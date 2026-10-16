@@ -4,7 +4,6 @@ using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
 using Robust.Shared.Serialization.Markdown.Validation;
-using Robust.Shared.Serialization.Markdown.Value;
 using Robust.Shared.Serialization.TypeSerializers.Interfaces;
 using Robust.Shared.Utility;
 
@@ -28,7 +27,7 @@ public sealed class NPCBlackboardSerializer : ITypeReader<NPCBlackboard, Mapping
 
             if (data.Value.Tag == null)
             {
-                validated.Add(new ErrorNode(new ValueDataNode(key), $"Unable to validate {key}'s type"));
+                validated.Add(new ErrorNode(node.GetKeyNode(key), $"Unable to validate {key}'s type"));
                 continue;
             }
 
@@ -36,7 +35,7 @@ public sealed class NPCBlackboardSerializer : ITypeReader<NPCBlackboard, Mapping
 
             if (!reflection.TryLooseGetType(typeString, out var type))
             {
-                validated.Add(new ErrorNode(new ValueDataNode(key), $"Unable to find type for {typeString}"));
+                validated.Add(new ErrorNode(node.GetKeyNode(key), $"Unable to find type for {typeString}"));
                 continue;
             }
 

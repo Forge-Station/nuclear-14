@@ -1,78 +1,87 @@
-using Content.Server.Ghost.Roles;
+using Content.Server.Chat.Managers;
+using Content.Shared.Administration.Logs;
+using Content.Shared.Chat;
+using Content.Shared.Database;
+using Content.Shared.Mind;
 using Content.Shared.Roles;
+using Robust.Shared.Network;
 
 namespace Content.Server.Roles;
 
-public sealed class RoleSystem : SharedRoleSystem
+public sealed partial class RoleSystem : SharedRoleSystem
 {
-    public override void Initialize()
-    {
-        // TODO make roles entities
-        base.Initialize();
-
-        SubscribeAntagEvents<DragonRoleComponent>();
-        SubscribeAntagEvents<InitialInfectedRoleComponent>();
-        SubscribeAntagEvents<NinjaRoleComponent>();
-        SubscribeAntagEvents<NukeopsRoleComponent>();
-        SubscribeAntagEvents<RevolutionaryRoleComponent>();
-        SubscribeAntagEvents<SubvertedSiliconRoleComponent>();
-        SubscribeAntagEvents<TraitorRoleComponent>();
-        SubscribeAntagEvents<ZombieRoleComponent>();
-        SubscribeAntagEvents<ThiefRoleComponent>();
-        SubscribeLocalEvent<GhostRoleMarkerRoleComponent, MindGetAllRolesEvent>(OnGhostRoleMarkerGetAllRoles);
-    }
-
-    private void OnGhostRoleMarkerGetAllRoles(
-        EntityUid uid,
-        GhostRoleMarkerRoleComponent component,
-        ref MindGetAllRolesEvent args
-    )
-    {
-        var name = string.IsNullOrWhiteSpace(component.Name)
-            ? Loc.GetString("game-ticker-unknown-role")
-            : component.Name;
-
-        args.Roles.Add(new RoleInfo(component, name, false, null, string.Empty));
-    }
+    [Dependency] private ISharedAdminLogManager _adminLogger = default!;
+    [Dependency] private IChatManager _chat = default!;
 
     public string? MindGetBriefing(EntityUid? mindId)
     {
         if (mindId == null)
+        {
+            Log.Error($"MindGetBriefing failed for mind {mindId}");
             return null;
+        }
+
+        TryComp<MindComponent>(mindId.Value, out var mindComp);
+
+        if (mindComp is null)
+        {
+            Log.Error($"MindGetBriefing failed for mind {mindId}");
+            return null;
+        }
 
         var ev = new GetBriefingEvent();
-        RaiseLocalEvent(mindId.Value, ref ev);
+
+        // This is on the event because while this Entity<T> is also present on every Mind Role Entity's MindRoleComp
+        // getting to there from a GetBriefing event subscription can be somewhat boilerplate
+        // and this needs to be looked up for the event anyway so why calculate it again later
+        ev.Mind = (mindId.Value, mindComp);
+
+        // Briefing is no longer raised on the mind entity itself
+        // because all the components that briefings subscribe to should be on Mind Role Entities
+        foreach (var role in mindComp.MindRoleContainer.ContainedEntities)
+        {
+            RaiseLocalEvent(role, ref ev);
+        }
+
         return ev.Briefing;
     }
-}
 
-/// <summary>
-/// Event raised on the mind to get its briefing.
-/// Handlers can either replace or append to the briefing, whichever is more appropriate.
-/// </summary>
-[ByRefEvent]
-public sealed class GetBriefingEvent
-{
-    public string? Briefing;
-
-    public GetBriefingEvent(string? briefing = null)
+    public void RoleUpdateMessage(MindComponent mind)
     {
-        Briefing = briefing;
+        if (!Player.TryGetSessionById(mind.UserId, out var session))
+            return;
+
+        if (!ProtoMan.Resolve(mind.RoleType, out var proto))
+            return;
+
+        var roleText = Loc.GetString(proto.Name);
+        var color = proto.Color;
+
+        //TODO add audio? Would need to be optional so it does not play on role changes that already come with their own audio
+        // _audio.PlayGlobal(Sound, session);
+
+        var message = Loc.GetString("role-type-update-message", ("color", color), ("role", roleText));
+        var wrappedMessage = Loc.GetString("chat-manager-server-wrap-message", ("message", message));
+        _chat.ChatMessageToOne(ChatChannel.Server,
+            message,
+            wrappedMessage,
+            default,
+            false,
+            session.Channel);
     }
 
-    /// <summary>
-    /// If there is no briefing, sets it to the string.
-    /// If there is a briefing, adds a new line to separate it from the appended string.
-    /// </summary>
-    public void Append(string text)
+    protected override void UpdateCharacterWindow(NetUserId? user, MindStringRepresentation mindString)
     {
-        if (Briefing == null)
+        if (Player.TryGetSessionById(user, out var session))
         {
-            Briefing = text;
+            RaiseNetworkEvent(new MindRoleTypeChangedEvent(), session.Channel);
         }
         else
         {
-            Briefing += "\n" + text;
+            _adminLogger.Add(
+                LogType.Mind,
+                LogImpact.Medium,
+                $"The Character Window of {mindString} potentially did not update immediately : session error");
         }
     }
 }

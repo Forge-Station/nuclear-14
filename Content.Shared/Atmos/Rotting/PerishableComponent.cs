@@ -7,7 +7,7 @@ namespace Content.Shared.Atmos.Rotting;
 /// This makes mobs eventually start rotting when they die.
 /// It may be expanded to food at some point, but it's just for mobs right now.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, AutoGenerateComponentPause]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(fieldDeltas: true), AutoGenerateComponentPause]
 [Access(typeof(SharedRottingSystem))]
 public sealed partial class PerishableComponent : Component
 {
@@ -15,12 +15,12 @@ public sealed partial class PerishableComponent : Component
     /// How long it takes after death to start rotting.
     /// </summary>
     [DataField]
-    public TimeSpan RotAfter = TimeSpan.FromMinutes(30);
+    public TimeSpan RotAfter = TimeSpan.FromMinutes(10);
 
     /// <summary>
     /// How much rotting has occured
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public TimeSpan RotAccumulator = TimeSpan.Zero;
 
     /// <summary>
@@ -41,10 +41,16 @@ public sealed partial class PerishableComponent : Component
     /// How many moles of gas released per second, per unit of mass.
     /// </summary>
     [DataField]
-    public float MolsPerSecondPerUnitMass = 0f;
+    public float MolsPerSecondPerUnitMass = 0.0025f;
 
     [DataField, AutoNetworkedField]
     public int Stage;
+
+    /// <summary>
+    /// If true, rot will always progress.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool ForceRotProgression;
 }
 
 

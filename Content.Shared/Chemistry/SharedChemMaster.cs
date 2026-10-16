@@ -11,7 +11,6 @@ namespace Content.Shared.Chemistry
     {
         public const uint PillTypes = 20;
         public const string BufferSolutionName = "buffer";
-        public const string PillBufferSolutionName = "pillBuffer";
         public const string InputSlotName = "beakerSlot";
         public const string OutputSlotName = "outputSlot";
         public const string PillSolutionName = "food";
@@ -45,16 +44,14 @@ namespace Content.Shared.Chemistry
     public sealed class ChemMasterReagentAmountButtonMessage : BoundUserInterfaceMessage
     {
         public readonly ReagentId ReagentId;
-        public readonly int Amount;
+        public readonly ChemMasterReagentAmount Amount;
         public readonly bool FromBuffer;
-        public readonly bool IsOutput;
 
-        public ChemMasterReagentAmountButtonMessage(ReagentId reagentId, int amount, bool fromBuffer, bool isOutput)
+        public ChemMasterReagentAmountButtonMessage(ReagentId reagentId, ChemMasterReagentAmount amount, bool fromBuffer)
         {
             ReagentId = reagentId;
             Amount = amount;
             FromBuffer = fromBuffer;
-            IsOutput = isOutput;
         }
     }
 
@@ -87,21 +84,58 @@ namespace Content.Shared.Chemistry
     }
 
     [Serializable, NetSerializable]
-    public sealed class ChemMasterSortMethodUpdated(int sortMethod) : BoundUserInterfaceMessage
+    public sealed class ChemMasterOutputDrawSourceMessage(ChemMasterDrawSource drawSource) : BoundUserInterfaceMessage
     {
-        public readonly int SortMethod = sortMethod;
-    }
-
-    [Serializable, NetSerializable]
-    public sealed class ChemMasterTransferringAmountUpdated(int transferringAmount) : BoundUserInterfaceMessage
-    {
-        public readonly int TransferringAmount = transferringAmount;
+        public readonly ChemMasterDrawSource DrawSource = drawSource;
     }
 
     public enum ChemMasterMode
     {
         Transfer,
         Discard,
+    }
+
+    public enum ChemMasterSortingType : byte
+    {
+        None = 0,
+        Alphabetical = 1,
+        Quantity = 2,
+        Latest = 3,
+    }
+
+    [Serializable, NetSerializable]
+    public sealed class ChemMasterSortingTypeCycleMessage : BoundUserInterfaceMessage;
+
+
+    public enum ChemMasterReagentAmount
+    {
+        U1 = 1,
+        U5 = 5,
+        U10 = 10,
+        U15 = 15,
+        U20 = 20,
+        U30 = 30,
+        U40 = 40,
+        U60 = 60,
+        U120 = 120,
+        All,
+    }
+
+    public enum ChemMasterDrawSource
+    {
+        Internal,
+        External,
+    }
+
+    public static class ChemMasterReagentAmountToFixedPoint
+    {
+        public static FixedPoint2 GetFixedPoint(this ChemMasterReagentAmount amount)
+        {
+            if (amount == ChemMasterReagentAmount.All)
+                return FixedPoint2.MaxValue;
+            else
+                return FixedPoint2.New((int)amount);
+        }
     }
 
     /// <summary>
@@ -141,44 +175,45 @@ namespace Content.Shared.Chemistry
     }
 
     [Serializable, NetSerializable]
-    public sealed class ChemMasterBoundUserInterfaceState(
-        ChemMasterMode mode,
-        ContainerInfo? containerInfo,
-        IReadOnlyList<ReagentQuantity> bufferReagents,
-        IReadOnlyList<ReagentQuantity> pillBufferReagents,
-        FixedPoint2 bufferCurrentVolume,
-        FixedPoint2 pillBufferCurrentVolume,
-        uint selectedPillType,
-        uint pillDosageLimit,
-        bool updateLabel,
-        int sortMethod,
-        int transferringAmount)
-        : BoundUserInterfaceState
+    public sealed class ChemMasterBoundUserInterfaceState : BoundUserInterfaceState
     {
-        public readonly ContainerInfo? ContainerInfo = containerInfo;
+        public readonly ContainerInfo? InputContainerInfo;
+        public readonly ContainerInfo? OutputContainerInfo;
 
         /// <summary>
         /// A list of the reagents and their amounts within the buffer, if applicable.
         /// </summary>
-        public readonly IReadOnlyList<ReagentQuantity> BufferReagents = bufferReagents;
+        public readonly IReadOnlyList<ReagentQuantity> BufferReagents;
 
-        /// <summary>
-        /// A list of the reagents and their amounts within the buffer, if applicable.
-        /// </summary>
-        public readonly IReadOnlyList<ReagentQuantity> PillBufferReagents = pillBufferReagents;
+        public readonly ChemMasterMode Mode;
 
-        public readonly ChemMasterMode Mode = mode;
+        public readonly ChemMasterSortingType SortingType;
 
-        public readonly FixedPoint2? BufferCurrentVolume = bufferCurrentVolume;
-        public readonly FixedPoint2? PillBufferCurrentVolume = pillBufferCurrentVolume;
-        public readonly uint SelectedPillType = selectedPillType;
+        public readonly FixedPoint2? BufferCurrentVolume;
+        public readonly uint SelectedPillType;
 
-        public readonly uint PillDosageLimit = pillDosageLimit;
+        public readonly uint PillDosageLimit;
 
-        public readonly bool UpdateLabel = updateLabel;
+        public readonly bool UpdateLabel;
 
-        public readonly int SortMethod = sortMethod;
-        public readonly int TransferringAmount = transferringAmount;
+        public readonly ChemMasterDrawSource DrawSource;
+
+        public ChemMasterBoundUserInterfaceState(
+            ChemMasterMode mode, ChemMasterSortingType sortingType, ContainerInfo? inputContainerInfo, ContainerInfo? outputContainerInfo,
+            IReadOnlyList<ReagentQuantity> bufferReagents, FixedPoint2 bufferCurrentVolume,
+            uint selectedPillType, uint pillDosageLimit, bool updateLabel, ChemMasterDrawSource drawSource)
+        {
+            InputContainerInfo = inputContainerInfo;
+            OutputContainerInfo = outputContainerInfo;
+            BufferReagents = bufferReagents;
+            Mode = mode;
+            SortingType = sortingType;
+            BufferCurrentVolume = bufferCurrentVolume;
+            SelectedPillType = selectedPillType;
+            PillDosageLimit = pillDosageLimit;
+            UpdateLabel = updateLabel;
+            DrawSource = drawSource;
+        }
     }
 
     [Serializable, NetSerializable]

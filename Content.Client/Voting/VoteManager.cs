@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Content.Shared.Voting;
@@ -32,14 +32,14 @@ namespace Content.Client.Voting
         event Action CanCallStandardVotesChanged;
     }
 
-    public sealed class VoteManager : IVoteManager
+    public sealed partial class VoteManager : IVoteManager
     {
-        [Dependency] private readonly IAudioManager _audio = default!;
-        [Dependency] private readonly IBaseClient _client = default!;
-        [Dependency] private readonly IClientConsoleHost _console = default!;
-        [Dependency] private readonly IClientNetManager _netManager = default!;
-        [Dependency] private readonly IGameTiming _gameTiming = default!;
-        [Dependency] private readonly IResourceCache _res = default!;
+        [Dependency] private IAudioManager _audio = default!;
+        [Dependency] private IBaseClient _client = default!;
+        [Dependency] private IClientConsoleHost _console = default!;
+        [Dependency] private IClientNetManager _netManager = default!;
+        [Dependency] private IGameTiming _gameTiming = default!;
+        [Dependency] private IResourceCache _res = default!;
 
         private readonly Dictionary<StandardVoteType, TimeSpan> _standardVoteTimeouts = new();
         private readonly Dictionary<int, ActiveVote> _votes = new();
@@ -60,7 +60,9 @@ namespace Content.Client.Voting
             _voteSource = _audio.CreateAudioSource(_res.GetResource<AudioResource>(sound));
 
             if (_voteSource != null)
+            {
                 _voteSource.Global = true;
+            }
 
             _netManager.RegisterNetMessage<MsgVoteData>(ReceiveVoteData);
             _netManager.RegisterNetMessage<MsgVoteCanCall>(ReceiveVoteCanCall);
@@ -182,6 +184,8 @@ namespace Content.Client.Voting
             existingVote.Title = message.VoteTitle;
             existingVote.StartTime = _gameTiming.RealServerToLocal(message.StartTime);
             existingVote.EndTime = _gameTiming.RealServerToLocal(message.EndTime);
+            existingVote.DisplayVotes = message.DisplayVotes;
+            existingVote.TargetEntity = message.TargetEntity;
 
             // Logger.Debug($"{existingVote.StartTime}, {existingVote.EndTime}, {_gameTiming.RealTime}");
 
@@ -243,7 +247,8 @@ namespace Content.Client.Voting
             public string Initiator = "";
             public int? OurVote;
             public int Id;
-
+            public bool DisplayVotes;
+            public int? TargetEntity; // NetEntity
             public ActiveVote(int voteId)
             {
                 Id = voteId;

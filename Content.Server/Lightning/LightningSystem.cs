@@ -1,6 +1,6 @@
 using System.Linq;
 using Content.Server.Beam;
-using Content.Server.Beam.Components;
+using Content.Shared.Beam.Components;
 using Content.Server.Lightning.Components;
 using Content.Shared.Lightning;
 using Robust.Server.GameObjects;
@@ -16,12 +16,12 @@ namespace Content.Server.Lightning;
 
 //I redesigned so that lightning branches can only be created from the point where the lightning struck, no more collide checks
 //and the number of these branches is explicitly controlled in the new function.
-public sealed class LightningSystem : SharedLightningSystem
+public sealed partial class LightningSystem : SharedLightningSystem
 {
-    [Dependency] private readonly BeamSystem _beam = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private BeamSystem _beam = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private EntityLookupSystem _lookup = default!;
+    [Dependency] private TransformSystem _transform = default!;
 
     public override void Initialize()
     {
@@ -71,35 +71,33 @@ public sealed class LightningSystem : SharedLightningSystem
     /// <param name="triggerLightningEvents">if the lightnings being fired should trigger lightning events.</param>
     public void ShootRandomLightnings(EntityUid user, float range, int boltCount, string lightningPrototype = "Lightning", int arcDepth = 0, bool triggerLightningEvents = true)
     {
-        //To Do: add support to different priority target tablem for different lightning types
-        //To Do: Remove Hardcode LightningTargetComponent (this should be a parameter of the SharedLightningComponent)
-        //To Do: This is still pretty bad for perf but better than before and at least it doesn't re-allocate
+        //TODO: add support to different priority target tablem for different lightning types
+        //TODO: Remove Hardcode LightningTargetComponent (this should be a parameter of the SharedLightningComponent)
+        //TODO: This is still pretty bad for perf but better than before and at least it doesn't re-allocate
         // several hashsets every time
-        var mapCoords = _transform.GetMapCoordinates(user);
-        var targets = _lookup.GetEntitiesInRange<LightningTargetComponent>(mapCoords, range).ToList();
+
+        var targets = _lookup.GetEntitiesInRange<LightningTargetComponent>(_transform.GetMapCoordinates(user), range).ToList();
         _random.Shuffle(targets);
         targets.Sort((x, y) => y.Comp.Priority.CompareTo(x.Comp.Priority));
 
-        int shotCount = 0;
+        int shootedCount = 0;
         int count = -1;
-
-        while (shotCount < boltCount)
+        while (shootedCount < boltCount)
         {
             count++;
 
             if (count >= targets.Count) { break; }
-            var curTarget = targets[count];
 
-            // Chance to ignore target
-            if (!_random.Prob(curTarget.Comp.HitProbability))
+            var curTarget = targets[count];
+            if (!_random.Prob(curTarget.Comp.HitProbability)) //Chance to ignore target
                 continue;
 
             ShootLightning(user, targets[count].Owner, lightningPrototype, triggerLightningEvents);
-
             if (arcDepth - targets[count].Comp.LightningResistance > 0)
+            {
                 ShootRandomLightnings(targets[count].Owner, range, 1, lightningPrototype, arcDepth - targets[count].Comp.LightningResistance, triggerLightningEvents);
-
-            shotCount++;
+            }
+            shootedCount++;
         }
     }
 }

@@ -1,44 +1,20 @@
 {
-  "version": 1,
-  "license": "CC0-1.0",
-  "copyright": "Mithrandalf Discord 93652604520767488",
-  "size": {
-    "x": 32,
-    "y": 32
-  },
-  "states": [
-    {
-      "name": "black-closed"
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Taken from vgstation13 at https://github.com/vgstation-coders/vgstation13/blob/4d150fd98a7b067305c157ad79431fa150f2c145/icons/obj/objects.dmi, modified and adapted by EmoGarbage404 (github)",
+    "size": {
+        "x": 32,
+        "y": 32
     },
-    {
-      "name": "black-full"
-    },
-	{
-      "name": "black-open"
-    },
-	{
-      "name": "blue-closed"
-    },
-	{
-      "name": "blue-open"
-    },
-	{
-      "name": "red-closed"
-    },
-	{
-      "name": "red-full"
-    },
-	{
-      "name": "red-open"
-    },
-	{
-      "name": "yellow-closed"
-    },
-	{
-      "name": "yellow-full"
-    },
-	{
-      "name": "yellow-open"
-    }
-  ]
+    "states": [
+        {
+            "name": "silicatebarrel"
+        },
+        {
+            "name": "metalbarrel"
+        },
+        {
+            "name": "radbarrel"
+        }
+    ]
 }

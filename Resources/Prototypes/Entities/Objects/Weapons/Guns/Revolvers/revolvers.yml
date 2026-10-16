@@ -12,6 +12,7 @@
     shape:
     - 0,0,1,0
     - 0,1,0,1
+    storedOffset: 0,-6
   - type: Tag
     tags:
     - Sidearm
@@ -29,7 +30,6 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/revolver.ogg
-    fireOnDropChance: 0.5
   - type: UseDelay
     delay: 0.66
   - type: ContainerContainer
@@ -50,25 +50,12 @@
       path: /Audio/Weapons/Guns/MagIn/revolver_magin.ogg
   - type: StaticPrice
     price: 500
-  - type: MeleeWeapon
-    attackRate: 1.2
-    damage:
-      types:
-        Blunt: 7
-    swapKeys: true
-    disableHeavy: true
-    animation: WeaponArcThrust
-    wideAnimationRotation: 135
-    soundHit:
-      collection: MetalThud
-  - type: DamageOtherOnHit
-    staminaCost: 5
 
 - type: entity
   name: Deckard
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseSecurityCommandContraband]
   id: WeaponRevolverDeckard
-  description: A rare, custom-built revolver. Use when there is no time for Voight-Kampff test. Uses .45 magnum ammo.
+  description: A beautifully machined, custom-built revolver. Used when there is no time for the Voight-Kampff test. Loads 5 rounds of .45 magnum.
   components:
   - type: Sprite
     sprite: Objects/Weapons/Guns/Revolvers/deckard.rsi
@@ -93,97 +80,62 @@
     price: 1500
 
 - type: entity
-  name: Deckard
-  parent: WeaponRevolverDeckard
-  id: WeaponRevolverDeckardSecurity
-  description: A rare, custom-built revolver. Use when there is no time for Voight-Kampff test. Uses .45 magnum ammo.
-               The serial number on the handguard marks this gun as belonging to an NT Security Officer.
-  components:
-  - type: GuideHelp
-    guides: [ SecurityWeapons ]
-
-- type: entity
-  name: Deckard
-  parent: WeaponRevolverDeckardSecurity
-  id: WeaponRevolverDeckardNonLethalSecurity
-  description: A rare, custom-built revolver. Use when you need to spare the Replicants. Comes with .45 magnum rubber.
-               The serial number on the handguard marks this gun as belonging to an NT Security Officer.
-  components:
-  - type: RevolverAmmoProvider
-    whitelist:
-      tags:
-        - CartridgeMagnum
-        - SpeedLoaderMagnum
-    proto: CartridgeMagnumRubber
-  - type: GuideHelp
-    guides: [ SecurityWeapons ]
-
-- type: entity
   name: Inspector
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseSecurityContraband]
   id: WeaponRevolverInspector
-  description: A detective's best friend. Uses .45 magnum ammo.
+  description: A double-action revolver manufactured by various companies. It is readily available on the civilian market, making it a popular choice among private investigators. You feel lucky just holding it. Loads 6 rounds of .45 magnum.
   components:
   - type: Sprite
     sprite: Objects/Weapons/Guns/Revolvers/inspector.rsi
   - type: Clothing
     sprite: Objects/Weapons/Guns/Revolvers/inspector.rsi
+  - type: Item
+    storedOffset: 0,-2
   - type: RevolverAmmoProvider
     capacity: 6
     chambers: [ True, True, True, True, True, True ]
     ammoSlots: [ null, null, null, null, null, null ]
-
-- type: entity
-  name: Inspector
-  parent: WeaponRevolverInspector
-  id: WeaponRevolverInspectorSecurity
-  description: A detective's best friend. Uses .45 magnum ammo.
-               The serial number on the handguard marks this gun as belonging to an NT Security Officer.
-  components:
-  - type: GuideHelp
-    guides: [ SecurityWeapons ]
-
-- type: entity
-  name: Inspector
-  parent: WeaponRevolverInspectorSecurity
-  id: WeaponRevolverInspectorNonLethalSecurity
-  description: A detective's best friend. Comes loaded with .45 magnum rubber.
-               The serial number on the handguard marks this gun as belonging to an NT Security Officer.
-  components:
-  - type: RevolverAmmoProvider
-    whitelist:
-      tags:
-        - CartridgeMagnum
-        - SpeedLoaderMagnum
-    proto: CartridgeMagnumRubber
-  - type: GuideHelp
-    guides: [ SecurityWeapons ]
+  - type: StealTarget
+    stealGroup:
+    - OfficerHandgun
 
 - type: entity
   name: Mateba
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseMajorContraband]
   id: WeaponRevolverMateba
-  description: A distinctive revolver of an ancient Sol' design that was once seen as a rare collectible. It is in common manufacture by many companies in the Biesel Republic. Uses .45 magnum ammo.
+  description: A modern revolver used by Nanotrasen’s elite, near mythical ‘Death Squad’ task force. Its unique trigger action and barrel placement enable a high fire rate with minimal muzzle flip. Many have looked down this barrel, but few have lived to tell of it. Loads 6 rounds of .45 magnum.
   components:
   - type: Sprite
     sprite: Objects/Weapons/Guns/Revolvers/mateba.rsi
   - type: Clothing
     sprite: Objects/Weapons/Guns/Revolvers/mateba.rsi
+  - type: Item
+    storedOffset: 0,-3
   - type: Gun
     fireRate: 3
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/mateba.ogg
 
 - type: entity
+  parent: WeaponRevolverMateba
+  id: WeaponRevolverMatebaAP # For deathsquad
+  suffix: armor-piercing
+  components:
+  - type: RevolverAmmoProvider
+    proto: CartridgeMagnumAP
+
+- type: entity
   name: Python
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseSyndicateContraband]
   id: WeaponRevolverPython
-  description: An iconic large-framed revolver of ancient Sol' design. It is commonly manufactured by many companies all over the colonies. Uses .45 magnum ammo.
+  description: A powerful double-action revolver manufactured by the Syndicate. Loud and flashy, perfect for any agent looking to make a statement. Loads 6 rounds of .45 magnum.
   components:
   - type: Sprite
     sprite: Objects/Weapons/Guns/Revolvers/python.rsi
   - type: Clothing
     sprite: Objects/Weapons/Guns/Revolvers/python.rsi
+  - type: Item
+    storedOffset: 0,-2
   - type: Gun
     selectedMode: SemiAuto
     fireRate: 2
@@ -193,67 +145,32 @@
       path: /Audio/Weapons/Guns/Gunshots/revolver.ogg
       params:
         volume: 2.25
-    fireOnDropChance: 0.3
+  - type: StaticPrice
+    price: 1500 # Botany can shit these out like candy, but let's see how it goes
 
 - type: entity
-  name: Python
-  parent: WeaponRevolverPython
-  id: WeaponRevolverPythonSecurity
-  description: An iconic large-framed revolver of ancient Sol' design. It is commonly manufactured by many companies all over the colonies. Uses .45 magnum ammo.
-               The serial number on the handguard marks this gun as belonging to an NT Security Officer.
-  components:
-  - type: GuideHelp
-    guides: [ SecurityWeapons ]
-
-- type: entity
-  name: Python
-  parent: WeaponRevolverPythonSecurity
-  id: WeaponRevolverPythonNonlethalSecurity
-  components:
-  - type: RevolverAmmoProvider
-    whitelist:
-      tags:
-        - CartridgeMagnum
-        - SpeedLoaderMagnum
-    proto: CartridgeMagnumRubber
-    capacity: 6
-    chambers: [ True, True, True, True, True, True ]
-    ammoSlots: [ null, null, null, null, null, null ]
-    soundEject:
-      path: /Audio/Weapons/Guns/MagOut/revolver_magout.ogg
-    soundInsert:
-      path: /Audio/Weapons/Guns/MagIn/revolver_magin.ogg
-  - type: GuideHelp
-    guides: [ SecurityWeapons ]
-
-- type: entity
-  name: Python
   parent: WeaponRevolverPython
   id: WeaponRevolverPythonAP # For the uplink.
   suffix: armor-piercing
-  description: An iconic large-framed revolver of ancient Sol' design. It is commonly manufactured by many companies all over the colonies. Uses .45 magnum ammo.
   components:
   - type: RevolverAmmoProvider
-    whitelist:
-      tags:
-        - CartridgeMagnum
-        - SpeedLoaderMagnum
     proto: CartridgeMagnumAP
 
 
 - type: entity
   name: pirate revolver
-  parent: BaseWeaponRevolver
+  parent: [BaseWeaponRevolver, BaseMajorContraband]
   id: WeaponRevolverPirate
-  description: An odd, old-looking revolver, favoured by pirate crews. Uses .45 magnum ammo.
+  description: A crude single-action revolver handmade by a space pirate. Old and covered in rust, it somehow still works. Loads 5 rounds of .45 magnum.
   components:
   - type: Sprite
     sprite: Objects/Weapons/Guns/Revolvers/pirate_revolver.rsi
   - type: Clothing
     sprite: Objects/Weapons/Guns/Revolvers/pirate_revolver.rsi
+  - type: Item
+    storedOffset: 1,-5
   - type: Gun
     fireRate: 1
-    fireOnDropChance: 1
   - type: ContainerContainer
     containers:
       revolver-ammo: !type:Container
@@ -263,25 +180,13 @@
     ammoSlots: [ null, null, null, null, null ]
 
 - type: entity
-  parent: WeaponRevolverArgenti
-  id: WeaponRevolverArgentiSecurity
-  description: The military grade Argenti Type 20 revolver. Manufactured by Silver Industries. While the design with expanded cylinder is quite ancient, the right gunslinger will know how to utilise it well. Uses .20 rifle ammo.
-               The serial number on the handguard marks this gun as belonging to an NT Security Officer.
-  components:
-  - type: GuideHelp
-    guides: [ SecurityWeapons ]
-
-- type: entity
-  parent: WeaponRevolverArgenti
-  id: WeaponRevolverArgentiNonLethalSecurity
-  suffix: Non-lethal
-  description: The military grade Argenti Type 20 revolver. Manufactured by Silver Industries. While the design with expanded cylinder is quite ancient, the right gunslinger will know how to utilise it well. Comes with .20 rubber rifle ammo.
-               The serial number on the handguard marks this gun as belonging to an NT Security Officer.
+  parent: WeaponRevolverPirate
+  id: WeaponRevolverPirateEmpty
+  suffix: Empty
   components:
   - type: RevolverAmmoProvider
-    capacity: 8
-    proto: CartridgeRifleRubber
-    chambers: [ True, True, True, True, True, True, True, True ]
-    ammoSlots: [ null, null, null, null, null, null, null, null ]
-  - type: GuideHelp
-    guides: [ SecurityWeapons ]
+    proto: null
+    capacity: 5
+    chambers: [ null, null, null, null, null ]
+    ammoSlots: [ null, null, null, null, null ]
+

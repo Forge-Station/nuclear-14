@@ -4,63 +4,43 @@
   description: job-description-detective
   playTimeTracker: JobDetective
   requirements:
-  - !type:CharacterDepartmentTimeRequirement
-    department: Security
-    min: 36000 # DeltaV - 10 hours
-  # - !type:CharacterTraitRequirement
-    # inverted: true
-    # traits:
-      # - Foreigner
-      # - ForeignerLight
-      # - Muted
-      # - Blindness
-      # - Pacifist
-      # - BrittleBoneDisease
+  - !type:RoleTimeRequirement
+    role: JobSecurityOfficer
+    time: 5h
   startingGear: DetectiveGear
   icon: "JobIconDetective"
   supervisors: job-supervisors-hos
-  canBeAntag: false
+  guides: [ Forensics ] # Todo: should have a more specific guidebook page, since there's a bit more to detective than just forensics itself
   access:
   - Security
-  #- Brig # Delta V: Removed
+  - Brig
   - Maintenance
-  - Service
   - Detective
-  - External
   - Cryogenics
+  - External
   special:
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
-  afterLoadoutSpecial:
-  - !type:ModifyEnvirosuitSpecial
-    charges: 6
-  - !type:ModifyEnvirohelmSpecial
-    powerCell: PowerCellHigh
-  setPreference: false
 
 - type: startingGear
   id: DetectiveGear
-  subGear:
-  - DetectivePlasmamanGear
-
   equipment:
-    jumpsuit: ClothingUniformJumpsuitDetective
-    back: ClothingBackpackSecurity
-    shoes: ClothingShoesBootsCombatFilled
-    eyes: ClothingEyesGlassesSunglasses
-    head: ClothingHeadHatFedoraBrown
-    outerClothing: ClothingOuterVestDetective
+    eyes: ClothingEyesGlassesSecurity
     id: DetectivePDA
     ears: ClothingHeadsetSecurity
     belt: ClothingBeltHolsterFilled
-  innerClothingSkirt: ClothingUniformJumpskirtDetective
-  satchel: ClothingBackpackSatchelSecurity
-  duffelbag: ClothingBackpackDuffelSecurity
+  storage:
+    back:
+    - Flash
+    - ForensicPad
+    - ForensicScanner
 
-- type: startingGear
-  id: DetectivePlasmamanGear
-  parent: BasePlasmamanSecurityGear
+- type: chameleonOutfit
+  id: DetectiveChameleonOutfit
+  job: Detective
+  hasMindShield: true
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitDetective
-    head: ClothingHeadEnvirohelmDetective
-    gloves: ClothingHandsGlovesEnviroglovesWhite
+    head: ClothingHeadHatFedoraBrown
+    mask: ClothingMaskGasSecurity
+    neck: ClothingNeckTieDet
+    gloves: ClothingHandsGlovesForensic

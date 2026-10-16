@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Configuration;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
 
@@ -9,6 +9,15 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<bool> RelativeMovement =
         CVarDef.Create("physics.relative_movement", true, CVar.ARCHIVE | CVar.REPLICATED | CVar.SERVER);
+
+    public static readonly CVarDef<float> MinFriction =
+        CVarDef.Create("physics.min_friction", 0.0f, CVar.ARCHIVE | CVar.REPLICATED | CVar.SERVER);
+
+    public static readonly CVarDef<float> AirFriction =
+        CVarDef.Create("physics.air_friction", 0.2f, CVar.ARCHIVE | CVar.REPLICATED | CVar.SERVER);
+
+    public static readonly CVarDef<float> OffgridFriction =
+        CVarDef.Create("physics.offgrid_friction", 0.05f, CVar.ARCHIVE | CVar.REPLICATED | CVar.SERVER);
 
     public static readonly CVarDef<float> TileFrictionModifier =
         CVarDef.Create("physics.tile_friction", 8.0f, CVar.ARCHIVE | CVar.REPLICATED | CVar.SERVER);

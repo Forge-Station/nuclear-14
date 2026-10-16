@@ -1,11 +1,11 @@
-﻿using Robust.Shared.Prototypes;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Ghost.Roles.Raffles;
 
 /// <summary>
 /// Allows getting a <see cref="IGhostRoleRaffleDecider"/> as prototype.
 /// </summary>
-[Prototype("ghostRoleRaffleDecider")]
+[Prototype]
 public sealed partial class GhostRoleRaffleDeciderPrototype : IPrototype
 {
     /// <inheritdoc />

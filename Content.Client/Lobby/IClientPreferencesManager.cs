@@ -1,5 +1,6 @@
-using System;
+using Content.Shared.Construction.Prototypes;
 using Content.Shared.Preferences;
+using Robust.Shared.Prototypes;
 
 namespace Content.Client.Lobby
 {
@@ -12,12 +13,13 @@ namespace Content.Client.Lobby
         GameSettings? Settings { get; }
         PlayerPreferences? Preferences { get; }
         void Initialize();
-        void SelectCharacter(ICharacterProfile profile);
+        void SelectCharacter(HumanoidCharacterProfile profile);
         void SelectCharacter(int slot);
-        void UpdateCharacter(ICharacterProfile profile, int slot);
-        void CreateCharacter(ICharacterProfile profile);
-        void DeleteCharacter(ICharacterProfile profile);
+        void UpdateCharacter(HumanoidCharacterProfile profile, int slot);
+        void CreateCharacter(HumanoidCharacterProfile profile);
+        void DeleteCharacter(HumanoidCharacterProfile profile);
         void DeleteCharacter(int slot);
+        void UpdateConstructionFavorites(List<ProtoId<ConstructionPrototype>> favorites);
 
         // Forge-Change: update sponsor cosmetic preferences (custom OOC/LOOC color, ghost skin).
         void UpdateSponsorPreferences(Color oocColor, Color loocColor, string ghostSkin);

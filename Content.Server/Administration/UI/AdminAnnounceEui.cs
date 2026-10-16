@@ -1,27 +1,21 @@
 using Content.Server.Administration.Managers;
-using Content.Server.Chat;
 using Content.Server.Chat.Managers;
 using Content.Server.Chat.Systems;
 using Content.Server.EUI;
 using Content.Shared.Administration;
 using Content.Shared.Eui;
-using Content.Server.Announcements.Systems;
-using Robust.Shared.Player;
 
 namespace Content.Server.Administration.UI
 {
-    public sealed class AdminAnnounceEui : BaseEui
+    public sealed partial class AdminAnnounceEui : BaseEui
     {
-        [Dependency] private readonly IAdminManager _adminManager = default!;
-        [Dependency] private readonly IChatManager _chatManager = default!;
-        private readonly AnnouncerSystem _announcer;
+        [Dependency] private IAdminManager _adminManager = default!;
+        [Dependency] private IChatManager _chatManager = default!;
         private readonly ChatSystem _chatSystem;
 
         public AdminAnnounceEui()
         {
             IoCManager.InjectDependencies(this);
-
-            _announcer = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<AnnouncerSystem>();
             _chatSystem = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<ChatSystem>();
         }
 
@@ -51,12 +45,11 @@ namespace Content.Server.Administration.UI
                     switch (doAnnounce.AnnounceType)
                     {
                         case AdminAnnounceType.Server:
-                            _chatManager.DispatchServerAnnouncement(doAnnounce.Announcement);
+                            _chatManager.DispatchServerAnnouncement(doAnnounce.Announcement, sender: Player);
                             break;
                         // TODO: Per-station announcement support
                         case AdminAnnounceType.Station:
-                            _announcer.SendAnnouncement(_announcer.GetAnnouncementId("Announce"), Filter.Broadcast(),
-                                doAnnounce.Announcement, doAnnounce.Announcer, Color.Gold);
+                            _chatSystem.DispatchGlobalAnnouncement(doAnnounce.Announcement, doAnnounce.Announcer, colorOverride: Color.Gold);
                             break;
                     }
 

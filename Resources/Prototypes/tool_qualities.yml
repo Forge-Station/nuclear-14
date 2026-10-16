@@ -34,13 +34,6 @@
   icon: { sprite: Objects/Tools/welder.rsi, state: icon }
 
 - type: tool
-  id: SprayPainting
-  name: tool-quality-spray-painting-name
-  toolName: tool-quality-spray-painting-tool-name
-  spawn: SprayPainter
-  icon: { sprite: Objects/Tools/spray_painter.rsi, state: spray_painter }
-
-- type: tool
   id: Pulsing
   name: tool-quality-pulsing-name
   toolName: tool-quality-pulsing-tool-name
@@ -76,8 +69,15 @@
   icon: { sprite: Objects/Tools/rolling_pin.rsi, state: icon }
 
 - type: tool
-  id: Axing
-  name: tool-quality-axing-name
-  toolName: tool-quality-axing-tool-name
-  spawn: FireAxe
-  icon: { sprite: Objects/Weapons/Melee/fireaxe.rsi, state: icon }
+  id: Brushing
+  name: tool-quality-brushing-name
+  toolName: tool-quality-brushing-tool-name
+  spawn: WireBrush
+  icon: { sprite: Objects/Specific/Janitorial/wirebrush.rsi, state: icon }
+
+- type: tool
+  id: Shearing
+  name: tool-quality-shearing-name
+  toolName: tool-quality-shearing-tool-name
+  spawn: Wirecutter
+  icon: { sprite: Objects/Tools/wirecutters.rsi, state: cutters-map }

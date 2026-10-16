@@ -3,7 +3,8 @@
   id: BaseFlatpack
   name: base flatpack
   description: A flatpack used for constructing something.
-  categories: [ HideSpawnMenu ]
+  categories:
+  - HideSpawnMenu
   components:
   - type: Item
     size: Large
@@ -51,6 +52,26 @@
 
 - type: entity
   parent: BaseFlatpack
+  id: AmeControllerFlatpack
+  name: AME controller flatpack
+  description: A flatpack used for constructing the terminal that controls the antimatter engine.
+  components:
+  - type: Sprite
+    layers:
+    - state: ame-part
+    - state: overlay
+      color: "#EFB341"
+  - type: Flatpack
+    entity: AmeController
+  - type: StaticPrice
+    price: 1000
+  - type: GuideHelp
+    guides:
+    - AME
+    - Power
+
+- type: entity
+  parent: BaseFlatpack
   id: AmePartFlatpack
   name: AME flatpack
   description: A flatpack used for constructing an antimatter engine reactor.
@@ -62,46 +83,13 @@
     entity: AmeShielding
   - type: StaticPrice
     price: 500
-  # - type: GuideHelp
-    # guides: [ AME, Power ]
+  - type: GuideHelp
+    guides:
+    - AME
+    - Power
   - type: StealTarget
-    stealGroup: AmePartFlatpack
-
-- type: entity
-  parent: BaseFlatpack
-  id: TegCenterPartFlatpack
-  name: TEG Center flatpack
-  description: A flatpack used for constructing the central core of a TEG.
-  components:
-  - type: Flatpack
-    entity: TegCenter
-  - type: Sprite
-    layers:
-    - state: base
-    - state: overlay
-      color: "#cec8ac"
-      map: ["enum.FlatpackVisualLayers.Overlay"]
-    - state: icon-default
-  - type: GuideHelp
-    guides: [ TEG, Power ]
-
-- type: entity
-  parent: BaseFlatpack
-  id: TegCirculatorPartFlatpack
-  name: TEG Circulator flatpack
-  description: A flatpack used for constructing the circulator of a TEG.
-  components:
-  - type: Flatpack
-    entity: TegCirculator
-  - type: Sprite
-    layers:
-    - state: base
-    - state: overlay
-      color: "#cec8ac"
-      map: ["enum.FlatpackVisualLayers.Overlay"]
-    - state: icon-default
-  - type: GuideHelp
-    guides: [ TEG, Power ]
+    stealGroup:
+    - AmePartFlatpack
 
 - type: entity
   parent: BaseFlatpack
@@ -114,8 +102,10 @@
   - type: Sprite
     layers:
     - state: singularity-generator
-  # - type: GuideHelp
-    # guides: [ Singularity, Power ]
+  - type: GuideHelp
+    guides:
+    - SingularityEngine
+    - Power
 
 - type: entity
   parent: BaseFlatpack
@@ -128,8 +118,10 @@
   - type: Sprite
     layers:
     - state: radiation-collector
-  # - type: GuideHelp
-    # guides: [ Singularity, Power ]
+  - type: GuideHelp
+    guides:
+    - SingularityEngine
+    - Power
 
 - type: entity
   parent: BaseFlatpack
@@ -142,8 +134,10 @@
   - type: Sprite
     layers:
     - state: containment-field-generator
-  # - type: GuideHelp
-    # guides: [ Singularity, Power ]
+  - type: GuideHelp
+    guides:
+    - SingularityEngine
+    - Power
 
 - type: entity
   parent: BaseFlatpack
@@ -156,8 +150,10 @@
   - type: Sprite
     layers:
     - state: emitter
-  # - type: GuideHelp
-    # guides: [ Singularity, Power ]
+  - type: GuideHelp
+    guides:
+    - SingularityEngine
+    - Power
 
 - type: entity
   parent: BaseFlatpack
@@ -170,8 +166,10 @@
   - type: Sprite
     layers:
     - state: tesla-generator
-  # - type: GuideHelp
-    # guides: [ Power ] # TODO add tesla guide
+  - type: GuideHelp
+    guides:
+    - TeslaEngine
+    - Power
 
 - type: entity
   parent: BaseFlatpack
@@ -184,8 +182,10 @@
   - type: Sprite
     layers:
     - state: tesla-coil
-  # - type: GuideHelp
-    # guides: [ Power ] # TODO add tesla guide
+  - type: GuideHelp
+    guides:
+    - TeslaEngine
+    - Power
 
 - type: entity
   parent: BaseFlatpack
@@ -198,8 +198,10 @@
   - type: Sprite
     layers:
     - state: grounding-rod
-  # - type: GuideHelp
-    # guides: [ Power ] # TODO add tesla guide
+  - type: GuideHelp
+    guides:
+    - TeslaEngine
+    - Power
 
 - type: entity
   parent: BaseFlatpack
@@ -229,4 +231,111 @@
     - state: base
     - state: overlay
       color: "#cec8ac"
+    - state: icon-default
+
+- type: entity
+  parent: BaseFlatpack
+  id: SpaceHeaterFlatpack
+  name: space heater flatpack
+  description: A flatpack used for constructing a space heater.
+  components:
+  - type: Flatpack
+    entity: SpaceHeaterAnchored
+
+- type: entity
+  parent: BaseFlatpack
+  id: FaxMachineFlatpack
+  name: fax machine flatpack
+  description: A flatpack used for constructing a fax machine.
+  components:
+  - type: Sprite
+    layers:
+    - state: fax-machine
+  - type: Flatpack
+    entity: FaxMachineBase
+
+- type: entity
+  parent: BaseFlatpack
+  id: CrewMonitoringServerFlatpack
+  name: crew monitoring server flatpack
+  description: A flatpack used for constructing a crew monitoring server.
+  components:
+  - type: Flatpack
+    entity: CrewMonitoringServer
+
+- type: entity
+  parent: BaseFlatpack
+  id: CrewMonitoringComputerFlatpack
+  name: crew monitoring computer flatpack
+  description: A flatpack used for constructing a crew monitoring console.
+  components:
+  - type: Flatpack
+    entity: ComputerCrewMonitoring
+
+- type: entity
+  parent: BaseFlatpack
+  id: HydroponicsTrayFlatpack
+  name: hydroponics tray flatpack
+  description: A flatpack used for constructing a hydroponics tray.
+  components:
+  - type: Flatpack
+    entity: HydroponicsTray
+  - type: Sprite
+    layers:
+    - state: hydroponics-tray
+  - type: GuideHelp
+    guides:
+    - Botany
+    - Chemicals
+
+- type: entity
+  parent: [ BaseFlatpack, BaseSyndicateContraband ]
+  id: SyndicateMicrowaveFlatpack
+  name: donk co. microwave flatpack
+  description: A flatpack used for constructing a microwave too hot for Nanotrasen to handle.
+  components:
+  - type: Item
+    size: Normal
+  - type: Flatpack
+    entity: SyndicateMicrowave
+  - type: GuideHelp
+    guides:
+    - FoodRecipes
+
+- type: entity
+  parent: [ BaseFlatpack, BaseXenoborgContraband ]
+  id: XenoborgExtractorFlatpack
+  name: xenoborg extractor flatpack
+  description: A flatpack used for constructing a xenoborg extractor.
+  components:
+  - type: Sprite
+    layers:
+    - state: base-xenoborg
+    - state: overlay
+      color: "#452dfa"
+    - state: icon-xenoborg-extractor
+  - type: Item
+    size: Normal
+  - type: Flatpack
+    entity: XenoborgExtractor
+  - type: GuideHelp
+    guides:
+    - Xenoborgs
+
+- type: entity
+  parent: BaseFlatpack
+  id: MachineAnomalyVesselFlatpack
+  name: anomaly vessel flatpack
+  description: A flatpack used for constructing an anomaly vessel.
+  components:
+  - type: Flatpack
+    entity: MachineAnomalyVessel
+  - type: GuideHelp
+    guides:
+    - ScannersAndVessels
+  - type: Sprite
+    layers:
+    - state: base
+    - state: overlay
+      color: "#D381C9"
     - state: icon-default

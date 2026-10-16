@@ -1,4 +1,14 @@
 - type: entity
+  parent: ClothingEyesBase
+  id: ClothingEyesHudBase
+  abstract: true
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StealTarget
+    stealGroup:
+    - ClothingEyesHuds
+
+- type: entity
   id: ShowSecurityIcons
   abstract: true
   categories: [ HideSpawnMenu ]
@@ -6,6 +16,7 @@
   - type: ShowJobIcons
   - type: ShowMindShieldIcons
   - type: ShowCriminalRecordIcons
+  - type: ShowContrabandDetails
 
 - type: entity
   id: ShowMedicalIcons
@@ -16,14 +27,7 @@
   - type: ShowHealthIcons
 
 - type: entity
-  id: ShowPsionicsIcons
-  abstract: true
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: ShowPsionicsRecordIcons
-
-- type: entity
-  parent: ClothingEyesBase
+  parent: ClothingEyesHudBase
   id: ClothingEyesHudDiagnostic
   name: diagnostic hud
   description: A heads-up display capable of analyzing the integrity and status of robotics and exosuits. Made out of see-borg-ium.
@@ -36,9 +40,10 @@
     damageContainers:
     - Inorganic
     - Silicon
+  - type: ShowAccessReaderSettings
 
 - type: entity
-  parent: ClothingEyesBase
+  parent: [ClothingEyesHudBase, ShowMedicalIcons]
   id: ClothingEyesHudMedical
   name: medical hud
   description: A heads-up display that scans the humanoids in view and provides accurate data about their health status.
@@ -47,18 +52,14 @@
     sprite: Clothing/Eyes/Hud/med.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Hud/med.rsi
-  - type: ShowHealthBars
-    damageContainers:
-    - Biological
-  - type: ShowHealthIcons
-    damageContainers:
-    - Biological
   - type: Tag
     tags:
     - HudMedical
+    - PetWearable
+    - WhitelistChameleon
 
 - type: entity
-  parent: [ClothingEyesBase, ShowSecurityIcons]
+  parent: [ClothingEyesHudBase, ShowSecurityIcons, BaseSecurityContraband]
   id: ClothingEyesHudSecurity
   name: security hud
   description: A heads-up display that scans the humanoids in view and provides accurate data about their ID status and security records.
@@ -70,20 +71,27 @@
   - type: Tag
     tags:
     - HudSecurity
+    - PetWearable
+    - WhitelistChameleon
 
 - type: entity
-  parent: [ClothingEyesBase, ShowPsionicsIcons]
-  id: ClothingEyesHudEpistemics
-  name: epi psionics hud
-  description: A heads-up display that scans the humanoids in view and provides accurate data about their psionics records.
+  parent: [ClothingEyesHudBase, BaseCommandContraband]
+  id: ClothingEyesHudCommand
+  name: administration hud
+  description: A heads-up display that scans the humanoids in view and provides accurate data about their ID status.
   components:
   - type: Sprite
-    sprite: Clothing/Eyes/Hud/epi.rsi
+    sprite: Clothing/Eyes/Hud/command.rsi
   - type: Clothing
-    sprite: Clothing/Eyes/Hud/epi.rsi
+    sprite: Clothing/Eyes/Hud/command.rsi
+  - type: ShowJobIcons
+  - type: Tag
+    tags:
+    - PetWearable
+    - WhitelistChameleon
 
 - type: entity
-  parent: ClothingEyesBase
+  parent: ClothingEyesHudBase
   id: ClothingEyesHudBeer
   name: beer goggles
   description: A pair of sunHud outfitted with apparatus to scan reagents, as well as providing an innate understanding of liquid viscosity while in motion.
@@ -92,14 +100,18 @@
     sprite: Clothing/Eyes/Hud/beergoggles.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Hud/beergoggles.rsi
-  - type: ShowThirstIcons
-  - type: StealTarget
-    stealGroup: ClothingEyesHudBeer
+  - type: ShowSatiationIcons
+    shownTypes:
+    - Thirst
   - type: SolutionScanner
+  - type: Tag
+    tags:
+    - PetWearable
+    - WhitelistChameleon
 
 - type: entity
-  parent: ClothingEyesBase
-  id: ClothingEyesHudFriedOnion
+  parent: [SolutionFood, SolutionSmall, ClothingEyesHudBase]
+  id: ClothingEyesHudFriedOnion # It's been too long since I've had good onion rings...
   name: fried onion goggles
   description: Filler
   components:
@@ -107,22 +119,22 @@
     sprite: Clothing/Eyes/Hud/friedonion.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Hud/friedonion.rsi
-  - type: ShowHungerIcons
-  - type: Food
-  - type: SolutionContainerManager
-    solutions:
-      food:
-        maxVol: 3
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 3
+  - type: ShowSatiationIcons
+    shownTypes:
+    - Hunger
+  - type: Edible
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 30
   - type: FlavorProfile
     flavors:
       - onion
-      - greasey
+      - oily
 
 - type: entity
-  parent: ClothingEyesBase
+  parent: ClothingEyesHudBase
   id: ClothingEyesHudOnionBeer
   name: thungerst goggles
   description: Filler
@@ -131,11 +143,13 @@
     sprite: Clothing/Eyes/Hud/onionbeer.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Hud/onionbeer.rsi
-  - type: ShowHungerIcons
-  - type: ShowThirstIcons
+  - type: ShowSatiationIcons
+    shownTypes:
+    - Hunger
+    - Thirst
 
 - type: entity
-  parent: ClothingEyesBase
+  parent: [ClothingEyesHudBase, ShowMedicalIcons]
   id: ClothingEyesHudMedOnion
   name: medonion hud
   description: Filler
@@ -144,16 +158,12 @@
     sprite: Clothing/Eyes/Hud/medonion.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Hud/medonion.rsi
-  - type: ShowHealthBars
-    damageContainers:
-    - Biological
-  - type: ShowHealthIcons
-    damageContainers:
-    - Biological
-  - type: ShowHungerIcons
+  - type: ShowSatiationIcons
+    shownTypes:
+    - Hunger
 
 - type: entity
-  parent: ClothingEyesBase
+  parent: [ClothingEyesHudBase, ShowMedicalIcons]
   id: ClothingEyesHudMedOnionBeer
   name: medthungerst hud
   description: Filler
@@ -162,17 +172,13 @@
     sprite: Clothing/Eyes/Hud/medonionbeer.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Hud/medonionbeer.rsi
-  - type: ShowHealthBars
-    damageContainers:
-    - Biological
-  - type: ShowHealthIcons
-    damageContainers:
-    - Biological
-  - type: ShowHungerIcons
-  - type: ShowThirstIcons
+  - type: ShowSatiationIcons
+    shownTypes:
+    - Hunger
+    - Thirst
 
 - type: entity
-  parent: [ClothingEyesBase, ShowSecurityIcons]
+  parent: [ClothingEyesHudBase, ShowSecurityIcons, ShowMedicalIcons, BaseSecurityCommandContraband]
   id: ClothingEyesHudMedSec
   name: medsec hud
   description: An eye display that looks like a mixture of medical and security huds.
@@ -184,15 +190,9 @@
   - type: Construction
     graph: HudMedSec
     node: medsecHud
-  - type: ShowHealthBars
-    damageContainers:
-    - Biological
-  - type: ShowHealthIcons
-    damageContainers:
-    - Biological
 
 - type: entity
-  parent: [ClothingEyesBase, ShowSecurityIcons]
+  parent: [ClothingEyesHudBase, ShowSecurityIcons, ShowMedicalIcons]
   id: ClothingEyesHudMultiversal
   name: multiversal hud
   description: Filler
@@ -205,13 +205,10 @@
     damageContainers:
     - Biological
     - Inorganic
-  - type: ShowHealthIcons
-    damageContainers:
-    - Biological
   - type: ShowSyndicateIcons
 
 - type: entity
-  parent: [ClothingEyesBase, ShowSecurityIcons]
+  parent: [ClothingEyesHudBase, ShowSecurityIcons, ShowMedicalIcons]
   id: ClothingEyesHudOmni
   name: omni hud
   description: Filler
@@ -224,15 +221,14 @@
     damageContainers:
     - Biological
     - Inorganic
-  - type: ShowHealthIcons
-    damageContainers:
-    - Biological
-  - type: ShowHungerIcons
-  - type: ShowThirstIcons
+  - type: ShowSatiationIcons
+    shownTypes:
+    - Hunger
+    - Thirst
   - type: ShowSyndicateIcons
 
 - type: entity
-  parent: [ClothingEyesBase, ShowSecurityIcons]
+  parent: [ClothingEyesHudBase, ShowSecurityIcons, BaseSyndicateContraband]
   id: ClothingEyesHudSyndicate
   name: syndicate visor
   description: The syndicate's professional head-up display, designed for better detection of humanoids and their subsequent elimination.
@@ -242,12 +238,16 @@
   - type: Clothing
     sprite: Clothing/Eyes/Hud/synd.rsi
   - type: ShowSyndicateIcons
+  - type: Tag
+    tags:
+    - PetWearable
+    - WhitelistChameleon
 
 - type: entity
-  parent: [ClothingEyesBase, ShowSecurityIcons]
+  parent: [ClothingEyesHudBase, ShowSecurityIcons, BaseSyndicateContraband]
   id: ClothingEyesHudSyndicateAgent
-  name: syndicate agent visor
-  description: The Syndicate Agent's professional heads-up display, designed for quick diagnosis of their team's status.
+  name: syndicate medical visor
+  description: The Syndicate Corpsman's professional heads-up display, designed for quick diagnosis of their team's status.
   components:
   - type: Sprite
     sprite: Clothing/Eyes/Hud/syndagent.rsi
@@ -255,16 +255,22 @@
     sprite: Clothing/Eyes/Hud/syndagent.rsi
   - type: ShowSyndicateIcons
   - type: ShowHealthBars
-    damageContainers:
-    - Biological
+  - type: Tag
+    tags:
+    - PetWearable
+    - WhitelistChameleon
 
 - type: entity
   parent: [ClothingEyesGlassesSunglasses, ShowSecurityIcons]
   id: ClothingEyesGlassesHiddenSecurity
   suffix: Syndicate
+  components:
+  - type: StealTarget
+    stealGroup:
+    - ClothingEyesHuds
 
 - type: entity
-  parent: ClothingEyesHudMedical
+  parent: [ClothingEyesHudMedical, ClothingHeadEyeBaseFlippable]
   id: ClothingEyesEyepatchHudMedical
   name: medical hud eyepatch
   description: A heads-up display that scans the humanoids in view and provides accurate data about their health status. For true patriots.
@@ -273,9 +279,19 @@
     sprite: Clothing/Eyes/Hud/medpatch.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Hud/medpatch.rsi
+  - type: Tag
+    tags:
+    - PetWearable
+    - WhitelistChameleon
+    - HudMedical
 
 - type: entity
-  parent: ClothingEyesHudSecurity
+  parent: [ClothingEyesEyepatchHudMedical, ClothingHeadEyeBaseFlipped]
+  id: ClothingEyesEyepatchHudMedicalFlipped
+  name: medical hud eyepatch
+
+- type: entity
+  parent: [ClothingEyesHudSecurity, ClothingHeadEyeBaseFlippable]
   id: ClothingEyesEyepatchHudSecurity
   name: security hud eyepatch
   description: A heads-up display that scans the humanoids in view and provides accurate data about their ID status and security records. For true patriots.
@@ -284,9 +300,19 @@
     sprite: Clothing/Eyes/Hud/secpatch.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Hud/secpatch.rsi
+  - type: Tag
+    tags:
+    - PetWearable
+    - WhitelistChameleon
+    - HudSecurity
 
 - type: entity
-  parent: ClothingEyesHudBeer
+  parent: [ClothingEyesEyepatchHudSecurity,  ClothingHeadEyeBaseFlipped]
+  id: ClothingEyesEyepatchHudSecurityFlipped
+  name: security hud eyepatch
+
+- type: entity
+  parent: [ClothingEyesHudBeer, ClothingHeadEyeBaseFlippable]
   id: ClothingEyesEyepatchHudBeer
   name: beer hud eyepatch
   description: A pair of sunHud outfitted with apparatus to scan reagents, as well as providing an innate understanding of liquid viscosity while in motion. For true patriots.
@@ -297,7 +323,12 @@
     sprite: Clothing/Eyes/Hud/beerpatch.rsi
 
 - type: entity
-  parent: ClothingEyesBase
+  parent: [ClothingEyesEyepatchHudBeer, ClothingHeadEyeBaseFlipped]
+  id: ClothingEyesEyepatchHudBeerFlipped
+  name: beer hud eyepatch
+
+- type: entity
+  parent: [ClothingEyesHudDiagnostic, ClothingHeadEyeBaseFlippable]
   id: ClothingEyesEyepatchHudDiag
   name: diagnostic hud eyepatch
   description: A heads-up display capable of analyzing the integrity and status of robotics and exosuits. Made out of see-borg-ium.
@@ -306,7 +337,8 @@
     sprite: Clothing/Eyes/Hud/diagpatch.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Hud/diagpatch.rsi
-  - type: ShowHealthBars
-    damageContainers:
-    - Inorganic
-    - Silicon
+
+- type: entity
+  parent: [ClothingEyesEyepatchHudDiag, ClothingHeadEyeBaseFlipped]
+  id: ClothingEyesEyepatchHudDiagFlipped
+  name: diagnostic hud eyepatch

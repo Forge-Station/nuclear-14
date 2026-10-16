@@ -1,4 +1,5 @@
 # TODO: Fix - The idea is that blood and vomit is potentially not tile-bound versions of puddles(?)
+# TODO: Replace this whole thing with a SolutionFillComponent that uses a reagent table.
 - type: entity
   id: PuddleTemporary
   parent: Puddle
@@ -18,71 +19,99 @@
   parent: PuddleTemporary
   suffix: Vomit
   components:
-  - type: SolutionContainerManager
-    solutions:
-      puddle:
-        maxVol: 1000
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 5
-        - ReagentId: Water
-          Quantity: 5
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Vomit
+        Quantity: 10
 
 - type: entity
   id: PuddleEgg
   parent: PuddleTemporary
   suffix: Egg
   components:
-  - type: SolutionContainerManager
-    solutions:
-      puddle:
-        maxVol: 1000
-        reagents:
-        - ReagentId: Egg
-          Quantity: 6 # same as when cooking
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Egg
+        Quantity: 6 # same as when cooking
 
 - type: entity
   id: PuddleTomato
   parent: PuddleTemporary
   suffix: Tomato
   components:
-  - type: SolutionContainerManager
-    solutions:
-      puddle:
-        maxVol: 1000
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 5
-        - ReagentId: Water
-          Quantity: 5
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: JuiceTomato
+        Quantity: 10
+
+- type: entity
+  parent: PuddleTemporary
+  id: PuddleBloodSmall
+  suffix: Blood (5u)
+  components:
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Blood
+        Quantity: 5
+
+- type: entity
+  parent: PuddleTemporary
+  id: PuddleBlood
+  suffix: Blood (30u)
+  components:
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Blood
+        Quantity: 30
+
+- type: entity
+  parent: PuddleTemporary
+  id: PuddleFluorosulfuricAcidSmall
+  suffix: FluorosulfuricAcid (5u)
+  components:
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: FluorosulfuricAcid
+        Quantity: 5
+
+- type: entity
+  parent: PuddleTemporary
+  id: PuddleFluorosulfuricAcid
+  suffix: FluorosulfuricAcid (15u)
+  components:
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: FluorosulfuricAcid
+        Quantity: 15
 
 - type: entity
   id: PuddleWatermelon
   parent: PuddleTemporary
   suffix: Watermelon
   components:
-  - type: SolutionContainerManager
-    solutions:
-      puddle:
-        maxVol: 1000
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 15
-        - ReagentId: Water
-          Quantity: 15
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: JuiceWatermelon
+        Quantity: 30
 
 - type: entity
   id: PuddleFlour
   parent: PuddleTemporary
   suffix: Flour
   components:
-  - type: SolutionContainerManager
-    solutions:
-      puddle:
-        maxVol: 1000
-        reagents:
-        - ReagentId: Flour
-          Quantity: 15
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Flour
+        Quantity: 15
 
 - type: entity
   id: PuddleSparkle
@@ -101,37 +130,32 @@
       layers:
         - sprite: Fluids/wet_floor_sparkles.rsi
           state: sparkles
-      drawdepth: FloorObjects
+      drawdepth: Puddles
       color: "#FFFFFF80"
 
 - type: entity
-  name: puddle
+  parent: SolutionTile
   id: Puddle
+  name: puddle
   description: A puddle of liquid.
   placement:
     mode: SnapgridCenter
   components:
   - type: Clickable
   - type: Slippery
-    launchForwardsMultiplier: 2.0
+    staminaDamage: 0
+    frictionStatusTime: 0 # Don't apply friction twice
   - type: Transform
     noRot: true
     anchored: true
   - type: Sprite
-    layers:
-    - sprite: Fluids/puddle.rsi
-      state: splat0
-    drawdepth: FloorObjects
+    sprite: Fluids/puddle.rsi
+    drawdepth: Puddles
     color: "#FFFFFF80"
   - type: Physics
     bodyType: Static
   - type: Fixtures
     fixtures:
-      # Context / examine fixture
-      fix1:
-        shape:
-          !type:PhysShapeCircle
-          radius: 0.25
       slipFixture:
         shape:
           !type:PhysShapeAabb
@@ -143,13 +167,14 @@
         hard: false
   - type: IconSmooth
     key: puddles
-    base: splat
-    mode: CardinalFlags
-  - type: SolutionContainerManager
-    solutions:
-      puddle:
-        maxVol: 1000
+    enabled: false # Let bum ass puddle system update this.
+    states:
+    - !type:DirectionSpriteSmoothing
+      mask: [ walls, windows, marble, puddles ]
+      base: splat
   - type: Puddle
+  - type: Solution
+    id: puddle
   - type: MixableSolution
     solution: puddle
   - type: Appearance
@@ -157,77 +182,19 @@
   - type: EdgeSpreader
     id: Puddle
   - type: StepTrigger
-    triggerGroups:
-      types:
-      - SlipTile
-  - type: Drink
+  - type: Edible
+    edible: Drink
     delay: 3
     transferAmount: 1
     solution: puddle
-    examinable: false
+    utensil: Spoon
   - type: ExaminableSolution
     solution: puddle
+    locVolume: "examinable-solution-on-examine-volume-puddle"
   - type: DrawableSolution
     solution: puddle
   - type: BadDrink
   - type: IgnoresFingerprints
-  - type: PuddleFootPrints
-
-- type: entity
-  name: footstep
-  id: Footstep
-  save: false
-  description: Trace of liquid.
-  components:
-    - type: Clickable
-    - type: FootstepModifier
-      footstepSoundCollection:
-        collection: FootstepWater
-        params:
-          volume: 3
-    - type: Transform
-      noRot: false
-    - type: Sprite
-      drawdepth: FloorObjects
-      color: "#FFFFFF80"
-    - type: Physics
-      bodyType: Static
-    - type: Fixtures
-      fixtures:
-        # Context / examine fixture
-        fix1:
-          shape:
-            !type:PhysShapeCircle
-            radius: 0.25
-        slipFixture:
-          shape:
-            !type:PhysShapeAabb
-            bounds: "-0.4,-0.4,0.4,0.4"
-          mask:
-            - ItemMask
-          layer:
-            - SlipLayer
-          hard: false
-    - type: SolutionContainerManager
-      solutions:
-        step: { maxVol: 2 }
-    - type: FootPrint
-    - type: Puddle
-      solution: step
-    - type: Appearance
-    - type: Drink
-      delay: 3
-      transferAmount: 1
-      solution: step
-      examinable: false
-    - type: ExaminableSolution
-      solution: step
-    - type: MixableSolution
-      solution: step
-    - type: DrawableSolution
-      solution: step
-    - type: BadDrink
-    - type: IgnoresFingerprints
-    - type: Tag
-      tags:
-      - DNASolutionScannable
+  - type: Tag
+    tags:
+    - DNASolutionScannable

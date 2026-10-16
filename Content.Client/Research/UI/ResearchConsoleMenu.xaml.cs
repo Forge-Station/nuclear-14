@@ -22,9 +22,9 @@ public sealed partial class ResearchConsoleMenu : FancyWindow
     public Action<string>? OnTechnologyCardPressed;
     public Action? OnServerButtonPressed;
 
-    [Dependency] private readonly IEntityManager _entity = default!;
-    [Dependency] private readonly IPrototypeManager _prototype = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private IEntityManager _entity = default!;
+    [Dependency] private IPrototypeManager _prototype = default!;
+    [Dependency] private IPlayerManager _player = default!;
     private readonly ResearchSystem _research;
     private readonly SpriteSystem _sprite;
     private readonly AccessReaderSystem _accessReader;
@@ -70,7 +70,7 @@ public sealed partial class ResearchConsoleMenu : FancyWindow
         foreach (var techId in database.CurrentTechnologyCards)
         {
             var tech = _prototype.Index<TechnologyPrototype>(techId);
-            var cardControl = new TechnologyCardControl(tech, _prototype, _sprite, _research.GetTechnologyDescription(tech, includeTier: false, databaseComponent: database), state.Points, hasAccess, database);
+            var cardControl = new TechnologyCardControl(tech, _prototype, _sprite, _research.GetTechnologyDescription(tech, includeTier: false), state.Points, hasAccess);
             cardControl.OnPressed += () => OnTechnologyCardPressed?.Invoke(techId);
             TechnologyCardsContainer.AddChild(cardControl);
         }
@@ -82,7 +82,7 @@ public sealed partial class ResearchConsoleMenu : FancyWindow
     public void UpdateInformationPanel(ResearchConsoleBoundInterfaceState state)
     {
         var amountMsg = new FormattedMessage();
-        amountMsg.AddMarkup(Loc.GetString("research-console-menu-research-points-text",
+        amountMsg.AddMarkupOrThrow(Loc.GetString("research-console-menu-research-points-text",
             ("points", state.Points)));
         ResearchAmountLabel.SetMessage(amountMsg);
 
@@ -99,14 +99,9 @@ public sealed partial class ResearchConsoleMenu : FancyWindow
         }
 
         var msg = new FormattedMessage();
-        msg.AddMarkup(Loc.GetString("research-console-menu-main-discipline",
+        msg.AddMarkupOrThrow(Loc.GetString("research-console-menu-main-discipline",
             ("name", disciplineText), ("color", disciplineColor)));
         MainDisciplineLabel.SetMessage(msg);
-
-        var softcapMsg = new FormattedMessage();
-        softcapMsg.AddMarkup(Loc.GetString("research-console-menu-softcap-amount-text",
-            ("softcap", state.SoftCapMultiplier.ToString("#.##"))));
-        SoftcapAmountLabel.SetMessage(softcapMsg);
 
         TierDisplayContainer.Children.Clear();
         foreach (var disciplineId in database.SupportedDisciplines)

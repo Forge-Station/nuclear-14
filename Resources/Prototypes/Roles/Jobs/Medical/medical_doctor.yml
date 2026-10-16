@@ -4,44 +4,35 @@
   description: job-description-doctor
   playTimeTracker: JobMedicalDoctor
   requirements:
-    - !type:CharacterDepartmentTimeRequirement
+    - !type:DepartmentTimeRequirement
       department: Medical
-      min: 14400 #4 hrs
+      time: 2.5h
   startingGear: DoctorGear
   icon: "JobIconMedicalDoctor"
   supervisors: job-supervisors-cmo
+  guides: [ Medical ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Medical
   - Maintenance
   extendedAccess:
   - Chemistry
-  - Paramedic # DeltaV - Add Paramedic access
   special:
-  - !type:AddComponentSpecial
-    components:
-    - type: CPRTraining
-    - type: SurgerySpeedModifier
-      speedModifier: 1.75
-  setPreference: false
+  - !type:GiveItemOnHolidaySpecial
+    holiday: DoctorDay
+    prototype: WehMedipen
 
 - type: startingGear
   id: DoctorGear
-  subGear:
-  - DoctorPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitMedicalDoctor
-    back: ClothingBackpackMedicalFilled
-    shoes: ClothingShoesColorWhite
-    id: MedicalPDA
     ears: ClothingHeadsetMedical
-  innerClothingSkirt: ClothingUniformJumpskirtMedicalDoctor
-  satchel: ClothingBackpackSatchelMedicalFilled
-  duffelbag: ClothingBackpackDuffelMedicalFilled
 
-- type: startingGear
-  id: DoctorPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: MedicalDoctorChameleonOutfit
+  job: MedicalDoctor
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitMedicalDoctor
-    head: ClothingHeadEnvirohelmMedicalDoctor
-    gloves: ClothingHandsGlovesEnviroglovesWhite
+    head: ClothingHeadNurseHat
+    eyes: ClothingEyesHudMedical
+    mask: ClothingMaskSterile
+    neck: ClothingNeckStethoscope
+    outerClothing: ClothingOuterCoatLab
+    gloves: ClothingHandsGlovesLatex

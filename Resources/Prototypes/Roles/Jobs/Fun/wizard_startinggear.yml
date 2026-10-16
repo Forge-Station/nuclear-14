@@ -3,53 +3,39 @@
   id: WizardBlueGear
   equipment:
     jumpsuit: ClothingUniformJumpsuitColorDarkBlue
-    back: ClothingBackpackFilled
-    head: ClothingHeadHatWizard
-    outerClothing: ClothingOuterWizard
-    shoes: ClothingShoesWizard
-    id: PassengerPDA
-    ears: ClothingHeadsetService
-  innerClothingSkirt: ClothingUniformJumpskirtColorDarkBlue
-  satchel: ClothingBackpackSatchelFilled
-  duffelbag: ClothingBackpackDuffelFilled
+    head: ClothingHeadHatWizardBlue
+    back: ClothingBackpack # Wizard backpack?
+    outerClothing: ClothingOuterWizardBlue
+    shoes: ClothingShoesSandalsBrown
+    id: WizardPDA
+    ears: ClothingHeadsetAltWizard
+    belt: ClothingBeltWand
+    pocket1: WizardTeleportScroll
+    pocket2: WizardsGrimoire
 
 - type: startingGear
   id: WizardRedGear
+  parent: WizardBlueGear
   equipment:
     jumpsuit: ClothingUniformJumpsuitColorRed
-    back: ClothingBackpackFilled
-    head: ClothingHeadHatRedwizard
+    head: ClothingHeadHatWizardRed
     outerClothing: ClothingOuterWizardRed
-    shoes: ClothingShoesWizard
-    id: PassengerPDA
-    ears: ClothingHeadsetService
-  innerClothingSkirt: ClothingUniformJumpskirtColorRed
-  satchel: ClothingBackpackSatchelFilled
-  duffelbag: ClothingBackpackDuffelFilled
 
 - type: startingGear
   id: WizardVioletGear
+  parent: WizardBlueGear
   equipment:
     jumpsuit: ClothingUniformJumpsuitColorPurple
-    back: ClothingBackpackFilled
-    head: ClothingHeadHatVioletwizard
+    head: ClothingHeadHatWizardViolet
     outerClothing: ClothingOuterWizardViolet
-    shoes: ClothingShoesWizard
-    id: PassengerPDA
-    ears: ClothingHeadsetService
-  innerClothingSkirt: ClothingUniformJumpskirtColorPurple
-  satchel: ClothingBackpackSatchelFilled
-  duffelbag: ClothingBackpackDuffelFilled
 
-- type: startingGear
-  id: WizardHardsuitGear
+- type: chameleonOutfit
+  id: WizardChameleonOutfit
+  name: roles-antag-wizard-name
+  startingGear: WizardBlueGear
+  icon: "JobIconWizard"
   equipment:
-    jumpsuit: ClothingUniformJumpsuitColorPurple
-    back: ClothingBackpackFilled
-    outerClothing: ClothingOuterHardsuitWizard
-    shoes: ClothingShoesWizard
-    id: PassengerPDA
-    ears: ClothingHeadsetService
-  innerClothingSkirt: ClothingUniformJumpskirtColorPurple
-  satchel: ClothingBackpackSatchelFilled
-  duffelbag: ClothingBackpackDuffelFilled
+    eyes: ClothingEyesGlassesCheapSunglasses
+    mask: ClothingMaskBreath
+    neck: ClothingNeckLGBTPin
+    gloves: ClothingHandsGlovesColorBlack

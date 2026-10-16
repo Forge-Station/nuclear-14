@@ -14,23 +14,29 @@
     tags:
     - HelmetEVA
     - WhitelistChameleon
+    - CorgiWearable
 
-#Large EVA Helmet
+#Emergency pressure suit helmet
 - type: entity
   parent: ClothingHeadEVAHelmetBase
   id: ClothingHeadHelmetEVALarge
-  name: EVA helmet
-  description: An old-but-gold helmet designed for extravehicular activites.
+  name: emergency helmet
+  description: Hard to believe this cheap-looking thing is airtight, but it is.
   components:
   - type: BreathMask
   - type: Sprite
     sprite: Clothing/Head/Helmets/eva_large.rsi
   - type: Clothing
     sprite: Clothing/Head/Helmets/eva_large.rsi
+  - type: Tag
+    tags:
+    - HelmetEVA
+    - WhitelistChameleon
+    - CorgiWearable
 
 #Syndicate EVA Helmet
 - type: entity
-  parent: ClothingHeadEVAHelmetBase
+  parent: [ ClothingHeadEVAHelmetBase, BaseSyndicateContraband ]
   id: ClothingHeadHelmetSyndicate
   name: syndicate EVA helmet
   description: A simple, stylish EVA helmet. Designed for maximum humble space-badassery.
@@ -40,6 +46,8 @@
     sprite: Clothing/Head/Helmets/eva_syndicate.rsi
   - type: Clothing
     sprite: Clothing/Head/Helmets/eva_syndicate.rsi
+  - type: StaticPrice
+    price: 500 # Suit is 1000
 
 #Cosmonaut Helmet
 - type: entity
@@ -59,10 +67,52 @@
   parent: ClothingHeadEVAHelmetBase
   id: ClothingHeadHelmetAncient
   name: NTSRA void helmet
-  description: An ancient space helmet, designed by the NTSRA branch of CentCom.
+  description: An ancient space helmet, designed by the NTSRA branch of CentComm.
   components:
   - type: BreathMask
   - type: Sprite
     sprite: Clothing/Head/Helmets/ancientvoidsuit.rsi
   - type: Clothing
     sprite: Clothing/Head/Helmets/ancientvoidsuit.rsi
+
+#Paramedic Void Helmet
+- type: entity
+  parent: [ ClothingHeadSuitWithLightBase, ClothingHeadEVAHelmetBase ] #Despite acting like a hardsuit helmet, since it inherits from EVA Helmet, it goes here.
+  id: ClothingHeadHelmetVoidParamed
+  name: paramedic void helmet
+  description: A void helmet made for paramedics.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Clothing/Head/Hardsuits/paramedhelm.rsi
+    layers:
+    - state: icon
+    - state: light-overlay
+      visible: false
+      shader: unshaded
+      map: [ "light" ]
+  - type: HandheldLight
+    addPrefix: false
+  - type: ToggleableVisuals
+    spriteLayer: light
+    clothingVisuals:
+      head:
+      - state: equipped-head-light
+        shader: unshaded
+  - type: Clothing
+    clothingVisuals:
+      head:
+      - state: equipped-head
+  - type: Armor
+    modifiers:
+      coefficients:
+        Heat: 0.90
+        Radiation: 0.75
+  - type: PointLight
+    radius: 5
+    energy: 2
+    color: "#00ffff"
+  - type: Tag
+    tags:
+    - HelmetEVA
+    - WhitelistChameleon

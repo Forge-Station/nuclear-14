@@ -1,11 +1,15 @@
-﻿using Content.Shared._NC.TTS;
+using Content.Shared._NC.TTS;
 using Content.Shared.Inventory;
 using Content.Shared.VoiceMask;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.VoiceMask;
 
 public partial class VoiceMaskSystem
 {
+    // Corvax-TTS: upstream's VoiceMaskSystem no longer injects IPrototypeManager, so declare it here.
+    [Dependency] private readonly IPrototypeManager _proto = default!;
+
     private void InitializeTTS()
     {
         SubscribeLocalEvent<VoiceMaskComponent, InventoryRelayedEvent<TransformSpeakerVoiceEvent>>(OnSpeakerVoiceTransform);

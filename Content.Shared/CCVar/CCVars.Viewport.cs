@@ -1,11 +1,11 @@
-﻿using Robust.Shared.Configuration;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
 
 public sealed partial class CCVars
 {
     public static readonly CVarDef<bool> ViewportStretch =
-        CVarDef.Create("viewport.stretch", false, CVar.CLIENTONLY | CVar.ARCHIVE);
+        CVarDef.Create("viewport.stretch", true, CVar.CLIENTONLY | CVar.ARCHIVE);
 
     public static readonly CVarDef<int> ViewportFixedScaleFactor =
         CVarDef.Create("viewport.fixed_scale_factor", 2, CVar.CLIENTONLY | CVar.ARCHIVE);
@@ -23,11 +23,17 @@ public sealed partial class CCVars
         CVarDef.Create("viewport.minimum_width", 15, CVar.REPLICATED | CVar.SERVER);
 
     public static readonly CVarDef<int> ViewportMaximumWidth =
-        CVarDef.Create("viewport.maximum_width", 30, CVar.REPLICATED | CVar.SERVER); // Corvax-Change
+        CVarDef.Create("viewport.maximum_width", 30, CVar.REPLICATED | CVar.SERVER);
 
     public static readonly CVarDef<int> ViewportWidth =
         CVarDef.Create("viewport.width", 21, CVar.CLIENTONLY | CVar.ARCHIVE);
 
     public static readonly CVarDef<bool> ViewportVerticalFit =
         CVarDef.Create("viewport.vertical_fit", true, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    public static readonly CVarDef<string> ViewportScalingFilterMode =
+        CVarDef.Create("viewport.scaling_filter", "nearest", CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    public static readonly CVarDef<int> ViewportSharpnessStrength =
+        CVarDef.Create("viewport.sharpness_strength", 0, CVar.CLIENTONLY | CVar.ARCHIVE);
 }

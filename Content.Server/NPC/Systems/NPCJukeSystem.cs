@@ -1,67 +1,58 @@
 using System.Numerics;
 using Content.Server.NPC.Components;
 using Content.Server.NPC.Events;
-using Content.Server.NPC.HTN.PrimitiveTasks.Operators.Combat;
 using Content.Server.Weapons.Melee;
-using Content.Shared.Coordinates.Helpers;
 using Content.Shared.NPC;
-using Content.Shared.Weapons.Melee;
-using Robust.Shared.Collections;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics.Components;
-using Robust.Shared.Physics.Systems;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
 namespace Content.Server.NPC.Systems;
 
-public sealed class NPCJukeSystem : EntitySystem
+public sealed partial class NPCJukeSystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
-    [Dependency] private readonly MeleeWeaponSystem _melee = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly SharedMapSystem _map = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private EntityLookupSystem _lookup = default!;
+    [Dependency] private MeleeWeaponSystem _melee = default!;
+    [Dependency] private SharedMapSystem _mapSystem = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
 
-    private EntityQuery<NPCMeleeCombatComponent> _npcMeleeQuery;
-    private EntityQuery<NPCRangedCombatComponent> _npcRangedQuery;
-    private EntityQuery<PhysicsComponent> _physicsQuery;
+    [Dependency] private EntityQuery<NPCMeleeCombatComponent> _npcMeleeQuery = default!;
+    [Dependency] private EntityQuery<NPCRangedCombatComponent> _npcRangedQuery = default!;
+    [Dependency] private EntityQuery<PhysicsComponent> _physicsQuery = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-        _npcMeleeQuery = GetEntityQuery<NPCMeleeCombatComponent>();
-        _npcRangedQuery = GetEntityQuery<NPCRangedCombatComponent>();
-        _physicsQuery = GetEntityQuery<PhysicsComponent>();
-
         SubscribeLocalEvent<NPCJukeComponent, NPCSteeringEvent>(OnJukeSteering);
     }
 
     private void OnJukeSteering(EntityUid uid, NPCJukeComponent component, ref NPCSteeringEvent args)
     {
-        if (_timing.CurTime < component.NextJuke)
-        {
-            component.TargetTile = null;
-            return;
-        }
-
-        component.NextJuke = _timing.CurTime + TimeSpan.FromSeconds(component.JukeCooldown);
-
         if (component.JukeType == JukeType.AdjacentTile)
         {
-            if (args.Transform.GridUid == null)
-                return;
-
-            if (_npcRangedQuery.TryGetComponent(uid, out var ranged)
-                && ranged.Status is CombatStatus.NotInSight
-                || !TryComp<MapGridComponent>(args.Transform.GridUid, out var grid))
+            if (_npcRangedQuery.TryGetComponent(uid, out var ranged) &&
+                ranged.Status == CombatStatus.NotInSight)
             {
                 component.TargetTile = null;
                 return;
             }
 
-            var currentTile = _map.CoordinatesToTile((EntityUid) args.Transform.GridUid, grid, args.Transform.Coordinates);
+            if (_timing.CurTime < component.NextJuke)
+            {
+                component.TargetTile = null;
+                return;
+            }
+
+            if (!TryComp<MapGridComponent>(args.Transform.GridUid, out var grid))
+            {
+                component.TargetTile = null;
+                return;
+            }
+
+            var currentTile = _mapSystem.CoordinatesToTile(args.Transform.GridUid.Value, grid, args.Transform.Coordinates);
 
             if (component.TargetTile == null)
             {
@@ -74,7 +65,7 @@ public sealed class NPCJukeSystem : EntitySystem
                 for (var i = 0; i < 8; i++)
                 {
                     var index = (startIndex + i) % 8;
-                    var neighbor = ((Direction) index).ToIntVec() + currentTile;
+                    var neighbor = ((Direction)index).ToIntVec() + currentTile;
                     var valid = true;
 
                     // TODO: Probably make this a helper on engine maybe
@@ -109,16 +100,17 @@ public sealed class NPCJukeSystem : EntitySystem
 
             var elapsed = _timing.CurTime - component.NextJuke;
 
-            // Finished juke.
-            if (elapsed.TotalSeconds > component.JukeDuration
-                || currentTile == component.TargetTile)
+            // Finished juke, reset timer.
+            if (elapsed.TotalSeconds > component.JukeDuration ||
+                currentTile == component.TargetTile)
             {
                 component.TargetTile = null;
+                component.NextJuke = _timing.CurTime + TimeSpan.FromSeconds(component.JukeDuration);
                 return;
             }
 
-            var targetCoords = _map.GridTileToWorld((EntityUid) args.Transform.GridUid, grid, component.TargetTile.Value);
-            var targetDir = targetCoords.Position - args.WorldPosition;
+            var targetCoords = _mapSystem.GridTileToWorld(args.Transform.GridUid.Value, grid, component.TargetTile.Value);
+            var targetDir = (targetCoords.Position - args.WorldPosition);
             targetDir = args.OffsetRotation.RotateVec(targetDir);
             const float weight = 1f;
             var norm = targetDir.Normalized();
@@ -144,6 +136,9 @@ public sealed class NPCJukeSystem : EntitySystem
                 if (!_melee.TryGetWeapon(uid, out var weaponUid, out var weapon))
                     return;
 
+                if (!HasComp<TransformComponent>(melee.Target))
+                    return;
+
                 var cdRemaining = weapon.NextAttack - _timing.CurTime;
                 var attackCooldown = TimeSpan.FromSeconds(1f / _melee.GetAttackRate(weaponUid, uid, weapon));
 
@@ -156,7 +151,9 @@ public sealed class NPCJukeSystem : EntitySystem
                 var obstacleDirection = _transform.GetWorldPosition(melee.Target) - args.WorldPosition;
 
                 if (obstacleDirection == Vector2.Zero)
+                {
                     obstacleDirection = _random.NextVector2();
+                }
 
                 // If they're moving away then pursue anyway.
                 // If just hit then always back up a bit.

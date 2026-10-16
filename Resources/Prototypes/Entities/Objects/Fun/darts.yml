@@ -1,8 +1,8 @@
 - type: entity
-  name: dart
-  description: light throwing dart for playing darts. Don't get in the eye!
-  parent: BaseItem
+  parent: [BaseItem, SolutionDart]
   id: Dart
+  name: dart
+  description: Light throwing dart for playing darts. Don't get in the eye!
   components:
   - type: EmbeddableProjectile
     minimumSpeed: 3
@@ -44,10 +44,6 @@
   - type: Item
     size: Tiny
     sprite: Objects/Fun/Darts/dart_red.rsi
-  - type: SolutionContainerManager
-    solutions:
-      melee:
-        maxVol: 2
   - type: MeleeChemicalInjector
     solution: melee
   - type: RefillableSolution
@@ -61,15 +57,10 @@
   - type: SolutionTransfer
     maxTransferAmount: 2
   - type: Damageable
+  - type: Injurable
     damageContainer: Inorganic
   - type: Destructible
     thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 30 #excess damage avoids cost of spawning entities.
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
     - trigger:
         !type:DamageTrigger
         damage: 20
@@ -84,13 +75,17 @@
             max: 1
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-  - type: Appearance
-  - type: SolutionContainerVisuals
-    maxFillLevels: 1
-    fillBaseName: dart
-  - type: Tag # Corvax-Add
-    tags:
-    - Darts
+  - type: BalloonPopper
+
+- type: entity
+  parent: Solution
+  id: SolutionDart
+  categories: [ HideSpawnMenu ] # Not abstract so weapons with multiple solutions can exist
+  components:
+  - type: Solution
+    id: melee
+    solution:
+      maxVol: 2
 
 - type: entity
   parent: Dart
@@ -124,15 +119,15 @@
   id: HypoDart
   suffix: HypoDart
   components:
-  - type: SolutionContainerManager
-    solutions:
-      melee:
-        maxVol: 7
+  - type: Solution
+    solution:
+      maxVol: 10
   - type: SolutionInjectOnEmbed
-    transferAmount: 7
+    transferAmount: 10
+    blockSlots: NONE
     solution: melee
   - type: SolutionTransfer
-    maxTransferAmount: 7
+    maxTransferAmount: 10
 
 - type: entity
   name: dartboard
@@ -158,6 +153,7 @@
   - type: InteractionOutline
   - type: Physics
   - type: Damageable
+  - type: Injurable
   - type: DamageRandomPopup
     popups:
       - darts-popup-bullseye
@@ -176,12 +172,6 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 500
-      behaviors:
-        - !type:DoActsBehavior
-          acts: [ "Destruction" ]
-    - trigger:
-        !type:DamageTrigger
         damage: 300
       behaviors:
       - !type:SpawnEntitiesBehavior
@@ -196,11 +186,11 @@
         acts: [ "Destruction" ]
 
 - type: entity
-  parent: BaseItem
+  parent: [ BaseItem, BaseSyndicateContraband ]
   id: HypoDartBox
   name: hypodart box
   suffix: HypoDart
-  description: A small box containing an hypodart. Packaging disintegrates when opened, leaving no evidence behind.
+  description: A small box containing a hypodart. Packaging disintegrates when opened, leaving no evidence behind.
   components:
   - type: Sprite
     sprite: Objects/Fun/Darts/dartbox.rsi

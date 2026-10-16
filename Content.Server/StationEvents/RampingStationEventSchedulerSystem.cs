@@ -1,76 +1,73 @@
-﻿using Content.Server.GameTicking;
-using Content.Server.GameTicking.Rules;
+using Content.Server.GameTicking;
 using Content.Server.StationEvents.Components;
-using Content.Shared.CCVar;
 using Content.Shared.GameTicking.Components;
-using Robust.Shared.Configuration;
+using Content.Shared.GameTicking.Rules;
 using Robust.Shared.Random;
 
 namespace Content.Server.StationEvents;
 
-public sealed class RampingStationEventSchedulerSystem : GameRuleSystem<RampingStationEventSchedulerComponent>
+/// <summary>
+/// Handles ramping scheduling: starts other game rules more and more frequently as the round goes on.
+/// </summary>
+/// <seealso cref="RampingStationEventSchedulerComponent"/>
+public sealed partial class RampingStationEventSchedulerSystem : GameRuleSystem<RampingStationEventSchedulerComponent>
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly EventManagerSystem _event = default!;
-    [Dependency] private readonly GameTicker _gameTicker = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private EventManagerSystem _event = default!;
+    [Dependency] private ServerGameTicker _gameTicker = default!;
 
-    public float GetChaosModifier(EntityUid uid, RampingStationEventSchedulerComponent component)
+    /// <summary>
+    /// Returns the ChaosModifier which increases as round time increases to a point.
+    /// </summary>
+    public float GetChaosModifier(Entity<RampingStationEventSchedulerComponent> ent)
     {
-        var roundTime = (float) _gameTicker.RoundDuration().TotalSeconds;
-        if (roundTime > component.EndTime)
-            return component.MaxChaos;
+        var roundTime = (float)_gameTicker.RoundDuration().TotalSeconds;
+        if (roundTime > ent.Comp.EndTime)
+            return ent.Comp.MaxChaos;
 
-        return component.MaxChaos / component.EndTime * roundTime + component.StartingChaos;
+        return ent.Comp.MaxChaos / ent.Comp.EndTime * roundTime + ent.Comp.StartingChaos;
     }
 
-    protected override void Started(EntityUid uid, RampingStationEventSchedulerComponent component, GameRuleComponent gameRule, GameRuleStartedEvent args)
+    protected override void Started(Entity<RampingStationEventSchedulerComponent, GameRuleComponent> ent, ref GameRuleStartedEvent args)
     {
-        base.Started(uid, component, gameRule, args);
+        base.Started(ent, ref args);
 
-        var avgChaos = _cfg.GetCVar(CCVars.EventsRampingAverageChaos) * component.ChaosModifier;
-        var avgTime = _cfg.GetCVar(CCVars.EventsRampingAverageEndTime) * component.ShiftLengthModifier;
+        var scheduler = ent.Comp1;
 
         // Worlds shittiest probability distribution
         // Got a complaint? Send them to
-        component.MaxChaos = avgChaos * _random.NextFloat(0.75f, 1.25f);
+        scheduler.MaxChaos = _random.NextFloat(scheduler.AverageChaos - scheduler.AverageChaos / 4, scheduler.AverageChaos + scheduler.AverageChaos / 4);
         // This is in minutes, so *60 for seconds (for the chaos calc)
-        component.EndTime = avgTime * _random.NextFloat(0.75f, 1.25f) * 60f;
-        component.StartingChaos = component.MaxChaos * component.StartingChaosRatio;
+        scheduler.EndTime = _random.NextFloat(scheduler.AverageEndTime - scheduler.AverageEndTime / 4, scheduler.AverageEndTime + scheduler.AverageEndTime / 4) * 60f;
+        scheduler.StartingChaos = scheduler.MaxChaos / 10;
 
-        PickNextEventTime(uid, component);
+        PickNextEventTime(ent);
     }
 
-    public override void Update(float frameTime)
+    // TODO: GO THROUGH EVERY SINGLE GAME RULE AND JUST CLEAN THIS STUFF UP!!!
+    protected override void ActiveTick(EntityUid entityUid, RampingStationEventSchedulerComponent component, GameRuleComponent gameRuleComponent, float frameTime)
     {
-        base.Update(frameTime);
-
         if (!_event.EventsEnabled)
             return;
 
-        var query = EntityQueryEnumerator<RampingStationEventSchedulerComponent, GameRuleComponent>();
-        while (query.MoveNext(out var uid, out var scheduler, out var gameRule))
+        if (component.TimeUntilNextEvent > 0f)
         {
-            if (!GameTicker.IsGameRuleActive(uid, gameRule))
-                return;
-
-            if (scheduler.TimeUntilNextEvent > 0f)
-            {
-                scheduler.TimeUntilNextEvent -= frameTime;
-                return;
-            }
-
-            PickNextEventTime(uid, scheduler);
-            _event.RunRandomEvent();
+            component.TimeUntilNextEvent -= frameTime;
+            return;
         }
+
+        PickNextEventTime((entityUid, component));
+        _event.RunRandomEvent(component.ScheduledGameRules);
     }
 
-    private void PickNextEventTime(EntityUid uid, RampingStationEventSchedulerComponent component)
+    /// <summary>
+    /// Sets the timing of the next event addition.
+    /// </summary>
+    private void PickNextEventTime(Entity<RampingStationEventSchedulerComponent> ent)
     {
-        component.TimeUntilNextEvent = _random.NextFloat(
-            _cfg.GetCVar(CCVars.GameEventsRampingMinimumTime),
-            _cfg.GetCVar(CCVars.GameEventsRampingMaximumTime));
+        var mod = GetChaosModifier(ent);
 
-        component.TimeUntilNextEvent *= component.EventDelayModifier / GetChaosModifier(uid, component);
+        // 4-12 minutes baseline. Will get faster over time as the chaos mod increases.
+        ent.Comp.TimeUntilNextEvent = _random.NextFloat(240f / mod, 720f / mod);
     }
 }

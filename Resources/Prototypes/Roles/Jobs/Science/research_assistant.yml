@@ -4,31 +4,36 @@
   description: job-description-research-assistant
   playTimeTracker: JobResearchAssistant
   requirements:
-    # - !type:DepartmentTimeRequirement # DeltaV - Removes time limit
-    #   department: Science
-    #   time: 54000 #15 hrs
-    #   inverted: true # stop playing intern if you're good at science!
+    - !type:DepartmentTimeRequirement
+      department: Science
+      time: 10h
+      inverted: true # stop playing intern if you're good at science!
   startingGear: ResearchAssistantGear
   icon: "JobIconResearchAssistant"
   supervisors: job-supervisors-science
-  canBeAntag: true # DeltaV - Can be antagonist
+  guides: [ Science ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Research
   - Maintenance
-  setPreference: false
 
 - type: startingGear
   id: ResearchAssistantGear
-  subGear:
-  - ScientistPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitColorWhite
-    back: ClothingBackpackScienceFilled
     shoes: ClothingShoesColorWhite
     id: ResearchAssistantPDA
     ears: ClothingHeadsetScience
-    pocket1: BookPsionicsGuidebook
     pocket2: BookScientistsGuidebook
-  innerClothingSkirt: ClothingUniformJumpskirtColorWhite
-  satchel: ClothingBackpackSatchelScienceFilled
-  duffelbag: ClothingBackpackDuffelScienceFilled
+  #storage:
+    #back:
+    #- Stuff
+
+- type: chameleonOutfit
+  id: ResearchAssistantChameleonOutfit
+  job: ResearchAssistant
+  equipment:
+    head: ClothingHeadHatCardborg
+    eyes: ClothingEyesGlasses
+    mask: ClothingMaskGas
+    neck: ClothingNeckScarfStripedPurple
+    outerClothing: ClothingOuterCoatLab
+    gloves: ClothingHandsGlovesLatex

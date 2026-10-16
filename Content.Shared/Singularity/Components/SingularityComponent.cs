@@ -54,7 +54,7 @@ public sealed partial class SingularityComponent : Component
     [ViewVariables(VVAccess.ReadOnly)]
     public SoundSpecifier? AmbientSound = new SoundPathSpecifier(
         "/Audio/Effects/singularity_form.ogg",
-        AudioParams.Default.WithVolume(5).WithLoop(true).WithMaxDistance(20f)
+        AudioParams.Default.AddVolume(5).WithLoop(true).WithMaxDistance(20f)
     );
 
     /// <summary>
@@ -81,26 +81,4 @@ public sealed partial class SingularityComponent : Component
     );
 
     #endregion Audio
-
-    #region Update Timing
-
-    /// <summary>
-    /// The amount of time that should elapse between automated updates to this singularity.
-    /// </summary>
-    [DataField("updatePeriod")]
-    [ViewVariables(VVAccess.ReadWrite)]
-    public TimeSpan TargetUpdatePeriod = TimeSpan.FromSeconds(1.0);
-
-    /// <summary>
-    /// </summary>
-    [ViewVariables(VVAccess.ReadOnly)]
-    public TimeSpan NextUpdateTime = default!;
-
-    /// <summary>
-    /// The last time this singularity was updated.
-    /// </summary>
-    [ViewVariables(VVAccess.ReadOnly)]
-    public TimeSpan LastUpdateTime = default!;
-
-    #endregion Update Timing
 }

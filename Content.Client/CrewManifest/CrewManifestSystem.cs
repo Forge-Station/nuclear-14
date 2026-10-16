@@ -4,10 +4,8 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Client.CrewManifest;
 
-public sealed class CrewManifestSystem : EntitySystem
+public sealed partial class CrewManifestSystem : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-
     private Dictionary<string, Dictionary<string, int>> _jobDepartmentLookup = new();
     private HashSet<string> _departments = new();
 
@@ -40,8 +38,7 @@ public sealed class CrewManifestSystem : EntitySystem
     {
         _jobDepartmentLookup.Clear();
         _departments.Clear();
-
-        foreach (var department in _prototypeManager.EnumeratePrototypes<DepartmentPrototype>())
+        foreach (var department in ProtoMan.EnumeratePrototypes<DepartmentPrototype>())
         {
             _departments.Add(department.ID);
 
@@ -53,9 +50,25 @@ public sealed class CrewManifestSystem : EntitySystem
                     _jobDepartmentLookup.Add(department.Roles[i - 1], departments);
                 }
 
-                if (department.Roles.Count == i)
-                    departments.Add(department.ID, i);
+                departments.Add(department.ID, i);
             }
         }
+    }
+
+    public int GetDepartmentOrder(string department, string jobPrototype)
+    {
+        if (!Departments.Contains(department))
+        {
+            return -1;
+        }
+
+        if (!_jobDepartmentLookup.TryGetValue(jobPrototype, out var departments))
+        {
+            return -1;
+        }
+
+        return departments.TryGetValue(department, out var order)
+            ? order
+            : -1;
     }
 }

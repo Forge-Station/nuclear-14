@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Configuration;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
 
@@ -54,8 +54,15 @@ public sealed partial class CCVars
             CVar.CLIENTONLY | CVar.ARCHIVE,
             "Toggles displaying a background under the speaking character's name.");
 
-    public static readonly CVarDef<int> ChatStackLastLines =
-        CVarDef.Create("chat.chatstack_last_lines", 1, CVar.CLIENTONLY | CVar.ARCHIVE, "How far into the chat history to look when looking for similiar messages to coalesce them.");
+    /// <summary>
+    ///     When enabled, shows a speech bubble above the character's head previewing the text
+    ///     they are currently typing.
+    /// </summary>
+    public static readonly CVarDef<bool> ChatTypingPreviewEnabled =
+        CVarDef.Create("chat.typing_preview_enabled",
+            true,
+            CVar.CLIENTONLY | CVar.ARCHIVE,
+            "When enabled, shows a speech bubble above your character's head previewing what you are typing.");
 
     /// <summary>
     ///     A message broadcast to each player that joins the lobby.
@@ -68,4 +75,28 @@ public sealed partial class CCVars
             "",
             CVar.SERVER | CVar.SERVERONLY | CVar.ARCHIVE,
             "A message broadcast to each player that joins the lobby.");
+
+    /// <summary>
+    /// A string containing a list of newline-separated words to be highlighted in the chat.
+    /// </summary>
+    public static readonly CVarDef<string> ChatHighlights =
+        CVarDef.Create("chat.highlights", "", CVar.CLIENTONLY | CVar.ARCHIVE, "A list of newline-separated words to be highlighted in the chat.");
+
+    /// <summary>
+    /// An option to toggle the automatic filling of the highlights with the character's info, if available.
+    /// </summary>
+    public static readonly CVarDef<bool> ChatAutoFillHighlights =
+        CVarDef.Create("chat.auto_fill_highlights", false, CVar.CLIENTONLY | CVar.ARCHIVE, "Toggles automatically filling the highlights with the character's information.");
+
+    /// <summary>
+    /// The color in which the highlights will be displayed.
+    /// </summary>
+    public static readonly CVarDef<string> ChatHighlightsColor =
+        CVarDef.Create("chat.highlights_color", "#17FFC1FF", CVar.CLIENTONLY | CVar.ARCHIVE, "The color in which the highlights will be displayed.");
+
+    /// <summary>
+    /// If true will allow TextLinkTags to make interactable chat labels in place of sender names.
+    /// </summary>
+    public static readonly CVarDef<bool> ChatNameLinks =
+        CVarDef.Create("chat.chat_name_links", true, CVar.REPLICATED | CVar.SERVER, "Toggles Chat Name Link functionality.");
 }

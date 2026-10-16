@@ -1,0 +1,38 @@
+<Document>
+  # Vox
+
+  <Box>
+    <GuideEntityEmbed Entity="MobVox" Caption=""/>
+  </Box>
+
+  [color=#ffa500]Warning! This species is not recommended for new players due to their fatal allergy to oxygen![/color]
+
+  ## General Information
+
+  Voxes' sharp talons make their unarmed attacks deal Slash damage.
+
+  The highly-efficient vox digestive system can [color=lightgreen]digest raw meat, blood, eggshells, banana peels,
+  snack packaging, and even welding fuel[/color] without ill effects.
+
+  Their ammonia-based blood is replenished when metabolizing iron.
+
+  They [color=lightgreen]slowly recover from Poison damage[/color] on their own.
+
+  ## Oxygen Allergy
+
+  <Box>
+    <GuideEntityEmbed Entity="SignDanger" Caption=""/>
+    <GuideEntityEmbed Entity="OxygenCanister" Caption=""/>
+    <GuideEntityEmbed Entity="SignDanger" Caption=""/>
+  </Box>
+
+  Vox breathe nitrogen, and [color=palevioletred]oxygen is poisonous to them[/color]. Unfortunately, Nanotrasen space stations
+  are designed for oxygen-breathing species, so Vox must breathe from a nitrogen tank at almost all times to avoid fatal exposure.
+
+  Vox always spawn wearing working nitrogen internals. Similarly to most other species,
+  a spare breathing mask and emergency nitrogen tank is also provided in their survival box.
+
+  Vox's innate ability to heal Poison damage also applies to oxygen poisoning, giving them some leeway to briefly take
+  off their internals to eat, drink, take oral medication, and so on.
+
+</Document>

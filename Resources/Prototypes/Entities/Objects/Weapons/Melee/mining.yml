@@ -11,8 +11,7 @@
     sprite: Objects/Weapons/Melee/pickaxe.rsi
     state: pickaxe
   - type: MeleeWeapon
-    attackRate: 0.85
-    range: 1.5
+    attackRate: 0.7
     wideAnimationRotation: -135
     soundHit:
       path: "/Audio/Weapons/smash.ogg"
@@ -20,21 +19,13 @@
         volume: -3
     damage:
       types:
-        Blunt: 6
-        Piercing: 3
-    bluntStaminaDamageFactor: 2.0
-    heavyDamageBaseModifier: 1.75
-    maxTargets: 5
-    angle: 80
-  - type: DamageOtherOnHit
-    staminaCost: 5
+        Piercing: 5
   - type: Wieldable
   - type: IncreaseDamageOnWield
     damage:
-      groups:
-        Brute: 5
       types:
-        Structural: 30
+        Piercing: 10
+        Structural: 9
   - type: Item
     size: Normal
     shape:
@@ -43,6 +34,10 @@
     sprite: Objects/Weapons/Melee/pickaxe.rsi
     storedRotation: -45
   - type: UseDelay
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 100
+      Wood: 100
 
 - type: entity
   name: mining drill
@@ -64,23 +59,11 @@
     wideAnimationRotation: -90
     soundHit:
       path: "/Audio/Items/drill_hit.ogg"
-    attackRate: 0.25
-    range: 1.5
-    heavyStaminaCost: 0.7
+    attackRate: 4
     damage:
-      groups:
-        Brute: 3
       types:
-        Structural: 15
-  - type: DamageOtherOnHit
-    staminaCost: 9
-    damage:
-      groups:
-        Brute: 9
-      types:
-        Structural: 15
-  - type: ThrowingAngle
-    angle: 270
+        Piercing: 3
+        Structural: 6
 
 - type: entity
   name: diamond tipped mining drill
@@ -92,23 +75,10 @@
     sprite: Objects/Tools/handdrilldiamond.rsi
     state: handdrill
   - type: MeleeWeapon
-    autoAttack: true
-    angle: 0
-    wideAnimationRotation: -90
-    soundHit:
-      path: "/Audio/Items/drill_hit.ogg"
-    heavyStaminaCost: 0.55 # More efficient so less stamina needed to use
     damage:
-      groups:
-        Brute: 6
       types:
-        Structural: 30
-  - type: DamageOtherOnHit
-    damage:
-      groups:
-        Brute: 18
-      types:
-        Structural: 30
+        Piercing: 5
+        Structural: 12
 
 - type: entity
   abstract: true
@@ -117,15 +87,20 @@
   name: crusher
   description: An early design of the proto-kinetic accelerator.
   components:
-  - type: Sharp
+  - type: Tool
+    qualities:
+    - Slicing
+  - type: Execution
+    doAfterDuration: 4.0
   - type: UnpoweredFlashlight
   - type: PointLight
     color: "#ffeead"
     enabled: false
     radius: 4
 
+# Very high burst damage if you land a mark, while also providing a small amount of healing.
 - type: entity
-  parent: BaseWeaponCrusher
+  parent: [BaseWeaponCrusher, BaseSecurityCargoContraband]
   id: WeaponCrusher
   components:
   - type: Tag
@@ -134,14 +109,28 @@
   - type: Sprite
     sprite: Objects/Weapons/Melee/crusher.rsi
     state: icon
+  - type: Item
+    size: Ginormous
+    shape:
+    - 0,0,3,6
+    storedRotation: -45
+    sprite: Objects/Weapons/Melee/crusher-inhands.rsi
+  - type: Clothing
+    sprite: Objects/Weapons/Melee/crusher.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
   - type: AmmoCounter
   - type: UseDelayOnShoot
   - type: UseDelay
     delay: 0.9
   - type: LeechOnMarker
     leech:
-      groups:
-        Brute: -10
+      types:
+        Blunt: -2
+        Slash: -2
+        Piercing: -2
   - type: Gun
     soundGunshot: /Audio/Weapons/plasma_cutter.ogg
     fireRate: 1
@@ -155,40 +144,28 @@
     capacity: 1
     count: 1
   - type: MeleeWeapon
-    attackRate: 0.85
-    range: 1.65
+    attackRate: 1
     wideAnimationRotation: -135
     damage:
       types:
-        Blunt: 8
+        Blunt: 6
         Slash: 4
-    bluntStaminaDamageFactor: 2.0
-    heavyRateModifier: 0.75
-    heavyDamageBaseModifier: 1.2
-    heavyStaminaCost: 7.5
-    angle: 120
     soundHit:
       collection: MetalThud
-  - type: DamageOtherOnHit
-    staminaCost: 8
   - type: Wieldable
   - type: IncreaseDamageOnWield
     damage:
       types:
-        Blunt: 2.5
-        Slash: 2.5
-        Structural: 30
+        Blunt: 6
+        Slash: 2
+        Structural: 12
   - type: GunRequiresWield
-  - type: Item
-    size: Ginormous
   - type: DisarmMalus
-  - type: Tool
-    qualities:
-      - Prying
   - type: Prying
 
+# No mark ability in exchange for wideswing, autoattack, and being one-handed
 - type: entity
-  parent: BaseWeaponCrusher
+  parent: [ BaseKnife, BaseWeaponCrusher, BaseSecurityCargoContraband]
   id: WeaponCrusherDagger
   name: crusher dagger
   description: A scaled down version of a proto-kinetic crusher. Uses kinetic energy to vibrate the blade at high speeds.
@@ -199,45 +176,85 @@
   - type: MeleeWeapon
     autoAttack: true
     wideAnimationRotation: -135
-    attackRate: 1.25
-    range: 1.4
+    attackRate: 2
     damage:
       types:
-        Slash: 9
-    heavyRateModifier: 0.9
-    heavyDamageBaseModifier: 1.2
-    maxTargets: 2
-    angle: 20
-  - type: DamageOtherOnHit
-    staminaCost: 5
+        Slash: 12
   - type: EmbeddableProjectile
-  - type: EmbedPassiveDamage
+    sound: /Audio/Weapons/star_hit.ogg
+    offset: -0.15,0.0
+  - type: LandAtCursor
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Slash: 10
+  - type: DisarmMalus
+    malus: 0.225
   - type: ThrowingAngle
     angle: 225
-  - type: Tag
-    tags:
-    - Knife
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PolygonShape
+          radius: 0.01
+          vertices:
+          - -0.4,-0.2
+          - -0.2,-0.4
+          - 0.4,0.2
+          - 0.2,0.4
+        density: 20 # derived from base_item
+        mask:
+        - ItemMask
+        restitution: 0.3
+        friction: 0.2
 
-# Like a crusher... but better
+# Less mark damage in exchange for more healing. Also has a better ratio of blunt to slash damage, but less structural.
 - type: entity
-  parent: WeaponCrusher
+  parent: [ WeaponCrusher, BaseSecurityCargoContraband]
   id: WeaponCrusherGlaive
   name: crusher glaive
-  description: An early design of the proto-kinetic accelerator, in glaive form.
+  description: An early design of the proto-kinetic accelerator, in glaive form. Provides better healing in exchange for less charged damage.
   components:
   - type: Sprite
     sprite: Objects/Weapons/Melee/crusher_glaive.rsi
+    state: icon
+  - type: Item
+    size: Ginormous
+    shape:
+    - 0,0,3,6
+    storedRotation: -45
+    sprite: Objects/Weapons/Melee/crusher_glaive-inhands.rsi
+  - type: Clothing
+    sprite: Objects/Weapons/Melee/crusher_glaive.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
   - type: UseDelay
     delay: 1.9
+  - type: BasicEntityAmmoProvider
+    proto: BulletChargeGlaive
+    capacity: 1
+    count: 1
   - type: LeechOnMarker
     leech:
-      groups:
-        Brute: -21
-  - type: MeleeWeapon
-  - type: EmbeddableProjectile
-  - type: EmbedPassiveDamage
-  - type: ThrowingAngle
-    angle: 225
+      types:
+        Blunt: -5
+        Piercing: -5
+        Slash: -5
   - type: Tag
     tags:
       - Pickaxe
+  - type: MeleeWeapon
+    attackRate: 1
+    wideAnimationRotation: -135
+    damage:
+      types:
+        Blunt: 3
+        Slash: 7
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 2
+        Slash: 6
+        Structural: 12

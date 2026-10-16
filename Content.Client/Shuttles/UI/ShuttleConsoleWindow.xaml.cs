@@ -13,7 +13,7 @@ namespace Content.Client.Shuttles.UI;
 public sealed partial class ShuttleConsoleWindow : FancyWindow,
     IComputerWindow<ShuttleBoundUserInterfaceState>
 {
-    [Dependency] private readonly IEntityManager _entManager = default!;
+    [Dependency] private IEntityManager _entManager = default!;
 
     private ShuttleConsoleMode _mode = ShuttleConsoleMode.Nav;
 
@@ -62,8 +62,6 @@ public sealed partial class ShuttleConsoleWindow : FancyWindow,
         {
             UndockRequest?.Invoke(entity);
         };
-
-        NfInitialize(); // Frontier Initialization for the ShuttleConsoleWindow
     }
 
     private void ClearModes(ShuttleConsoleMode mode)
@@ -140,6 +138,7 @@ public sealed partial class ShuttleConsoleWindow : FancyWindow,
     {
         var coordinates = _entManager.GetCoordinates(cState.NavState.Coordinates);
         NavContainer.SetShuttle(coordinates?.EntityId);
+        NavContainer.SetConsole(owner);
         MapContainer.SetShuttle(coordinates?.EntityId);
         MapContainer.SetConsole(owner);
 

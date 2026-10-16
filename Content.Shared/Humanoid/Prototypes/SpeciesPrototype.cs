@@ -1,9 +1,12 @@
+using Content.Shared.Body;
+using Content.Shared.Chat.Prototypes;
+using Content.Shared.Dataset;
+using Content.Shared.Humanoid.Markings;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Shared.Humanoid.Prototypes;
 
-[Prototype("species")]
+[Prototype]
 public sealed partial class SpeciesPrototype : IPrototype
 {
     /// <summary>
@@ -32,18 +35,6 @@ public sealed partial class SpeciesPrototype : IPrototype
     [DataField(required: true)]
     public bool RoundStart { get; private set; } = false;
 
-    // The below two are to avoid fetching information about the species from the entity
-    // prototype.
-
-    // This one here is a utility field, and is meant to *avoid* having to duplicate
-    // the massive SpriteComponent found in every species.
-    // Species implementors can just override SpriteComponent if they want a custom
-    // sprite layout, and leave this null. Keep in mind that this will disable
-    // sprite accessories.
-
-    [DataField("sprites")]
-    public string SpriteSet { get; private set; } = default!;
-
     /// <summary>
     ///     Default skin tone for this species. This applies for non-human skin tones.
     /// </summary>
@@ -58,47 +49,38 @@ public sealed partial class SpeciesPrototype : IPrototype
     public int DefaultHumanSkinTone { get; private set; } = 20;
 
     /// <summary>
-    ///     The limit of body markings that you can place on this species.
-    /// </summary>
-    [DataField("markingLimits")]
-    public string MarkingPoints { get; private set; } = default!;
-
-    /// <summary>
     ///     Humanoid species variant used by this entity.
     /// </summary>
     [DataField(required: true)]
-    public EntProtoId Prototype { get; private set; }
+    public EntProtoId Prototype { get; private set; } = default!;
 
     /// <summary>
     /// Prototype used by the species for the dress-up doll in various menus.
     /// </summary>
     [DataField(required: true)]
-    public EntProtoId DollPrototype { get; private set; }
-
-    /// <summary>
-    /// Allow Custom Specie Name for this Specie.
-    /// </summary>
-    [DataField]
-    public Boolean CustomName { get; private set; } = false;
+    public EntProtoId DollPrototype { get; private set; } = default!;
 
     /// <summary>
     /// Method of skin coloration used by the species.
     /// </summary>
     [DataField(required: true)]
-    public HumanoidSkinColor SkinColoration { get; private set; }
+    public ProtoId<SkinColorationPrototype> SkinColoration { get; private set; }
 
     [DataField]
-    public string MaleFirstNames { get; private set; } = "names_first_male";
+    public ProtoId<LocalizedDatasetPrototype> MaleFirstNames { get; private set; } = "NamesFirstMale";
 
     [DataField]
-    public string FemaleFirstNames { get; private set; } = "names_first_female";
+    public ProtoId<LocalizedDatasetPrototype> FemaleFirstNames { get; private set; } = "NamesFirstFemale";
+
+    [DataField]
+    public ProtoId<LocalizedDatasetPrototype> LastNames { get; private set; } = "NamesLast";
 
     // Corvax-LastnameGender-Start: Split lastname field by gender
     [DataField]
-    public string MaleLastNames { get; private set; } = "names_last_male";
+    public ProtoId<DatasetPrototype> MaleLastNames { get; private set; } = "names_last_male";
 
     [DataField]
-    public string FemaleLastNames { get; private set; } = "names_last_female";
+    public ProtoId<DatasetPrototype> FemaleLastNames { get; private set; } = "names_last_female";
     // Corvax-LastnameGender-End
 
     [DataField]
@@ -106,6 +88,18 @@ public sealed partial class SpeciesPrototype : IPrototype
 
     [DataField]
     public List<Sex> Sexes { get; private set; } = new() { Sex.Male, Sex.Female };
+
+    /// <summary>
+    ///     Emote sounds prototype conversion id for every sex. This is ALWAYS in the order: Male; Female; Unsexed.
+    /// </summary>
+    [DataField]
+    public ProtoId<EmoteSoundsPrototype>[] DefaultSoundsBySex = ["MaleHuman", "FemaleHuman", "MaleHuman"];
+
+    /// <summary>
+    ///     List of user selectable voices in the menu. This should at least have the same sound banks as the defaults.
+    /// </summary>
+    [DataField]
+    public HashSet<ProtoId<EmoteSoundsPrototype>> Voices = ["MaleHuman", "FemaleHuman"];
 
     /// <summary>
     ///     Characters younger than this are too young to be hired by Nanotrasen.
@@ -131,60 +125,6 @@ public sealed partial class SpeciesPrototype : IPrototype
     /// </summary>
     [DataField]
     public int MaxAge = 120;
-
-    /// <summary>
-    ///     The minimum height and width ratio for this species
-    /// </summary>
-    [DataField]
-    public float SizeRatio = 1.2f;
-
-    /// <summary>
-    ///     The minimum height for this species
-    /// </summary>
-    [DataField]
-    public float MinHeight = 0.75f;
-
-    /// <summary>
-    ///     The default height for this species
-    /// </summary>
-    [DataField]
-    public float DefaultHeight = 1f;
-
-    /// <summary>
-    ///     The maximum height for this species
-    /// </summary>
-    [DataField]
-    public float MaxHeight = 1.25f;
-
-    /// <summary>
-    ///     The minimum width for this species
-    /// </summary>
-    [DataField]
-    public float MinWidth = 0.7f;
-
-    /// <summary>
-    ///     The default width for this species
-    /// </summary>
-    [DataField]
-    public float DefaultWidth = 1f;
-
-    /// <summary>
-    ///     The maximum width for this species
-    /// </summary>
-    [DataField]
-    public float MaxWidth = 1.3f;
-
-    /// <summary>
-    ///     The average height in centimeters for this species, used to calculate player facing height values in UI elements
-    /// </summary>
-    [DataField]
-    public float AverageHeight = 176.1f;
-
-    /// <summary>
-    ///     The average shoulder-to-shoulder width in cm for this species, used to calculate player facing width values in UI elements
-    /// </summary>
-    [DataField]
-    public float AverageWidth = 40f;
 }
 
 public enum SpeciesNaming : byte
@@ -192,10 +132,5 @@ public enum SpeciesNaming : byte
     First,
     FirstLast,
     FirstDashFirst,
-    //Start of Nyano - Summary: for Oni naming
-    LastNoFirst,
-    //End of Nyano - Summary: for Oni naming
     TheFirstofLast,
-    FirstDashLast,
-    FirstRoman,
 }

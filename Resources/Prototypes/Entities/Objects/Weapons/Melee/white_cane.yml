@@ -2,7 +2,7 @@
   parent: BaseItem
   id: WhiteCane
   name: white cane
-  description: This isn't for you. It's for the people who can't figure out you're blind when you ask if logistics is the bar. # DeltaV - Logistics Department replacing Cargo
+  description: This isn't for you. It's for the people who can't figure out you're blind when you ask if cargo is the bar.
   components:
   - type: Sprite
     sprite: Objects/Weapons/Melee/white_cane.rsi
@@ -12,23 +12,15 @@
     sprite: Objects/Weapons/Melee/white_cane.rsi
   - type: MeleeWeapon
     wideAnimationRotation: 45
-    attackRate: 1.1
-    range: 1.6
     damage:
       types:
-        Blunt: 6
-    bluntStaminaDamageFactor: 2.5
-    heavyRateModifier: 2
-    heavyRangeModifier: 1.75
-    heavyDamageBaseModifier: 1.2
-    heavyStaminaCost: 0
-    maxTargets: 1
-    angle: 20
-  - type: DamageOtherOnHit
+        Blunt: 5
+  - type: StaminaDamageOnHit
+    damage: 5
   - type: Wieldable
   - type: IncreaseDamageOnWield
     damage:
       types:
-        Blunt: 2
+        Blunt: 3
   - type: UseDelay
     delay: 1

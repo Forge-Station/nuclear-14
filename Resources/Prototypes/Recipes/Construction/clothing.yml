@@ -1,110 +1,99 @@
+# region Base
 - type: construction
-  name: clown vacsuit
+  abstract: true
+  id: BaseClothing
+  category: construction-category-clothing
+  objectType: Item
+# endregion Base
+
+# region Clothing
+- type: construction
+  parent: BaseClothing
   id: ClownHardsuit
   graph: ClownHardsuit
-  startNode: start
   targetNode: clownHardsuit
-  category: construction-category-clothing
-  description: A modified vacsuit fit for a clown.
-  icon: { sprite: Clothing/OuterClothing/Hardsuits/clown.rsi, state: icon }
-  objectType: Item
 
 - type: construction
-  name: mime vacsuit
+  parent: BaseClothing
   id: MimeHardsuit
   graph: MimeHardsuit
-  startNode: start
   targetNode: mimeHardsuit
-  category: construction-category-clothing
-  description: A modified vacsuit fit for a mime.
-  icon: { sprite: Clothing/OuterClothing/Hardsuits/mime.rsi, state: icon }
-  objectType: Item
 
 - type: construction
-  name: bone helmet
+  parent: BaseClothing
+  id: BoneArmor
+  graph: BoneArmor
+  targetNode: armor
+
+- type: construction
+  parent: BaseClothing
   id: BoneHelmet
   graph: BoneHelmet
-  startNode: start
   targetNode: helmet
-  category: construction-category-clothing
-  description: Cool-looking helmet made of skull of your enemies. # Forge-Change
-  icon: { sprite: Clothing/Head/Helmets/bone_helmet.rsi, state: icon }
-  hide: false # Forge-Change
-  objectType: Item
 
 - type: construction
-  name: banana clown mask
+  parent: BaseClothing
+  id: cardHelmet
+  graph: cardHelmet
+  targetNode: cardhelmet
+
+- type: construction
+  parent: BaseClothing
+  id: cardArmour
+  graph: cardArmour
+  targetNode: cardarmour
+
+- type: construction
+  parent: BaseClothing
   id: BananaClownMask
   graph: BananaClownMask
-  startNode: start
   targetNode: mask
-  category: construction-category-clothing
-  description: A clown mask upgraded with banana peels.
-  icon: { sprite: Clothing/Mask/clown_banana.rsi, state: icon }
-  objectType: Item
 
 - type: construction
-  name: banana clown suit
+  parent: BaseClothing
   id: BananaClownJumpsuit
   graph: BananaClownJumpsuit
-  startNode: start
   targetNode: jumpsuit
-  category: construction-category-clothing
-  description: A clown suit upgraded with banana peels.
-  icon: { sprite: Clothing/Uniforms/Jumpsuit/clown_banana.rsi, state: icon }
-  objectType: Item
 
 - type: construction
-  name: banana clown shoes
+  parent: BaseClothing
   id: BananaClownShoes
   graph: BananaClownShoes
-  startNode: start
   targetNode: shoes
-  category: construction-category-clothing
-  description: A pair of clown shoes upgraded with banana peels.
-  icon: { sprite: Clothing/Shoes/Specific/clown_banana.rsi, state: icon }
-  objectType: Item
 
 - type: construction
-  name: medsec hud
+  parent: BaseClothing
   id: ClothingEyesHudMedSec
   graph: HudMedSec
-  startNode: start
   targetNode: medsecHud
-  category: construction-category-clothing
-  description: Two huds joined by arms
-  icon: { sprite: Clothing/Eyes/Hud/medsec.rsi, state: icon }
-  objectType: Item
 
 - type: construction
-  name: ducky slippers
+  parent: BaseClothing
   id: ClothingShoeSlippersDuck
   graph: ClothingShoeSlippersDuck
-  startNode: start
   targetNode: shoes
-  category: construction-category-clothing
-  description: Comfy, yet haunted by the ghosts of ducks you fed bread to as a child.
-  icon: { sprite: Clothing/Shoes/Misc/duck-slippers.rsi, state: icon }
-  objectType: Item
 
 - type: construction
-  name: cloth wraps
-  id: ClothingClothWrap
-  graph: ClothingClothWrap
-  startNode: start
+  parent: BaseClothing
+  id: ClothingShoeSlippersLizard
+  graph: ClothingShoeSlippersLizard
   targetNode: shoes
-  category: construction-category-clothing
-  description: A roll of treated canvas used for wrapping claws or paws.
-  icon: { sprite: Clothing/Shoes/Misc/clothWrap.rsi, state: icon }
-  objectType: Item
 
 - type: construction
-  name: quiver
+  parent: BaseClothing
+  id: ClothingEyesGlassesSecurity
+  graph: GlassesSecHUD
+  targetNode: glassesSec
+
+- type: construction
+  parent: BaseClothing
   id: ClothingBeltQuiver
   graph: Quiver
-  startNode: start
   targetNode: Quiver
-  category: construction-category-clothing
-  description: Can hold up to 15 arrows, and fits snug around your waist.
-  icon: { sprite: Clothing/Belt/quiver.rsi, state: icon }
-  objectType: Item
+
+- type: construction
+  parent: BaseClothing
+  id: ClothingHeadHelmetJustice
+  graph: HelmetJustice
+  targetNode: helmet
+# endregion Clothing

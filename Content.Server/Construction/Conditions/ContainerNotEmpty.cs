@@ -32,10 +32,9 @@ namespace Content.Server.Construction.Conditions
 
             var entity = args.Examined;
 
-            var em2 = IoCManager.Resolve<IEntityManager>();
-            var containerSys2 = em2.EntitySysManager.GetEntitySystem<ContainerSystem>();
-            if (!em2.TryGetComponent(entity, out ContainerManagerComponent? containerManager) ||
-                !containerSys2.TryGetContainer(entity, Container, out var container)) return false;
+            var entityManager = IoCManager.Resolve<IEntityManager>();
+            if (!entityManager.TryGetComponent(entity, out ContainerManagerComponent? containerManager) ||
+                !entityManager.System<SharedContainerSystem>().TryGetContainer(entity, Container, out var container, containerManager)) return false;
 
             if (container.ContainedEntities.Count != 0)
                 return false;

@@ -29,13 +29,13 @@ CHANGELOG_RSS_KEY = os.environ.get("CHANGELOG_RSS_KEY")
 
 # Change these to suit your server settings
 # https://docs.fabfile.org/en/stable/getting-started.html#run-commands-via-connections-and-run
-SSH_HOST = "centcomm.spacestation14.io"
+SSH_HOST = "moon.spacestation14.com"
 SSH_USER = "changelog-rss"
 SSH_PORT = 22
 RSS_FILE = "changelog.xml"
 XSL_FILE = "stylesheet.xsl"
 HOST_KEYS = [
-    "AAAAC3NzaC1lZDI1NTE5AAAAIEE8EhnPjb3nIaAPTXAJHbjrwdGGxHoM0f1imCK0SygD"
+    "AAAAC3NzaC1lZDI1NTE5AAAAIOBpGO/Qc6X0YWuw7z+/WS/65+aewWI29oAyx+jJpCmh"
 ]
 
 # RSS feed parameters, change these
@@ -56,6 +56,9 @@ TYPES_TO_EMOJI = {
     "Remove": "❌",
     "Tweak":  "⚒️"
 }
+
+EXPERIMENTAL_LABEL = "Intent: Experimental"
+EXPERIMENTAL_EMOJI = "🧪"
 
 XML_NS = "https://spacestation14.com/changelog_rss"
 XML_NS_B = f"{{{XML_NS}}}"
@@ -183,6 +186,9 @@ def generate_description_for_entries(entries: List[Any]) -> str:
         for entry in sorted(group, key=lambda x: x["time"]):
             for change in entry["changes"]:
                 emoji = TYPES_TO_EMOJI.get(change["type"], "")
+                labels = entry.get("labels") or []
+                if EXPERIMENTAL_LABEL in labels:
+                    emoji = f"{emoji}{EXPERIMENTAL_EMOJI}"
                 msg = change["message"]
                 desc.write(f"<li>{emoji} {html.escape(msg)}</li>")
 

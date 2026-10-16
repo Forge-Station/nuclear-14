@@ -1,4 +1,4 @@
-﻿using Content.Shared.Administration;
+using Content.Shared.Administration;
 using Content.Shared.CCVar;
 using Robust.Shared.Configuration;
 using Robust.Shared.Console;
@@ -6,26 +6,26 @@ using Robust.Shared.Console;
 namespace Content.Server.Administration.Commands;
 
 [AdminCommand(AdminFlags.Server)]
-public sealed class PanicBunkerCommand : LocalizedCommands
+public sealed partial class PanicBunkerCommand : LocalizedCommands
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
 
     public override string Command => "panicbunker";
 
     public override void Execute(IConsoleShell shell, string argStr, string[] args)
     {
-        var toggle = Toggle(CCVars.PanicBunkerEnabled, shell, args, _cfg);
+        var toggle = Toggle(CCVars.PanicBunkerEnabled, shell, args, _cfg, LocalizationManager);
         if (toggle == null)
             return;
 
         shell.WriteLine(Loc.GetString(toggle.Value ? "panicbunker-command-enabled" : "panicbunker-command-disabled"));
     }
 
-    public static bool? Toggle(CVarDef<bool> cvar, IConsoleShell shell, string[] args, IConfigurationManager config)
+    public static bool? Toggle(CVarDef<bool> cvar, IConsoleShell shell, string[] args, IConfigurationManager config, ILocalizationManager loc)
     {
         if (args.Length > 1)
         {
-            shell.WriteError(Robust.Shared.Localization.Loc.GetString("shell-need-between-arguments",("lower", 0), ("upper", 1)));
+            shell.WriteError(loc.GetString("shell-need-between-arguments",("lower", 0), ("upper", 1)));
             return null;
         }
 
@@ -38,7 +38,7 @@ public sealed class PanicBunkerCommand : LocalizedCommands
 
         if (args.Length == 1 && !bool.TryParse(args[0], out enabled))
         {
-            shell.WriteError(Robust.Shared.Localization.Loc.GetString("shell-argument-must-be-boolean"));
+            shell.WriteError(loc.GetString("shell-argument-must-be-boolean"));
             return null;
         }
 
@@ -48,15 +48,15 @@ public sealed class PanicBunkerCommand : LocalizedCommands
 }
 
 [AdminCommand(AdminFlags.Server)]
-public sealed class PanicBunkerDisableWithAdminsCommand : LocalizedCommands
+public sealed partial class PanicBunkerDisableWithAdminsCommand : LocalizedCommands
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
 
     public override string Command => "panicbunker_disable_with_admins";
 
     public override void Execute(IConsoleShell shell, string argStr, string[] args)
     {
-        var toggle = PanicBunkerCommand.Toggle(CCVars.PanicBunkerDisableWithAdmins, shell, args, _cfg);
+        var toggle = PanicBunkerCommand.Toggle(CCVars.PanicBunkerDisableWithAdmins, shell, args, _cfg, LocalizationManager);
         if (toggle == null)
             return;
 
@@ -68,15 +68,15 @@ public sealed class PanicBunkerDisableWithAdminsCommand : LocalizedCommands
 }
 
 [AdminCommand(AdminFlags.Server)]
-public sealed class PanicBunkerEnableWithoutAdminsCommand : LocalizedCommands
+public sealed partial class PanicBunkerEnableWithoutAdminsCommand : LocalizedCommands
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
 
     public override string Command => "panicbunker_enable_without_admins";
 
     public override void Execute(IConsoleShell shell, string argStr, string[] args)
     {
-        var toggle = PanicBunkerCommand.Toggle(CCVars.PanicBunkerEnableWithoutAdmins, shell, args, _cfg);
+        var toggle = PanicBunkerCommand.Toggle(CCVars.PanicBunkerEnableWithoutAdmins, shell, args, _cfg, LocalizationManager);
         if (toggle == null)
             return;
 
@@ -88,15 +88,15 @@ public sealed class PanicBunkerEnableWithoutAdminsCommand : LocalizedCommands
 }
 
 [AdminCommand(AdminFlags.Server)]
-public sealed class PanicBunkerCountDeadminnedCommand : LocalizedCommands
+public sealed partial class PanicBunkerCountDeadminnedCommand : LocalizedCommands
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
 
     public override string Command => "panicbunker_count_deadminned_admins";
 
     public override void Execute(IConsoleShell shell, string argStr, string[] args)
     {
-        var toggle = PanicBunkerCommand.Toggle(CCVars.PanicBunkerCountDeadminnedAdmins, shell, args, _cfg);
+        var toggle = PanicBunkerCommand.Toggle(CCVars.PanicBunkerCountDeadminnedAdmins, shell, args, _cfg, LocalizationManager);
         if (toggle == null)
             return;
 
@@ -108,15 +108,15 @@ public sealed class PanicBunkerCountDeadminnedCommand : LocalizedCommands
 }
 
 [AdminCommand(AdminFlags.Server)]
-public sealed class PanicBunkerShowReasonCommand : LocalizedCommands
+public sealed partial class PanicBunkerShowReasonCommand : LocalizedCommands
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
 
     public override string Command => "panicbunker_show_reason";
 
     public override void Execute(IConsoleShell shell, string argStr, string[] args)
     {
-        var toggle = PanicBunkerCommand.Toggle(CCVars.PanicBunkerShowReason, shell, args, _cfg);
+        var toggle = PanicBunkerCommand.Toggle(CCVars.PanicBunkerShowReason, shell, args, _cfg, LocalizationManager);
         if (toggle == null)
             return;
 
@@ -128,9 +128,9 @@ public sealed class PanicBunkerShowReasonCommand : LocalizedCommands
 }
 
 [AdminCommand(AdminFlags.Server)]
-public sealed class PanicBunkerMinAccountAgeCommand : LocalizedCommands
+public sealed partial class PanicBunkerMinAccountAgeCommand : LocalizedCommands
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
 
     public override string Command => "panicbunker_min_account_age";
 
@@ -139,7 +139,7 @@ public sealed class PanicBunkerMinAccountAgeCommand : LocalizedCommands
         if (args.Length == 0)
         {
             var current = _cfg.GetCVar(CCVars.PanicBunkerMinAccountAge);
-            shell.WriteLine(Loc.GetString("panicbunker-command-min-account-age-is", ("hours", current / 60)));
+            shell.WriteLine(Loc.GetString("panicbunker-command-min-account-age-is", ("minutes", current)));
         }
 
         if (args.Length > 1)
@@ -148,30 +148,30 @@ public sealed class PanicBunkerMinAccountAgeCommand : LocalizedCommands
             return;
         }
 
-        if (!int.TryParse(args[0], out var hours))
+        if (!int.TryParse(args[0], out var minutes))
         {
             shell.WriteError(Loc.GetString("shell-argument-must-be-number"));
             return;
         }
 
-        _cfg.SetCVar(CCVars.PanicBunkerMinAccountAge, hours * 60);
-        shell.WriteLine(Loc.GetString("panicbunker-command-min-account-age-set", ("hours", hours)));
+        _cfg.SetCVar(CCVars.PanicBunkerMinAccountAge, minutes);
+        shell.WriteLine(Loc.GetString("panicbunker-command-min-account-age-set", ("minutes", minutes)));
     }
 }
 
 [AdminCommand(AdminFlags.Server)]
-public sealed class PanicBunkerMinOverallHoursCommand : LocalizedCommands
+public sealed partial class PanicBunkerMinOverallMinutesCommand : LocalizedCommands
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
 
-    public override string Command => "panicbunker_min_overall_hours";
+    public override string Command => "panicbunker_min_overall_minutes";
 
     public override void Execute(IConsoleShell shell, string argStr, string[] args)
     {
         if (args.Length == 0)
         {
-            var current = _cfg.GetCVar(CCVars.PanicBunkerMinOverallHours);
-            shell.WriteLine(Loc.GetString("panicbunker-command-min-overall-hours-is", ("hours", current)));
+            var current = _cfg.GetCVar(CCVars.PanicBunkerMinOverallMinutes);
+            shell.WriteLine(Loc.GetString("panicbunker-command-min-overall-minutes-is", ("minutes", current)));
         }
 
         if (args.Length > 1)
@@ -180,13 +180,13 @@ public sealed class PanicBunkerMinOverallHoursCommand : LocalizedCommands
             return;
         }
 
-        if (!int.TryParse(args[0], out var hours))
+        if (!int.TryParse(args[0], out var minutes))
         {
             shell.WriteError(Loc.GetString("shell-argument-must-be-number"));
             return;
         }
 
-        _cfg.SetCVar(CCVars.PanicBunkerMinOverallHours, hours);
-        shell.WriteLine(Loc.GetString("panicbunker-command-overall-hours-age-set", ("hours", hours)));
+        _cfg.SetCVar(CCVars.PanicBunkerMinOverallMinutes, minutes);
+        shell.WriteLine(Loc.GetString("panicbunker-command-min-overall-minutes-set", ("minutes", minutes)));
     }
 }

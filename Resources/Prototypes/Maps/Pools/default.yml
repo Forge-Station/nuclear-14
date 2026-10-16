@@ -1,9 +1,13 @@
 - type: gameMapPool
   id: DefaultMapPool
   maps:
-  #- Wave1
-  - Sunnyvale
-  #- Snowyvale
-  - Wendover
-  - Yuma
-  - Juneau
+  - Bagel
+  - Box
+  - Elkridge
+  - Marathon
+  - Packed
+  - Plasma
+  - Exo
+  - Snowball
+  - Sushi
+  - Tram2

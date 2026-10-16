@@ -1,17 +1,15 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Content.Server.Construction;
 using Robust.Shared.CPUJob.JobQueues.Queues;
 using Content.Server.Decals;
 using Content.Server.GameTicking.Events;
 using Content.Shared.CCVar;
 using Content.Shared.Construction.EntitySystems;
 using Content.Shared.GameTicking;
+using Content.Shared.GameTicking.Events;
 using Content.Shared.Maps;
 using Content.Shared.Physics;
 using Content.Shared.Procedural;
-using Content.Shared.Tag;
-using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
 using Robust.Shared.Console;
 using Robust.Shared.EntitySerialization;
@@ -20,25 +18,24 @@ using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Robust.Shared.Utility;
 
 namespace Content.Server.Procedural;
 
 public sealed partial class DungeonSystem : SharedDungeonSystem
 {
-    [Dependency] private readonly IConfigurationManager _configManager = default!;
-    [Dependency] private readonly IConsoleHost _console = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
-    [Dependency] private readonly IPrototypeManager _prototype = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly ITileDefinitionManager _tileDefManager = default!;
-    [Dependency] private readonly AnchorableSystem _anchorable = default!;
-    [Dependency] private readonly DecalSystem _decals = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
-    [Dependency] private readonly TagSystem _tag = default!;
-    [Dependency] private readonly TileSystem _tile = default!;
-    [Dependency] private readonly MapLoaderSystem _loader = default!;
-    [Dependency] private readonly SharedMapSystem _maps = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private IConfigurationManager _configManager = default!;
+    [Dependency] private IConsoleHost _console = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private ITileDefinitionManager _tileDefManager = default!;
+    [Dependency] private AnchorableSystem _anchorable = default!;
+    [Dependency] private DecalSystem _decals = default!;
+    [Dependency] private EntityLookupSystem _lookup = default!;
+    [Dependency] private TileSystem _tile = default!;
+    [Dependency] private TurfSystem _turf = default!;
+    [Dependency] private MapLoaderSystem _loader = default!;
+    [Dependency] private SharedMapSystem _maps = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
 
     private readonly List<(Vector2i, Tile)> _tiles = new();
 
@@ -51,10 +48,9 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
     public const int CollisionLayer = (int) CollisionGroup.Impassable;
 
     private readonly JobQueue _dungeonJobQueue = new(DungeonJobTime);
-    private readonly Dictionary<DungeonJob, CancellationTokenSource> _dungeonJobs = new();
+    private readonly Dictionary<DungeonJob.DungeonJob, CancellationTokenSource> _dungeonJobs = new();
 
-    [ValidatePrototypeId<ContentTileDefinition>]
-    public const string FallbackTileId = "FloorSteel";
+    public static readonly ProtoId<ContentTileDefinition> FallbackTileId = "FloorSteel";
 
     public override void Initialize()
     {
@@ -99,7 +95,7 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
             return;
 
         // Force all templates to be setup.
-        foreach (var room in _prototype.EnumeratePrototypes<DungeonRoomPrototype>())
+        foreach (var room in ProtoMan.EnumeratePrototypes<DungeonRoomPrototype>())
         {
             GetOrCreateTemplate(room);
         }
@@ -175,85 +171,84 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
                 return Transform(uid).MapID;
         }
 
-        // Use TryLoadMap directly instead of CreateMap+TryMergeMap.
-        // TryMergeMap doesn't support grid-maps (entities that are both map and grid).
-        if (!_loader.TryLoadMap(proto.AtlasPath, out var map, out _))
+        var opts = new MapLoadOptions
         {
-            Log.Error($"Failed to load dungeon template: {proto.AtlasPath}");
-            var fallbackUid = _maps.CreateMap(out var fallbackMapId, runMapInit: false);
-            _maps.SetPaused(fallbackUid, true);
-            comp = AddComp<DungeonAtlasTemplateComponent>(fallbackUid);
-            comp.Path = proto.AtlasPath;
-            return fallbackMapId;
-        }
+            DeserializationOptions = DeserializationOptions.Default with {PauseMaps = true},
+            ExpectedCategory = FileCategory.Map
+        };
 
-        var mapUid = map.Value.Owner;
-        var mapId = Comp<MapComponent>(mapUid).MapId;
-        _maps.SetPaused(mapUid, true);
-        comp = AddComp<DungeonAtlasTemplateComponent>(mapUid);
+        if (!_loader.TryLoadGeneric(proto.AtlasPath, out var res, opts) || !res.Maps.TryFirstOrNull(out var map))
+            throw new Exception($"Failed to load dungeon template.");
+
+        comp = AddComp<DungeonAtlasTemplateComponent>(map.Value.Owner);
         comp.Path = proto.AtlasPath;
-        return mapId;
+        return map.Value.Comp.MapId;
     }
 
-    public void GenerateDungeon(DungeonConfigPrototype gen,
+    /// <summary>
+    /// Generates a dungeon in the background with the specified config.
+    /// </summary>
+    /// <param name="coordinates">Coordinates to move the dungeon to afterwards. Will delete the original map</param>
+    public void GenerateDungeon(DungeonConfig gen,
         EntityUid gridUid,
         MapGridComponent grid,
         Vector2i position,
-        int seed)
+        int seed,
+        EntityCoordinates? coordinates = null)
     {
         var cancelToken = new CancellationTokenSource();
-        var job = new DungeonJob(
+        var job = new DungeonJob.DungeonJob(
             Log,
             DungeonJobTime,
             EntityManager,
-            _mapManager,
-            _prototype,
+            ProtoMan,
             _tileDefManager,
             _anchorable,
             _decals,
             this,
             _lookup,
-            _tag,
             _tile,
+            _turf,
             _transform,
             gen,
             grid,
             gridUid,
             seed,
             position,
+            coordinates,
             cancelToken.Token);
 
         _dungeonJobs.Add(job, cancelToken);
         _dungeonJobQueue.EnqueueJob(job);
     }
 
-    public async Task<Dungeon> GenerateDungeonAsync(
-        DungeonConfigPrototype gen,
+    public async Task<List<Dungeon>> GenerateDungeonAsync(
+        DungeonConfig gen,
         EntityUid gridUid,
         MapGridComponent grid,
         Vector2i position,
         int seed)
     {
         var cancelToken = new CancellationTokenSource();
-        var job = new DungeonJob(
+        var job = new DungeonJob.DungeonJob(
             Log,
             DungeonJobTime,
             EntityManager,
-            _mapManager,
-            _prototype,
+            ProtoMan,
             _tileDefManager,
             _anchorable,
             _decals,
             this,
             _lookup,
-            _tag,
             _tile,
+            _turf,
             _transform,
             gen,
             grid,
             gridUid,
             seed,
             position,
+            null,
             cancelToken.Token);
 
         _dungeonJobs.Add(job, cancelToken);

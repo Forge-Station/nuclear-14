@@ -1,9 +1,9 @@
-﻿using System.Linq;
+using Content.Shared._NC.Sponsor; // Forge-Change
+using System.Linq;
 using System.Threading.Tasks;
 using Content.Server.Connection.Whitelist;
 using Content.Server.Connection.Whitelist.Conditions;
 using Content.Server.Database;
-using Content.Shared._NC.Sponsor;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
 using Content.Shared.Players.PlayTimeTracking;
@@ -18,7 +18,7 @@ public sealed partial class ConnectionManager
 {
     private PlayerConnectionWhitelistPrototype[]? _whitelists;
 
-    public void PostInit()
+    private void InitializeWhitelist()
     {
         _cfg.OnValueChanged(CCVars.WhitelistPrototypeList, UpdateWhitelists, true);
     }
@@ -128,7 +128,7 @@ public sealed partial class ConnectionManager
 
     private async Task<bool> CheckConditionManualWhitelist(NetUserData data)
     {
-        return await _db.GetWhitelistStatusAsync(data.UserId); // Forge-Change
+        return await _db.GetWhitelistStatusAsync(data.UserId);
     }
 
     // Forge-Change-Start
@@ -139,12 +139,7 @@ public sealed partial class ConnectionManager
         if (roles == null)
             return false;
 
-        var level = SponsorData.ParseRoles(roles);
-
-        if (level == SponsorLevel.None)
-            return false;
-
-        return true;
+        return SponsorData.ParseRoles(roles) != SponsorLevel.None;
     }
     // Forge-Change-End
 

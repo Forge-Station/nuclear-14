@@ -1,5 +1,6 @@
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Dataset;
+using Content.Shared.Random.Helpers;
 using Robust.Shared.Random;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Enums;
@@ -11,17 +12,18 @@ namespace Content.Shared.Humanoid
     /// </summary>
     public sealed partial class NamingSystem : EntitySystem
     {
-        [Dependency] private readonly IRobustRandom _random = default!;
-        [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+        private static readonly ProtoId<SpeciesPrototype> FallbackSpecies = "Human";
+
+        [Dependency] private IRobustRandom _random = default!;
 
         public string GetName(string species, Gender? gender = null)
         {
             // if they have an old species or whatever just fall back to human I guess?
             // Some downstream is probably gonna have this eventually but then they can deal with fallbacks.
-            if (!_prototypeManager.TryIndex(species, out SpeciesPrototype? speciesProto))
+            if (!ProtoMan.TryIndex(species, out SpeciesPrototype? speciesProto))
             {
-                speciesProto = _prototypeManager.Index<SpeciesPrototype>("Human");
-                Log.Warning($"Unable to find species {species} for name, falling back to Human");
+                speciesProto = ProtoMan.Index(FallbackSpecies);
+                Log.Warning($"Unable to find species {species} for name, falling back to {FallbackSpecies}");
             }
 
             switch (speciesProto.Naming)
@@ -29,23 +31,12 @@ namespace Content.Shared.Humanoid
                 case SpeciesNaming.First:
                     return Loc.GetString("namepreset-first",
                         ("first", GetFirstName(speciesProto, gender)));
-                // Start of Nyano - Summary: for Oni naming
-                case SpeciesNaming.LastNoFirst:
-                    return Loc.GetString("namepreset-lastnofirst",
-                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto, gender))); // Corvax-LastnameGender
-                // End of Nyano - Summary: for Oni naming
                 case SpeciesNaming.TheFirstofLast:
                     return Loc.GetString("namepreset-thefirstoflast",
                         ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto, gender))); // Corvax-LastnameGender
                 case SpeciesNaming.FirstDashFirst:
                     return Loc.GetString("namepreset-firstdashfirst",
                         ("first1", GetFirstName(speciesProto, gender)), ("first2", GetFirstName(speciesProto, gender)));
-                case SpeciesNaming.FirstDashLast:
-                    return Loc.GetString("namepreset-firstdashlast",
-                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto)));
-                case SpeciesNaming.FirstRoman:
-                    return Loc.GetString("namepreset-firstlast",
-                        ("first", GetFirstName(speciesProto, gender)), ("last", GenerateRomanNumeral()));
                 case SpeciesNaming.FirstLast:
                 default:
                     return Loc.GetString("namepreset-firstlast",
@@ -58,31 +49,35 @@ namespace Content.Shared.Humanoid
             switch (gender)
             {
                 case Gender.Male:
-                    return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.MaleFirstNames).Values);
+                    return _random.Pick(ProtoMan.Index(speciesProto.MaleFirstNames));
                 case Gender.Female:
-                    return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.FemaleFirstNames).Values);
+                    return _random.Pick(ProtoMan.Index(speciesProto.FemaleFirstNames));
                 default:
                     if (_random.Prob(0.5f))
-                        return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.MaleFirstNames).Values);
+                        return _random.Pick(ProtoMan.Index(speciesProto.MaleFirstNames));
                     else
-                        return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.FemaleFirstNames).Values);
+                        return _random.Pick(ProtoMan.Index(speciesProto.FemaleFirstNames));
             }
         }
 
+        public string GetLastName(SpeciesPrototype speciesProto)
+        {
+            return _random.Pick(ProtoMan.Index(speciesProto.LastNames));
+        }
+
         // Corvax-LastnameGender-Start: Added custom gender split logic
-        public string GetLastName(SpeciesPrototype speciesProto, Gender? gender = null)
+        public string GetLastName(SpeciesPrototype speciesProto, Gender? gender)
         {
             switch (gender)
             {
                 case Gender.Male:
-                    return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.MaleLastNames).Values);
+                    return _random.Pick(ProtoMan.Index(speciesProto.MaleLastNames).Values);
                 case Gender.Female:
-                    return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.FemaleLastNames).Values);
+                    return _random.Pick(ProtoMan.Index(speciesProto.FemaleLastNames).Values);
                 default:
-                    if (_random.Prob(0.5f))
-                        return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.MaleLastNames).Values);
-                    else
-                        return _random.Pick(_prototypeManager.Index<DatasetPrototype>(speciesProto.FemaleLastNames).Values);
+                    return _random.Prob(0.5f)
+                        ? _random.Pick(ProtoMan.Index(speciesProto.MaleLastNames).Values)
+                        : _random.Pick(ProtoMan.Index(speciesProto.FemaleLastNames).Values);
             }
         }
         // Corvax-LastnameGender-End

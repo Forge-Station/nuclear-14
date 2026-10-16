@@ -1,189 +1,120 @@
-# - type: trait
-#   id: Blindness
-#   category: Visual
-#   points: 6
-#   requirements:
-#     - !type:CharacterJobRequirement
-#       inverted: true
-#       jobs:
-#         - Borg
-#         - MedicalBorg
-#   components:
-#     - type: PermanentBlindness
+# If you add a new trait, make sure to add the corresponding component to the whitelist in \Resources\Prototypes\Entities\Mobs\Player\clone.yml so it gets copied to clones correctly!
 
-# - type: trait
-#   id: Narcolepsy
-#   category: Mental
-#   points: 2
-#   requirements:
-#     - !type:CharacterJobRequirement
-#       inverted: true
-#       jobs:
-#         - Borg
-#         - MedicalBorg
-#   components:
-#     - type: Narcolepsy
-#       timeBetweenIncidents: 300, 600
-#       durationOfIncident: 10, 30
+- type: trait
+  id: Blindness
+  name: trait-blindness-name
+  description: trait-blindness-desc
+  traitGear: WhiteCane
+  category: Disabilities
+  whitelist:
+    components:
+      - Blindable
+  components:
+    - type: PermanentBlindness
 
-# - type: trait
-#   id: Pacifist
-#   category: Mental
-#   points: 6
-#   components:
-#     - type: Pacified
+- type: trait
+  id: PoorVision
+  name: trait-poor-vision-name
+  description: trait-poor-vision-desc
+  traitGear: ClothingEyesGlasses
+  category: Disabilities
+  whitelist:
+    components:
+      - Blindable
+  components:
+    - type: PermanentBlindness
+      blindness: 4
 
-# - type: trait
-#   id: Paracusia
-#   category: Auditory
-#   points: 2
-#   components:
-#     - type: Paracusia
-#       minTimeBetweenIncidents: 0.1
-#       maxTimeBetweenIncidents: 300
-#       maxSoundDistance: 7
-#       sounds:
-#         collection: Paracusia
+- type: trait
+  id: Narcolepsy
+  name: trait-narcolepsy-name
+  description: trait-narcolepsy-desc
+  category: Disabilities
+  components:
+    - type: Narcolepsy
+      maxTimeBetweenIncidents: 600
+      minTimeBetweenIncidents: 300
+      maxDurationOfIncident: 30
+      minDurationOfIncident: 10
 
-# - type: trait
-#   id: Muted
-#   category: Speech
-#   points: 0
-#   requirements:
-#     - !type:CharacterJobRequirement
-#       inverted: true
-#       jobs:
-#         - Borg
-#         - MedicalBorg
-#   components:
-#     - type: Muted
+- type: trait
+  id: Unrevivable
+  name: trait-unrevivable-name
+  description: trait-unrevivable-desc
+  category: Disabilities
+  components:
+    - type: Unrevivable
+      cloneable: true
 
-# - type: trait
-#   id: Uncloneable
-#   category: Physical
-#   points: 1
-#   requirements:
-#     - !type:CharacterJobRequirement
-#       inverted: true
-#       jobs:
-#         - Borg
-#         - MedicalBorg
-#   components:
-#     - type: Uncloneable
+- type: trait
+  id: Monochromacy
+  name: trait-monochromacy-name
+  description: trait-monochromacy-desc
+  category: Disabilities
+  components:
+  - type: BlackAndWhiteOverlay
 
-# - type: trait
-#   id: FrontalLisp
-#   category: Speech
-#   requirements:
-#     - !type:CharacterJobRequirement
-#       inverted: true
-#       jobs:
-#         - Borg
-#         - MedicalBorg
-#     - !type:CharacterSpeciesRequirement
-#       inverted: true
-#       species:
-#         - IPC
-#   components:
-#     - type: FrontalLisp
+- type: trait
+  id: Muted
+  name: trait-muted-name
+  description: trait-muted-desc
+  category: Disabilities
+  blacklist:
+    components:
+      - BorgChassis
+  specials:
+  - !type:ApplyStatusEffectSpecial
+    statusEffects:
+    - TraitStatusEffectMuted
 
-# - type: trait
-#   id: Snoring
-#   category: Auditory
-#   requirements:
-#     - !type:CharacterJobRequirement
-#       inverted: true
-#       jobs:
-#         - Borg
-#         - MedicalBorg
-#     - !type:CharacterSpeciesRequirement
-#       inverted: true
-#       species:
-#         - IPC
-#   components:
-#     - type: Snoring
+- type: trait
+  id: Paracusia
+  name: trait-paracusia-name
+  description: trait-paracusia-desc
+  category: Disabilities
+  components:
+    - type: Paracusia
+      minTimeBetweenIncidents: 0.1
+      maxTimeBetweenIncidents: 300
+      maxSoundDistance: 7
+      sounds:
+        collection: Paracusia
 
-# - type: trait
-#   id: Sluggish
-#   category: Physical
-#   points: 3
-#   requirements:
-#     - !type:CharacterTraitRequirement
-#       inverted: true
-#       traits:
-#         - ParkourTraining
-#         - SnailPaced
-#     - !type:CharacterSpeciesRequirement
-#       inverted: true
-#       species:
-#         - Diona
-#   components:
-#     - type: TraitSpeedModifier
-#       sprintModifier: 0.85
-#       walkModifier: 0.85
-#     - type: ClimbDelayModifier
-#       climbDelayMultiplier: 1.35
-#     - type: LayingDownModifier
-#       layingDownCooldownMultiplier: 1.2
+- type: trait
+  id: PainNumbness
+  name: trait-painnumbness-name
+  description: trait-painnumbness-desc
+  category: Disabilities
+  specials:
+  - !type:ApplyStatusEffectSpecial
+    statusEffects:
+    - TraitStatusEffectPainNumbness
 
-# - type: trait
-#   id: SnailPaced
-#   category: Physical
-#   points: 5
-#   requirements:
-#     - !type:CharacterTraitRequirement
-#       inverted: true
-#       traits:
-#         - ParkourTraining
-#         - Sluggish
-#     - !type:CharacterSpeciesRequirement
-#       inverted: true
-#       species:
-#         - Diona
-#   components:
-#     - type: TraitSpeedModifier
-#       sprintModifier: 0.7
-#       walkModifier: 0.7
-#     - type: ClimbDelayModifier
-#       climbDelayMultiplier: 1.66
-#     - type: LayingDownModifier
-#       layingDownCooldownMultiplier: 1.6
+- type: trait
+  id: Hemophilia
+  name: trait-hemophilia-name
+  description: trait-hemophilia-desc
+  category: Disabilities
+  specials:
+  - !type:ApplyStatusEffectSpecial
+    statusEffects:
+    - TraitStatusEffectHemophilia
 
-# - type: trait
-#   id: BloodDeficiency
-#   category: Physical
-#   points: 5
-#   requirements:
-#     - !type:CharacterJobRequirement
-#       inverted: true
-#       jobs:
-#         - Borg
-#         - MedicalBorg
-#     - !type:CharacterSpeciesRequirement
-#       inverted: true
-#       species:
-#         - IPC
-#   components:
-#     - type: BloodDeficiency              # by default, start taking bloodloss damage at around ~21.4 minutes,
-#       bloodLossPercentage: 0.0002333333  # then become crit ~10 minutes
+- type: trait
+  id: ImpairedMobility
+  name: trait-impaired-mobility-name
+  description: trait-impaired-mobility-desc
+  traitGear: OffsetCane
+  category: Disabilities
+  components:
+    - type: ImpairedMobility
 
-# - type: trait
-#   id: Hemophilia
-#   category: Physical
-#   points: 2
-#   requirements:
-#     - !type:CharacterJobRequirement
-#       inverted: true
-#       jobs:
-#         - Borg
-#         - MedicalBorg
-#     - !type:CharacterSpeciesRequirement
-#       inverted: true
-#       species:
-#         - IPC
-#   components:
-#     - type: Hemophilia
-#       bleedReductionModifier: 0.5
-#       damageModifiers:
-#         coefficients:
-#           Blunt: 1.1
+- type: trait
+  id: BlinkDyspraxia
+  name: trait-blink-dyspraxia-name
+  description: trait-blink-dyspraxia-desc
+  category: Disabilities
+  specials:
+  - !type:ApplyStatusEffectSpecial
+    statusEffects:
+    - TraitStatusEffectBlinkDyspraxia

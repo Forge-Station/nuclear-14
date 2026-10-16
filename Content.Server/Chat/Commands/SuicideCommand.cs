@@ -1,8 +1,6 @@
-using Content.Server.GameTicking;
 using Content.Server.Popups;
-using Content.Server.Popups;
+using Content.Server.Suicide;
 using Content.Shared.Administration;
-using Content.Shared.Chat;
 using Content.Shared.Mind;
 using Robust.Shared.Console;
 using Robust.Shared.Enums;
@@ -10,9 +8,9 @@ using Robust.Shared.Enums;
 namespace Content.Server.Chat.Commands
 {
     [AnyCommand]
-    internal sealed class SuicideCommand : IConsoleCommand
+    internal sealed partial class SuicideCommand : IConsoleCommand
     {
-        [Dependency] private readonly IEntityManager _entityManager = default!;
+        [Dependency] private IEntityManager _e = default!;
 
         public string Command => "suicide";
 
@@ -31,7 +29,7 @@ namespace Content.Server.Chat.Commands
             if (player.Status != SessionStatus.InGame || player.AttachedEntity == null)
                 return;
 
-            var minds = _entityManager.System<SharedMindSystem>();
+            var minds = _e.System<SharedMindSystem>();
 
             // This check also proves mind not-null for at the end when the mob is ghosted.
             if (!minds.TryGetMind(player, out var mindId, out var mindComp) ||
@@ -41,13 +39,13 @@ namespace Content.Server.Chat.Commands
                 return;
             }
 
-            var suicideSystem = _entityManager.System<SuicideSystem>();
+            var suicideSystem = _e.System<SuicideSystem>();
 
-            if (_entityManager.HasComponent<AdminFrozenComponent>(victim))
+            if (_e.HasComponent<AdminFrozenComponent>(victim))
             {
                 var deniedMessage = Loc.GetString("suicide-command-denied");
                 shell.WriteLine(deniedMessage);
-                _entityManager.System<PopupSystem>()
+                _e.System<PopupSystem>()
                     .PopupEntity(deniedMessage, victim, victim);
                 return;
             }
@@ -55,7 +53,6 @@ namespace Content.Server.Chat.Commands
             if (suicideSystem.Suicide(victim))
                 return;
 
-            shell.WriteLine(Loc.GetString("ghost-command-denied"));
             shell.WriteLine(Loc.GetString("ghost-command-denied"));
         }
     }

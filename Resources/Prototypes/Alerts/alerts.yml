@@ -5,16 +5,15 @@
   id: BaseAlertOrder
   order:
     - category: Health
-    - category: Mood
     - category: Stamina
     - alertType: SuitPower
-    - alertType: ModsuitPower # Goobstation - Modsuits
     - category: Internals
     - alertType: Fire
     - alertType: Handcuffed
     - alertType: Ensnared
     - category: Buckled
     - alertType: Pulling
+    - alertType: Walking
     - category: Piloting
     - alertType: Corporeal
     - alertType: Stun
@@ -25,9 +24,9 @@
     - category: Hunger
     - category: Thirst
     - alertType: Magboots
+    - alertType: Rooted
     - alertType: Pacified
-    - alertType: Offer
-    - alertType: Deflecting
+    - alertType: Stealthy
 
 - type: entity
   id: AlertSpriteView
@@ -54,24 +53,6 @@
       state: not_enough_nitro
   name: alerts-low-nitrogen-name
   description: alerts-low-nitrogen-desc
-
-- type: alert
-  id: LowPlasma
-  category: Breathing
-  icons:
-    - sprite: /Textures/Interface/Alerts/breathing.rsi
-      state: not_enough_tox
-  name: alerts-low-plasma-name
-  description: alerts-low-plasma-desc
-
-- type: alert
-  id: HighOxygen
-  category: Breathing
-  icons:
-    - sprite: /Textures/Interface/Alerts/breathing.rsi
-      state: too_much_oxy
-  name: alerts-high-oxygen-name
-  description: alerts-high-oxygen-desc
 
 - type: alert
   id: Toxins
@@ -109,7 +90,7 @@
 - type: alert
   id: Fire
   icons: [ /Textures/Interface/Alerts/Fire/fire.png ]
-  onClick: !type:ResistFire  { }
+  clickEvent: !type:ResistFireAlertEvent
   name: alerts-on-fire-name
   description: alerts-on-fire-desc
 
@@ -149,23 +130,33 @@
   description: alerts-weightless-desc
 
 - type: alert
-  id: Stun
+  id: Walking
   icons:
-  - sprite: /Textures/Objects/Weapons/Melee/stunbaton.rsi #Should probably draw a proper icon
-    state: stunbaton_off
-  name: alerts-stunned-name
-  description: alerts-stunned-desc
+  - sprite: /Textures/Interface/Alerts/walking.rsi
+    state: walking
+  name: alerts-walking-name
+  description: alerts-walking-desc
+  clientHandled: true
+
+- type: alert
+  id: Knockdown
+  clickEvent: !type:KnockedDownAlertEvent
+  icons:
+  - sprite: /Textures/Interface/Alerts/stunnable.rsi
+    state: knocked-down
+  name: alerts-knockdown-name
+  description: alerts-knockdown-desc
 
 - type: alert
   id: Handcuffed
-  onClick: !type:RemoveCuffs  { }
+  clickEvent: !type:RemoveCuffsAlertEvent
   icons: [ /Textures/Interface/Alerts/Handcuffed/Handcuffed.png ]
   name: alerts-handcuffed-name
   description: alerts-handcuffed-desc
 
 - type: alert
   id: Ensnared
-  onClick: !type:RemoveEnsnare  { }
+  clickEvent: !type:RemoveEnsnareAlertEvent
   icons:
   - sprite: /Textures/Interface/Alerts/ensnared.rsi
     state: ensnared
@@ -175,19 +166,10 @@
 - type: alert
   id: Buckled
   category: Buckled
-  onClick: !type:Unbuckle  { }
+  clickEvent: !type:UnbuckleAlertEvent
   icons: [ /Textures/Interface/Alerts/Buckle/buckled.png ]
   name: alerts-buckled-name
   description: alerts-buckled-desc
-
-- type: alert
-  id: Offer
-  onClick: !type:AcceptOffer  { }
-  icons:
-  - sprite: /Textures/Interface/Alerts/offer_item.rsi
-    state: offer_item
-  name: alerts-offer-name
-  description: alerts-offer-desc
 
 - type: alert
   id: HumanCrit
@@ -210,7 +192,6 @@
 - type: alert
   id: HumanHealth
   category: Health
-  onClick: !type:CheckHealth { }
   icons:
   - sprite: /Textures/Interface/Alerts/human_alive.rsi
     state: health0
@@ -294,6 +275,7 @@
   description: alerts-battery-desc
   minSeverity: 0
   maxSeverity: 10
+  clientHandled: true # the power cell is read on the client so that we don't have to periodically network the charge
 
 - type: alert
   id: BorgBatteryNone
@@ -303,11 +285,17 @@
     state: battery-none
   name: alerts-no-battery-name
   description: alerts-no-battery-desc
+  clientHandled: true # the power cell battery is read on the client so that we don't have to periodically network the charge
+
+- type: alert
+  parent: BorgBattery
+  id: AiBattery
+  clientHandled: false # the station AI does not have a predicted battery, so we need to send the alert from the server
 
 - type: alert
   id: Internals
   category: Internals
-  onClick: !type:ToggleInternals {}
+  clickEvent: !type:ToggleInternalsAlertEvent
   icons:
   - sprite: /Textures/Interface/Alerts/internals.rsi
     state: internal0
@@ -323,8 +311,10 @@
 - type: alert
   id: PilotingShuttle
   category: Piloting
-  onClick: !type:StopPiloting { }
-  icons: [ /Textures/Interface/Alerts/piloting.png ]
+  clickEvent: !type:StopPilotingAlertEvent
+  icons:
+  - sprite: /Textures/Interface/Alerts/shuttle.rsi
+    state: piloting
   name: alerts-piloting-name
   description: alerts-piloting-desc
 
@@ -388,36 +378,23 @@
   description: alerts-parched-desc
 
 - type: alert
-  id: Muted
-  icons: [ /Textures/Interface/Alerts/Abilities/silenced.png ]
-  name: alerts-muted-name
-  description: alerts-muted-desc
-
-- type: alert
-  id: VowOfSilence
-  icons: [ /Textures/Interface/Alerts/Abilities/silenced.png ]
-  name: alerts-vow-silence-name
-  onClick: !type:BreakVow  { }
-  description: alerts-vow-silence-desc
-
-- type: alert
   id: VowBroken
   icons: [ /Textures/Interface/Actions/scream.png ]
   name: alerts-vow-broken-name
-  onClick: !type:RetakeVow  { }
+  clickEvent: !type:RetakeVowAlertEvent
   description: alerts-vow-broken-desc
 
 - type: alert
   id: Pulled
   icons: [ /Textures/Interface/Alerts/Pull/pulled.png ]
-  onClick: !type:StopBeingPulled  { }
+  clickEvent: !type:StopBeingPulledAlertEvent
   name: alerts-pulled-name
   description: alerts-pulled-desc
 
 - type: alert
   id: Pulling
   icons: [ /Textures/Interface/Alerts/Pull/pulling.png ]
-  onClick: !type:StopPulling  { }
+  clickEvent: !type:StopPullingAlertEvent
   name: alerts-pulling-name
   description: alerts-pulling-desc
 
@@ -460,16 +437,28 @@
   description: alerts-pacified-desc
 
 - type: alert
-  id: Walking
+  id: Stealthy
+  clickEvent: !type:ToggleThievingEvent
   icons:
-  - sprite: /Textures/Interface/Alerts/walking.rsi
-    state: walking0
-  - sprite: /Textures/Interface/Alerts/walking.rsi
-    state: walking1
-  name: alerts-walking-name
-  description: alerts-walking-desc
+  - sprite: /Textures/Interface/Alerts/stealthy.rsi
+    state: stealthy-off
+  - sprite: /Textures/Interface/Alerts/stealthy.rsi
+    state: stealthy-on
+  name: alerts-stealthy-name
+  description: alerts-stealthy-desc
   minSeverity: 0
   maxSeverity: 1
+
+# Making alerts for innate abilities like this should generally be avoided by turning them into actions or giving better UX.
+# This was done this way because several entities currently can pry innately and have no indicator for this whatsoever.
+# The ideal solution would be to clean up actions to handle this sort of thing easier while avoiding bloating the action UI.
+- type: alert
+  id: Prying
+  icons:
+  - sprite: /Textures/Objects/Tools/crowbar.rsi
+    state: icon
+  name: alerts-prying-name
+  description: alerts-prying-desc
 
 - type: alert
   id: Debug1
@@ -518,122 +507,3 @@
     state: critical
   name: Debug6
   description: Debug
-
-# Moods
-- type: alert
-  id: Insane
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood_insane
-  name: alerts-mood-insane-name
-  description: alerts-mood-insane-desc
-
-- type: alert
-  id: Horrible
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood1
-  name: alerts-mood-horrible-name
-  description: alerts-mood-horrible-desc
-
-- type: alert
-  id: Terrible
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood2
-  name: alerts-mood-terrible-name
-  description: alerts-mood-terrible-desc
-
-- type: alert
-  id: Bad
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood3
-  name: alerts-mood-bad-name
-  description: alerts-mood-bad-desc
-
-- type: alert
-  id: Meh
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood4
-  name: alerts-mood-meh-name
-  description: alerts-mood-meh-desc
-
-- type: alert
-  id: Neutral
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood5
-  name: alerts-mood-neutral-name
-  description: alerts-mood-neutral-desc
-
-- type: alert
-  id: Good
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood6
-  name: alerts-mood-good-name
-  description: alerts-mood-good-desc
-
-- type: alert
-  id: Great
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood7
-  name: alerts-mood-great-name
-  description: alerts-mood-great-desc
-
-- type: alert
-  id: Exceptional
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood8
-  name: alerts-mood-exceptional-name
-  description: alerts-mood-exceptional-desc
-
-- type: alert
-  id: Perfect
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood9
-  name: alerts-mood-perfect-name
-  description: alerts-mood-perfect-desc
-
-- type: alert
-  id: MoodDead
-  category: Mood
-  onClick: !type:ShowMoodEffects { }
-  icons:
-    - sprite: /Textures/Interface/Alerts/mood.rsi
-      state: mood_happiness_bad
-  name: alerts-mood-dead-name
-  description: alerts-mood-dead-desc
-
-- type: alert
-  id: Deflecting
-  icons:
-  - sprite: /Textures/Interface/Alerts/deflecting.rsi
-    state: deflecting0
-  name: alerts-deflecting-name
-  description: alerts-deflecting-desc

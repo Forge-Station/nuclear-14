@@ -26,7 +26,7 @@
           cost: 2
         - proto: CloningPodMachineCircuitboard
           cost: 2
-        - proto: CognizineChemistryBottle
+        - proto: ChemistryBottleCognizine
         - proto: FoodBoxDonkpocketCarp
           prob: 0.5
         - proto: CrateSalvageEquipment
@@ -45,7 +45,7 @@
           cost: 2
         - proto: NuclearBombKeg
           cost: 5
-        - proto: OmnizineChemistryBottle
+        - proto: ChemistryBottleOmnizine
           prob: 0.5
         - proto: PortableGeneratorPacman
           cost: 2
@@ -88,7 +88,6 @@
         - proto: RipleyHarness
           cost: 3
           prob: 0.5
-        - proto: RPED
         - proto: SpaceCash1000
         - proto: SpaceCash10000
           cost: 10
@@ -106,10 +105,6 @@
         - proto: WeaponTeslaGun
           prob: 0.1
           cost: 2
-        - proto: ClothingEyesNightVisionGoggles
-          cost: 8
-        - proto: ClothingEyesGlassesThermal
-          cost: 8
 
 # Mob loot table
 
@@ -177,13 +172,6 @@
       proto: OreUranium
 
 - type: salvageLoot
-  id: OreBananium
-  guaranteed: true
-  loots:
-    - !type:BiomeMarkerLoot
-      proto: OreBananium
-
-- type: salvageLoot
   id: OreDiamond
   guaranteed: true
   loots:
@@ -196,17 +184,3 @@
   loots:
     - !type:BiomeMarkerLoot
       proto: OreArtifactFragment
-
-- type: salvageLoot
-  id: OreBluespace
-  guaranteed: true
-  loots:
-    - !type:BiomeMarkerLoot
-      proto: OreBluespace
-
-- type: salvageLoot
-  id: OreNormality
-  guaranteed: true
-  loots:
-    - !type:BiomeMarkerLoot
-      proto: OreNormality

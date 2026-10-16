@@ -5,18 +5,16 @@ using Content.Server.Doors.Systems;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Database;
-using Content.Shared.Maps;
-using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics.Components;
-using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+
 namespace Content.Server.Atmos.EntitySystems
 {
     public sealed partial class AtmosphereSystem
     {
-        [Dependency] private readonly FirelockSystem _firelockSystem = default!;
+        [Dependency] private FirelockSystem _firelockSystem = default!;
 
         private readonly TileAtmosphereComparer _monstermosComparer = new();
 
@@ -139,7 +137,7 @@ namespace Content.Server.Atmos.EntitySystems
             var logN = MathF.Log2(tileCount);
 
             // Optimization - try to spread gases using an O(n log n) algorithm that has a chance of not working first to avoid O(n^2)
-            if (!MonstermosUseExpensiveAirflow && giverTilesLength > logN && takerTilesLength > logN)
+            if (giverTilesLength > logN && takerTilesLength > logN)
             {
                 // Even if it fails, it will speed up the next part.
                 Array.Sort(_equalizeTiles, 0, tileCount, _monstermosComparer);
@@ -357,7 +355,7 @@ namespace Content.Server.Atmos.EntitySystems
                         continue;
 
                     DebugTools.Assert(otherTile2.AdjacentBits.IsFlagSet(direction.GetOpposite()));
-                    if (otherTile2.Air != null && CompareExchange(otherTile2.Air, tile.Air) == GasCompareResult.NoExchange)
+                    if (otherTile2.Air != null && CompareExchange(otherTile2, tile) == GasCompareResult.NoExchange)
                         continue;
 
                     AddActiveTile(gridAtmosphere, otherTile2);
@@ -552,8 +550,7 @@ namespace Content.Server.Atmos.EntitySystems
                 }
 
                 InvalidateVisuals(ent, otherTile);
-                if (MonstermosRipTiles && otherTile.PressureDifference > MonstermosRipTilesMinimumPressure)
-                    HandleDecompressionFloorRip(mapGrid, otherTile, otherTile.PressureDifference);
+                HandleDecompressionFloorRip((owner, mapGrid), otherTile, otherTile.MonstermosInfo.CurrentTransferAmount);
             }
 
             if (GridImpulse && tileCount > 0)
@@ -599,8 +596,17 @@ namespace Content.Server.Atmos.EntitySystems
             if (!reconsiderAdjacent)
                 return;
 
+            // Before updating the adjacent tile flags that determine whether air is allowed to flow
+            // or not, we explicitly update airtight data on these tiles right now.
+            // This ensures that UpdateAdjacentTiles has updated data before updating flags.
+            // This allows monstermos' floodfill check that determines if firelocks have dropped
+            // to work correctly.
+            UpdateAirtightData(ent.Owner, ent.Comp1, ent.Comp3, tile);
+            UpdateAirtightData(ent.Owner, ent.Comp1, ent.Comp3, other);
+
             UpdateAdjacentTiles(ent, tile);
             UpdateAdjacentTiles(ent, other);
+
             InvalidateVisuals(ent, tile);
             InvalidateVisuals(ent, other);
         }
@@ -685,14 +691,14 @@ namespace Content.Server.Atmos.EntitySystems
             adj.MonstermosInfo[idx.ToOppositeDir()] -= amount;
         }
 
-        private void HandleDecompressionFloorRip(MapGridComponent mapGrid, TileAtmosphere tile, float sum)
+        private void HandleDecompressionFloorRip(Entity<MapGridComponent> mapGrid, TileAtmosphere tile, float sum)
         {
             if (!MonstermosRipTiles)
                 return;
 
-            var chance = MathHelper.Clamp(0.01f + sum / SpacingMaxWind * 0.3f, 0.003f, 0.3f);
+            var chance = MathHelper.Clamp(0.01f + (sum / SpacingMaxWind) * 0.3f, 0.003f, 0.3f);
 
-            if (sum > 20 && _robustRandom.Prob(chance))
+            if (sum > 20 && _random.Prob(chance))
                 PryTile(mapGrid, tile.GridIndices);
         }
 

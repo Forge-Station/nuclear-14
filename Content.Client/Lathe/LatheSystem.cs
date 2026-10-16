@@ -6,9 +6,10 @@ using Content.Shared.Research.Prototypes;
 
 namespace Content.Client.Lathe;
 
-public sealed class LatheSystem : SharedLatheSystem
+public sealed partial class LatheSystem : SharedLatheSystem
 {
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SpriteSystem _sprite = default!;
 
     public override void Initialize()
     {
@@ -22,21 +23,29 @@ public sealed class LatheSystem : SharedLatheSystem
         if (args.Sprite == null)
             return;
 
-        if (_appearance.TryGetData<bool>(uid, PowerDeviceVisuals.Powered, out var powered, args.Component) &&
-            args.Sprite.LayerMapTryGet(PowerDeviceVisualLayers.Powered, out var powerLayer))
+        // Lathe specific stuff
+        if (args.TryGetData<bool>(LatheVisuals.IsRunning, out var isRunning))
         {
-            args.Sprite.LayerSetVisible(powerLayer, powered);
+            if (_sprite.LayerMapTryGet((uid, args.Sprite), LatheVisualLayers.IsRunning, out var runningLayer, false) &&
+                component.RunningState != null &&
+                component.IdleState != null)
+            {
+                var state = isRunning ? component.RunningState : component.IdleState;
+                _sprite.LayerSetRsiState((uid, args.Sprite), runningLayer, state);
+            }
         }
 
-        // Lathe specific stuff
-        if (_appearance.TryGetData<bool>(uid, LatheVisuals.IsRunning, out var isRunning, args.Component) &&
-            args.Sprite.LayerMapTryGet(LatheVisualLayers.IsRunning, out var runningLayer) &&
-            component.RunningState != null &&
-            component.IdleState != null)
+        if (args.TryGetData<bool>(PowerDeviceVisuals.Powered, out var powered) &&
+            _sprite.LayerMapTryGet((uid, args.Sprite), PowerDeviceVisualLayers.Powered, out var powerLayer, false))
         {
-            var state = isRunning ? component.RunningState : component.IdleState;
-            args.Sprite.LayerSetAnimationTime(runningLayer, 0f);
-            args.Sprite.LayerSetState(runningLayer, state);
+            _sprite.LayerSetVisible((uid, args.Sprite), powerLayer, powered);
+
+            if (component.UnlitIdleState != null &&
+                component.UnlitRunningState != null)
+            {
+                var state = isRunning ? component.UnlitRunningState : component.UnlitIdleState;
+                _sprite.LayerSetRsiState((uid, args.Sprite), powerLayer, state);
+            }
         }
     }
 

@@ -5,12 +5,12 @@ namespace Content.Shared.Item;
 /// <summary>
 /// This is a prototype for a category of an item's size.
 /// </summary>
-[Prototype("itemSize")]
+[Prototype]
 public sealed partial class ItemSizePrototype : IPrototype, IComparable<ItemSizePrototype>
 {
     /// <inheritdoc/>
     [IdDataField]
-    public string ID { get; set; } = default!;
+    public string ID { get; private set; } = default!;
 
     /// <summary>
     /// The amount of space in a bag an item of this size takes.

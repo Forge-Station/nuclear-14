@@ -5,20 +5,16 @@ namespace Content.Server.Atmos.EntitySystems
 {
     public sealed partial class AtmosphereSystem
     {
-        [Dependency] private readonly IConfigurationManager _cfg = default!;
+        [Dependency] private IConfigurationManager _cfg = default!;
 
         public bool SpaceWind { get; private set; }
         public float SpaceWindPressureForceDivisorThrow { get; private set; }
         public float SpaceWindPressureForceDivisorPush { get; private set; }
         public float SpaceWindMaxVelocity { get; private set; }
         public float SpaceWindMaxPushForce { get; private set; }
-        public float SpaceWindMinimumCalculatedMass { get; private set; }
-        public float SpaceWindMaximumCalculatedInverseMass { get; private set; }
-        public bool MonstermosUseExpensiveAirflow { get; private set; }
         public bool MonstermosEqualization { get; private set; }
         public bool MonstermosDepressurization { get; private set; }
         public bool MonstermosRipTiles { get; private set; }
-        public float MonstermosRipTilesMinimumPressure { get; private set; }
         public bool GridImpulse { get; private set; }
         public float SpacingEscapeRatio { get; private set; }
         public float SpacingMinGas { get; private set; }
@@ -29,8 +25,9 @@ namespace Content.Server.Atmos.EntitySystems
         public float AtmosMaxProcessTime { get; private set; }
         public float AtmosTickRate { get; private set; }
         public float Speedup { get; private set; }
-        public float HeatScale { get; private set; }
-        public float HumanoidThrowMultiplier { get; private set; }
+        public bool DeltaPressureDamage { get; private set; }
+        public int DeltaPressureParallelProcessPerIteration { get; private set; }
+        public int DeltaPressureParallelBatchSize { get; private set; }
 
         /// <summary>
         /// Time between each atmos sub-update.  If you are writing an atmos device, use AtmosDeviceUpdateEvent.dt
@@ -46,13 +43,9 @@ namespace Content.Server.Atmos.EntitySystems
             Subs.CVar(_cfg, CCVars.SpaceWindPressureForceDivisorPush, value => SpaceWindPressureForceDivisorPush = value, true);
             Subs.CVar(_cfg, CCVars.SpaceWindMaxVelocity, value => SpaceWindMaxVelocity = value, true);
             Subs.CVar(_cfg, CCVars.SpaceWindMaxPushForce, value => SpaceWindMaxPushForce = value, true);
-            Subs.CVar(_cfg, CCVars.SpaceWindMinimumCalculatedMass, value => SpaceWindMinimumCalculatedMass = value, true);
-            Subs.CVar(_cfg, CCVars.SpaceWindMaximumCalculatedInverseMass, value => SpaceWindMaximumCalculatedInverseMass = value, true);
-            Subs.CVar(_cfg, CCVars.MonstermosUseExpensiveAirflow, value => MonstermosUseExpensiveAirflow = value, true);
             Subs.CVar(_cfg, CCVars.MonstermosEqualization, value => MonstermosEqualization = value, true);
             Subs.CVar(_cfg, CCVars.MonstermosDepressurization, value => MonstermosDepressurization = value, true);
             Subs.CVar(_cfg, CCVars.MonstermosRipTiles, value => MonstermosRipTiles = value, true);
-            Subs.CVar(_cfg, CCVars.MonstermosRipTilesMinimumPressure, value => MonstermosRipTilesMinimumPressure = value, true);
             Subs.CVar(_cfg, CCVars.AtmosGridImpulse, value => GridImpulse = value, true);
             Subs.CVar(_cfg, CCVars.AtmosSpacingEscapeRatio, value => SpacingEscapeRatio = value, true);
             Subs.CVar(_cfg, CCVars.AtmosSpacingMinGas, value => SpacingMinGas = value, true);
@@ -61,10 +54,11 @@ namespace Content.Server.Atmos.EntitySystems
             Subs.CVar(_cfg, CCVars.AtmosMaxProcessTime, value => AtmosMaxProcessTime = value, true);
             Subs.CVar(_cfg, CCVars.AtmosTickRate, value => AtmosTickRate = value, true);
             Subs.CVar(_cfg, CCVars.AtmosSpeedup, value => Speedup = value, true);
-            Subs.CVar(_cfg, CCVars.AtmosHeatScale, value => { HeatScale = value; InitializeGases(); }, true);
             Subs.CVar(_cfg, CCVars.ExcitedGroups, value => ExcitedGroups = value, true);
             Subs.CVar(_cfg, CCVars.ExcitedGroupsSpaceIsAllConsuming, value => ExcitedGroupsSpaceIsAllConsuming = value, true);
-            Subs.CVar(_cfg, CCVars.AtmosHumanoidThrowMultiplier, value => HumanoidThrowMultiplier = value, true);
+            Subs.CVar(_cfg, CCVars.DeltaPressureDamage, value => DeltaPressureDamage = value, true);
+            Subs.CVar(_cfg, CCVars.DeltaPressureParallelToProcessPerIteration, value => DeltaPressureParallelProcessPerIteration = value, true);
+            Subs.CVar(_cfg, CCVars.DeltaPressureParallelBatchSize, value => DeltaPressureParallelBatchSize = value, true);
         }
     }
 }

@@ -1,4 +1,4 @@
-using Content.Server.Shuttles.Components;
+using Content.Shared.Shuttles.Components;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Dynamics;
 using Robust.Shared.Physics.Events;
@@ -8,7 +8,7 @@ namespace Content.Server.Shuttles.Systems;
 /// <summary>
 ///     Deletes anything with <see cref="SpaceGarbageComponent"/> that has a cross-grid collision with a static body.
 /// </summary>
-public sealed class SpaceGarbageSystem : EntitySystem
+public sealed partial class SpaceGarbageSystem : EntitySystem
 {
     private EntityQuery<TransformComponent> _xformQuery;
 

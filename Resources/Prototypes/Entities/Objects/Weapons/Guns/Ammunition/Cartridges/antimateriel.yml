@@ -1,7 +1,8 @@
 - type: entity
-  parent: BaseCartridge
+  parent: [ BaseCartridge, BaseMajorContraband ]
   id: CartridgeAntiMateriel
   name: cartridge (.60 anti-materiel)
+  description: A high-power cartridge used by high-precision rifles.
   components:
   - type: Material #Forge-add-start
   - type: PhysicalComposition
@@ -11,7 +12,6 @@
       N14Gunpowder: 10
   - type: Tag
     tags:
-    - Cartridge
     - CartridgeAntiMateriel
   - type: CartridgeAmmo
     proto: BulletAntiMateriel

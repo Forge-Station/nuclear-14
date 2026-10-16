@@ -6,18 +6,19 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Popups;
 using Content.Shared.Throwing;
+using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.CombatMode.Pacification;
 
-public sealed class PacificationSystem : EntitySystem
+public sealed partial class PacificationSystem : EntitySystem
 {
-    [Dependency] private readonly AlertsSystem _alertsSystem = default!;
-    [Dependency] private readonly SharedActionsSystem _actionsSystem = default!;
-    [Dependency] private readonly SharedCombatModeSystem _combatSystem = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private AlertsSystem _alertsSystem = default!;
+    [Dependency] private SharedActionsSystem _actionsSystem = default!;
+    [Dependency] private SharedCombatModeSystem _combatSystem = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     public override void Initialize()
     {
@@ -54,13 +55,21 @@ public sealed class PacificationSystem : EntitySystem
             && !(_timing.CurTime > user.Comp.NextPopupTime))
             return;
 
-        _popup.PopupClient(Loc.GetString(reason, ("entity", target)), user, user);
+        var targetName = Identity.Entity(target, EntityManager);
+        _popup.PopupEntity(Loc.GetString(reason, ("entity", targetName)), user, user);
         user.Comp.NextPopupTime = _timing.CurTime + user.Comp.PopupCooldown;
         user.Comp.LastAttackedEntity = target;
     }
 
     private void OnShootAttempt(Entity<PacifiedComponent> ent, ref ShotAttemptedEvent args)
     {
+        if (HasComp<PacifismAllowedGunComponent>(args.Used))
+            return;
+
+        if (TryComp<BatteryWeaponFireModesComponent>(args.Used, out var component))
+            if (component.FireModes[component.CurrentFireMode].PacifismAllowedMode)
+                return;
+
         // Disallow firing guns in all cases.
         ShowPopup(ent, args.Used, "pacified-cannot-fire-gun");
         args.Cancel();

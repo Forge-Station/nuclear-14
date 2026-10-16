@@ -6,8 +6,10 @@ namespace Content.Server.Objectives.Systems;
 /// <summary>
 /// Handles checking the job blacklist for this objective.
 /// </summary>
-public sealed class NotJobRequirementSystem : EntitySystem
+public sealed partial class NotJobRequirementSystem : EntitySystem
 {
+    [Dependency] private SharedJobSystem _jobs = default!;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -20,11 +22,10 @@ public sealed class NotJobRequirementSystem : EntitySystem
         if (args.Cancelled)
             return;
 
-        // if player has no job then don't care
-        if (!TryComp<JobComponent>(args.MindId, out var job))
-            return;
+        _jobs.MindTryGetJob(args.MindId, out var proto);
 
-        if (job.Prototype == comp.Job)
+        // if player has no job then don't care
+        if (proto is not null && comp.Jobs.Contains(proto.ID))
             args.Cancelled = true;
     }
 }

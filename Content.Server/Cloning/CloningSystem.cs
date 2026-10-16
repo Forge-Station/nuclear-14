@@ -1,405 +1,281 @@
-using Content.Server.Atmos.EntitySystems;
-using Content.Server.Chat.Systems;
-using Content.Server.Cloning.Components;
-using Content.Server.Construction;
-using Content.Server.DeviceLinking.Systems;
-using Content.Server.EUI;
-using Content.Server.Fluids.EntitySystems;
-using Content.Server.Humanoid;
-using Content.Server.Jobs;
-using Content.Server.Materials;
-using Content.Server.Popups;
-using Content.Server.Power.EntitySystems;
-using Content.Shared.Silicon.Components; // Goobstation
-using Content.Shared.Atmos;
-using Content.Shared.CCVar;
-using Content.Shared.Chemistry.Components;
+using Content.Shared.Administration.Logs;
+using Content.Shared.Body;
 using Content.Shared.Cloning;
-using Content.Shared.Damage;
-using Content.Shared.DeviceLinking.Events;
-using Content.Shared.Emag.Systems;
-using Content.Shared.Examine;
-using Content.Shared.GameTicking;
+using Content.Shared.Cloning.Events;
+using Content.Shared.Database;
 using Content.Shared.Humanoid;
-using Content.Shared.Mind;
-using Content.Shared.Mind.Components;
-using Content.Shared.Mobs.Systems;
-using Content.Shared.Random;
-using Content.Shared.Roles.Jobs;
-using Robust.Server.Containers;
-using Robust.Server.GameObjects;
-using Robust.Server.Player;
-using Robust.Shared.Audio.Systems;
-using Robust.Shared.Configuration;
+using Content.Shared.IdentityManagement;
+using Content.Shared.Inventory;
+using Content.Shared.Implants;
+using Content.Shared.Implants.Components;
+using Content.Shared.NameModifier.EntitySystems;
+using Content.Shared.Silicon.Components; // Goobstation
+using Content.Shared.StatusEffect;
+using Content.Shared.Storage;
+using Content.Shared.Storage.EntitySystems;
+using Content.Shared.Whitelist;
 using Robust.Shared.Containers;
-using Robust.Shared.Physics.Components;
+using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
-using Content.Shared.Tag;
-using Content.Shared.Preferences;
-using Content.Shared.Humanoid.Prototypes;
-using Content.Shared.Random.Helpers;
-using Content.Shared.Contests;
-using Robust.Shared.Serialization.Manager;
-using Robust.Shared.Utility;
-using Timer = Robust.Shared.Timing.Timer;
-using Content.Server.Power.Components;
-using Content.Shared.Drunk;
-using Content.Shared.Nutrition.EntitySystems;
-using Content.Shared.Power;
-
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Content.Server.Cloning;
 
-public sealed partial class CloningSystem : EntitySystem
+/// <summary>
+///     System responsible for making a copy of a humanoid's body.
+///     For the cloning machines themselves look at CloningPodSystem, CloningConsoleSystem and MedicalScannerSystem instead.
+/// </summary>
+public sealed partial class CloningSystem : SharedCloningSystem
 {
-    [Dependency] private readonly DeviceLinkSystem _signalSystem = default!;
-    [Dependency] private readonly IPlayerManager _playerManager = null!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly EuiManager _euiManager = null!;
-    [Dependency] private readonly CloningConsoleSystem _cloningConsoleSystem = default!;
-    [Dependency] private readonly HumanoidAppearanceSystem _humanoidSystem = default!;
-    [Dependency] private readonly ContainerSystem _containerSystem = default!;
-    [Dependency] private readonly MobStateSystem _mobStateSystem = default!;
-    [Dependency] private readonly PowerReceiverSystem _powerReceiverSystem = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly AtmosphereSystem _atmosphereSystem = default!;
-    [Dependency] private readonly TransformSystem _transformSystem = default!;
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
-    [Dependency] private readonly PuddleSystem _puddleSystem = default!;
-    [Dependency] private readonly ChatSystem _chatSystem = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly IConfigurationManager _config = default!;
-    [Dependency] private readonly MaterialStorageSystem _material = default!;
-    [Dependency] private readonly PopupSystem _popupSystem = default!;
-    [Dependency] private readonly SharedMindSystem _mindSystem = default!;
-    [Dependency] private readonly MetaDataSystem _metaSystem = default!;
-    [Dependency] private readonly SharedJobSystem _jobs = default!;
-    [Dependency] private readonly TagSystem _tag = default!;
-    [Dependency] private readonly ContestsSystem _contests = default!;
-    [Dependency] private readonly ISerializationManager _serialization = default!;
-    [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly HungerSystem _hunger = default!;
-    [Dependency] private readonly ThirstSystem _thirst = default!;
-    [Dependency] private readonly SharedDrunkSystem _drunk = default!;
-    [Dependency] private readonly MobThresholdSystem _thresholds = default!;
-    public readonly Dictionary<MindComponent, EntityUid> ClonesWaitingForMind = new();
+    [Dependency] private InventorySystem _inventory = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
+    [Dependency] private EntityWhitelistSystem _whitelist = default!;
+    [Dependency] private ISharedAdminLogManager _adminLogger = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedStorageSystem _storage = default!;
+    [Dependency] private SharedSubdermalImplantSystem _subdermalImplant = default!;
+    [Dependency] private SharedVisualBodySystem _visualBody = default!;
+    [Dependency] private NameModifierSystem _nameMod = default!;
+    [Dependency] private IdentitySystem _identity = default!;
 
-    // <summary>
-    //   The minimum mass an entity needs for its mass to affect the cloning timer with a MassContest.
-    // </summary>
-    private const float MinMassContestMass = 71f;
-
-    public override void Initialize()
+    public override bool TryCloning(
+        EntityUid original,
+        MapCoordinates? coords,
+        ProtoId<CloningSettingsPrototype> settingsId,
+        [NotNullWhen(true)] out EntityUid? clone)
     {
-        base.Initialize();
+        clone = null;
+        if (!ProtoMan.Resolve(settingsId, out var settings))
+            return false; // invalid settings
 
-        SubscribeLocalEvent<CloningPodComponent, ComponentInit>(OnComponentInit);
-        SubscribeLocalEvent<RoundRestartCleanupEvent>(Reset);
-        SubscribeLocalEvent<BeingClonedComponent, MindAddedMessage>(HandleMindAdded);
-        SubscribeLocalEvent<CloningPodComponent, PortDisconnectedEvent>(OnPortDisconnected);
-        SubscribeLocalEvent<CloningPodComponent, AnchorStateChangedEvent>(OnAnchor);
-        SubscribeLocalEvent<CloningPodComponent, ExaminedEvent>(OnExamined);
-        SubscribeLocalEvent<CloningPodComponent, GotEmaggedEvent>(OnEmagged);
-        SubscribeLocalEvent<CloningPodComponent, PowerChangedEvent>(OnPowerChanged);
-        SubscribeLocalEvent<CloningPodComponent, RefreshPartsEvent>(OnPartsRefreshed);
-        SubscribeLocalEvent<CloningPodComponent, UpgradeExamineEvent>(OnUpgradeExamine);
-    }
-    private void OnPartsRefreshed(EntityUid uid, CloningPodComponent component, RefreshPartsEvent args)
-    {
-        var materialRating = args.PartRatings[component.MachinePartMaterialUse];
-        var speedRating = args.PartRatings[component.MachinePartCloningSpeed];
+        if (!TryComp<HumanoidProfileComponent>(original, out var humanoid))
+            return false; // whatever body was to be cloned, was not a humanoid
 
-        component.BiomassCostMultiplier = MathF.Pow(component.PartRatingMaterialMultiplier, materialRating - 1);
-        component.CloningTime = component.CloningTime * MathF.Pow(component.PartRatingSpeedMultiplier, speedRating - 1);
-    }
+        if (!ProtoMan.Resolve(humanoid.Species, out var speciesPrototype))
+            return false; // invalid species
 
-    private void OnUpgradeExamine(EntityUid uid, CloningPodComponent component, UpgradeExamineEvent args)
-    {
-        args.AddPercentageUpgrade("cloning-pod-component-upgrade-speed", component.CloningTime / component.CloningTime);
-        args.AddPercentageUpgrade("cloning-pod-component-upgrade-biomass-requirement", component.BiomassCostMultiplier);
-    }
-    private void OnPortDisconnected(EntityUid uid, CloningPodComponent pod, PortDisconnectedEvent args)
-    {
-        pod.ConnectedConsole = null;
-    }
-
-    private void OnAnchor(EntityUid uid, CloningPodComponent component, ref AnchorStateChangedEvent args)
-    {
-        if (component.ActivelyCloning)
-            CauseCloningFail(uid, component);
-
-        if (component.ConnectedConsole == null
-            || !TryComp<CloningConsoleComponent>(component.ConnectedConsole, out var console)
-            || !args.Anchored
-            || !_cloningConsoleSystem.RecheckConnections(component.ConnectedConsole.Value, uid, console.GeneticScanner, console))
-            return;
-
-        _cloningConsoleSystem.UpdateUserInterface(component.ConnectedConsole.Value, console);
-    }
-
-    private void OnExamined(EntityUid uid, CloningPodComponent component, ExaminedEvent args)
-    {
-        if (!args.IsInDetailsRange
-            || !_powerReceiverSystem.IsPowered(uid))
-            return;
-
-        args.PushMarkup(Loc.GetString("cloning-pod-biomass", ("number", _material.GetMaterialAmount(uid, component.RequiredMaterial))));
-    }
-    private void OnComponentInit(EntityUid uid, CloningPodComponent clonePod, ComponentInit args)
-    {
-        clonePod.BodyContainer = _containerSystem.EnsureContainer<ContainerSlot>(uid, "clonepod-bodyContainer");
-        _signalSystem.EnsureSinkPorts(uid, CloningPodComponent.PodPort);
-    }
-
-    private void OnPowerChanged(EntityUid uid, CloningPodComponent component, PowerChangedEvent args)
-    {
-        if (!args.Powered && component.ActivelyCloning)
-            CauseCloningFail(uid, component);
-    }
-
-    /// <summary>
-    ///     On emag, spawns a failed clone when cloning process fails which attacks nearby crew.
-    /// </summary>
-    private void OnEmagged(EntityUid uid, CloningPodComponent clonePod, ref GotEmaggedEvent args)
-    {
-        if (!this.IsPowered(uid, EntityManager))
-            return;
-
-        if (clonePod.ActivelyCloning)
-            CauseCloningFail(uid, clonePod);
-
-        _audio.PlayPvs(clonePod.SparkSound, uid);
-        _popupSystem.PopupEntity(Loc.GetString("cloning-pod-component-upgrade-emag-requirement"), uid);
-        args.Handled = true;
-    }
-
-    private void Reset(RoundRestartCleanupEvent ev)
-    {
-        ClonesWaitingForMind.Clear();
-    }
-
-    /// <summary>
-    ///     The master function behind Cloning, called by the cloning console via button press to start the cloning process.
-    /// </summary>
-    public bool TryCloning(EntityUid uid, EntityUid bodyToClone, Entity<MindComponent> mindEnt, CloningPodComponent clonePod, float failChanceModifier = 1)
-    {
-        var allowLivingPeople = _config.GetCVar(CCVars.CloningAllowLivingPeople);
-        if ((!allowLivingPeople && !_mobStateSystem.IsDead(bodyToClone))
-            || clonePod.ActivelyCloning
-            || clonePod.ConnectedConsole == null
-            || !CheckUncloneable(uid, bodyToClone, clonePod, out var cloningCostMultiplier)
-            || !TryComp<HumanoidAppearanceComponent>(bodyToClone, out var humanoid)
-            || !TryComp<PhysicsComponent>(bodyToClone, out var physics))
-            return false;
-
-        var mind = mindEnt.Comp;
-        if (ClonesWaitingForMind.TryGetValue(mind, out var clone))
-        {
-            if (!allowLivingPeople &&
-                EntityManager.EntityExists(clone) &&
-                !_mobStateSystem.IsDead(clone) &&
-                TryComp<MindContainerComponent>(clone, out var cloneMindComp) &&
-                (cloneMindComp.Mind == null || cloneMindComp.Mind == mindEnt))
-                return false; // Mind already has clone
-
-            ClonesWaitingForMind.Remove(mind);
-        }
-
-        if ((!allowLivingPeople && mind.OwnedEntity != null && !_mobStateSystem.IsDead(mind.OwnedEntity.Value))
-            || mind.UserId == null
-            || !_playerManager.TryGetSessionById(mind.UserId.Value, out var client)
-            || !CheckBiomassCost(uid, physics, clonePod, cloningCostMultiplier))
-            return false;
-
-        // Special handling for humanoid data related to metempsychosis. This function is needed for Paradox Anomaly code to play nice with reincarnated people
-        var pref = humanoid.LastProfileLoaded;
-        if (pref == null
-            || !_prototypeManager.TryIndex(humanoid.Species, out var speciesPrototype))
-            return false;
-
-        if (HasComp<SiliconComponent>(bodyToClone))
+        if (HasComp<SiliconComponent>(original))
             return false; // Goobstation: Don't clone IPCs.
 
-        // Yes, this can return true without making a body. If it returns true, we're making clone soup instead.
-        if (CheckGeneticDamage(uid, bodyToClone, clonePod, out var geneticDamage, failChanceModifier))
-            return true;
+        if (!settings.ForceCloning)
+        {
+            var attemptEv = new CloningAttemptEvent(settings);
+            RaiseLocalEvent(original, ref attemptEv);
+            if (attemptEv.Cancelled)
+                return false; // cannot clone, for example due to the unrevivable trait
+        }
 
-        var mob = FetchAndSpawnMob(uid, clonePod, pref, speciesPrototype, humanoid, bodyToClone, geneticDamage);
-        var ev = new CloningEvent(bodyToClone, mob);
-        RaiseLocalEvent(bodyToClone, ref ev);
+        clone = coords == null ? Spawn(speciesPrototype.Prototype) : Spawn(speciesPrototype.Prototype, coords.Value);
+        _visualBody.CopyAppearanceFrom(original, clone.Value);
 
-        if (!ev.NameHandled)
-            _metaSystem.SetEntityName(mob, MetaData(bodyToClone).EntityName);
+        CloneComponents(original, clone.Value, settings);
 
-        var cloneMindReturn = EntityManager.AddComponent<BeingClonedComponent>(mob);
-        cloneMindReturn.Mind = mindEnt.Comp;
-        cloneMindReturn.Parent = uid;
-        _containerSystem.Insert(mob, clonePod.BodyContainer);
-        ClonesWaitingForMind.Add(mindEnt.Comp, mob);
-        UpdateStatus(uid, CloningPodStatus.NoMind, clonePod);
-        _euiManager.OpenEui(new AcceptCloningEui(mindEnt, mindEnt.Comp, this), client);
+        // Add equipment first so that SetEntityName also renames the ID card.
+        if (settings.CopyEquipment != null)
+            CopyEquipment(original, clone.Value, settings.CopyEquipment.Value, settings.EquipmentWhitelist, settings.EquipmentBlacklist);
 
-        clonePod.ActivelyCloning = true;
+        // Copy storage on the mob itself as well.
+        // This is needed for slime storage.
+        if (settings.CopyInternalStorage)
+            CopyStorage(original, clone.Value, settings.EquipmentWhitelist, settings.EquipmentBlacklist);
 
-        if (_jobs.MindTryGetJob(mindEnt, out _, out var prototype))
-            foreach (var special in prototype.Special)
-                if (special is AddComponentSpecial)
-                    special.AfterEquip(mob);
+        // copy implants and their storage contents
+        if (settings.CopyImplants)
+            CopyImplants(original, clone.Value, settings.CopyInternalStorage, settings.EquipmentWhitelist, settings.EquipmentBlacklist);
 
+        // Copy permanent status effects
+        if (settings.CopyStatusEffects)
+            CopyStatusEffects(original, clone.Value, settings.StatusEffectWhitelist, settings.StatusEffectBlacklist);
+
+        var originalName = _nameMod.GetBaseName(original);
+
+        // Set the clone's name. The raised events will also adjust their PDA and ID card names.
+        _metaData.SetEntityName(clone.Value, originalName, raiseEvents: settings.RaiseEntityRenamedEvent);
+        _metaData.SetEntityDescription(clone.Value, Description(original));
+        _identity.QueueIdentityUpdate(clone.Value); // We have to manually refresh the identity in case we did not raise events.
+
+        _adminLogger.Add(LogType.Chat, LogImpact.Medium, $"The body of {original:player} was cloned as {clone.Value:player}");
         return true;
     }
 
-    /// <summary>
-    ///     Begins the cloning timer, which at the end can either produce clone soup, or a functional body, depending on if anything interrupts the procedure.
-    /// </summary>
-    public void AttemptCloning(EntityUid cloningPod, CloningPodComponent cloningPodComponent)
+    public override void CloneComponents(
+        EntityUid original,
+        EntityUid clone,
+        ProtoId<CloningSettingsPrototype> settings)
     {
-        if (cloningPodComponent.BodyContainer.ContainedEntity is { Valid: true } entity
-            && TryComp<PhysicsComponent>(entity, out var physics)
-            && physics.Mass > MinMassContestMass)
-        {
-            Timer.Spawn(TimeSpan.FromSeconds(cloningPodComponent.CloningTime * _contests.MassContest(entity, physics, true)), () => EndCloning(cloningPod, cloningPodComponent));
+        if (!ProtoMan.Resolve(settings, out var proto))
             return;
+
+        CloneComponents(original, clone, proto);
+    }
+
+    public override void CloneComponents(
+        EntityUid original,
+        EntityUid clone,
+        CloningSettingsPrototype settings)
+    {
+        var componentsToCopy = settings.Components;
+        var componentsToEvent = settings.EventComponents;
+
+        // don't make status effects permanent
+        if (TryComp<StatusEffectsComponent>(original, out var statusComp))
+        {
+            var statusComps = statusComp.ActiveEffects.Values.Select(s => s.RelevantComponent).Where(s => s != null).ToList();
+            componentsToCopy.ExceptWith(statusComps!);
+            componentsToEvent.ExceptWith(statusComps!);
         }
 
-        Timer.Spawn(TimeSpan.FromSeconds(cloningPodComponent.CloningTime), () => EndCloning(cloningPod, cloningPodComponent));
-    }
-
-    /// <summary>
-    ///     Ding, your body is ready. Time to find out if it's soup or solid.
-    /// </summary>
-    public void EndCloning(EntityUid cloningPod, CloningPodComponent cloningPodComponent)
-    {
-        if (!cloningPodComponent.ActivelyCloning
-            || !_powerReceiverSystem.IsPowered(cloningPod)
-            || cloningPodComponent.BodyContainer.ContainedEntity == null
-            || cloningPodComponent.FailedClone)
-            EndFailedCloning(cloningPod, cloningPodComponent); //Surprise, it's soup!
-
-        Eject(cloningPod, cloningPodComponent); //Hey look, a body!
-    }
-
-    public void UpdateStatus(EntityUid podUid, CloningPodStatus status, CloningPodComponent cloningPod)
-    {
-        cloningPod.Status = status;
-        _appearance.SetData(podUid, CloningPodVisuals.Status, cloningPod.Status);
-    }
-
-    /// <summary>
-    ///     This function handles the Clone vs. Metem logic, as well as creation of the new body.
-    /// </summary>
-    private EntityUid FetchAndSpawnMob(
-        EntityUid clonePod,
-        CloningPodComponent clonePodComp,
-        HumanoidCharacterProfile pref,
-        SpeciesPrototype speciesPrototype,
-        HumanoidAppearanceComponent humanoid,
-        EntityUid bodyToClone,
-        float geneticDamage
-    )
-    {
-        List<Sex> sexes = new();
-        bool switchingSpecies = false;
-        var toSpawn = speciesPrototype.Prototype;
-        var forceOldProfile = true;
-        var oldKarma = 0;
-        var oldGender = humanoid.Gender;
-        if (TryComp<MetempsychosisKarmaComponent>(bodyToClone, out var oldKarmaComp))
-            oldKarma += oldKarmaComp.Score;
-
-        if (clonePodComp.DoMetempsychosis)
+        foreach (var componentName in componentsToCopy)
         {
-            toSpawn = GetSpawnEntity(bodyToClone, clonePodComp, speciesPrototype, oldKarma, out var newSpecies, out var changeProfile);
-            forceOldProfile = !changeProfile;
-            oldKarma++;
-
-            if (changeProfile)
-                geneticDamage = 0;
-
-            if (newSpecies != null)
+            if (!Factory.TryGetRegistration(componentName, out var componentRegistration))
             {
-                sexes = newSpecies.Sexes;
+                Log.Error($"Tried to use invalid component registration for cloning: {componentName}");
+                continue;
+            }
 
-                if (speciesPrototype.ID != newSpecies.ID)
-                    switchingSpecies = true;
+            // If the original does not have the component, then the clone shouldn't have it either.
+            RemComp(clone, componentRegistration.Type);
+            if (TryComp(original, componentRegistration.Type, out var sourceComp)) // Does the original have this component?
+            {
+                CopyComp(original, clone, sourceComp);
             }
         }
-        EntityUid mob = Spawn(toSpawn, _transformSystem.GetMapCoordinates(clonePod));
-        EnsureComp<MetempsychosisKarmaComponent>(mob, out var newKarma);
-        newKarma.Score += oldKarma;
 
-        UpdateCloneDamage(mob, clonePodComp, geneticDamage);
-        UpdateCloneAppearance(mob, pref, humanoid, sexes, oldGender, switchingSpecies, forceOldProfile, out var gender);
-        var ev = new CloningEvent(bodyToClone, mob);
-        RaiseLocalEvent(bodyToClone, ref ev);
+        foreach (var componentName in componentsToEvent)
+        {
+            if (!Factory.TryGetRegistration(componentName, out var componentRegistration))
+            {
+                Log.Error($"Tried to use invalid component registration for cloning: {componentName}");
+                continue;
+            }
 
-        if (!ev.NameHandled)
-            _metaSystem.SetEntityName(mob, MetaData(bodyToClone).EntityName);
+            // If the original does not have the component, then the clone shouldn't have it either.
+            if (!HasComp(original, componentRegistration.Type))
+                RemComp(clone, componentRegistration.Type);
+        }
 
-        UpdateGrammar(mob, gender);
-        CleanupCloneComponents(mob, bodyToClone, forceOldProfile, clonePodComp.DoMetempsychosis);
-        UpdateHungerAndThirst(mob, clonePodComp);
-
-        return mob;
+        var cloningEv = new CloningEvent(settings, clone);
+        RaiseLocalEvent(original, ref cloningEv); // used for datafields that cannot be directly copied using CopyComp
     }
 
-    public string GetSpawnEntity(EntityUid oldBody, CloningPodComponent component, SpeciesPrototype oldSpecies, int karma, out SpeciesPrototype? species, out bool changeProfile)
+    public override void CopyEquipment(
+        Entity<InventoryComponent?> original,
+        Entity<InventoryComponent?> clone,
+        SlotFlags slotFlags,
+        EntityWhitelist? whitelist = null,
+        EntityWhitelist? blacklist = null)
     {
-        changeProfile = true;
-        species = oldSpecies;
-        if (!_prototypeManager.TryIndex<WeightedRandomPrototype>(component.MetempsychoticHumanoidPool, out var humanoidPool)
-            || !_prototypeManager.TryIndex<SpeciesPrototype>(humanoidPool.Pick(), out var speciesPrototype)
-            || !_prototypeManager.TryIndex<WeightedRandomPrototype>(component.MetempsychoticNonHumanoidPool, out var nonHumanoidPool)
-            || !_prototypeManager.TryIndex<EntityPrototype>(nonHumanoidPool.Pick(), out var entityPrototype))
+        if (!Resolve(original, ref original.Comp) || !Resolve(clone, ref clone.Comp))
+            return;
+
+        var coords = Transform(clone).Coordinates;
+
+        // Iterate over all inventory slots
+        var slotEnumerator = _inventory.GetSlotEnumerator(original, slotFlags);
+        while (slotEnumerator.NextItem(out var item, out var slot))
         {
-            DebugTools.Assert("Could not index species for metempsychotic machine.");
-            changeProfile = false;
-            return oldSpecies.Prototype;
+            var cloneItem = CopyItem(item, coords, whitelist, blacklist);
+
+            if (cloneItem != null && !_inventory.TryEquip(clone, cloneItem.Value, slot.Name, silent: true, inventory: clone.Comp))
+                Del(cloneItem); // delete it again if the clone cannot equip it
         }
-        var chance = (component.HumanoidBaseChance - karma * component.KarmaOffset) * _contests.MindContest(oldBody, true);
+    }
 
+    public override EntityUid? CopyItem(
+        EntityUid original,
+        EntityCoordinates coords,
+        EntityWhitelist? whitelist = null,
+        EntityWhitelist? blacklist = null)
+    {
+        // we use a whitelist and blacklist to be sure to exclude any problematic entities
+        if (!_whitelist.CheckBoth(original, blacklist, whitelist))
+            return null;
 
-        var ev = new ReincarnatingEvent(oldBody, chance);
-        RaiseLocalEvent(oldBody, ref ev);
+        var prototype = MetaData(original).EntityPrototype?.ID;
+        if (prototype == null)
+            return null;
 
-        chance = ev.OverrideChance
-            ? ev.ReincarnationChances
-            : chance * ev.ReincarnationChanceModifier;
+        var spawned = SpawnAtPosition(prototype, coords);
 
-        switch (ev.ForcedType)
+        // copy over important component data
+        var ev = new CloningItemEvent(spawned);
+        RaiseLocalEvent(original, ref ev);
+
+        // if the original has items inside its storage, copy those as well
+        if (TryComp<StorageComponent>(original, out var originalStorage) && TryComp<StorageComponent>(spawned, out var spawnedStorage))
         {
-            case ForcedMetempsychosisType.None:
-                if (!ev.NeverTrulyClone
-                    && chance > 1
-                    && _random.Prob(chance - 1))
-                {
-                    changeProfile = false;
-                    return oldSpecies.Prototype;
-                }
+            // remove all items that spawned with the entity inside its storage
+            // this ignores other containers, but this should be good enough for our purposes
+            _container.CleanContainer(spawnedStorage.Container);
 
-                chance = Math.Clamp(chance, 0, 1);
-                if (_random.Prob(chance))
-                {
-                    species = speciesPrototype;
-                    return speciesPrototype.Prototype;
-                }
-                species = null;
-                return entityPrototype.ID;
-
-            case ForcedMetempsychosisType.Clone:
-                changeProfile = false;
-                return oldSpecies.Prototype;
-
-            case ForcedMetempsychosisType.RandomHumanoid:
-                species = speciesPrototype;
-                return speciesPrototype.Prototype;
-
-            case ForcedMetempsychosisType.RandomNonHumanoid:
-                species = null;
-                return entityPrototype.ID;
+            // recursively replace them
+            // surely no one will ever create two items that contain each other causing an infinite loop, right?
+            foreach ((var itemUid, var itemLocation) in originalStorage.StoredItems)
+            {
+                var copy = CopyItem(itemUid, coords, whitelist, blacklist);
+                if (copy != null)
+                    _storage.InsertAt((spawned, spawnedStorage), copy.Value, itemLocation, out _, playSound: false);
+            }
         }
-        changeProfile = false;
-        return oldSpecies.Prototype;
+
+        return spawned;
+    }
+
+    public override void CopyStorage(
+        Entity<StorageComponent?> original,
+        Entity<StorageComponent?> target,
+        EntityWhitelist? whitelist = null,
+        EntityWhitelist? blacklist = null)
+    {
+        if (!Resolve(original, ref original.Comp, false) || !Resolve(target, ref target.Comp, false))
+            return;
+
+        var coords = Transform(target).Coordinates;
+
+        // delete all items in the target storage
+        _container.CleanContainer(target.Comp.Container);
+
+        // recursively replace them
+        foreach ((var itemUid, var itemLocation) in original.Comp.StoredItems)
+        {
+            var copy = CopyItem(itemUid, coords, whitelist, blacklist);
+            if (copy != null)
+                _storage.InsertAt(target, copy.Value, itemLocation, out _, playSound: false);
+        }
+    }
+
+    public override void CopyImplants(
+        Entity<ImplantedComponent?> original,
+        EntityUid target,
+        bool copyStorage = false,
+        EntityWhitelist? whitelist = null,
+        EntityWhitelist? blacklist = null)
+    {
+        if (!Resolve(original, ref original.Comp, false))
+            return; // they don't have any implants to copy!
+
+        foreach (var originalImplant in original.Comp.ImplantContainer.ContainedEntities)
+        {
+            if (!HasComp<SubdermalImplantComponent>(originalImplant))
+                continue; // not an implant (should only happen with admin shenanigans)
+
+            var implantId = MetaData(originalImplant).EntityPrototype?.ID;
+
+            if (implantId == null)
+                continue;
+
+            var targetImplant = _subdermalImplant.AddImplant(target, implantId);
+
+            if (targetImplant == null)
+                continue;
+
+            // copy over important component data
+            var ev = new CloningItemEvent(targetImplant.Value);
+            RaiseLocalEvent(originalImplant, ref ev);
+
+            if (copyStorage)
+                CopyStorage(originalImplant, targetImplant.Value, whitelist, blacklist); // only needed for storage implants
+        }
     }
 }

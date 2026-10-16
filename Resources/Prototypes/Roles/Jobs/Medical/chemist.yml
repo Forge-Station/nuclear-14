@@ -4,42 +4,31 @@
   description: job-description-chemist
   playTimeTracker: JobChemist
   requirements:
-    - !type:CharacterDepartmentTimeRequirement
+    - !type:DepartmentTimeRequirement
       department: Medical
-      min: 28800 # DeltaV - 8 hours
+      time: 5h
   startingGear: ChemistGear
   icon: "JobIconChemist"
   supervisors: job-supervisors-cmo
+  guides: [ Chemist ]
   access:
   - Medical
   - Chemistry
   - Maintenance
-  special:
-  - !type:AddComponentSpecial
-    components:
-    - type: CPRTraining
-    - type: SurgerySpeedModifier
-      speedModifier: 1.75
-  setPreference: false
 
 - type: startingGear
   id: ChemistGear
-  subGear:
-  - ChemistPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitChemistry
-    back: ClothingBackpackChemistryFilled
-    shoes: ClothingShoesColorWhite
     id: ChemistryPDA
     ears: ClothingHeadsetMedical
-  innerClothingSkirt: ClothingUniformJumpskirtChemistry
-  satchel: ClothingBackpackSatchelChemistryFilled
-  duffelbag: ClothingBackpackDuffelChemistryFilled
 
-- type: startingGear
-  id: ChemistPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: ChemistChameleonOutfit
+  job: Chemist
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitChemist
-    head: ClothingHeadEnvirohelmChemist
-    gloves: ClothingHandsGlovesEnviroglovesWhite
+    head: ClothingHeadHatBeretMedic
+    eyes: ClothingEyesGlassesChemical
+    mask: ClothingMaskSterile
+    neck: ClothingNeckStethoscope
+    outerClothing: ClothingOuterCoatLabChem
+    gloves: ClothingHandsGlovesLatex

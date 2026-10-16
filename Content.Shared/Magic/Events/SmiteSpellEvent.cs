@@ -1,9 +1,8 @@
-﻿using Content.Shared.Actions;
-using Content.Shared.Chat;
+using Content.Shared.Actions;
 
 namespace Content.Shared.Magic.Events;
 
-public sealed partial class SmiteSpellEvent : EntityTargetActionEvent, ISpeakSpell
+public sealed partial class SmiteSpellEvent : EntityTargetActionEvent
 {
     // TODO: Make part of gib method
     /// <summary>
@@ -11,9 +10,4 @@ public sealed partial class SmiteSpellEvent : EntityTargetActionEvent, ISpeakSpe
     /// </summary>
     [DataField]
     public bool DeleteNonBrainParts = true;
-
-    [DataField]
-    public string? Speech { get; private set; }
-
-    public InGameICChatType ChatType { get; } = InGameICChatType.Speak;
 }

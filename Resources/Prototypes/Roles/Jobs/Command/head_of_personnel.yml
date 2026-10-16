@@ -3,20 +3,26 @@
   name: job-name-hop
   description: job-description-hop
   playTimeTracker: JobHeadOfPersonnel
-  antagAdvantage: 6 # DeltaV - Reduced TC: Head of Staff
-  setPreference: false
-  # requirements:
-    # - !type:CharacterTraitRequirement
-      # inverted: true
-      # traits:
-        # - Foreigner
-        # - ForeignerLight
-  weight: 10 # DeltaV - Changed HoP weight from 20 to 10 due to them not being more important than other Heads
+  requirements:
+    - !type:DepartmentTimeRequirement
+      department: Engineering
+      time: 2.5h
+    - !type:DepartmentTimeRequirement
+      department: Medical
+      time: 2.5h
+    - !type:DepartmentTimeRequirement
+      department: Science
+      time: 2.5h
+    - !type:DepartmentTimeRequirement
+      department: Security
+      time: 2.5h
+    - !type:DepartmentTimeRequirement
+      department: Command
+      time: 2.5h
   startingGear: HoPGear
   icon: "JobIconHeadOfPersonnel"
-  requireAdminNotify: true
   supervisors: job-supervisors-captain
-  canBeAntag: false
+  guides: [ Command ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Command
   - HeadOfPersonnel
@@ -26,62 +32,54 @@
   - Janitor
   - Theatre
   - Kitchen
-#  - Chapel
+  - Chapel
   - Hydroponics
   - External
   - Cryogenics
   # I mean they'll give themselves the rest of the access levels *anyways*.
   # As of 15/03/23 they can't do that so here's MOST of the rest of the access levels.
   # Head level access that isn't their own was deliberately left out, get AA from the captain instead.
-  # Delta V - fuck all of this HoP is a service role
-#  - Chemistry
-#  - Engineering
-#  - Research
-#  - Detective
-#  - Salvage
-#  - Security # NoooOoOo!! My HoPcurity!1
-#  - Brig
+  - Chemistry
+  - Engineering
+  - Research
+  - Detective
+  - Salvage
+  - Security
+  - Brig
   - Lawyer
   - Cargo
-#  - Atmospherics
-#  - Medical
-  - Boxer # DeltaV - Add Boxer access
-  - Clown # DeltaV - Add Clown access
-  - Library # DeltaV - Add Library access
-  - Mime # DeltaV - Add Mime access
-  - Musician # DeltaV - Add Musician access
-  - Reporter # DeltaV - Add Reporter access
-  - Zookeeper # DeltaV - Add Zookeeper access
+  - Atmospherics
+  - Medical
+  - GenpopEnter
+  - GenpopLeave
   special:
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
   - !type:AddComponentSpecial
     components:
       - type: CommandStaff
-  afterLoadoutSpecial:
-  - !type:ModifyEnvirosuitSpecial
-    charges: 8
-  - !type:ModifyEnvirohelmSpecial
-    powerCell: PowerCellHigh
 
 - type: startingGear
   id: HoPGear
-  subGear:
-  - HoPPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitHoP
-    back: ClothingBackpackHOPFilled
-    shoes: ClothingShoesLeather # DeltaV - HoP needs something better than plebe shoes.
+    shoes: ClothingShoesColorBrown
     id: HoPPDA
-    ears: ClothingHeadsetHoP # DeltaV - HoP is now a service role, replaces their all channels headset.
-  innerClothingSkirt: ClothingUniformJumpskirtHoP
-  satchel: ClothingBackpackSatchelHOPFilled
-  duffelbag: ClothingBackpackDuffelHOPFilled
+    gloves: ClothingHandsGlovesHop
+    ears: ClothingHeadsetAltCommand
+    belt: BoxFolderClipboardThreePapers
+    eyes: ClothingEyesHudCommand
+  storage:
+    back:
+    - Flash
 
-- type: startingGear
-  id: HoPPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: HeadOfPersonnelChameleonOutfit
+  job: HeadOfPersonnel
+  hasMindShield: true
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitHoP
-    head: ClothingHeadEnvirohelmHoP
-    gloves: ClothingHandsGlovesEnviroglovesHoP
+    head: ClothingHeadHatHopcap
+    eyes: ClothingEyesHudCommand
+    mask: ClothingMaskNeckGaiterRed
+    neck: ClothingNeckCloakHop
+    outerClothing: ClothingOuterWinterHoP
+

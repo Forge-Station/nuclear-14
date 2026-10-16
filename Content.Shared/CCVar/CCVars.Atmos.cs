@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Configuration;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
 
@@ -8,10 +8,7 @@ public sealed partial class CCVars
     ///     Whether gas differences will move entities.
     /// </summary>
     public static readonly CVarDef<bool> SpaceWind =
-        CVarDef.Create("atmos.space_wind", true, CVar.SERVERONLY);
-
-    public static readonly CVarDef<float> SpaceWindStrengthMultiplier =
-        CVarDef.Create("atmos.space_wind_strength_multiplier", 1f, CVar.SERVERONLY);
+        CVarDef.Create("atmos.space_wind", false, CVar.SERVERONLY);
 
     /// <summary>
     ///     Divisor from maxForce (pressureDifference * 2.25f) to force applied on objects.
@@ -30,7 +27,7 @@ public sealed partial class CCVars
     ///     Useful to prevent clipping through objects.
     /// </summary>
     public static readonly CVarDef<float> SpaceWindMaxVelocity =
-        CVarDef.Create("atmos.space_wind_max_velocity", 15f, CVar.SERVERONLY);
+        CVarDef.Create("atmos.space_wind_max_velocity", 30f, CVar.SERVERONLY);
 
     /// <summary>
     ///     The maximum force that may be applied to an object by pushing (i.e. not throwing) atmospheric pressure differences.
@@ -38,24 +35,6 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<float> SpaceWindMaxPushForce =
         CVarDef.Create("atmos.space_wind_max_push_force", 20f, CVar.SERVERONLY);
-
-    /// <summary>
-    ///     If an object's mass is below this number, then this number is used in place of mass to determine whether air pressure can throw an object.
-    ///     This has nothing to do with throwing force, only acting as a way of reducing the odds of tiny 5 gram objects from being yeeted by people's breath
-    /// </summary>
-    /// <remarks>
-    ///     If you are reading this because you want to change it, consider looking into why almost every item in the game weighs only 5 grams
-    ///     And maybe do your part to fix that? :)
-    /// </remarks>
-    public static readonly CVarDef<float> SpaceWindMinimumCalculatedMass =
-        CVarDef.Create("atmos.space_wind_minimum_calculated_mass", 5f, CVar.SERVERONLY);
-
-    /// <summary>
-    /// 	Calculated as 1/Mass, where Mass is the physics.Mass of the desired threshold.
-    /// 	If an object's inverse mass is lower than this, it is capped at this. Basically, an upper limit to how heavy an object can be before it stops resisting space wind more.
-    /// </summary>
-    public static readonly CVarDef<float> SpaceWindMaximumCalculatedInverseMass =
-        CVarDef.Create("atmos.space_wind_maximum_calculated_inverse_mass", 0.04f, CVar.SERVERONLY);
 
     /// <summary>
     ///     Whether monstermos tile equalization is enabled.
@@ -78,14 +57,7 @@ public sealed partial class CCVars
     ///     Also looks weird on slow spacing for unrelated reasons. If you do want to enable this, you should probably turn on instaspacing.
     /// </summary>
     public static readonly CVarDef<bool> MonstermosRipTiles =
-        CVarDef.Create("atmos.monstermos_rip_tiles", true, CVar.SERVERONLY);
-
-    /// <summary>
-    ///     Taken as the cube of a tile's mass, this acts as a minimum threshold of mass for which air pressure calculates whether or not to rip a tile from the floor
-    ///     This should be set by default to the cube of the game's lowest mass tile as defined in their prototypes, but can be increased for server performance reasons
-    /// </summary>
-    public static readonly CVarDef<float> MonstermosRipTilesMinimumPressure =
-        CVarDef.Create("atmos.monstermos_rip_tiles_min_pressure", 20f, CVar.SERVERONLY);
+        CVarDef.Create("atmos.monstermos_rip_tiles", false, CVar.SERVERONLY);
 
     /// <summary>
     ///     Whether explosive depressurization will cause the grid to gain an impulse.
@@ -99,7 +71,7 @@ public sealed partial class CCVars
     ///     1.0 for instant spacing, 0.2 means 20% of remaining air lost each time
     /// </summary>
     public static readonly CVarDef<float> AtmosSpacingEscapeRatio =
-        CVarDef.Create("atmos.mmos_spacing_speed", 0.05f, CVar.SERVERONLY);
+        CVarDef.Create("atmos.mmos_spacing_speed", 0.15f, CVar.SERVERONLY);
 
     /// <summary>
     ///     Minimum amount of air allowed on a spaced tile before it is reset to 0 immediately in kPa
@@ -115,13 +87,6 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<float> AtmosSpacingMaxWind =
         CVarDef.Create("atmos.mmos_max_wind", 500f, CVar.SERVERONLY);
-
-    /// <summary>
-    /// Increases default airflow calculations to O(n^2) complexity, for use with heavy space wind optimizations. Potato servers BEWARE
-    /// This solves the problem of objects being trapped in an infinite loop of slamming into a wall repeatedly.
-    /// </summary>
-    public static readonly CVarDef<bool> MonstermosUseExpensiveAirflow =
-        CVarDef.Create("atmos.mmos_expensive_airflow", false, CVar.SERVERONLY);
 
     /// <summary>
     ///     Whether atmos superconduction is enabled.
@@ -173,16 +138,52 @@ public sealed partial class CCVars
         CVarDef.Create("atmos.speedup", 8f, CVar.SERVERONLY);
 
     /// <summary>
-    ///     Like atmos.speedup, but only for gas and reaction heat values. 64x means
-    ///     gases heat up and cool down 64x faster than real life.
+    /// Like atmos.speedup, but only for gas and reaction heat values. 64x means
+    /// gases heat up and cool down 64x faster than real life.
     /// </summary>
+    /// <remarks><para>This is only supposed to facilitate the speedup of
+    /// heat transfer between bodies by making the heat capacities appear smaller.
+    /// In the context of a heat-only reaction like gas reactions creating heat,
+    /// you shouldn't be using the scaled specific heat.</para>
+    /// <para>So things like thermomachines and the TEG, which work based on heat transfer, would need to use the scaled value,
+    /// whereas heat-only reactions like gas reactions and anything else that "generates" or "consumes" heat would use the unscaled value.</para>
+    /// </remarks>
+    /// <example>Mechanics like the thermomachine or TEG should be affected by this CVAR change,
+    /// whereas gas reactions and heat-only interactions should stay the same.</example>
     public static readonly CVarDef<float> AtmosHeatScale =
-        CVarDef.Create("atmos.heat_scale", 8f, CVar.SERVERONLY);
+        CVarDef.Create("atmos.heat_scale", 8f, CVar.REPLICATED | CVar.SERVER);
 
     /// <summary>
-    ///     A multiplier on the amount of force applied to Humanoid entities, as tracked by HumanoidAppearanceComponent
-    ///     This multiplier is added after all other checks are made, and applies to both throwing force, and how easy it is for an entity to be thrown.
+    ///     Maximum explosion intensity for explosions caused by bursting a gas tank ("max caps").
+    ///     Setting this to zero disables the limits.
     /// </summary>
-    public static readonly CVarDef<float> AtmosHumanoidThrowMultiplier =
-        CVarDef.Create("atmos.humanoid_throw_multiplier", 2f, CVar.SERVERONLY);
+    public static readonly CVarDef<float> AtmosTankFragment =
+        CVarDef.Create("atmos.max_explosion_range", 0f, CVar.SERVER);
+
+    /// <summary>
+    /// Whether atmospherics will process delta-pressure damage on entities with a DeltaPressureComponent.
+    /// Entities with this component will take damage if they are exposed to a pressure difference
+    /// above the minimum pressure threshold defined in the component.
+    /// </summary>
+    // TODO: Needs CVARs for global configuration, like min pressure, max damage, etc.
+    public static readonly CVarDef<bool> DeltaPressureDamage =
+        CVarDef.Create("atmos.delta_pressure_damage", true, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Number of entities to submit for parallel processing per processing run.
+    /// Low numbers may suffer from thinning out the work per job and leading to threads waiting,
+    /// or seeing a lot of threading overhead.
+    /// High numbers may cause Atmospherics to exceed its time budget per tick, as it will not
+    /// check its time often enough to know if it's exceeding it.
+    /// </summary>
+    public static readonly CVarDef<int> DeltaPressureParallelToProcessPerIteration =
+        CVarDef.Create("atmos.delta_pressure_parallel_process_per_iteration", 1000, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Number of entities to process per processing job.
+    /// Low numbers may cause Atmospherics to see high threading overhead,
+    /// high numbers may cause Atmospherics to distribute the work unevenly.
+    /// </summary>
+    public static readonly CVarDef<int> DeltaPressureParallelBatchSize =
+        CVarDef.Create("atmos.delta_pressure_parallel_batch_size", 10, CVar.SERVERONLY);
 }

@@ -9,18 +9,18 @@ using System.Numerics;
 namespace Content.Client.Commands;
 
 [UsedImplicitly]
-public sealed class ZoomCommand : LocalizedCommands
+public sealed partial class ZoomCommand : LocalizedCommands
 {
-    [Dependency] private readonly IEntityManager _entityManager = default!;
-    [Dependency] private readonly IEyeManager _eyeManager = default!;
-    [Dependency] private readonly IPlayerManager _playerManager = default!;
+    [Dependency] private IEntityManager _entityManager = default!;
+    [Dependency] private IEyeManager _eyeManager = default!;
+    [Dependency] private IPlayerManager _playerManager = default!;
 
     public override string Command => "zoom";
 
     public override void Execute(IConsoleShell shell, string argStr, string[] args)
     {
         Vector2 zoom;
-        if (args.Length is not (1 or 2))
+        if (args.Length is not (1 or 2 or 3))
         {
             shell.WriteLine(Help);
             return;
@@ -57,11 +57,18 @@ public sealed class ZoomCommand : LocalizedCommands
             }
         }
 
+        var scalePvs = true;
+        if (args.Length == 3 && !bool.TryParse(args[2], out scalePvs))
+        {
+            shell.WriteError(LocalizationManager.GetString("cmd-parse-failure-bool", ("arg", args[2])));
+            return;
+        }
+
         var player = _playerManager.LocalSession?.AttachedEntity;
 
         if (_entityManager.TryGetComponent<ContentEyeComponent>(player, out var content))
         {
-            _entityManager.System<ContentEyeSystem>().RequestZoom(player.Value, zoom, true, content);
+            _entityManager.System<ContentEyeSystem>().RequestZoom(player.Value, zoom, true, scalePvs, content);
             return;
         }
 

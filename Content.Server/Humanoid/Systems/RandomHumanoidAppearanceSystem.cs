@@ -1,13 +1,14 @@
-using Content.Server.CharacterAppearance.Components;
+using Content.Shared.Body;
 using Content.Shared.Humanoid;
 using Content.Shared.Preferences;
 
 namespace Content.Server.Humanoid.Systems;
 
-public sealed class RandomHumanoidAppearanceSystem : EntitySystem
+public sealed partial class RandomHumanoidAppearanceSystem : EntitySystem
 {
-    [Dependency] private readonly HumanoidAppearanceSystem _humanoid = default!;
-    [Dependency] private readonly MetaDataSystem _metaData = default!;
+    [Dependency] private HumanoidProfileSystem _humanoidProfile = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
+    [Dependency] private SharedVisualBodySystem _visualBody = default!;
 
     public override void Initialize()
     {
@@ -19,35 +20,13 @@ public sealed class RandomHumanoidAppearanceSystem : EntitySystem
     private void OnMapInit(EntityUid uid, RandomHumanoidAppearanceComponent component, MapInitEvent args)
     {
         // If we have an initial profile/base layer set, do not randomize this humanoid.
-        if (!TryComp(uid, out HumanoidAppearanceComponent? humanoid) || !string.IsNullOrEmpty(humanoid.Initial))
-        {
+        if (!TryComp<HumanoidProfileComponent>(uid, out var humanoid))
             return;
-        }
 
         var profile = HumanoidCharacterProfile.RandomWithSpecies(humanoid.Species);
 
-        if (component.Sex is { } sex)
-        {
-            profile = profile.WithSex(sex);
-            profile = profile.WithVoice(HumanoidCharacterProfile.RandomVoiceForSex(sex));
-        }
-
-        if (component.Gender is { } gender)
-            profile = profile.WithGender(gender);
-
-        if (component.Age is { } age)
-            profile = profile.WithAge(Math.Max(0, age));
-
-        if (component.SkinColor is { } skinColor)
-            profile = profile.WithCharacterAppearance(profile.Appearance.WithSkinColor(skinColor));
-
-        if (!string.IsNullOrWhiteSpace(component.Hair))
-            profile = profile.WithCharacterAppearance(profile.Appearance.WithHairStyleName(component.Hair));
-
-        if (component.HairColor is { } hairColor)
-            profile = profile.WithCharacterAppearance(profile.Appearance.WithHairColor(hairColor));
-
-        _humanoid.LoadProfile(uid, profile, humanoid);
+        _visualBody.ApplyProfileTo(uid, profile);
+        _humanoidProfile.ApplyProfileTo(uid, profile);
 
         if (component.RandomizeName)
             _metaData.SetEntityName(uid, profile.Name);

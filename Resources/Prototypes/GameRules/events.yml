@@ -1,8 +1,84 @@
+- type: entityTable
+  id: BasicCalmEventsTable
+  table: !type:AllSelector # we need to pass a list of rules, since rules have further restrictions to consider via StationEventComp
+    children:
+    - id: AnomalySpawn
+    - id: BluespaceArtifact
+    - id: BluespaceLocker
+    - id: BreakerFlip
+    - id: BureaucraticError
+    - id: ClericalError
+    - id: CockroachMigration
+    - id: GasLeak
+    - id: GreytideVirus
+    - id: IonStorm # its calm like 90% of the time smh
+    - id: KudzuGrowth
+    - id: MassHallucinations
+    - id: MouseMigration
+    - id: PowerGridCheck
+    - id: RandomSentience
+    - id: SlimesSpawnHorde
+    - id: SolarFlare
+    - id: SnakeSpawnHorde
+    - id: SpiderClownSpawnHorde
+    - id: SpiderSpawnHorde
+    - id: VendorMalfunction
+    - id: VentClog
+
+- type: entityTable
+  id: BasicAntagEventsTable
+  table: !type:AllSelector # we need to pass a list of rules, since rules have further restrictions to consider via StationEventComp
+    children:
+    - id: ClosetSkeleton
+    - id: KingRatMigration
+    - id: RevenantSpawn
+    - !type:NestedSelector
+      tableId: DerelictBorgEventTable
+
+- type: entityTable
+  id: ModerateAntagEventsTable
+  table: !type:AllSelector # we need to pass a list of rules, since rules have further restrictions to consider via StationEventComp
+    children:
+    - id: DragonSpawn
+    - id: NinjaSpawn
+    - id: ParadoxCloneSpawn
+    - id: SleeperAgents
+    - id: ZombieOutbreak
+    - id: LoneOpsSpawn
+    - id: WizardSpawn
+    - id: SpaceChangelingSpawn
+    - !type:NestedSelector
+      tableId: DerelictBorgEventTable
+
+- type: entityTable
+  id: DerelictBorgEventTable #For Derelict Borg spawns
+  table: !type:GroupSelector
+    children:
+    - !type:GroupSelector # Standard NT Borgs
+      weight: 85
+      children:
+        - id: DerelictEngineerCyborgSpawn
+        - id: DerelictGenericCyborgSpawn
+        - id: DerelictJanitorCyborgSpawn
+        - id: DerelictMedicalCyborgSpawn
+        - id: DerelictMiningCyborgSpawn
+    - !type:GroupSelector # Other Borgs
+      weight: 15
+      children:
+        - id: DerelictSyndicateAssaultCyborgSpawn
+
+- type: entity
+  abstract: true
+  parent: BaseGameRule
+  id: BaseAntagGhostRoleRule
+  components:
+  - type: AntagSelection
+    selectionTime: Never
+
 - type: entity
   id: BaseStationEvent
   parent: BaseGameRule
   abstract: true
-  categories: [ HideSpawnMenu ]
   components:
   - type: GameRule
     delay:
@@ -10,10 +86,19 @@
       max:  20
 
 - type: entity
+  abstract: true
+  parent: BaseGameRule
+  id: BaseStationEventVeryShortDelay
+  components:
+  - type: GameRule
+    delay:
+      min:  5
+      max:  10
+
+- type: entity
   id: BaseStationEventShortDelay
   parent: BaseGameRule
   abstract: true
-  categories: [ HideSpawnMenu ]
   components:
   - type: GameRule
     delay:
@@ -24,7 +109,6 @@
   id: BaseStationEventLongDelay
   parent: BaseGameRule
   abstract: true
-  categories: [ HideSpawnMenu ]
   components:
   - type: GameRule
     delay:
@@ -33,327 +117,321 @@
 
 - type: entity
   id: AnomalySpawn
-  parent: BaseStationEventLongDelay
-  categories: [ HideSpawnMenu ]
+  parent: BaseStationEventShortDelay
   components:
-  # - type: StationEvent
-    # weight: 8
-    # duration: 35
+  - type: StationEvent
+    startAnnouncementColor: "#18abf5"
+    startAudio:
+      path: /Audio/Announcements/announce.ogg
+    weight: 8
+    duration: 35
   - type: AnomalySpawnRule
+  - type: DynamicRuleCost
+    cost: 10
 
-# - type: entity
-  # id: BluespaceArtifact
-  # parent: BaseStationEventLongDelay
-  # categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # weight: 8
-    # duration: 35
-  # - type: BluespaceArtifactRule
+- type: entity
+  id: BluespaceArtifact
+  parent: BaseStationEventShortDelay
+  components:
+  - type: GameRule
+    delay:
+      min:  30
+      max:  30
+  - type: StationEvent
+    startAnnouncementColor: "#18abf5"
+    startAudio:
+      path: /Audio/Announcements/announce.ogg
+    weight: 8
+    duration: 35
+  - type: BluespaceArtifactRule
+  - type: DynamicRuleCost
+    cost: 10
 
-# - type: entity
-  # id: BluespaceLocker
-  # parent: BaseGameRule
-  # categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # weight: 2
-    # reoccurrenceDelay: 5
-    # earliestStart: 1
-    # duration: 1
-  # - type: BluespaceLockerRule
+- type: entity
+  id: BluespaceLocker
+  parent: BaseGameRule
+  components:
+  - type: StationEvent
+    weight: 2
+    reoccurrenceDelay: 5
+    earliestStart: 1
+    duration: 1
+  - type: BluespaceLockerRule
+  - type: DynamicRuleCost
+    cost: 10
 
-# - type: entity
-  # id: BreakerFlip
-  # parent: BaseGameRule
-  # categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # weight: 7
-    # duration: 1
-    # minimumPlayers: 15
-  # - type: BreakerFlipRule
+- type: entity
+  parent: BaseGameRule
+  id: BreakerFlip
+  components:
+  - type: StationEvent
+    weight: 7
+    duration: 1
+    minimumPlayers: 15
+    startAudio:
+      path: /Audio/Announcements/announce.ogg
+  - type: BreakerFlipRule
+  - type: DynamicRuleCost
+    cost: 10
 
-# - type: entity
-  # id: BureaucraticError
-  # parent: BaseGameRule
-  # categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # minimumPlayers: 25
-    # weight: 3
-    # duration: 1
-  # - type: BureaucraticErrorRule
+- type: entity
+  parent: BaseGameRule
+  id: BureaucraticError
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-bureaucratic-error-announcement
+    minimumPlayers: 25
+    weight: 3
+    duration: 1
+  - type: BureaucraticErrorRule
+    ignoredJobs:
+    - StationAi
+    - ResearchAssistant
+    - MedicalIntern
+    - SecurityCadet
+    - TechnicalAssistant
+  - type: DynamicRuleCost
+    cost: 10
 
-# - type: entity
-  # id: ClericalError
-  # parent: BaseGameRule
-  # categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # minimumPlayers: 15
-    # weight: 5
-    # duration: 1
-  # - type: ClericalErrorRule
+- type: entity
+  id: ClericalError
+  parent: BaseGameRule
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-clerical-error-announcement
+    minimumPlayers: 15
+    weight: 5
+    duration: 1
+  - type: ClericalErrorRule
+  - type: DynamicRuleCost
+    cost: 15
 
 - type: entity
   parent: BaseGameRule
   id: ClosetSkeleton
-  categories: [ HideSpawnMenu ]
   components:
-  # - type: StationEvent
-    # weight: 5
-    # duration: 1
-    # minimumPlayers: 10
+  - type: StationEvent
+    weight: 5
+    duration: 1
+    occursDuringRoundEnd: false
+    minimumPlayers: 10
   - type: RandomEntityStorageSpawnRule
     prototype: MobSkeletonCloset
+  - type: DynamicRuleCost
+    cost: 50
 
 - type: entity
-  parent: BaseGameRule
+  parent: BaseAntagGhostRoleRule
   id: DragonSpawn
-  categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # weight: 6.5
-    # duration: 1
-    # earliestStart: 40
-    # reoccurrenceDelay: 20
-    # minimumPlayers: 20
-  # - type: RandomSpawnRule
-    # prototype: SpawnPointGhostDragon
+  components:
+  - type: StationEvent
+    weight: 6.5
+    earliestStart: 40
+    reoccurrenceDelay: 20
+    minimumPlayers: 20
+    duration: null
+    occursDuringRoundEnd: false
+  - type: SpaceSpawnRule
+    spawnDistance: 0
+  - type: AntagSpawner
+    prototype: MobDragon
+  - type: DragonRule
+  - type: AntagObjectives
+    objectives:
+    - CarpRiftsObjective
+    - DragonSurviveObjective
+  - type: AntagSelection
+    agentName: dragon-round-end-agent-name
+    antags:
+    - !type:FixedAntagCount
+      proto: Dragon
+  - type: DynamicRuleCost
+    cost: 75
 
 - type: entity
-  parent: BaseGameRule
+  parent: BaseAntagGhostRoleRule
+  id: SpaceChangelingSpawn
+  components:
+  - type: StationEvent
+    weight: 6
+    earliestStart: 20 # can start early since lings need time to start doing stuff
+    reoccurrenceDelay: 40
+    minimumPlayers: 20
+    duration: null
+    occursDuringRoundEnd: false
+  - type: SpaceSpawnRule
+    spawnDistance: 80
+  - type: AntagSpawner
+    prototype: MobHeadSlugElder
+  - type: ChangelingRule
+  - type: AntagRandomObjectives
+    sets:
+    - groups: ChangelingObjectiveGroupDevourDummy
+      maxPicks: 1
+    - groups: ChangelingObjectiveGroupEscapeDummy
+      maxPicks: 1
+    - groups: ChangelingObjectiveGroupKillDummy
+      maxPicks: 1
+    maxDifficulty: 8
+  - type: AntagSelection
+    agentName: changeling-round-end-agent-name
+    antags:
+    - !type:FixedAntagCount
+      proto: SpaceChangeling
+  - type: DynamicRuleCost
+    cost: 75
+
+- type: entity
+  parent: BaseAntagGhostRoleRule
   id: NinjaSpawn
-  categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # weight: 6
-    # duration: 1
-    # earliestStart: 30
-    # reoccurrenceDelay: 20
-    # minimumPlayers: 30
-  # - type: SpaceSpawnRule
-  # - type: AntagLoadProfileRule
-  # - type: AntagObjectives
-    # objectives:
-    # - StealResearchObjective
-    # - DoorjackObjective
-    # - SpiderChargeObjective
-    # - TerrorObjective
-    # - MassArrestObjective
-    # - NinjaSurviveObjective
-  # - type: AntagSelection
-    # agentName: ninja-round-end-agent-name
-    # definitions:
-    # - spawnerPrototype: SpawnPointGhostSpaceNinja
-      # min: 1
-      # max: 1
-      # pickPlayer: false
-      # startingGear: SpaceNinjaGear
-      # briefing:
-        # text: ninja-role-greeting
-        # color: Green
-        # sound: /Audio/Misc/ninja_greeting.ogg
-      # components:
-      # - type: SpaceNinja
-      # - type: NpcFactionMember
-        # factions:
-        # - Syndicate
-      # - type: AutoImplant
-        # implants:
-        # - DeathAcidifierImplant
-      # - type: RandomMetadata
-        # nameSegments:
-        # - names_ninja_title
-        # - names_ninja
-      # mindComponents:
-      # - type: NinjaRole
-        # prototype: SpaceNinja
+  components:
+  - type: StationEvent
+    weight: 6
+    duration: null
+    occursDuringRoundEnd: false
+    earliestStart: 30
+    reoccurrenceDelay: 20
+    minimumPlayers: 30
+  - type: SpaceSpawnRule
+  - type: AntagLoadProfileRule
+  - type: AntagObjectives
+    objectives:
+    - StealResearchObjective
+    - DoorjackObjective
+    - SpiderChargeObjective
+    - TerrorObjective
+    - MassArrestObjective
+    - NinjaSurviveObjective
+  - type: AntagSelection
+    agentName: ninja-round-end-agent-name
+    antags:
+    - !type:FixedAntagCount
+      proto: SpaceNinja
+  - type: DynamicRuleCost
+    cost: 75
+
+- type: entity
+  parent: BaseAntagGhostRoleRule
+  id: ParadoxCloneSpawn
+  components:
+  - type: StationEvent
+    weight: 5
+    duration: null
+    occursDuringRoundEnd: false
+    earliestStart: 20
+    reoccurrenceDelay: 20
+    minimumPlayers: 15
+  - type: ParadoxCloneRule
+    objectiveBlacklist:
+      tags:
+      - ParadoxCloneObjectiveBlacklist
+  - type: AntagObjectives
+    objectives:
+    - ParadoxCloneKillObjective
+    - ParadoxCloneLivingObjective
+  - type: AntagRandomSpawn # TODO: improve spawning so they only start in maints
+  - type: AntagSelection
+    agentName: paradox-clone-round-end-agent-name
+    antags:
+    - !type:FixedAntagCount
+      proto: ParadoxClone
+  - type: DynamicRuleCost
+    cost: 75
 
 - type: entity
   parent: BaseGameRule
   id: RevenantSpawn
-  categories: [ HideSpawnMenu ]
   components:
-  # - type: StationEvent
-    # weight: 7.5
-    # duration: 1
-    # earliestStart: 45
-    # minimumPlayers: 20
+  - type: StationEvent
+    weight: 7.5
+    duration: 1
+    occursDuringRoundEnd: false
+    earliestStart: 45
+    minimumPlayers: 20
   - type: RandomSpawnRule
     prototype: MobRevenant
+  - type: DynamicRuleCost
+    cost: 75
 
-# # disabled until event is rewritten to be more interesting
-# #- type: entity
-# #  id: FalseAlarm
-# #  parent: BaseGameRule
-# #  categories: [ HideSpawnMenu ]
-# #  components:
-# #  - type: StationEvent
-# #    weight: 15
-# #    duration: 1
-# #  - type: FalseAlarmRule
+- type: entity
+  parent: [ BaseAntagGhostRoleRule, BaseWizardRule ]
+  id: WizardSpawn
+  components:
+  - type: StationEvent
+    weight: 1 # rare
+    duration: null
+    occursDuringRoundEnd: false
+    earliestStart: 30
+    reoccurrenceDelay: 60
+    minimumPlayers: 30
+
+# disabled until event is rewritten to be more interesting
+#- type: entity
+#  id: FalseAlarm
+#  parent: BaseGameRule
+#  components:
+#  - type: StationEvent
+#    weight: 15
+#    duration: 1
+#  - type: FalseAlarmRule
 
 - type: entity
   id: GasLeak
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
+  parent: BaseStationEventShortDelay
   components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # endAnnouncement: true
-    # weight: 8
-    # startDelay: 20
+  - type: StationEvent
+    startAnnouncement: station-event-gas-leak-start-announcement
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    endAnnouncement: station-event-gas-leak-end-announcement
+    weight: 8
   - type: GasLeakRule
+  - type: DynamicRuleCost
+    cost: 25
 
 - type: entity
   id: KudzuGrowth
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
+  parent: BaseStationEventLongDelay
   components:
-  # - type: StationEvent
-    # earliestStart: 15
-    # minimumPlayers: 15
-    # weight: 7
-    # startDelay: 50
-    # duration: 240
+  - type: StationEvent
+    earliestStart: 15
+    minimumPlayers: 15
+    weight: 7
+    duration: 240
   - type: KudzuGrowthRule
-
-- type: entity
-  id: MeteorSwarm
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
-  components:
-  # - type: StationEvent
-    # earliestStart: 30
-    # weight: 7.5
-    # minimumPlayers: 10 #Enough to hopefully have at least one engineering guy
-    # startAnnouncement: true
-    # endAnnouncement: true
-    # duration: null #ending is handled by MeteorSwarmRule
-    # startDelay: 30
-  - type: MeteorSwarmRule
-
-- type: entity
-  id: MouseMigration
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
-  components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # startDelay: 10
-    # earliestStart: 15
-    # weight: 6
-    # duration: 50
-  - type: VentCrittersRule
-    entries:
-    - id: MobMouse
-      prob: 0.02
-    - id: MobMouse1
-      prob: 0.02
-    - id: MobMouse2
-      prob: 0.02
-    - id: MobMouseCancer
-      prob: 0.001
-    specialEntries:
-    - id: SpawnPointGhostRatKing
-      prob: 0.001
-
-- type: entity
-  id: CockroachMigration
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
-  components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # startDelay: 10
-    # weight: 6
-    # duration: 50
-  - type: VentCrittersRule
-    entries:
-    - id: MobCockroach
-      prob: 0.03
-    - id: MobMothroach
-      prob: 0.008
-
-- type: entity
-  id: SnailMigrationLowPop
-  parent: BaseGameRule
-  components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # startDelay: 10
-    # weight: 6
-    # duration: 50
-  - type: VentCrittersRule
-    entries:
-    - id: MobSnail
-      prob: 0.02
-    - id: MobSnailSpeed
-      prob: 0.002
-    - id: MobSnailMoth
-      prob: 0.002
-
-- type: entity
-  id: SnailMigration
-  parent: BaseStationEventShortDelay
-  components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # earliestStart: 15
-    # weight: 6
-    # duration: 50
-    # minimumPlayers: 30
-  - type: VentCrittersRule
-    entries:
-    - id: MobSnail
-      prob: 0.02
-    - id: MobSnailSpeed
-      prob: 0.002
-    - id: MobSnailMoth
-      prob: 0.002
-    - id: MobSnailInstantDeath
-      prob: 0.00001 #  ~ 1:2000 snails
+  - type: DynamicRuleCost
+    cost: 40 #this shit can get insane
 
 - type: entity
   id: PowerGridCheck
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
+  parent: BaseStationEventShortDelay
   components:
-  # - type: StationEvent
-    # weight: 5
-    # startAnnouncement: true
-    # endAnnouncement: true
-    # startDelay: 24
-    # duration: 60
-    # maxDuration: 120
+  - type: StationEvent
+    weight: 5
+    startAnnouncement: station-event-power-grid-check-start-announcement
+    endAnnouncement: station-event-power-grid-check-end-announcement
+    startAudio:
+      path: /Audio/Announcements/power_off.ogg
+      params:
+        volume: -4
+    duration: 50
+    maxDuration: 100
   - type: PowerGridCheckRule
-
-- type: entity
-  id: RandomSentience
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
-  components:
-  # - type: StationEvent
-    # weight: 6
-    # duration: 1
-    # maxOccurrences: 1 # this event has diminishing returns on interesting-ness, so we cap it
-  - type: RandomSentienceRule
+  - type: DynamicRuleCost
+    cost: 20
 
 - type: entity
   parent: BaseGameRule
   id: SolarFlare
-  categories: [ HideSpawnMenu ]
   components:
-  # - type: StationEvent
-    # weight: 8
-    # startAnnouncement: true
-    # endAnnouncement: true
-    # duration: 120
-    # maxDuration: 240
+  - type: StationEvent
+    weight: 8
+    startAnnouncement: station-event-solar-flare-start-announcement
+    endAnnouncement: station-event-solar-flare-end-announcement
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    duration: 120
+    maxDuration: 240
   - type: SolarFlareRule
     onlyJamHeadsets: true
     affectedChannels:
@@ -369,231 +447,348 @@
     extraCount: 2
     lightBreakChancePerSecond: 0.0003
     doorToggleChancePerSecond: 0.001
+  - type: DynamicRuleCost
+    cost: 10
+
+- type: entity
+  parent: BaseStationEventVeryShortDelay
+  id: VendorMalfunction
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vendor-malfunction-announcement
+    startAudio:
+      path: /Audio/Announcements/announce.ogg
+    weight: 5
+    duration: 1
+  - type: VendorMalfunctionRule
+  - type: DynamicRuleCost
+    cost: 5
 
 - type: entity
   id: VentClog
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
+  parent: BaseStationEventLongDelay
   components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # earliestStart: 15
-    # minimumPlayers: 15
-    # weight: 5
-    # startDelay: 50
-    # duration: 60
+  - type: StationEvent
+    startAnnouncement: station-event-vent-clog-start-announcement
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    earliestStart: 15
+    minimumPlayers: 15
+    weight: 5
+    duration: 60
   - type: VentClogRule
+  - type: DynamicRuleCost
+    cost: 15
+
+# Critters
 
 - type: entity
-  id: SlimesSpawn
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # startDelay: 10
-    # earliestStart: 20
-    # minimumPlayers: 15
-    # weight: 5
-    # duration: 60
-  # - type: VentCrittersRule
-    # entries:
-    # - id: MobAdultSlimesBlueAngry
-      # prob: 0.02
-    # - id: MobAdultSlimesGreenAngry
-      # prob: 0.02
-    # - id: MobAdultSlimesYellowAngry
-      # prob: 0.02
+  id: SlimesSpawnHorde
+  parent: BaseStationEventShortDelay
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vent-creatures-start-horde-announcement
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    earliestStart: 20
+    minimumPlayers: 15
+    weight: 5
+    duration: 5
+    maxDuration: 20
+  - type: VentHordeRule
+    table: !type:GroupSelector
+      rolls: 4, 8
+      children:
+      - id: MobAdultSlimesBlueAngry
+      - id: MobAdultSlimesGreenAngry
+      - id: MobAdultSlimesYellowAngry
+  - type: DynamicRuleCost
+    cost: 30
 
 - type: entity
-  id: SpiderSpawn
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # startAnnouncement: true
-    # startDelay: 10
-    # earliestStart: 20
-    # minimumPlayers: 15
-    # weight: 5
-    # duration: 60
-  # - type: VentCrittersRule
-    # entries:
-    # - id: MobGiantSpiderAngry
-      # prob: 0.05
+  id: SnakeSpawnHorde
+  parent: BaseStationEventShortDelay
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vent-creatures-start-horde-announcement
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    earliestStart: 20
+    minimumPlayers: 15
+    weight: 5
+    duration: 5
+    maxDuration: 20
+  - type: VentHordeRule
+    table: !type:GroupSelector
+      rolls: 4, 8
+      children:
+      - id: MobPurpleSnake
+      - id: MobSmallPurpleSnake
+      - id: MobCobraSpace
+  - type: DynamicRuleCost
+    cost: 30
 
 - type: entity
-  id: SpiderClownSpawn
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
-  # components:
-  # - type: StationEvent
-    # startAnnouncement: false
-    # startDelay: 10
-    # earliestStart: 20
-    # minimumPlayers: 20
-    # weight: 1.5
-    # duration: 60
-  # - type: VentCrittersRule
-    # entries:
-    # - id: MobClownSpider
-      # prob: 0.05
+  id: SpiderSpawnHorde
+  parent: BaseStationEventShortDelay
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vent-creatures-start-horde-announcement
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    earliestStart: 20
+    minimumPlayers: 15
+    weight: 5
+    duration: 5
+    maxDuration: 20
+  - type: VentHordeRule
+    table: !type:GroupSelector
+      rolls: 4, 8
+      children:
+      - id: MobGiantSpiderTarantulaAngry
+      - id: MobGiantSpiderHunterAngry
+      - id: MobGiantSpiderGuardAngry
+      - id: MobGiantSpiderMidwifeAngry
+      - id: MobGiantSpiderNurseAngry
+  - type: DynamicRuleCost
+    cost: 30
+
+- type: entity
+  id: SpiderClownSpawnHorde
+  parent: BaseStationEventShortDelay
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vent-creatures-start-horde-announcement
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    earliestStart: 20
+    minimumPlayers: 20
+    weight: 1.5
+    duration: 5
+    maxDuration: 20
+  - type: VentHordeRule
+    table: !type:GroupSelector
+      rolls: 4, 8
+      children:
+      - id: MobGiantSpiderClownAngry
+  - type: DynamicRuleCost
+    cost: 30
 
 - type: entity
   id: ZombieOutbreak
   parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
   components:
-  # - type: StationEvent
-    # earliestStart: 50
-    # minimumPlayers: 30
-    # weight: 2
-    # duration: 1
+  - type: StationEvent
+    earliestStart: 45
+    minimumPlayers: 40
+    weight: 1
+    duration: 1
+    occursDuringRoundEnd: false
   - type: ZombieRule
   - type: AntagSelection
-    definitions:
-    - prefRoles: [ InitialInfected ]
-      max: 3
-      playerRatio: 10
-      blacklist:
-        components:
-        - ZombieImmune
-        - AntagImmune
-      briefing:
-        text: zombie-patientzero-role-greeting
-        color: Plum
-        sound: "/Audio/Ambience/Antag/zombie_start.ogg"
-      components:
-      - type: PendingZombie #less time to prepare than normal
-        minInitialInfectedGrace: 300
-        maxInitialInfectedGrace: 450
-      - type: ZombifyOnDeath
-      - type: IncurableZombie
-      mindComponents:
-      - type: InitialInfectedRole
-        prototype: InitialInfected
+    antags:
+    - !type:LinearAntagCount
+      proto: InitialInfected
+      range:
+        min: 1
+        max: 3
+  - type: DynamicRuleCost
+    cost: 200
 
 - type: entity
-  categories: [ HideSpawnMenu ]
-  parent: BaseNukeopsRule
+  parent: [ BaseAntagGhostRoleRule, BaseNukeopsRule ]
   id: LoneOpsSpawn
-  # components:
-  # - type: StationEvent
-    # earliestStart: 35
-    # weight: 5.5
-    # minimumPlayers: 20
-    # duration: 1
-  # - type: LoadMapRule
-    # preloadedGrid: ShuttleStriker
-  # - type: NukeopsRule
-    # roundEndBehavior: Nothing
-  # - type: AntagSelection
-    # definitions:
-    # - spawnerPrototype: SpawnPointLoneNukeOperative
-      # min: 1
-      # max: 1
-      # pickPlayer: false
-      # startingGear: SyndicateLoneOperativeGearFull
-      # components:
-      # - type: NukeOperative
-      # - type: RandomMetadata
-        # nameSegments:
-        # - SyndicateNamesPrefix
-        # - SyndicateNamesNormal
-      # - type: NpcFactionMember
-        # factions:
-        # - Syndicate
-      # mindComponents:
-      # - type: NukeopsRole
-        # prototype: Nukeops
+  components:
+  - type: StationEvent
+    earliestStart: 35
+    weight: 5.5
+    minimumPlayers: 20
+    duration: null # LoneOpsSpawn needs an infinite duration so that it inherits the NukeOpsRule things of an actually appropriate end screen (not always "Neutral outcome!") and... ending the game if the station is nuked.
+    occursDuringRoundEnd: false
+  - type: RuleGrids
+  - type: LoadMapRule
+    gridPath: /Maps/Shuttles/ShuttleEvent/striker.yml
+  - type: NukeopsRule
+    roundEndBehavior: Nothing
+  - type: AntagSelection
+    antags:
+    - !type:FixedAntagCount
+      proto: LoneOp
+  - type: DynamicRuleCost
+    cost: 75
 
 - type: entity
-  categories: [ HideSpawnMenu ]
   parent: BaseTraitorRule
   id: SleeperAgents
   components:
-  # - type: StationEvent
-    # earliestStart: 25
-    # weight: 8
-    # minimumPlayers: 15
-    # reoccurrenceDelay: 30
-    # startAnnouncement: false
-# # - type: AlertLevelInterceptionRule - Disable setting to blue with sleeper agents. Uncomment to enable.
+  - type: StationEvent
+    earliestStart: 30
+    weight: 8
+    minimumPlayers: 15
+    maxOccurrences: 1 # can only happen once per round
+    startAnnouncement: station-event-communication-interception
+    startAudio:
+      path: /Audio/Announcements/intercept.ogg
+    duration: null # the rule has to last the whole round not 1 second
+    occursDuringRoundEnd: false
+  - type: AlertLevelInterceptionRule
   - type: AntagSelection
-    definitions:
-    - prefRoles: [ TraitorSleeper ]
-      fallbackRoles: [ Traitor ]
-      min: 1
-      max: 2
-      playerRatio: 10
-      blacklist:
-        components:
-        - AntagImmune
-      mindComponents:
-      - type: TraitorRole
-        prototype: TraitorSleeper
+    antags:
+    - !type:LinearAntagCount
+      proto: TraitorSleeper
+      range:
+        min: 1
+        max: 2
+  - type: DynamicRuleCost
+    cost: 50
 
 - type: entity
   id: MassHallucinations
   parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
   components:
-  # - type: StationEvent
-    # weight: 7
-    # duration: 150
-    # maxDuration: 300
-    # reoccurrenceDelay: 30
+  - type: StationEvent
+    weight: 7
+    duration: 150
+    maxDuration: 300
+    reoccurrenceDelay: 30
   - type: MassHallucinationsRule
     minTimeBetweenIncidents: 0.1
     maxTimeBetweenIncidents: 300
     maxSoundDistance: 7
     sounds:
       collection: Paracusia
+  - type: DynamicRuleCost
+    cost: 10
 
 - type: entity
-  id: ImmovableRodSpawn
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
-  components:
-  # - type: StationEvent
-    # startAnnouncement: false
-    # weight: 2
-    # duration: 1
-    # earliestStart: 45
-    # minimumPlayers: 20
-  - type: ImmovableRodRule
-
-- type: entity
-  categories: [ HideSpawnMenu ]
   parent: BaseGameRule
   id: IonStorm
   components:
-  # - type: StationEvent
-    # weight: 8
-    # reoccurrenceDelay: 20
-    # duration: 1
+  - type: StationEvent
+    weight: 8
+    reoccurrenceDelay: 20
+    duration: 1
   - type: IonStormRule
+  - type: DynamicRuleCost
+    cost: 25
 
 - type: entity
-  id: MimicVendorRule
-  parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
+  id: GreytideVirus
+  parent: BaseStationEventShortDelay
   components:
-    # - type: StationEvent
-      # earliestStart: 0
-      # minimumPlayers: 20
-      # maxOccurrences: 1 # this event has diminishing returns on interesting-ness, so we cap it
-      # weight: 5
-   - type: MobReplacementRule
+  - type: StationEvent
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    weight: 5
+    minimumPlayers: 25
+    reoccurrenceDelay: 20
+  - type: GreytideVirusRule
+    accessGroups:
+    - Cargo
+    - Command
+    - Engineering
+    - Research
+    - Security
+    - Service
+    blacklist:
+    - External # don't space everything
+  - type: DynamicRuleCost
+    cost: 25
 
 - type: entity
-  id: AirlockVirusRule
   parent: BaseGameRule
-  categories: [ HideSpawnMenu ]
+  id: SmugglerStashVariationPass
   components:
-    # - type: StationEvent
-      # earliestStart: 15
-      # minimumPlayers: 5
-      # maxOccurrences: 1
-      # weight: 3
-   - type: AirlockVirusRule
+  - type: StationEvent
+    earliestStart: 0
+    duration: 1
+    maxOccurrences: 2
+    weight: 10
+  - type: RandomSpawnRule
+    prototype: RandomSatchelSpawner
+
+- type: entity
+  abstract: true
+  parent: BaseAntagGhostRoleRule
+  id: BaseDerelictCyborgSpawn
+  components:
+  - type: StationEvent
+    weight: 2.5
+    earliestStart: 15
+    reoccurrenceDelay: 20
+    minimumPlayers: 4
+    duration: null
+    occursDuringRoundEnd: false
+  - type: SpaceSpawnRule
+    spawnDistance: 0
+  - type: DynamicRuleCost
+    cost: 45
+
+- type: entity
+  parent: BaseDerelictCyborgSpawn
+  id: DerelictEngineerCyborgSpawn
+  components:
+  - type: AntagSpawner
+    prototype: PlayerEngineeringBorgDerelictGhostRole
+  - type: AntagSelection
+    antags:
+    - !type:FixedAntagCount
+      proto: DerelictEngineeringCyborg
+
+- type: entity
+  parent: BaseDerelictCyborgSpawn
+  id: DerelictGenericCyborgSpawn
+  components:
+  - type: AntagSpawner
+    prototype: PlayerBorgDerelictGhostRole
+  - type: AntagSelection
+    antags:
+    - !type:FixedAntagCount
+      proto: DerelictGenericCyborg
+
+- type: entity
+  parent: BaseDerelictCyborgSpawn
+  id: DerelictJanitorCyborgSpawn
+  components:
+  - type: AntagSpawner
+    prototype: PlayerJanitorBorgDerelictGhostRole
+  - type: AntagSelection
+    antags:
+    - !type:FixedAntagCount
+      proto: DerelictJanitorCyborg
+
+- type: entity
+  parent: BaseDerelictCyborgSpawn
+  id: DerelictMedicalCyborgSpawn
+  components:
+  - type: AntagSpawner
+    prototype: PlayerMedicalBorgDerelictGhostRole
+  - type: AntagSelection
+    antags:
+    - !type:FixedAntagCount
+      proto: DerelictMedicalCyborg
+
+- type: entity
+  parent: BaseDerelictCyborgSpawn
+  id: DerelictMiningCyborgSpawn
+  components:
+  - type: AntagSpawner
+    prototype: PlayerMiningBorgDerelictGhostRole
+  - type: AntagSelection
+    antags:
+    - !type:FixedAntagCount
+      proto: DerelictMiningCyborg
+
+- type: entity
+  parent: BaseDerelictCyborgSpawn
+  id: DerelictSyndicateAssaultCyborgSpawn
+  components:
+  - type: StationEvent
+    earliestStart: 25
+    minimumPlayers: 15
+  - type: AntagSpawner
+    prototype: PlayerBorgSyndicateDerelictGhostRole
+  - type: AntagSelection
+    antags:
+    - !type:FixedAntagCount
+      proto: DerelictSyndicateAssaultCyborg

@@ -1,64 +1,65 @@
 using Content.Shared.Flash;
+using Content.Shared.Flash.Components;
+using Content.Shared.StatusEffectNew;
 using Robust.Client.Graphics;
 using Robust.Client.Player;
-using Robust.Shared.GameStates;
-using Robust.Shared.Timing;
+using Robust.Shared.Player;
 
-namespace Content.Client.Flash
+namespace Content.Client.Flash;
+
+public sealed partial class FlashSystem : SharedFlashSystem
 {
-    public sealed class FlashSystem : SharedFlashSystem
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private IOverlayManager _overlayMan = default!;
+    [Dependency] private StatusEffectsSystem _statusEffects = default!;
+
+    private FlashOverlay _overlay = default!;
+
+    public override void Initialize()
     {
-        [Dependency] private readonly IGameTiming _gameTiming = default!;
-        [Dependency] private readonly IPlayerManager _playerManager = default!;
-        [Dependency] private readonly IOverlayManager _overlayManager = default!;
+        base.Initialize();
+        _overlay = new();
+    }
 
-        public override void Initialize()
+    [SubscribeLocalEvent]
+    private void OnApplied(Entity<FlashedStatusEffectComponent> ent, ref StatusEffectAppliedEvent args)
+    {
+        if (_player.LocalEntity == args.Target)
         {
-            base.Initialize();
-
-            SubscribeLocalEvent<FlashableComponent, ComponentHandleState>(OnFlashableHandleState);
+            _overlay.RequestScreenTexture = true;
+            _overlayMan.AddOverlay(_overlay);
         }
+    }
 
-        private void OnFlashableHandleState(EntityUid uid, FlashableComponent component, ref ComponentHandleState args)
+    [SubscribeLocalEvent]
+    private void OnRemoved(Entity<FlashedStatusEffectComponent> ent, ref StatusEffectRemovedEvent args)
+    {
+        if (_player.LocalEntity != args.Target)
+            return;
+
+        if (!_statusEffects.HasEffectComp<FlashedStatusEffectComponent>(args.Target))
         {
-            if (args.Current is not FlashableComponentState state)
-                return;
-
-            // Yes, this code is awful. I'm just porting it to an entity system so don't blame me.
-            if (_playerManager.LocalEntity != uid)
-            {
-                return;
-            }
-
-            if (state.Time == default)
-            {
-                return;
-            }
-
-            // Few things here:
-            // 1. If a shorter duration flash is applied then don't do anything
-            // 2. If the client-side time is later than when the flash should've ended don't do anything
-            var calculatedStateDuration = state.Duration * state.DurationMultiplier;
-
-            var currentTime = _gameTiming.CurTime.TotalSeconds;
-            var newEndTime = state.Time.TotalSeconds + calculatedStateDuration;
-            var currentEndTime = component.LastFlash.TotalSeconds + component.Duration;
-
-            if (currentEndTime > newEndTime)
-            {
-                return;
-            }
-
-            if (currentTime > newEndTime)
-            {
-                return;
-            }
-
-            component.LastFlash = state.Time;
-            component.Duration = calculatedStateDuration;
-
-            var overlay = _overlayManager.GetOverlay<FlashOverlay>();
-            overlay.ReceiveFlash(component.Duration);
+            _overlay.ScreenshotTexture = null;
+            _overlay.RequestScreenTexture = false;
+            _overlayMan.RemoveOverlay(_overlay);
         }
+    }
+
+    [SubscribeLocalEvent]
+    private void OnPlayerAttached(Entity<FlashedStatusEffectComponent> ent, ref StatusEffectRelayedEvent<LocalPlayerAttachedEvent> args)
+    {
+        _overlay.RequestScreenTexture = true;
+        _overlayMan.AddOverlay(_overlay);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnPlayerDetached(Entity<FlashedStatusEffectComponent> ent, ref StatusEffectRelayedEvent<LocalPlayerDetachedEvent> args)
+    {
+        if (_player.LocalEntity is null || _statusEffects.HasEffectComp<FlashedStatusEffectComponent>(_player.LocalEntity.Value))
+            return;
+
+        _overlay.ScreenshotTexture = null;
+        _overlay.RequestScreenTexture = false;
+        _overlayMan.RemoveOverlay(_overlay);
     }
 }

@@ -1,7 +1,7 @@
 using Content.Shared.Mind;
 using Content.Shared.Roles;
 using Content.Shared.Store;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Set;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Store.Conditions;
 
@@ -15,34 +15,33 @@ public sealed partial class BuyerAntagCondition : ListingCondition
     /// <summary>
     /// A whitelist of antag roles that can purchase this listing. Only one needs to be found.
     /// </summary>
-    [DataField("whitelist", customTypeSerializer: typeof(PrototypeIdHashSetSerializer<AntagPrototype>))]
-    public HashSet<string>? Whitelist;
+    [DataField]
+    public HashSet<ProtoId<AntagPrototype>>? Whitelist;
 
     /// <summary>
     /// A blacklist of antag roles that cannot purchase this listing. Only one needs to be found.
     /// </summary>
-    [DataField("blacklist", customTypeSerializer: typeof(PrototypeIdHashSetSerializer<AntagPrototype>))]
-    public HashSet<string>? Blacklist;
+    [DataField]
+    public HashSet<ProtoId<AntagPrototype>>? Blacklist;
 
     public override bool Condition(ListingConditionArgs args)
     {
         var ent = args.EntityManager;
-        var minds = ent.System<SharedMindSystem>();
 
-        if (!minds.TryGetMind(args.Buyer, out var mindId, out var mind))
-            return true;
+        if (!ent.HasComponent<MindComponent>(args.Buyer))
+            return true; // inanimate objects don't have minds
 
         var roleSystem = ent.System<SharedRoleSystem>();
-        var roles = roleSystem.MindGetAllRoles(mindId);
+        var roles = roleSystem.MindGetAllRoleInfo(args.Buyer);
 
         if (Blacklist != null)
         {
             foreach (var role in roles)
             {
-                if (role.Component is not AntagonistRoleComponent blacklistantag)
+                if (!role.Antagonist || string.IsNullOrEmpty(role.Prototype))
                     continue;
 
-                if (blacklistantag.PrototypeId != null && Blacklist.Contains(blacklistantag.PrototypeId))
+                if (Blacklist.Contains(role.Prototype))
                     return false;
             }
         }
@@ -52,10 +51,11 @@ public sealed partial class BuyerAntagCondition : ListingCondition
             var found = false;
             foreach (var role in roles)
             {
-                if (role.Component is not AntagonistRoleComponent antag)
+
+                if (!role.Antagonist || string.IsNullOrEmpty(role.Prototype))
                     continue;
 
-                if (antag.PrototypeId != null && Whitelist.Contains(antag.PrototypeId))
+                if (Whitelist.Contains(role.Prototype))
                     found = true;
             }
             if (!found)

@@ -1,12 +1,11 @@
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Atmos.Piping.Binary.Components;
-using Content.Server.Atmos.Piping.Components;
-using Content.Server.Construction;
-using Content.Server.NodeContainer;
 using Content.Server.NodeContainer.EntitySystems;
 using Content.Server.NodeContainer.Nodes;
 using Content.Shared.Atmos;
+using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.Piping;
+using Content.Shared.Atmos.Piping.Components;
 using Content.Shared.Audio;
 using Content.Shared.Examine;
 using JetBrains.Annotations;
@@ -15,12 +14,12 @@ using Robust.Server.GameObjects;
 namespace Content.Server.Atmos.Piping.Binary.EntitySystems
 {
     [UsedImplicitly]
-    public sealed class GasReyclerSystem : EntitySystem
+    public sealed partial class GasReyclerSystem : EntitySystem
     {
-        [Dependency] private readonly AppearanceSystem _appearance = default!;
-        [Dependency] private readonly AtmosphereSystem _atmosphereSystem = default!;
-        [Dependency] private readonly SharedAmbientSoundSystem _ambientSoundSystem = default!;
-        [Dependency] private readonly NodeContainerSystem _nodeContainer = default!;
+        [Dependency] private AppearanceSystem _appearance = default!;
+        [Dependency] private AtmosphereSystem _atmosphereSystem = default!;
+        [Dependency] private SharedAmbientSoundSystem _ambientSoundSystem = default!;
+        [Dependency] private NodeContainerSystem _nodeContainer = default!;
 
         public override void Initialize()
         {
@@ -29,8 +28,6 @@ namespace Content.Server.Atmos.Piping.Binary.EntitySystems
             SubscribeLocalEvent<GasRecyclerComponent, AtmosDeviceUpdateEvent>(OnUpdate);
             SubscribeLocalEvent<GasRecyclerComponent, AtmosDeviceDisabledEvent>(OnDisabled);
             SubscribeLocalEvent<GasRecyclerComponent, ExaminedEvent>(OnExamined);
-            SubscribeLocalEvent<GasRecyclerComponent, RefreshPartsEvent>(OnRefreshParts);
-            SubscribeLocalEvent<GasRecyclerComponent, UpgradeExamineEvent>(OnUpgradeExamine);
         }
 
         private void OnEnabled(EntityUid uid, GasRecyclerComponent comp, ref AtmosDeviceEnabledEvent args)
@@ -41,7 +38,7 @@ namespace Content.Server.Atmos.Piping.Binary.EntitySystems
         private void OnExamined(Entity<GasRecyclerComponent> ent, ref ExaminedEvent args)
         {
             var comp = ent.Comp;
-            if (!EntityManager.GetComponent<TransformComponent>(ent).Anchored || !args.IsInDetailsRange) // Not anchored? Out of range? No status.
+            if (!Comp<TransformComponent>(ent).Anchored || !args.IsInDetailsRange) // Not anchored? Out of range? No status.
                 return;
 
             if (!_nodeContainer.TryGetNode(ent.Owner, comp.InletName, out PipeNode? inlet))
@@ -118,21 +115,6 @@ namespace Content.Server.Atmos.Piping.Binary.EntitySystems
                 return;
 
             _appearance.SetData(uid, PumpVisuals.Enabled, comp.Reacting);
-        }
-
-        private void OnRefreshParts(EntityUid uid, GasRecyclerComponent component, RefreshPartsEvent args)
-        {
-            var ratingTemp = args.PartRatings[component.MachinePartMinTemp];
-            var ratingPressure = args.PartRatings[component.MachinePartMinPressure];
-
-            component.MinTemp = component.BaseMinTemp * MathF.Pow(component.PartRatingMinTempMultiplier, ratingTemp - 1);
-            component.MinPressure = component.BaseMinPressure * MathF.Pow(component.PartRatingMinPressureMultiplier, ratingPressure - 1);
-        }
-
-        private void OnUpgradeExamine(EntityUid uid, GasRecyclerComponent component, UpgradeExamineEvent args)
-        {
-            args.AddPercentageUpgrade("gas-recycler-upgrade-min-temp", component.MinTemp / component.BaseMinTemp);
-            args.AddPercentageUpgrade("gas-recycler-upgrade-min-pressure", component.MinPressure / component.BaseMinPressure);
         }
     }
 }

@@ -1,10 +1,11 @@
 - type: entity
+  parent: [ BaseStructureDynamic, StructureHealthFurniture ]
   id: PottedPlantBase
-  parent: BaseStructureDynamic
   name: potted plant
   description: A little bit of nature contained in a pot.
   abstract: true
   components:
+  - type: SpriteFade
   - type: Transform
     noRot: true
   - type: InteractionOutline
@@ -24,26 +25,36 @@
     offset: "0.0,0.3"
     sprite: Structures/Furniture/potted_plants.rsi
     noRot: true
-  - type: PottedPlantHide
+  - type: Speech
+    speechVerb: Plant # for pais (In the secret stash)
   - type: SecretStash
-    secretPartName: secret-stash-part-plant
+    tryInsertItemSound: /Audio/Effects/plant_rustle.ogg
+    tryRemoveItemSound: /Audio/Effects/plant_rustle.ogg
+    secretStashName: secret-stash-plant
   - type: ContainerContainer
     containers:
       stash: !type:ContainerSlot {}
   - type: Pullable
+  - type: MultiHandedItem
+  - type: Item
+    sprite: Structures/Furniture/potted_plants.rsi
+    size: Huge
   - type: Damageable
-    damageContainer: Inorganic # The pot. Not the plant. Or is it plastic?
+    damageModifierSet: RockMod
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 50
+        damage: 40
       behaviors:
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
       - !type:PlaySoundBehavior
         sound:
           path: /Audio/Effects/plant_rustle.ogg
+      - !type:PlaySoundBehavior
+        sound:
+          path: /Audio/Effects/break_stone.ogg
+          params:
+            volume: -6
 
 - type: entity
   id: PottedPlant0
@@ -229,15 +240,14 @@
 - type: entity
   id: PottedPlantRD #PottedPlant25
   parent: PottedPlantBase
-  # DeltaV - Epistemics Department - Replace Research Director with Mystagogue
-  name: Mystagogue's potted plant
-  description: "A gift from the botanical staff, presented after the Mystagogue's reassignment. There's a tag on it that says \"Y'all come back now, y'hear?\"\nIt doesn't look very healthy..."
-  # End of modified code
+  name: "RD's potted plant"
+  description: "A gift from the botanical staff, presented after the RD's reassignment. There's a tag on it that says \"Y'all come back now, y'hear?\"\nIt doesn't look very healthy..."
   components:
   - type: Sprite
     state: plant-25
   - type: StealTarget
-    stealGroup: PlantRD
+    stealGroup:
+    - PlantRD
 
 - type: entity
   id: PottedPlant26

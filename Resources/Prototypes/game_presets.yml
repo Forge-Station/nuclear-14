@@ -6,44 +6,30 @@
   showInVote: false # secret
   description: survival-description
   rules:
+    - MeteorSwarmScheduler
     - RampingStationEventScheduler
+    - SpaceTrafficControlEventScheduler
     - BasicRoundstartVariation
-    - SubGamemodesRule
 
 - type: gamePreset
-  id: SurvivalHellshift
+  id: KesslerSyndrome
   alias:
-    - hellshift
-  showInVote: false
-  name: hellshift-title
-  description: hellshift-description
+    - kessler
+    - junk
+    - meteorhell
+  name: kessler-syndrome-title
+  showInVote: false # secret
+  description: kessler-syndrome-description
   rules:
-    - HellshiftStationEventScheduler
-    - BasicRoundstartVariation
-    - SubGamemodesRule
-
-- type: gamePreset
-  id: SurvivalIrregular
-  alias: [irregular]
-  showInVote: false
-  name: irregular-title
-  description: irregular-description
-  rules:
-    - IrregularStationEventScheduler
-    - BasicRoundstartVariation
-
-- type: gamePreset
-  id: SurvivalIrregularExtended
-  alias: [irregular-extended]
-  showInVote: false
-  name: irregular-extended-title
-  description: irregular-extended-description
-  rules:
-    - IrregularExtendedStationEventScheduler
+    - KesslerSyndromeScheduler
+    - RampingStationEventScheduler
+    - SpaceTrafficControlEventScheduler
     - BasicRoundstartVariation
 
 - type: gamePreset
   id: AllAtOnce
+  alias:
+  - all
   name: all-at-once-title
   description: all-at-once-description
   showInVote: false
@@ -52,7 +38,39 @@
     - Traitor
     - Revolutionary
     - Zombie
+    - Wizard
+    - Xenoborgs
+    - Changeling
+    - KesslerSyndromeScheduler
     - RampingStationEventScheduler
+    - SpaceTrafficControlEventScheduler
+    - BasicRoundstartVariation
+
+- type: gamePreset
+  id: AllerAtOnce
+  alias:
+  - allall
+  - aller
+  - badidea
+  - punishment
+  name: aller-at-once-title
+  description: aller-at-once-description
+  showInVote: false #Please god dont do this
+  rules:
+    - Nukeops
+    - Traitor
+    - Revolutionary
+    - Zombie
+    - Wizard
+    - Xenoborgs
+    - Changeling
+    - BasicStationEventScheduler
+    - KesslerSyndromeScheduler
+    - MeteorSwarmMildScheduler
+    - MeteorSwarmScheduler
+    - RampingStationEventScheduler
+    - SpaceTrafficControlEventScheduler
+    - BasicRoundstartVariation
 
 - type: gamePreset
   id: Extended
@@ -60,12 +78,13 @@
   - extended
   - shittersafari
   name: extended-title
-  showInVote: false
+  showInVote: false #2boring2vote
   description: extended-description
   rules:
   - BasicStationEventScheduler
+  - MeteorSwarmScheduler
+  - SpaceTrafficControlEventScheduler
   - BasicRoundstartVariation
-  - SubGamemodesRule
 
 - type: gamePreset
   id: Greenshift
@@ -73,9 +92,26 @@
   - greenshift
   - shittersafarideluxeedition
   name: greenshift-title
-  showInVote: false
+  showInVote: false #4boring4vote
   description: greenshift-description
   rules:
+  - BasicRoundstartVariation
+
+- type: gamePreset
+  id: Dynamic
+  alias:
+  - dynamic
+  - multiantag
+  - director
+  name: dynamic-title
+  showInVote: false # admin-only for now until we fix some bugs
+  description: dynamic-description
+  rules:
+  - DynamicRule
+  - DummyNonAntag
+  - DynamicStationEventScheduler
+  - MeteorSwarmScheduler
+  - SpaceTrafficControlEventScheduler
   - BasicRoundstartVariation
 
 - type: gamePreset
@@ -84,28 +120,10 @@
     - secret
     - sekrit
   name: secret-title
-  showInVote: false
+  showInVote: true
   description: secret-description
   rules:
     - Secret
-
-- type: gamePreset
-  id: SecretExtended #For Admin Use: Runs Extended but shows "Secret" in lobby.
-  alias:
-    - secretextended
-  name: secret-title
-  showInVote: false #Admin Use
-  description: secret-description
-  rules:
-    - BasicStationEventScheduler
-
-- type: gamePreset
-  id: SecretGreenshift #For Admin Use: Runs Greenshift but shows "Secret" in lobby.
-  alias:
-  - secretgreenshift
-  name: secret-title
-  showInVote: false #Admin Use
-  description: secret-description
 
 - type: gamePreset
   id: Sandbox
@@ -122,14 +140,18 @@
   id: Traitor
   alias:
     - traitor
+    - tator
   name: traitor-title
   description: traitor-description
   showInVote: false
   rules:
-    - Traitor
-    - SubGamemodesRule
-    - BasicStationEventScheduler
-    - BasicRoundstartVariation
+  - DummyNonAntagChance
+  - Traitor
+  - SubGamemodesRuleNoWizard
+  - BasicStationEventScheduler
+  - MeteorSwarmScheduler
+  - SpaceTrafficControlEventScheduler
+  - BasicRoundstartVariation
 
 - type: gamePreset
   id: Deathmatch
@@ -138,8 +160,8 @@
     - dm
   name: death-match-title
   description: death-match-description
-  #maxPlayers: 15
-  showInVote: false
+  maxPlayers: 15
+  showInVote: true
   supportedMaps: DeathMatchMapPool
   rules:
     - DeathMatch31
@@ -152,10 +174,13 @@
   description: nukeops-description
   showInVote: false
   rules:
-    - Nukeops
-    - SubGamemodesRule
-    - BasicStationEventScheduler
-    - BasicRoundstartVariation
+  - Nukeops
+  - DummyNonAntagChance
+  - SubGamemodesRuleNoWizard
+  - BasicStationEventScheduler
+  - MeteorSwarmScheduler
+  - SpaceTrafficControlEventScheduler
+  - BasicRoundstartVariation
 
 - type: gamePreset
   id: Revolutionary
@@ -167,10 +192,45 @@
   description: rev-description
   showInVote: false
   rules:
-    - Revolutionary
-    - SubGamemodesRule
-    - BasicStationEventScheduler
-    - BasicRoundstartVariation
+  - DummyNonAntagChance
+  - Revolutionary
+  - SubGamemodesRuleNoWizard
+  - BasicStationEventScheduler
+  - MeteorSwarmScheduler
+  - SpaceTrafficControlEventScheduler
+  - BasicRoundstartVariation
+
+- type: gamePreset
+  id: Wizard
+  alias:
+  - wizard
+  name: wizard-title
+  description: wizard-description
+  showInVote: false
+  rules:
+  - Wizard
+  - DummyNonAntagChance
+  - SubGamemodesRuleNoWizard #No Dual Wizards at the start, midround is fine
+  - BasicStationEventScheduler
+  - MeteorSwarmScheduler
+  - SpaceTrafficControlEventScheduler
+  - BasicRoundstartVariation
+
+- type: gamePreset
+  id: Xenoborgs
+  alias:
+    - xenoborgs
+  name: xenoborgs-title
+  description: xenoborgs-description
+  showInVote: false
+  rules:
+  - Xenoborgs
+  - DummyNonAntagChance
+  - SubGamemodesRuleNoWizardNoXenoborg # no two motherships
+  - BasicStationEventScheduler
+  - MeteorSwarmScheduler
+  - SpaceTrafficControlEventScheduler
+  - BasicRoundstartVariation
 
 - type: gamePreset
   id: Zombie
@@ -186,12 +246,22 @@
   rules:
   - Zombie
   - BasicStationEventScheduler
+  - MeteorSwarmScheduler
+  - SpaceTrafficControlEventScheduler
   - BasicRoundstartVariation
 
-# - type: gamePreset
-  # id: Waves
-  # name: Vault Wave Defense
-  # description: Defend the vault from waves of increasingly difficult attackers.
-  # showInVote: false
-  # rules:
-    # - Waves
+- type: gamePreset
+  id: Zombieteors
+  alias:
+  - zombieteors
+  - zombombies
+  - meteombies
+  name: zombieteors-title
+  description: zombieteors-description
+  showInVote: false
+  rules:
+  - Zombie
+  - BasicStationEventScheduler
+  - KesslerSyndromeScheduler
+  - SpaceTrafficControlEventScheduler
+  - BasicRoundstartVariation

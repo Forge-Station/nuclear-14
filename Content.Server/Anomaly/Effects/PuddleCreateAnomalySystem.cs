@@ -1,5 +1,5 @@
 using Content.Server.Anomaly.Components;
-using Content.Server.Chemistry.Containers.EntitySystems;
+using Content.Shared.Chemistry.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
 using Content.Shared.Anomaly.Components;
 
@@ -8,10 +8,10 @@ namespace Content.Server.Anomaly.Effects;
 /// <summary>
 /// This component allows the anomaly to create puddles from SolutionContainer.
 /// </summary>
-public sealed class PuddleCreateAnomalySystem : EntitySystem
+public sealed partial class PuddleCreateAnomalySystem : EntitySystem
 {
-    [Dependency] private readonly PuddleSystem _puddle = default!;
-    [Dependency] private readonly SolutionContainerSystem _solutionContainer = default!;
+    [Dependency] private PuddleSystem _puddle = default!;
+    [Dependency] private SharedSolutionContainerSystem _solutionContainer = default!;
 
     public override void Initialize()
     {

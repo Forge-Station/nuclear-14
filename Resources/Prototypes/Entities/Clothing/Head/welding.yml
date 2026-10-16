@@ -15,7 +15,7 @@
       Steel: 200
       Glass: 100
   - type: StaticPrice
-    price: 5 #N14
+    price: 50
   - type: Tag
     tags:
     - WhitelistChameleon
@@ -23,13 +23,9 @@
   - type: HideLayerClothing
     slots:
     - Snout
-  - type: DamageOtherOnHit
-    damage:
-      types:
-        Blunt: 7
-    staminaCost: 5
-    soundHit:
-      collection: MetalThud
+  - type: ImageOverlay
+    pathToOverlayImage: "/Textures/Clothing/Head/Welding/weldingTexture.png"
+    additionalColorOverlay: "#000000A0"
 
 - type: entity
   parent: WeldingMaskBase

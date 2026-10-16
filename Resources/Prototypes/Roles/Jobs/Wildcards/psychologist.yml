@@ -6,32 +6,31 @@
   startingGear: PsychologistGear
   icon: "JobIconPsychologist"
   supervisors: job-supervisors-cmo
+  guides: [ Medical ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Medical
   - Maintenance
-  - Psychologist # DeltaV - Add Psychologist access
   extendedAccess:
   - Chemistry
-  setPreference: false
 
 - type: startingGear
   id: PsychologistGear
-  subGear:
-  - PsychologistPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitPsychologist
-    back: ClothingBackpackPsychologistFilled #DeltaV - stamp included
     shoes: ClothingShoesLeather
     id: PsychologistPDA
     ears: ClothingHeadsetMedical
-  innerClothingSkirt: ClothingUniformJumpsuitPsychologist
-  satchel: ClothingBackpackSatchelPsychologistFilled #DeltaV - stamp included
-  duffelbag: ClothingBackpackDuffelPsychologistFilled #DeltaV - stamp included
+  storage:
+    back:
+    - RubberStampPsychologist
 
-- type: startingGear
-  id: PsychologistPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: PsychologistChameleonOutfit
+  job: Psychologist
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitEnviroslacksPsychologist
-    head: ClothingHeadEnvirohelmMedicalDoctor
-    gloves: ClothingHandsGlovesEnviroglovesWhite
+    head: ClothingHeadHatBeretMedic
+    eyes: ClothingEyesHudMedical
+    mask: ClothingMaskSterile
+    outerClothing: ClothingOuterCoatLab
+    neck: ClothingNeckStethoscope
+    belt: ClothingBeltMedical
+    gloves: ClothingHandsGlovesLatex

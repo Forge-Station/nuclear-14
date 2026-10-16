@@ -12,9 +12,10 @@ namespace Content.Client.Shuttles.UI;
 [GenerateTypedNameReferences]
 public sealed partial class NavScreen : BoxContainer
 {
-    [Dependency] private readonly IEntityManager _entManager = default!;
+    [Dependency] private IEntityManager _entManager = default!;
     private SharedTransformSystem _xformSystem;
 
+    private EntityUid? _consoleEntity; // Entity of controlling console
     private EntityUid? _shuttleEntity;
 
     public NavScreen()
@@ -29,12 +30,22 @@ public sealed partial class NavScreen : BoxContainer
         DockToggle.OnToggled += OnDockTogglePressed;
         DockToggle.Pressed = NavRadar.ShowDocks;
 
-        NfInitialize(); // Frontier Initialization for the NavScreen
+        CargoDockToggle.OnToggled += OnCargoDockTogglePressed;
+        CargoDockToggle.Pressed = NavRadar.ShowCargoDocks;
+
+        ArrivalDockToggle.OnToggled += OnArrivalDockTogglePressed;
+        ArrivalDockToggle.Pressed = NavRadar.ShowArrivalDocks;
     }
 
     public void SetShuttle(EntityUid? shuttle)
     {
         _shuttleEntity = shuttle;
+    }
+
+    public void SetConsole(EntityUid? console)
+    {
+        _consoleEntity = console;
+        NavRadar.SetConsole(console);
     }
 
     private void OnIFFTogglePressed(BaseButton.ButtonEventArgs args)
@@ -49,10 +60,21 @@ public sealed partial class NavScreen : BoxContainer
         args.Button.Pressed = NavRadar.ShowDocks;
     }
 
+    private void OnCargoDockTogglePressed(BaseButton.ButtonEventArgs args)
+    {
+        NavRadar.ShowCargoDocks ^= true;
+        args.Button.Pressed = NavRadar.ShowCargoDocks;
+    }
+
+    private void OnArrivalDockTogglePressed(BaseButton.ButtonEventArgs args)
+    {
+        NavRadar.ShowArrivalDocks ^= true;
+        args.Button.Pressed = NavRadar.ShowArrivalDocks;
+    }
+
     public void UpdateState(NavInterfaceState scc)
     {
         NavRadar.UpdateState(scc);
-        NfUpdateState(); // Frontier Update State
     }
 
     public void SetMatrix(EntityCoordinates? coordinates, Angle? angle)
@@ -77,13 +99,19 @@ public sealed partial class NavScreen : BoxContainer
         // Get the positive reduced angle.
         var displayRot = -worldRot.Reduced();
 
-        GridPosition.Text = $"{worldPos.X:0.0}, {worldPos.Y:0.0}";
-        GridOrientation.Text = $"{displayRot.Degrees:0.0}";
+        GridPosition.Text = Loc.GetString("shuttle-console-position-value",
+            ("X", $"{worldPos.X:0.0}"),
+            ("Y", $"{worldPos.Y:0.0}"));
+        GridOrientation.Text = Loc.GetString("shuttle-console-orientation-value",
+            ("angle", $"{displayRot.Degrees:0.0}"));
 
         var gridVelocity = gridBody.LinearVelocity;
         gridVelocity = displayRot.RotateVec(gridVelocity);
         // Get linear velocity relative to the console entity
-        GridLinearVelocity.Text = $"{gridVelocity.X + 10f * float.Epsilon:0.0}, {gridVelocity.Y + 10f * float.Epsilon:0.0}";
-        GridAngularVelocity.Text = $"{-gridBody.AngularVelocity + 10f * float.Epsilon:0.0}";
+        GridLinearVelocity.Text = Loc.GetString("shuttle-console-linear-velocity-value",
+            ("X", $"{gridVelocity.X + 10f * float.Epsilon:0.0}"),
+            ("Y", $"{gridVelocity.Y + 10f * float.Epsilon:0.0}"));
+        GridAngularVelocity.Text = Loc.GetString("shuttle-console-angular-velocity-value",
+            ("angularVelocity", $"{-MathHelper.RadiansToDegrees(gridBody.AngularVelocity) + 10f * float.Epsilon:0.0}"));
     }
 }

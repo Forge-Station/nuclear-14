@@ -1,5 +1,5 @@
 - type: entity
-  id: EffectEmpPulseNoSound
+  id: EffectEmpPulse
   categories: [ HideSpawnMenu ]
   components:
   - type: TimedDespawn
@@ -9,7 +9,7 @@
     noRot: true
     layers:
     - shader: unshaded
-      map: [ "enum.EffectLayers.Unshaded" ]
+      map: ["enum.EffectLayers.Unshaded"]
       sprite: Effects/emp.rsi
       state: emp_pulse
   - type: EffectVisuals
@@ -17,15 +17,6 @@
     tags:
     - HideContextMenu
   - type: AnimationPlayer
-
-- type: entity
-  parent: EffectEmpPulseNoSound
-  id: EffectEmpPulse
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: EmitSoundOnSpawn
-    sound:
-      path: /Audio/Effects/Lightning/lightningbolt.ogg
 
 - type: entity
   id: EffectEmpDisabled
@@ -38,7 +29,7 @@
     noRot: true
     layers:
     - shader: unshaded
-      map: [ "enum.EffectLayers.Unshaded" ]
+      map: ["enum.EffectLayers.Unshaded"]
       sprite: Effects/emp.rsi
       state: emp_disable
   - type: EffectVisuals

@@ -50,6 +50,12 @@
   - type: Storage
     storageOpenSound:
       collection: BikeHorn
+      params:
+        variation: 0.125
+    storageInsertSound:
+      collection: FootstepClown
+      params:
+        variation: 0.125
 
 - type: entity
   parent: ClothingBackpackSatchel
@@ -59,6 +65,9 @@
   components:
   - type: Sprite
     sprite: Clothing/Back/Satchels/mime.rsi
+  - type: Storage
+    storageOpenSound: null
+    storageInsertSound: null
 
 - type: entity
   parent: ClothingBackpackSatchel
@@ -99,23 +108,14 @@
 - type: entity
   parent: ClothingBackpackSatchel
   id: ClothingBackpackSatchelScience
-  name: epistemics satchel # DeltaV - Epistemics Department replacing Science
+  name: science satchel
   description: Useful for holding research materials.
   components:
   - type: Sprite
     sprite: Clothing/Back/Satchels/science.rsi
 
 - type: entity
-  parent: ClothingBackpackSatchel
-  id: ClothingBackpackSatchelRobotics
-  name: robotics satchel
-  description: A sturdy satchel to store the various tools and duct tape.
-  components:
-  - type: Sprite
-    sprite: Clothing/Back/Satchels/robotics.rsi
-
-- type: entity
-  parent: ClothingBackpackSatchel
+  parent: [ClothingBackpackSatchel, BaseSecurityContraband]
   id: ClothingBackpackSatchelSecurity
   name: security satchel
   description: A robust satchel for security related needs.
@@ -124,16 +124,16 @@
     sprite: Clothing/Back/Satchels/security.rsi
 
 - type: entity
-  parent: ClothingBackpackSatchel
+  parent: [ClothingBackpackSatchel, BaseSecurityContraband]
   id: ClothingBackpackSatchelBrigmedic
-  name: corpsman satchel # DeltaV - rename brigmedic to corpsman
+  name: brigmedic satchel
   description: A sterile satchel for medical related needs.
   components:
   - type: Sprite
-    sprite: DeltaV/Clothing/Back/Satchels/brigmedic.rsi # DeltaV - resprite
+    sprite: Clothing/Back/Satchels/brigmedic.rsi
 
 - type: entity
-  parent: ClothingBackpackSatchel
+  parent: [ClothingBackpackSatchel, BaseCommandContraband]
   id: ClothingBackpackSatchelCaptain
   name: captain's satchel
   description: An exclusive satchel for Nanotrasen officers.
@@ -153,8 +153,8 @@
 - type: entity
   parent: ClothingBackpackSatchel
   id: ClothingBackpackSatchelCargo
-  name: logistics satchel # DeltaV - Logistics Department replacing Cargo
-  description: A robust satchel for stealing logistics's loot. # DeltaV - Logistics Department replacing Cargo
+  name: cargo satchel
+  description: A robust satchel for stealing cargo's loot.
   components:
     - type: Sprite
       sprite: Clothing/Back/Satchels/cargo.rsi
@@ -169,7 +169,19 @@
       sprite: Clothing/Back/Satchels/salvage.rsi
 
 - type: entity
-  parent: ClothingBackpackSatchel
+  parent: [ClothingBackpackSatchel, BaseHighlyIllegalContraband]
+  id: ClothingBackpackSatchelNinja
+  name: spider clan satchel
+  description: A robust satchel for stashing your loot.
+  components:
+  - type: Sprite
+    sprite: Clothing/Back/Satchels/ninja.rsi
+  - type: Storage # Backpack sounds are null due to silent ninja tech
+    storageOpenSound: null
+    storageInsertSound: null
+
+- type: entity
+  parent: ClothingBackpackHoldingBase #Standardized Bluespace Bags
   id: ClothingBackpackSatchelHolding
   name: satchel of holding
   description: A satchel that opens into a localized pocket of bluespace.
@@ -181,34 +193,17 @@
     - state: icon
     - state: icon-unlit
       shader: unshaded
-  - type: Item
-    size: Ginormous
+
+- type: entity
+  parent: ClothingBackpackSatchelHolding
+  id: ClothingBackpackSatchelAdmin
+  name: satchel of administration
+  suffix: Admin
+  description: If you are somehow seeing this, no you're not.
+  components:
+  - type: ExplosionResistance
+    damageCoefficient: 0
   - type: Storage
-    maxItemSize: Huge
+    maxItemSize: Colossal # Can hold ANYTHING
     grid:
     - 0,0,19,9
-
-- type: entity
-  parent: [ClothingBackpackSatchel, BaseFoldable]
-  id: ClothingBackpackSatchelPurse
-  name: purse
-  description: A small, fashionable bag typically worn over the shoulder.
-  components:
-  - type: Sprite
-    sprite: Clothing/Back/Satchels/purse.rsi
-  - type: Foldable
-    canFoldInsideContainer: true
-    unfoldVerbText: fold-flip-verb
-    foldVerbText: fold-flip-verb
-  - type: FoldableClothing
-    foldedEquippedPrefix: flipped
-
-- type: entity
-  parent: ClothingBackpackSatchelPurse
-  id: ClothingBackpackSatchelPurseFlipped
-  suffix: flipped
-  components:
-  - type: Foldable
-    folded: true
-  - type: Clothing
-    equippedPrefix: flipped

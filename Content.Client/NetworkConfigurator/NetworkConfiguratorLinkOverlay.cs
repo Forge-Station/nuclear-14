@@ -1,5 +1,6 @@
-using Content.Client.NetworkConfigurator.Systems;
-using Content.Shared.DeviceNetwork.Components;
+using Content.Shared.DeviceConfigurator.Components;
+using Content.Shared.DeviceConfigurator.Systems;
+using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Shared.Enums;
 using Robust.Shared.Map;
@@ -7,11 +8,12 @@ using Robust.Shared.Random;
 
 namespace Content.Client.NetworkConfigurator;
 
-public sealed class NetworkConfiguratorLinkOverlay : Overlay
+public sealed partial class NetworkConfiguratorLinkOverlay : Overlay
 {
-    [Dependency] private readonly IEntityManager _entityManager = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private IEntityManager _entityManager = default!;
+    [Dependency] private IRobustRandom _random = default!;
     private readonly DeviceListSystem _deviceListSystem;
+    private readonly SharedTransformSystem _transformSystem;
 
     public Dictionary<EntityUid, Color> Colors = new();
     public EntityUid? Action;
@@ -23,6 +25,7 @@ public sealed class NetworkConfiguratorLinkOverlay : Overlay
         IoCManager.InjectDependencies(this);
 
         _deviceListSystem = _entityManager.System<DeviceListSystem>();
+        _transformSystem = _entityManager.System<SharedTransformSystem>();
     }
 
     protected override void Draw(in OverlayDrawArgs args)
@@ -39,9 +42,9 @@ public sealed class NetworkConfiguratorLinkOverlay : Overlay
             if (!Colors.TryGetValue(uid, out var color))
             {
                 color = new Color(
-                    _random.Next(0, 255),
-                    _random.Next(0, 255),
-                    _random.Next(0, 255));
+                    _random.NextByte(0, 255),
+                    _random.NextByte(0, 255),
+                    _random.NextByte(0, 255));
                 Colors.Add(uid, color);
             }
 
@@ -53,7 +56,7 @@ public sealed class NetworkConfiguratorLinkOverlay : Overlay
                 continue;
             }
 
-            foreach (var device in _deviceListSystem.GetAllDevices(uid, deviceList))
+            foreach (var device in _deviceListSystem.GetAllDevices((uid, deviceList)))
             {
                 if (_entityManager.Deleted(device))
                 {
@@ -66,7 +69,7 @@ public sealed class NetworkConfiguratorLinkOverlay : Overlay
                     continue;
                 }
 
-                args.WorldHandle.DrawLine(sourceTransform.WorldPosition, linkTransform.WorldPosition, Colors[uid]);
+                args.WorldHandle.DrawLine(_transformSystem.GetWorldPosition(sourceTransform), _transformSystem.GetWorldPosition(linkTransform), Colors[uid]);
             }
         }
     }

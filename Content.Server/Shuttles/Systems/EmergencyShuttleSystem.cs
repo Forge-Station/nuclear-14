@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using Content.Server.Access.Systems;
@@ -5,86 +6,83 @@ using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
 using Content.Server.Chat.Systems;
 using Content.Server.Communications;
-using Content.Server.DeviceNetwork.Components;
-using Content.Server.DeviceNetwork.Systems;
+using Content.Shared.DeviceNetwork.Systems;
+using Content.Server.GameTicking;
 using Content.Server.GameTicking.Events;
 using Content.Server.Pinpointer;
-using Content.Server.Popups;
 using Content.Server.RoundEnd;
 using Content.Server.Screens.Components;
 using Content.Server.Shuttles.Components;
 using Content.Server.Shuttles.Events;
-using Content.Server.Station.Components;
 using Content.Server.Station.Events;
 using Content.Server.Station.Systems;
 using Content.Shared.Access.Systems;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
-using Content.Shared.DeviceNetwork;
+using Content.Shared.DeviceNetwork.Components;
 using Content.Shared.GameTicking;
+using Content.Shared.GameTicking.Events;
+using Content.Shared.Localizations;
+using Content.Shared.Pinpointer;
+using Content.Shared.RoundEnd;
 using Content.Shared.Shuttles.Components;
 using Content.Shared.Shuttles.Events;
+using Content.Shared.Shuttles.Systems;
 using Content.Shared.Tag;
 using Content.Shared.Tiles;
 using Robust.Server.GameObjects;
-using Robust.Shared.EntitySerialization;
-using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Audio.Systems;
-using Robust.Shared.Configuration;
-using Robust.Shared.Map;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
-using Content.Server.Announcements.Systems;
-
 
 namespace Content.Server.Shuttles.Systems;
 
-public sealed partial class EmergencyShuttleSystem : EntitySystem
+public sealed partial class EmergencyShuttleSystem : SharedEmergencyShuttleSystem
 {
     /*
      * Handles the escape shuttle + CentCom.
      */
 
-    [Dependency] private readonly IAdminLogManager _logger = default!;
-    [Dependency] private readonly IAdminManager _admin = default!;
-    [Dependency] private readonly IConfigurationManager _configManager = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly AccessReaderSystem _reader = default!;
-    [Dependency] private readonly ChatSystem _chatSystem = default!;
-    [Dependency] private readonly CommunicationsConsoleSystem _commsConsole = default!;
-    [Dependency] private readonly DeviceNetworkSystem _deviceNetworkSystem = default!;
-    [Dependency] private readonly DockingSystem _dock = default!;
-    [Dependency] private readonly EntityManager _entityManager = default!;
-    [Dependency] private readonly IdCardSystem _idSystem = default!;
-    [Dependency] private readonly NavMapSystem _navMap = default!;
-    [Dependency] private readonly MapLoaderSystem _map = default!;
-    [Dependency] private readonly PopupSystem _popup = default!;
-    [Dependency] private readonly RoundEndSystem _roundEnd = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly ShuttleSystem _shuttle = default!;
-    [Dependency] private readonly StationSystem _station = default!;
-    [Dependency] private readonly TransformSystem _transformSystem = default!;
-    [Dependency] private readonly UserInterfaceSystem _uiSystem = default!;
-    [Dependency] private readonly AnnouncerSystem _announcer = default!;
-    [Dependency] private readonly MapSystem _mapSystem = default!;
+    [Dependency] private IAdminLogManager _logger = default!;
+    [Dependency] private IAdminManager _admin = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private SharedMapSystem _mapSystem = default!;
+    [Dependency] private AccessReaderSystem _reader = default!;
+    [Dependency] private ChatSystem _chatSystem = default!;
+    [Dependency] private CommunicationsConsoleSystem _commsConsole = default!;
+    [Dependency] private DeviceNetworkSystem _deviceNetworkSystem = default!;
+    [Dependency] private DockingSystem _dock = default!;
+    [Dependency] private ServerGameTicker _ticker = default!;
+    [Dependency] private IdCardSystem _idSystem = default!;
+    [Dependency] private NavMapSystem _navMap = default!;
+    [Dependency] private MapLoaderSystem _loader = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
+    [Dependency] private RoundEndSystem _roundEnd = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private ShuttleSystem _shuttle = default!;
+    [Dependency] private ServerStationSystem _station = default!;
+    [Dependency] private TransformSystem _transformSystem = default!;
+    [Dependency] private UserInterfaceSystem _uiSystem = default!;
 
     private const float ShuttleSpawnBuffer = 1f;
 
     private bool _emergencyShuttleEnabled;
 
-    [ValidatePrototypeId<TagPrototype>]
-    private const string DockTag = "DockEmergency";
+    private static readonly ProtoId<TagPrototype> DockTag = "DockEmergency";
 
     public override void Initialize()
     {
-        _emergencyShuttleEnabled = _configManager.GetCVar(CCVars.EmergencyShuttleEnabled);
+        base.Initialize();
+
+        _emergencyShuttleEnabled = ConfigManager.GetCVar(CCVars.EmergencyShuttleEnabled);
         // Don't immediately invoke as roundstart will just handle it.
-        Subs.CVar(_configManager, CCVars.EmergencyShuttleEnabled, SetEmergencyShuttleEnabled);
+        Subs.CVar(ConfigManager, CCVars.EmergencyShuttleEnabled, SetEmergencyShuttleEnabled);
 
         SubscribeLocalEvent<RoundStartingEvent>(OnRoundStart);
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundCleanup);
@@ -123,15 +121,6 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
         component.MapEntity = null;
     }
 
-    /// <summary>
-    ///     Attempts to get the EntityUid of the emergency shuttle
-    /// </summary>
-    public EntityUid? GetShuttle()
-    {
-        AllEntityQuery<EmergencyShuttleComponent>().MoveNext(out var shuttle, out _);
-        return shuttle;
-    }
-
     private void SetEmergencyShuttleEnabled(bool value)
     {
         if (_emergencyShuttleEnabled == value)
@@ -162,7 +151,9 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
-        UpdateEmergencyConsole(frameTime);
+        // Don't handle any of this logic if in lobby
+        if (_ticker.RunLevel != GameRunLevel.PreRoundLobby)
+            UpdateEmergencyConsole(frameTime);
     }
 
     /// <summary>
@@ -185,7 +176,7 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
             return;
         }
 
-        var targetGrid = _station.GetLargestGrid(Comp<StationDataComponent>(station.Value));
+        var targetGrid = _station.GetLargestGrid(station.Value);
         if (targetGrid == null)
             return;
 
@@ -212,16 +203,16 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
 
         if (TryComp<DeviceNetworkComponent>(uid, out var netComp))
         {
-            var payload = new NetworkPayload
+            var payload = new ScreenShuttlePayload
             {
-                [ShuttleTimerMasks.ShuttleMap] = uid,
-                [ShuttleTimerMasks.SourceMap] = args.FromMapUid,
-                [ShuttleTimerMasks.DestMap] = args.TargetCoordinates.GetMapUid(_entityManager),
-                [ShuttleTimerMasks.ShuttleTime] = ftlTime,
-                [ShuttleTimerMasks.SourceTime] = ftlTime,
-                [ShuttleTimerMasks.DestTime] = ftlTime
+                Shuttle = uid,
+                SourceMap = args.FromMapUid,
+                DestinationMap = _transformSystem.GetMap(args.TargetCoordinates),
+                ShuttleTime = ftlTime,
+                SourceTime = ftlTime,
+                DestinationTime = ftlTime,
             };
-            _deviceNetworkSystem.QueuePacket(uid, null, payload, netComp.TransmitFrequency);
+            _deviceNetworkSystem.SendPacket(uid, null, ref payload, netComp.TransmitFrequency);
         }
     }
 
@@ -230,109 +221,176 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
     /// </summary>
     private void OnEmergencyFTLComplete(EntityUid uid, EmergencyShuttleComponent component, ref FTLCompletedEvent args)
     {
-        var countdownTime = TimeSpan.FromSeconds(_configManager.GetCVar(CCVars.RoundRestartTime));
+        var countdownTime = TimeSpan.FromSeconds(ConfigManager.GetCVar(CCVars.RoundRestartTime));
         var shuttle = args.Entity;
         if (TryComp<DeviceNetworkComponent>(shuttle, out var net))
         {
-            var payload = new NetworkPayload
+            var payload = new ScreenShuttlePayload
             {
-                [ShuttleTimerMasks.ShuttleMap] = shuttle,
-                [ShuttleTimerMasks.SourceMap] = _roundEnd.GetCentcomm(),
-                [ShuttleTimerMasks.DestMap] = _roundEnd.GetStation(),
-                [ShuttleTimerMasks.ShuttleTime] = countdownTime,
-                [ShuttleTimerMasks.SourceTime] = countdownTime,
-                [ShuttleTimerMasks.DestTime] = countdownTime,
+                Shuttle = shuttle,
+                SourceMap = _roundEnd.GetCentcomm(),
+                DestinationMap = _roundEnd.GetStation(),
+                ShuttleTime = countdownTime,
+                SourceTime = countdownTime,
+                DestinationTime = countdownTime,
             };
 
             // by popular request
             // https://discord.com/channels/310555209753690112/770682801607278632/1189989482234126356
             if (_random.Next(1000) == 0)
             {
-                payload.Add(ScreenMasks.Text, ShuttleTimerMasks.Kill);
-                payload.Add(ScreenMasks.Color, Color.Red);
+                payload.OverrideText = ShuttleTimerMasks.Kill;
+                payload.OverrideColor = Color.Red;
             }
             else
-                payload.Add(ScreenMasks.Text, ShuttleTimerMasks.Bye);
+                payload.OverrideText = ShuttleTimerMasks.Bye;
 
-            _deviceNetworkSystem.QueuePacket(shuttle, null, payload, net.TransmitFrequency);
+            _deviceNetworkSystem.SendPacket(shuttle, null, ref payload, net.TransmitFrequency);
         }
     }
 
     /// <summary>
-    ///     Attempts to dock the emergency shuttle to the station.
+    ///     Attempts to dock a station's emergency shuttle.
     /// </summary>
-    public void CallEmergencyShuttle(EntityUid stationUid, StationEmergencyShuttleComponent? stationShuttle = null)
+    /// <seealso cref="DockEmergencyShuttle"/>
+    public ShuttleDockResult? DockSingleEmergencyShuttle(EntityUid stationUid, StationEmergencyShuttleComponent? stationShuttle = null)
     {
         if (!Resolve(stationUid, ref stationShuttle))
-            return;
+            return null;
 
-        if (!TryComp<TransformComponent>(stationShuttle.EmergencyShuttle, out var xform) ||
+        if (!TryComp(stationShuttle.EmergencyShuttle, out TransformComponent? xform) ||
             !TryComp<ShuttleComponent>(stationShuttle.EmergencyShuttle, out var shuttle))
         {
             Log.Error($"Attempted to call an emergency shuttle for an uninitialized station? Station: {ToPrettyString(stationUid)}. Shuttle: {ToPrettyString(stationShuttle.EmergencyShuttle)}");
-            return;
+            return null;
         }
 
-        var targetGrid = _station.GetLargestGrid(Comp<StationDataComponent>(stationUid));
+        var targetGrid = _station.GetLargestGrid(stationUid);
 
         // UHH GOOD LUCK
         if (targetGrid == null)
         {
-            _logger.Add(LogType.EmergencyShuttle, LogImpact.High, $"Emergency shuttle {ToPrettyString(stationUid)} unable to dock with station {ToPrettyString(stationUid)}");
-            _announcer.SendAnnouncement(_announcer.GetAnnouncementId("ShuttleGoodLuck"), Filter.Broadcast(),
-                "emergency-shuttle-good-luck", colorOverride: DangerColor);
-            return;
+            _logger.Add(
+                LogType.EmergencyShuttle,
+                LogImpact.High,
+                $"Emergency shuttle {ToPrettyString(stationUid)} unable to dock with station {ToPrettyString(stationUid)}");
+
+            return new ShuttleDockResult
+            {
+                Station = (stationUid, stationShuttle),
+                ResultType = ShuttleDockResultType.GoodLuck,
+            };
         }
 
-        var xformQuery = GetEntityQuery<TransformComponent>();
-
-        if (_shuttle.TryFTLDock(stationShuttle.EmergencyShuttle.Value, shuttle, targetGrid.Value, DockTag))
+        ShuttleDockResultType resultType;
+        if (_shuttle.TryFTLDock(stationShuttle.EmergencyShuttle.Value, shuttle, targetGrid.Value, out var config, DockTag))
         {
-            if (TryComp<TransformComponent>(targetGrid.Value, out var targetXform))
-            {
-                var angle = _dock.GetAngle(stationShuttle.EmergencyShuttle.Value, xform, targetGrid.Value, targetXform, xformQuery);
-                _announcer.SendAnnouncementMessage(
-                    _announcer.GetAnnouncementId("ShuttleDock"),
-                    "emergency-shuttle-docked",
-                    null, null, null, null,
-                    ("time", $"{_consoleAccumulator:0}"),
-                        ("direction", angle.GetDir())
-                );
-            }
+            _logger.Add(
+                LogType.EmergencyShuttle,
+                LogImpact.High,
+                $"Emergency shuttle {ToPrettyString(stationUid)} docked with stations");
 
-            // shuttle timers
-            var time = TimeSpan.FromSeconds(_consoleAccumulator);
-            if (TryComp<DeviceNetworkComponent>(stationShuttle.EmergencyShuttle.Value, out var netComp))
-            {
-                var payload = new NetworkPayload
-                {
-                    [ShuttleTimerMasks.ShuttleMap] = stationShuttle.EmergencyShuttle.Value,
-                    [ShuttleTimerMasks.SourceMap] = targetXform?.MapUid,
-                    [ShuttleTimerMasks.DestMap] = _roundEnd.GetCentcomm(),
-                    [ShuttleTimerMasks.ShuttleTime] = time,
-                    [ShuttleTimerMasks.SourceTime] = time,
-                    [ShuttleTimerMasks.DestTime] = time + TimeSpan.FromSeconds(TransitTime),
-                    [ShuttleTimerMasks.Docked] = true
-                };
-                _deviceNetworkSystem.QueuePacket(stationShuttle.EmergencyShuttle.Value, null, payload, netComp.TransmitFrequency);
-            }
-
-            _logger.Add(LogType.EmergencyShuttle, LogImpact.High, $"Emergency shuttle {ToPrettyString(stationUid)} docked with stations");
-            _announcer.SendAnnouncementAudio(_announcer.GetAnnouncementId("ShuttleDock"), Filter.Broadcast());
+            resultType = _dock.IsConfigPriority(config, DockTag)
+                ? ShuttleDockResultType.PriorityDock
+                : ShuttleDockResultType.OtherDock;
         }
         else
         {
-            var location = FormattedMessage.RemoveMarkup(_navMap.GetNearestBeaconString((stationShuttle.EmergencyShuttle.Value, xform)));
-            _announcer.SendAnnouncementMessage(
-                    _announcer.GetAnnouncementId("ShuttleNearby"),
-                    "emergency-shuttle-nearby",
-                    null, null, null, null,
-                    ("direction", location)
-                );
+            _logger.Add(
+                LogType.EmergencyShuttle,
+                LogImpact.High,
+                $"Emergency shuttle {ToPrettyString(stationUid)} unable to find a valid docking port for {ToPrettyString(stationUid)}");
 
-            _logger.Add(LogType.EmergencyShuttle, LogImpact.High, $"Emergency shuttle {ToPrettyString(stationUid)} unable to find a valid docking port for {ToPrettyString(stationUid)}");
-            _announcer.SendAnnouncementAudio(_announcer.GetAnnouncementId("ShuttleNearby"), Filter.Broadcast());
+            resultType = ShuttleDockResultType.NoDock;
         }
+
+        return new ShuttleDockResult
+        {
+            Station = (stationUid, stationShuttle),
+            DockingConfig = config,
+            ResultType = resultType,
+            TargetGrid = targetGrid,
+        };
+    }
+
+    /// <summary>
+    /// Do post-shuttle-dock setup. Announce to the crew and set up shuttle timers.
+    /// </summary>
+    public void AnnounceShuttleDock(ShuttleDockResult result, bool extended)
+    {
+        var stationShuttleComp = result.Station.Comp;
+        var shuttle = result.Station.Comp.EmergencyShuttle;
+
+        DebugTools.Assert(shuttle != null);
+
+        if (result.ResultType == ShuttleDockResultType.GoodLuck)
+        {
+            _chatSystem.DispatchStationAnnouncement(
+                result.Station,
+                Loc.GetString(stationShuttleComp.FailureAnnouncement),
+                playDefaultSound: false);
+
+            // TODO: Need filter extensions or something don't blame me.
+            _audio.PlayGlobal(stationShuttleComp.FailureAudio, Filter.Broadcast(), true);
+            return;
+        }
+
+        DebugTools.Assert(result.TargetGrid != null);
+
+        // Send station announcement.
+
+        var targetXform = Transform(result.TargetGrid.Value);
+        var angle = _dock.GetAngle(
+            shuttle.Value,
+            Transform(shuttle.Value),
+            result.TargetGrid.Value,
+            targetXform);
+
+        var direction = ContentLocalizationManager.FormatDirection(angle.GetDir());
+        var location = FormattedMessage.RemoveMarkupPermissive(
+            _navMap.GetNearestBeaconString((shuttle.Value, Transform(shuttle.Value))));
+
+        var extendedText = extended ? Loc.GetString(stationShuttleComp.LaunchExtendedMessage) : "";
+        var locKey = result.ResultType == ShuttleDockResultType.NoDock
+            ? stationShuttleComp.NearbyAnnouncement
+            : stationShuttleComp.DockedAnnouncement;
+
+        _chatSystem.DispatchStationAnnouncement(
+            result.Station,
+            Loc.GetString(
+                locKey,
+                ("time", $"{_consoleAccumulator:0}"),
+                ("direction", direction),
+                ("location", location),
+                ("extended", extendedText)),
+            playDefaultSound: false);
+
+        // Trigger shuttle timers on the shuttle.
+
+        var time = TimeSpan.FromSeconds(_consoleAccumulator);
+        if (TryComp<DeviceNetworkComponent>(shuttle, out var netComp))
+        {
+            var payload = new ScreenShuttlePayload
+            {
+                Shuttle = shuttle,
+                SourceMap = targetXform.MapUid,
+                DestinationMap = _roundEnd.GetCentcomm(),
+                ShuttleTime = time,
+                SourceTime = time,
+                DestinationTime = time + TimeSpan.FromSeconds(TransitTime),
+                Docked = true,
+            };
+            _deviceNetworkSystem.SendPacket(shuttle.Value, null, ref payload, netComp.TransmitFrequency);
+        }
+
+        // Play announcement audio.
+
+        var audioFile = result.ResultType == ShuttleDockResultType.NoDock
+            ? stationShuttleComp.NearbyAudio
+            : stationShuttleComp.DockedAudio;
+
+        // TODO: Need filter extensions or something don't blame me.
+        _audio.PlayGlobal(audioFile, Filter.Broadcast(), true);
     }
 
     private void OnStationInit(EntityUid uid, StationCentcommComponent component, MapInitEvent args)
@@ -343,7 +401,7 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
             return;
 
         // Post mapinit? fancy
-        if (TryComp<TransformComponent>(component.Entity, out var xform))
+        if (TryComp(component.Entity, out TransformComponent? xform))
         {
             component.MapEntity = xform.MapUid;
             return;
@@ -358,9 +416,12 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
     }
 
     /// <summary>
-    ///     Spawns the emergency shuttle for each station and starts the countdown until controls unlock.
+    /// Teleports the emergency shuttle to its station and starts the countdown until it launches.
     /// </summary>
-    public void CallEmergencyShuttle()
+    /// <remarks>
+    /// If the emergency shuttle is disabled, this immediately ends the round.
+    /// </remarks>
+    public void DockEmergencyShuttle()
     {
         if (EmergencyShuttleArrived)
             return;
@@ -371,14 +432,39 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
             return;
         }
 
-        _consoleAccumulator = _configManager.GetCVar(CCVars.EmergencyShuttleDockTime);
+        _consoleAccumulator = ConfigManager.GetCVar(CCVars.EmergencyShuttleDockTime);
         EmergencyShuttleArrived = true;
 
         var query = AllEntityQuery<StationEmergencyShuttleComponent>();
 
+        var dockResults = new List<ShuttleDockResult>();
+
         while (query.MoveNext(out var uid, out var comp))
         {
-            CallEmergencyShuttle(uid, comp);
+            if (DockSingleEmergencyShuttle(uid, comp) is { } dockResult)
+                dockResults.Add(dockResult);
+        }
+
+        // Make the shuttle wait longer if it couldn't dock in the normal spot.
+        // We have to handle the possibility of there being multiple stations, so since the shuttle timer is global,
+        // use the WORST value we have.
+        var worstResult = dockResults.Max(x => x.ResultType);
+        var multiplier = worstResult switch
+        {
+            ShuttleDockResultType.OtherDock => ConfigManager.GetCVar(
+                CCVars.EmergencyShuttleDockTimeMultiplierOtherDock),
+            ShuttleDockResultType.NoDock => ConfigManager.GetCVar(
+                CCVars.EmergencyShuttleDockTimeMultiplierNoDock),
+            // GoodLuck doesn't get a multiplier.
+            // Quite frankly at that point the round is probably so fucked that you'd rather it be over ASAP.
+            _ => 1,
+        };
+
+        _consoleAccumulator *= multiplier;
+
+        foreach (var shuttleDockResult in dockResults)
+        {
+            AnnounceShuttleDock(shuttleDockResult, multiplier > 1);
         }
 
         _commsConsole.UpdateCommsConsoleInterface();
@@ -406,7 +492,7 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
 
     private void AddCentcomm(EntityUid station, StationCentcommComponent component)
     {
-        DebugTools.Assert(LifeStage(station)>= EntityLifeStage.MapInitialized);
+        DebugTools.Assert(LifeStage(station) >= EntityLifeStage.MapInitialized);
         if (component.MapEntity != null || component.Entity != null)
         {
             Log.Warning("Attempted to re-add an existing centcomm map.");
@@ -433,32 +519,30 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
             return;
         }
 
-        var mapPath = _random.Pick(component.Maps).ToString();
-        AddSingleCentcomm(station, component, mapPath);
-    }
-
-    private void AddSingleCentcomm(EntityUid station, StationCentcommComponent component, string mapPath)
-    {
-        if (string.IsNullOrEmpty(mapPath))
+        if (string.IsNullOrEmpty(component.Map.ToString()))
         {
             Log.Warning("No CentComm map found, skipping setup.");
             return;
         }
 
         var map = _mapSystem.CreateMap(out var mapId);
-        if (!_map.TryLoadGrid(mapId, new ResPath(mapPath), out var gridEnt))
+        if (!_loader.TryLoadGrid(mapId, component.Map, out var grid))
         {
-            Log.Error("Failed to set up centcomm grid!");
-            QueueDel(map);
+            Log.Error($"Failed to set up centcomm grid!");
             return;
         }
 
-        var grid = (EntityUid?) gridEnt.Value.Owner;
-
-        if (!Exists(map) || map == EntityUid.Invalid)
+        if (!Exists(map))
         {
-            Log.Error("Failed to set up centcomm map!");
+            Log.Error($"Failed to set up centcomm map!");
             QueueDel(grid);
+            return;
+        }
+
+        if (!Exists(grid))
+        {
+            Log.Error($"Failed to set up centcomm grid!");
+            QueueDel(map);
             return;
         }
 
@@ -472,8 +556,9 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
         }
 
         component.MapEntity = map;
+        _metaData.SetEntityName(map, Loc.GetString("map-name-centcomm"));
         component.Entity = grid;
-        _shuttle.TryAddFTLDestination(mapId, false, out _);
+        _shuttle.TryAddFTLDestination(mapId, true, out _);
         Log.Info($"Created centcomm grid {ToPrettyString(grid)} on map {ToPrettyString(map)} for station {ToPrettyString(station)}");
     }
 
@@ -499,7 +584,7 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
         if (!_emergencyShuttleEnabled)
             return;
 
-        if (ent.Comp1.EmergencyShuttle != null )
+        if (ent.Comp1.EmergencyShuttle != null)
         {
             if (Exists(ent.Comp1.EmergencyShuttle))
             {
@@ -519,14 +604,15 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
 
         // Load escape shuttle
         var shuttlePath = ent.Comp1.EmergencyShuttlePath;
-        if (!_map.TryLoadGrid(map.MapId, shuttlePath, out var shuttleGrid,
+        if (!_loader.TryLoadGrid(map.MapId,
+            shuttlePath,
+            out var shuttle,
+            // Should be far enough... right? I'm too lazy to bounds check CentCom rn.
             offset: new Vector2(500f + ent.Comp2.ShuttleIndex, 0f)))
         {
             Log.Error($"Unable to spawn emergency shuttle {shuttlePath} for {ToPrettyString(ent)}");
             return;
         }
-
-        var shuttle = (EntityUid?) shuttleGrid.Value.Owner;
 
         ent.Comp2.ShuttleIndex += Comp<MapGridComponent>(shuttle.Value).LocalAABB.Width + ShuttleSpawnBuffer;
 
@@ -558,18 +644,11 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
         if (!EmergencyShuttleArrived)
             return false;
 
-        // check each emergency shuttle
+        // check if target is on an emergency shuttle
         var xform = Transform(target);
-        foreach (var stationData in EntityQuery<StationEmergencyShuttleComponent>())
-        {
-            if (stationData.EmergencyShuttle == null)
-                continue;
 
-            if (IsOnGrid(xform, stationData.EmergencyShuttle.Value))
-            {
-                return true;
-            }
-        }
+        if (HasComp<EmergencyShuttleComponent>(xform.GridUid))
+            return true;
 
         return false;
     }
@@ -580,5 +659,67 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
             return false;
 
         return _transformSystem.GetWorldMatrix(shuttleXform).TransformBox(grid.LocalAABB).Contains(_transformSystem.GetWorldPosition(xform));
+    }
+
+    /// <summary>
+    /// A result of a shuttle dock operation done by <see cref="EmergencyShuttleSystem.DockSingleEmergencyShuttle"/>.
+    /// </summary>
+    /// <seealso cref="ShuttleDockResultType"/>
+    public sealed class ShuttleDockResult
+    {
+        /// <summary>
+        /// The station for which the emergency shuttle got docked.
+        /// </summary>
+        public Entity<StationEmergencyShuttleComponent> Station;
+
+        /// <summary>
+        /// The target grid of the station that the shuttle tried to dock to.
+        /// </summary>
+        /// <remarks>
+        /// Not present if <see cref="ResultType"/> is <see cref="ShuttleDockResultType.GoodLuck"/>.
+        /// </remarks>
+        public EntityUid? TargetGrid;
+
+        /// <summary>
+        /// Enum code describing the dock result.
+        /// </summary>
+        public ShuttleDockResultType ResultType;
+
+        /// <summary>
+        /// The docking config used to actually dock to the station.
+        /// </summary>
+        /// <remarks>
+        /// Only present if <see cref="ResultType"/> is <see cref="ShuttleDockResultType.PriorityDock"/>
+        /// or <see cref="ShuttleDockResultType.NoDock"/>.
+        /// </remarks>
+        public DockingConfig? DockingConfig;
+    }
+
+    /// <summary>
+    /// Emergency shuttle dock result codes used by <see cref="ShuttleDockResult"/>.
+    /// </summary>
+    public enum ShuttleDockResultType : byte
+    {
+        // This enum is ordered from "best" to "worst". This is used to sort the results.
+
+        /// <summary>
+        /// The shuttle was docked at a priority dock, which is the intended destination.
+        /// </summary>
+        PriorityDock,
+
+        /// <summary>
+        /// The shuttle docked at another dock on the station then the intended priority dock.
+        /// </summary>
+        OtherDock,
+
+        /// <summary>
+        /// The shuttle couldn't find any suitable dock on the station at all, it did not dock.
+        /// </summary>
+        NoDock,
+
+        /// <summary>
+        /// No station grid was found at all, shuttle did not get moved.
+        /// </summary>
+        GoodLuck,
     }
 }

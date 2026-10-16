@@ -1,42 +1,39 @@
 using Content.Server.StationEvents.Components;
-﻿using Content.Shared.GameTicking.Components;
+using Content.Shared.GameTicking.Components;
 using Robust.Shared.Random;
-using Content.Server.Announcements.Systems;
-using Robust.Shared.Player;
 
 namespace Content.Server.StationEvents.Events;
 
-public sealed class BluespaceArtifactRule : StationEventSystem<BluespaceArtifactRuleComponent>
+/// <summary>
+/// Handler for events spawning an artifact on station with a bluespace flash.
+/// </summary>
+/// <seealso cref="BluespaceArtifactRuleComponent"/>
+public sealed partial class BluespaceArtifactRule : StationEventSystem<BluespaceArtifactRuleComponent>
 {
-    [Dependency] private readonly AnnouncerSystem _announcer = default!;
-
-    protected override void Added(EntityUid uid, BluespaceArtifactRuleComponent component, GameRuleComponent gameRule, GameRuleAddedEvent args)
+    protected override void Added(Entity<BluespaceArtifactRuleComponent, GameRuleComponent> ent, ref GameRuleAddedEvent args)
     {
-        base.Added(uid, component, gameRule, args);
+        if (!TryComp<StationEventComponent>(ent, out var stationEvent))
+            return;
 
-        _announcer.SendAnnouncement(
-            _announcer.GetAnnouncementId(args.RuleId),
-            Filter.Broadcast(),
-            "bluespace-artifact-event-announcement",
-            null,
-            Color.FromHex("#18abf5"),
-            null, null,
-            ("sighting", Loc.GetString(RobustRandom.Pick(component.PossibleSighting)))
-        );
+        var str = Loc.GetString("bluespace-artifact-event-announcement",
+            ("sighting", Loc.GetString(RobustRandom.Pick(ent.Comp1.PossibleSightings))));
+        stationEvent.StartAnnouncement = str;
+
+        base.Added(ent, ref args);
     }
 
-    protected override void Started(EntityUid uid, BluespaceArtifactRuleComponent component, GameRuleComponent gameRule, GameRuleStartedEvent args)
+    protected override void Started(Entity<BluespaceArtifactRuleComponent, GameRuleComponent> ent, ref GameRuleStartedEvent args)
     {
-        base.Started(uid, component, gameRule, args);
+        base.Started(ent, ref args);
 
-        var amountToSpawn = 1;
+        var amountToSpawn = ent.Comp1.AmountToSpawn.Next(RobustRandom);
         for (var i = 0; i < amountToSpawn; i++)
         {
-            if (!TryFindRandomTile(out _, out _, out _, out var coords))
+            if (!Station.TryFindRandomTile(out _, out _, out _, out var coords))
                 return;
 
-            Spawn(component.ArtifactSpawnerPrototype, coords);
-            Spawn(component.ArtifactFlashPrototype, coords);
+            Spawn(ent.Comp1.ArtifactSpawnerPrototype, coords);
+            Spawn(ent.Comp1.ArtifactFlashPrototype, coords);
 
             Sawmill.Info($"Spawning random artifact at {coords}");
         }

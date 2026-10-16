@@ -13,13 +13,12 @@ public static class ServerPackaging
     private static readonly List<PlatformReg> Platforms = new()
     {
         new PlatformReg("win-x64", "Windows", true),
+        new PlatformReg("win-arm64", "Windows", true),
         new PlatformReg("linux-x64", "Linux", true),
         new PlatformReg("linux-arm64", "Linux", true),
         new PlatformReg("osx-x64", "MacOS", true),
+        new PlatformReg("osx-arm64", "MacOS", true),
         // Non-default platforms (i.e. for Watchdog Git)
-        new PlatformReg("win-x86", "Windows", false),
-        new PlatformReg("linux-x86", "Linux", false),
-        new PlatformReg("linux-arm", "Linux", false),
         new PlatformReg("freebsd-x64", "FreeBSD", false),
     };
 
@@ -37,14 +36,6 @@ public static class ServerPackaging
         .Where(o => o.BuildByDefault)
         .Select(o => o.Rid)
         .ToList();
-
-    private static readonly List<string> ServerContentAssemblies = new()
-    {
-        "Content.Server.Database",
-        "Content.Server",
-        "Content.Shared",
-        "Content.Shared.Database",
-    };
 
     private static readonly List<string> ServerNotExtraAssemblies = new()
     {
@@ -66,10 +57,11 @@ public static class ServerPackaging
         "ru",
         "tr",
         "zh-Hans",
-        "zh-Hant"
+        "zh-Hant",
+        "server_config.toml" // RT config (use our Content-facing one)
     };
 
-    public static async Task PackageServer(bool skipBuild, bool hybridAcz, IPackageLogger logger, string configuration, List<string>? platforms = null)
+    public static async Task PackageServer(bool skipBuild, bool hybridAcz, bool logBuild, IPackageLogger logger, string configuration, List<string>? platforms = null)
     {
         if (platforms == null)
         {
@@ -81,8 +73,8 @@ public static class ServerPackaging
             // Hybrid ACZ involves a file "Content.Client.zip" in the server executable directory.
             // Rather than hosting the client ZIP on the watchdog or on a separate server,
             //  Hybrid ACZ uses the ACZ hosting functionality to host it as part of the status host,
-            //  which means that features such as automatic UPnP forwarding still work correctly.
-            await ClientPackaging.PackageClient(skipBuild, configuration, logger);
+            //  which means that features such as automatic UPnP forwarding still work properly.
+            await ClientPackaging.PackageClient(skipBuild, logBuild, configuration, logger);
         }
 
         // Good variable naming right here.
@@ -91,17 +83,22 @@ public static class ServerPackaging
             if (!platforms.Contains(platform.Rid))
                 continue;
 
-            await BuildPlatform(platform, skipBuild, hybridAcz, configuration, logger);
+            await BuildPlatform(platform, skipBuild, hybridAcz, logBuild, configuration, logger);
         }
     }
 
-    private static async Task BuildPlatform(PlatformReg platform, bool skipBuild, bool hybridAcz, string configuration, IPackageLogger logger)
+    private static async Task BuildPlatform(PlatformReg platform,
+        bool skipBuild,
+        bool hybridAcz,
+        bool logBuild,
+        string configuration,
+        IPackageLogger logger)
     {
         logger.Info($"Building project for {platform.TargetOs}...");
 
         if (!skipBuild)
         {
-            await ProcessHelpers.RunCheck(new ProcessStartInfo
+            var startInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
                 ArgumentList =
@@ -116,7 +113,15 @@ public static class ServerPackaging
                     "/p:FullRelease=true",
                     "/m"
                 }
-            });
+            };
+
+            if (logBuild)
+            {
+                startInfo.ArgumentList.Add($"/bl:{Path.Combine("release", $"server-{platform.Rid}.binlog")}");
+                startInfo.ArgumentList.Add("/p:ReportAnalyzer=true");
+            }
+
+            await ProcessHelpers.RunCheck(startInfo);
 
             await PublishClientServer(platform.Rid, platform.TargetOs, configuration);
         }
@@ -168,6 +173,12 @@ public static class ServerPackaging
         var passes = graph.AllPasses.ToList();
 
         pass.Dependencies.Add(new AssetPassDependency(graph.Output.Name));
+
+        // Include a TOML config file - include the ss14 one from Resources if possible, using the RT one as a fallback.
+        var toml = Path.Combine(contentDir, "Resources", "ConfigPresets", "server_config.toml");
+        var robustToml = Path.Combine("RobustToolbox", "bin", "Server", platform.Rid, "publish", "server_config.toml");
+        pass.InjectFileFromDisk("server_config.toml", File.Exists(toml) ? toml : robustToml);
+
         passes.Add(pass);
 
         AssetGraph.CalculateGraph(passes, logger);
@@ -200,7 +211,7 @@ public static class ServerPackaging
         await RobustServerPackaging.WriteServerResources(
             contentDir,
             inputPassResources,
-            ServerContentIgnoresResources.Concat(RobustSharedPackaging.SharedIgnoredResources).ToHashSet(),
+            ServerContentIgnoresResources.Concat(SharedPackaging.AdditionalIgnoredResources).ToHashSet(),
             cancel);
 
         if (hybridAcz)

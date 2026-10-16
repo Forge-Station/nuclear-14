@@ -1,7 +1,29 @@
-﻿using Content.Shared.Roles;
+using Content.Shared.Roles;
 using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
+
+/// <summary>
+/// Controls how an unfilled round-start minimum job slot may ignore player job preferences.
+/// </summary>
+public enum MinimumJobFallback : int // needs int backing because cvar
+{
+    /// <summary>
+    /// Select a player who prefers another role in the target job's primary department.
+    /// </summary>
+    SameDepartment = 1,
+
+    /// <summary>
+    /// First select a player who prefers another role in the target job's primary department,
+    /// then select any player who otherwise qualifies for the target job.
+    /// </summary>
+    AnyEligiblePlayer = 2,
+
+    /// <summary>
+    /// Leave the minimum slot empty when no player prefers the target job.
+    /// </summary>
+    None = 3,
+}
 
 public sealed partial class CCVars
 {
@@ -45,7 +67,13 @@ public sealed partial class CCVars
     ///     The preset for the game to fall back to if the selected preset could not be used, and fallback is enabled.
     /// </summary>
     public static readonly CVarDef<string>
-        GameLobbyFallbackPreset = CVarDef.Create("game.fallbackpreset", "secret", CVar.ARCHIVE);
+        GameLobbyFallbackPreset = CVarDef.Create("game.fallbackpreset", "Traitor,Extended", CVar.ARCHIVE);
+
+    /// <summary>
+    ///     The preset for the game to fall back to if the selected preset could not be used, and fallback is enabled.
+    /// </summary>
+    public static readonly CVarDef<string>
+        GameTickerIgnoredPresets = CVarDef.Create("game.ignoredpresets", "", CVar.ARCHIVE);
 
     /// <summary>
     ///     Controls if people can win the game in Suspicion or Deathmatch.
@@ -54,59 +82,22 @@ public sealed partial class CCVars
         GameLobbyEnableWin = CVarDef.Create("game.enablewin", true, CVar.ARCHIVE);
 
     /// <summary>
-    ///     Minimum time between Basic station events in seconds
+    ///     Controls if round-end window shows whether the objective was completed or not.
     /// </summary>
-    public static readonly CVarDef<int> // 5 Minutes
-        GameEventsBasicMinimumTime = CVarDef.Create("game.events_basic_minimum_time", 300, CVar.SERVERONLY | CVar.ARCHIVE);
-
-    /// <summary>
-    ///     Maximum time between Basic station events in seconds
-    /// </summary>
-    public static readonly CVarDef<int> // 25 Minutes
-        GameEventsBasicMaximumTime = CVarDef.Create("game.events_basic_maximum_time", 1500, CVar.SERVERONLY | CVar.ARCHIVE);
-
-    /// <summary>
-    ///     Minimum time between Ramping station events in seconds
-    /// </summary>
-    public static readonly CVarDef<int> // 4 Minutes
-        GameEventsRampingMinimumTime = CVarDef.Create("game.events_ramping_minimum_time", 240, CVar.SERVERONLY | CVar.ARCHIVE);
-
-    /// <summary>
-    ///     Maximum time between Ramping station events in seconds
-    /// </summary>
-    public static readonly CVarDef<int> // 12 Minutes
-        GameEventsRampingMaximumTime = CVarDef.Create("game.events_ramping_maximum_time", 720, CVar.SERVERONLY | CVar.ARCHIVE);
-
-    /// <summary>
-    ///     Minimum time between Oscillating station events in seconds. This is the bare minimum which will never be violated, unlike with ramping events.
-    /// </summary>
-    public static readonly CVarDef<int> // 40 seconds
-        GameEventsOscillatingMinimumTime = CVarDef.Create("game.events_oscillating_minimum_time", 40, CVar.SERVERONLY | CVar.ARCHIVE);
-
-    /// <summary>
-    ///     Time between Oscillating station events in seconds at 1x chaos level. Events may occur at larger intervals if current chaos is lower than that.
-    /// </summary>
-    public static readonly CVarDef<int> // 20 Minutes - which constitutes a minimum of 120 seconds between events in Irregular and 280 seconds in Extended Irregular
-        GameEventsOscillatingAverageTime = CVarDef.Create("game.events_oscillating_average_time", 1200, CVar.SERVERONLY | CVar.ARCHIVE);
+    public static readonly CVarDef<bool>
+        GameShowGreentext = CVarDef.Create("game.showgreentext", true, CVar.ARCHIVE | CVar.SERVERONLY);
 
     /// <summary>
     ///     Controls the maximum number of character slots a player is allowed to have.
     /// </summary>
     public static readonly CVarDef<int>
-        GameMaxCharacterSlots = CVarDef.Create("game.maxcharacterslots", 15, CVar.ARCHIVE | CVar.SERVERONLY);
+        GameMaxCharacterSlots = CVarDef.Create("game.maxcharacterslots", 30, CVar.ARCHIVE | CVar.REPLICATED | CVar.SERVER);
 
     /// <summary>
     ///     Controls the game map prototype to load. SS14 stores these prototypes in Prototypes/Maps.
     /// </summary>
     public static readonly CVarDef<string>
         GameMap = CVarDef.Create("game.map", string.Empty, CVar.SERVERONLY);
-
-    /// <summary>
-    /// If roles should be restricted based on whether or not they are whitelisted.
-    /// </summary>
-    public static readonly CVarDef<bool>
-        GameRoleWhitelist = CVarDef.Create("game.role_whitelist", true, CVar.SERVER | CVar.REPLICATED);
-
 
     /// <summary>
     ///     Controls whether to use world persistence or not.
@@ -128,26 +119,52 @@ public sealed partial class CCVars
         GameMapPool = CVarDef.Create("game.map_pool", "DefaultMapPool", CVar.SERVERONLY);
 
     /// <summary>
-    /// The depth of the queue used to calculate which map is next in rotation.
-    /// This is how long the game "remembers" that some map was put in play. Default is 16 rounds.
+    ///     The depth of the queue used to calculate which map is next in rotation.
+    ///     This is how long the game "remembers" that some map was put in play. Default is 16 rounds.
     /// </summary>
     public static readonly CVarDef<int>
         GameMapMemoryDepth = CVarDef.Create("game.map_memory_depth", 16, CVar.SERVERONLY);
 
     /// <summary>
-    /// Is map rotation enabled?
+    ///     Is map rotation enabled?
     /// </summary>
     public static readonly CVarDef<bool>
         GameMapRotation = CVarDef.Create("game.map_rotation", true, CVar.SERVERONLY);
 
     /// <summary>
-    /// If roles should be restricted based on time.
+    ///     If roles should be restricted based on time.
     /// </summary>
     public static readonly CVarDef<bool>
         GameRoleTimers = CVarDef.Create("game.role_timers", true, CVar.SERVER | CVar.REPLICATED);
 
     /// <summary>
-    /// Whether or not disconnecting inside of a cryopod should remove the character or just store them until they reconnect.
+    /// If role loadout items should be restricted based on time.
+    /// </summary>
+    public static readonly CVarDef<bool>
+        GameRoleLoadoutTimers = CVarDef.Create("game.role_loadout_timers", true, CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    ///     Override default role requirements using a <see cref="JobRequirementOverridePrototype"/>
+    /// </summary>
+    public static readonly CVarDef<string>
+        GameRoleTimerOverride = CVarDef.Create("game.role_timer_override", "", CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    ///     If roles should be restricted based on whether or not they are whitelisted.
+    /// </summary>
+    public static readonly CVarDef<bool>
+        GameRoleWhitelist = CVarDef.Create("game.role_whitelist", true, CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    ///     Determines how unfilled round-start minimum job slots fall back when no player prefers the job.
+    ///     Role bans, whitelists, playtime requirements, and antag restrictions always apply.
+    /// </summary>
+    public static readonly CVarDef<MinimumJobFallback>
+        GameMinimumJobFallback = CVarDef.Create("game.minimum_job_fallback", MinimumJobFallback.None,
+            CVar.ARCHIVE | CVar.SERVERONLY);
+
+    /// <summary>
+    ///     Whether or not disconnecting inside of a cryopod should remove the character or just store them until they reconnect.
     /// </summary>
     public static readonly CVarDef<bool>
         GameCryoSleepRejoining = CVarDef.Create("game.cryo_sleep_rejoining", false, CVar.SERVER | CVar.REPLICATED);
@@ -165,192 +182,193 @@ public sealed partial class CCVars
         CVarDef.Create("game.soft_max_players", 30, CVar.SERVERONLY | CVar.ARCHIVE);
 
     /// <summary>
-    /// If a player gets denied connection to the server,
-    /// how long they are forced to wait before attempting to reconnect.
+    ///     If a player gets denied connection to the server,
+    ///     how long they are forced to wait before attempting to reconnect.
     /// </summary>
     public static readonly CVarDef<int> GameServerFullReconnectDelay =
         CVarDef.Create("game.server_full_reconnect_delay", 30, CVar.SERVERONLY);
 
     /// <summary>
-    /// Whether or not panic bunker is currently enabled.
+    ///     Whether or not panic bunker is currently enabled.
     /// </summary>
     public static readonly CVarDef<bool> PanicBunkerEnabled =
-        CVarDef.Create("game.panic_bunker.enabled", false, CVar.NOTIFY | CVar.REPLICATED);
+        CVarDef.Create("game.panic_bunker.enabled", false, CVar.NOTIFY | CVar.REPLICATED | CVar.SERVER);
 
     /// <summary>
-    /// Whether or not the panic bunker will disable when an admin comes online.
+    ///     Whether or not the panic bunker will disable when an admin comes online.
     /// </summary>
     public static readonly CVarDef<bool> PanicBunkerDisableWithAdmins =
         CVarDef.Create("game.panic_bunker.disable_with_admins", false, CVar.SERVERONLY);
 
     /// <summary>
-    /// Whether or not the panic bunker will enable when no admins are online.
+    ///     Whether or not the panic bunker will enable when no admins are online.
+    ///     This counts everyone with the 'Admin' AdminFlag.
     /// </summary>
     public static readonly CVarDef<bool> PanicBunkerEnableWithoutAdmins =
         CVarDef.Create("game.panic_bunker.enable_without_admins", false, CVar.SERVERONLY);
 
     /// <summary>
-    /// Whether or not the panic bunker will count deadminned admins for
-    /// <see cref="PanicBunkerDisableWithAdmins"/> and
-    /// <see cref="PanicBunkerEnableWithoutAdmins"/>
+    ///     Whether or not the panic bunker will count deadminned admins for
+    ///     <see cref="PanicBunkerDisableWithAdmins"/> and
+    ///     <see cref="PanicBunkerEnableWithoutAdmins"/>
     /// </summary>
     public static readonly CVarDef<bool> PanicBunkerCountDeadminnedAdmins =
         CVarDef.Create("game.panic_bunker.count_deadminned_admins", false, CVar.SERVERONLY);
 
     /// <summary>
-    /// Show reason of disconnect for user or not.
+    ///     Show reason of disconnect for user or not.
     /// </summary>
     public static readonly CVarDef<bool> PanicBunkerShowReason =
         CVarDef.Create("game.panic_bunker.show_reason", false, CVar.SERVERONLY);
 
     /// <summary>
-    /// Minimum age of the account (from server's PoV, so from first-seen date) in hours.
+    ///     Minimum age of the account (from server's PoV, so from first-seen date) in minutes.
     /// </summary>
     public static readonly CVarDef<int> PanicBunkerMinAccountAge =
-        CVarDef.Create("game.panic_bunker.min_account_age", 24, CVar.SERVERONLY);
+        CVarDef.Create("game.panic_bunker.min_account_age", 1440, CVar.SERVERONLY);
 
     /// <summary>
-    /// Minimal overall played time.
+    ///     Minimal overall played time.
     /// </summary>
-    public static readonly CVarDef<int> PanicBunkerMinOverallHours =
-        CVarDef.Create("game.panic_bunker.min_overall_hours", 10, CVar.SERVERONLY);
+    public static readonly CVarDef<int> PanicBunkerMinOverallMinutes =
+        CVarDef.Create("game.panic_bunker.min_overall_minutes", 600, CVar.SERVERONLY);
 
     /// <summary>
-    /// A custom message that will be used for connections denied to the panic bunker
-    /// If not empty, then will overwrite <see cref="PanicBunkerShowReason"/>
+    ///     A custom message that will be used for connections denied to the panic bunker
+    ///     If not empty, then will overwrite <see cref="PanicBunkerShowReason"/>
     /// </summary>
     public static readonly CVarDef<string> PanicBunkerCustomReason =
         CVarDef.Create("game.panic_bunker.custom_reason", string.Empty, CVar.SERVERONLY);
 
     /// <summary>
-    /// Allow bypassing the panic bunker if the user is whitelisted.
+    ///     Allow bypassing the panic bunker if the user is whitelisted.
     /// </summary>
     public static readonly CVarDef<bool> BypassBunkerWhitelist =
         CVarDef.Create("game.panic_bunker.whitelisted_can_bypass", true, CVar.SERVERONLY);
 
-    /*
-        * TODO: Remove baby jail code once a more mature gateway process is established. This code is only being issued as a stopgap to help with potential tiding in the immediate future.
-        */
-
     /// <summary>
-    /// Whether the baby jail is currently enabled.
+    /// Enable IPIntel for blocking VPN connections from new players.
     /// </summary>
-    public static readonly CVarDef<bool> BabyJailEnabled =
-        CVarDef.Create("game.baby_jail.enabled", false, CVar.NOTIFY | CVar.REPLICATED | CVar.SERVER);
+    public static readonly CVarDef<bool> GameIPIntelEnabled =
+        CVarDef.Create("game.ipintel_enabled", false, CVar.SERVERONLY);
 
     /// <summary>
-    /// Show reason of disconnect for user or not.
+    /// Whether clients which are flagged as a VPN will be denied
     /// </summary>
-    public static readonly CVarDef<bool> BabyJailShowReason =
-        CVarDef.Create("game.baby_jail.show_reason", false, CVar.SERVERONLY);
+    public static readonly CVarDef<bool> GameIPIntelRejectBad =
+        CVarDef.Create("game.ipintel_reject_bad", true, CVar.SERVERONLY);
 
     /// <summary>
-    /// Maximum age of the account (from server's PoV, so from first-seen date) in hours that can access baby
-    /// jailed servers.
+    /// Whether clients which cannot be checked due to a rate limit will be denied
     /// </summary>
-    public static readonly CVarDef<int> BabyJailMaxAccountAge =
-        CVarDef.Create("game.baby_jail.max_account_age", 24, CVar.SERVERONLY);
+    public static readonly CVarDef<bool> GameIPIntelRejectRateLimited =
+        CVarDef.Create("game.ipintel_reject_ratelimited", false, CVar.SERVERONLY);
 
     /// <summary>
-    /// Maximum overall played time allowed to access baby jailed servers.
+    /// Whether clients which cannot be checked due to an error of some form will be denied
     /// </summary>
-    public static readonly CVarDef<int> BabyJailMaxOverallHours =
-        CVarDef.Create("game.baby_jail.max_overall_hours", 2, CVar.SERVERONLY);
+    public static readonly CVarDef<bool> GameIPIntelRejectUnknown =
+        CVarDef.Create("game.ipintel_reject_unknown", false, CVar.SERVERONLY);
 
     /// <summary>
-    /// A custom message that will be used for connections denied due to the baby jail.
-    /// If not empty, then will overwrite <see cref="BabyJailShowReason"/>
+    /// Should an admin message be made if the connection got rejected cause of ipintel?
     /// </summary>
-    public static readonly CVarDef<string> BabyJailCustomReason =
-        CVarDef.Create("game.baby_jail.custom_reason", string.Empty, CVar.SERVERONLY);
+    public static readonly CVarDef<bool> GameIPIntelAlertAdminReject =
+        CVarDef.Create("game.ipintel_alert_admin_rejected", false, CVar.SERVERONLY);
 
     /// <summary>
-    /// Allow bypassing the baby jail if the user is whitelisted.
+    /// A contact email to be sent along with the request. Required by IPIntel
     /// </summary>
-    public static readonly CVarDef<bool> BypassBabyJailWhitelist =
-        CVarDef.Create("game.baby_jail.whitelisted_can_bypass", true, CVar.SERVERONLY);
+    public static readonly CVarDef<string> GameIPIntelEmail =
+        CVarDef.Create("game.ipintel_contact_email", string.Empty, CVar.SERVERONLY | CVar.CONFIDENTIAL);
 
     /// <summary>
-    /// Make people bonk when trying to climb certain objects like tables.
+    /// The URL to IPIntel to make requests to. If you pay for more queries this is what you want to change.
+    /// </summary>
+    public static readonly CVarDef<string> GameIPIntelBase =
+        CVarDef.Create("game.ipintel_baseurl", "https://check.getipintel.net", CVar.SERVERONLY);
+
+    /// <summary>
+    /// The flags to use in the request to IPIntel, please look here for more info. https://getipintel.net/free-proxy-vpn-tor-detection-api/#optional_settings
+    /// Note: Some flags may increase the chances of false positives and request time. The default should be fine for most servers.
+    /// </summary>
+    public static readonly CVarDef<string> GameIPIntelFlags =
+        CVarDef.Create("game.ipintel_flags", "b", CVar.SERVERONLY);
+
+    /// <summary>
+    /// Maximum amount of requests per Minute. For free you get 15.
+    /// </summary>
+    public static readonly CVarDef<int> GameIPIntelMaxMinute =
+        CVarDef.Create("game.ipintel_request_limit_minute", 15, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Maximum amount of requests per Day. For free you get 500.
+    /// </summary>
+    public static readonly CVarDef<int> GameIPIntelMaxDay =
+        CVarDef.Create("game.ipintel_request_limit_daily", 500, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Amount of seconds to add to the exponential backoff with every failed request.
+    /// </summary>
+    public static readonly CVarDef<int> GameIPIntelBackOffSeconds =
+        CVarDef.Create("game.ipintel_request_backoff_seconds", 30, CVar.SERVERONLY);
+
+    /// <summary>
+    /// How much time should pass before we attempt to cleanup the IPIntel table for old ip addresses?
+    /// </summary>
+    public static readonly CVarDef<int> GameIPIntelCleanupMins =
+        CVarDef.Create("game.ipintel_database_cleanup_mins", 15, CVar.SERVERONLY);
+
+    /// <summary>
+    /// How long to store results in the cache before they must be retrieved again in days.
+    /// </summary>
+    public static readonly CVarDef<TimeSpan> GameIPIntelCacheLength =
+        CVarDef.Create("game.ipintel_cache_length", TimeSpan.FromDays(7), CVar.SERVERONLY);
+
+    /// <summary>
+    /// Amount of playtime in minutes to be exempt from an IP check. 0 to search everyone. 5 hours by default.
+    /// </summary>
+    /// <remarks>
+    /// Trust me you want one.
+    /// </remarks>
+    public static readonly CVarDef<TimeSpan> GameIPIntelExemptPlaytime =
+        CVarDef.Create("game.ipintel_exempt_playtime", TimeSpan.FromMinutes(300), CVar.SERVERONLY);
+
+    /// <summary>
+    /// Rating to reject at. Anything equal to or higher than this will reject the connection.
+    /// </summary>
+    public static readonly CVarDef<float> GameIPIntelBadRating =
+        CVarDef.Create("game.ipintel_bad_rating", 0.95f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Rating to send an admin warning over, but not reject the connection. Set to 0 to disable
+    /// </summary>
+    public static readonly CVarDef<float> GameIPIntelAlertAdminWarnRating =
+        CVarDef.Create("game.ipintel_alert_admin_warn_rating", 0f, CVar.SERVERONLY);
+
+    /// <summary>
+    ///     Should clumsy people bonk when trying to climb certain objects like tables?
     /// </summary>
     public static readonly CVarDef<bool> GameTableBonk =
-        CVarDef.Create("game.table_bonk", false, CVar.REPLICATED);
+        CVarDef.Create("game.table_bonk", true, CVar.REPLICATED);
 
     /// <summary>
-    /// Whether or not status icons are rendered for everyone.
+    ///     Whether or not status icons are rendered for everyone.
     /// </summary>
     public static readonly CVarDef<bool> GlobalStatusIconsEnabled =
         CVarDef.Create("game.global_status_icons_enabled", true, CVar.SERVER | CVar.REPLICATED);
 
     /// <summary>
-    /// Whether or not status icons are rendered on this specific client.
+    ///     Whether or not status icons are rendered on this specific client.
     /// </summary>
     public static readonly CVarDef<bool> LocalStatusIconsEnabled =
         CVarDef.Create("game.local_status_icons_enabled", true, CVar.CLIENTONLY);
 
     /// <summary>
-    /// Whether or not coordinates on the Debug overlay should only be available to admins.
+    ///     Whether or not coordinates on the Debug overlay should only be available to admins.
     /// </summary>
     public static readonly CVarDef<bool> DebugCoordinatesAdminOnly =
         CVarDef.Create("game.debug_coordinates_admin_only", true, CVar.SERVER | CVar.REPLICATED);
-
-
-    /// <summary>
-    ///     Whether to allow characters to select traits.
-    /// </summary>
-    public static readonly CVarDef<bool> GameTraitsEnabled =
-        CVarDef.Create("game.traits_enabled", true, CVar.REPLICATED);
-
-    /// <summary>
-    ///     How many traits a character can have at most.
-    /// </summary>
-    public static readonly CVarDef<int> GameTraitsMax =
-        CVarDef.Create("game.traits_max", 14, CVar.REPLICATED);
-
-    /// <summary>
-    ///     How many points a character should start with.
-    /// </summary>
-    public static readonly CVarDef<int> GameTraitsDefaultPoints =
-        CVarDef.Create("game.traits_default_points", 10, CVar.REPLICATED);
-
-    /// <summary>
-    ///     Whether the game will SMITE people who used cheat engine to spawn with all of the traits.
-    ///     Illegal trait totals will still be logged even if this is disabled.
-    ///     If you are intending to decrease the trait points availability, or modify the costs of traits, consider temporarily disabling this.
-    /// </summary>
-    public static readonly CVarDef<bool> TraitsPunishCheaters =
-        CVarDef.Create("game.traits_punish_cheaters", false, CVar.REPLICATED);
-
-    /// <summary>
-    ///     Whether to allow characters to select loadout items.
-    /// </summary>
-    public static readonly CVarDef<bool> GameLoadoutsEnabled =
-        CVarDef.Create("game.loadouts_enabled", true, CVar.REPLICATED);
-
-    /// <summary>
-    ///     How many points to give to each player for loadouts.
-    /// </summary>
-    public static readonly CVarDef<int> GameLoadoutsPoints =
-        CVarDef.Create("game.loadouts_points", 14, CVar.REPLICATED);
-
-
-    /// <summary>
-    ///     Whether to repeat eating doafters after completion
-    /// </summary>
-    public static readonly CVarDef<bool> GameAutoEatFood =
-        CVarDef.Create("game.auto_eat_food", true, CVar.REPLICATED); // Corvax-Change
-
-    /// <summary>
-    ///     Whether to repeat drinking doafters after completion
-    /// </summary>
-    public static readonly CVarDef<bool> GameAutoEatDrinks =
-        CVarDef.Create("game.auto_eat_drinks", true, CVar.REPLICATED); // Corvax-Change
-
-    /// <summary>
-    ///     Whether item slots, such as power cell slots or AME fuel cell slots, should support quick swap if it is not otherwise specified in their YAML prototype.
-    /// </summary>
-    public static readonly CVarDef<bool> AllowSlotQuickSwap =
-        CVarDef.Create("game.slot_quick_swap", true, CVar.REPLICATED); // Corvax-Change
 
 #if EXCEPTION_TOLERANCE
     /// <summary>
@@ -362,35 +380,114 @@ public sealed partial class CCVars
 #endif
 
     /// <summary>
-    /// Delay between station alert level changes.
+    ///     Delay between station alert level changes (in seconds).
     /// </summary>
     public static readonly CVarDef<int> GameAlertLevelChangeDelay =
         CVarDef.Create("game.alert_level_change_delay", 30, CVar.SERVERONLY);
 
     /// <summary>
-    /// The time in seconds that the server should wait before restarting the round.
-    /// Defaults to 2 minutes.
+    ///     The time in seconds that the server should wait before restarting the round.
+    ///     Defaults to 2 minutes.
     /// </summary>
     public static readonly CVarDef<float> RoundRestartTime =
         CVarDef.Create("game.round_restart_time", 120f, CVar.SERVERONLY);
 
     /// <summary>
-    /// The prototype to use for secret weights.
+    ///     The prototype to use for secret weights.
     /// </summary>
     public static readonly CVarDef<string> SecretWeightPrototype =
         CVarDef.Create("game.secret_weight_prototype", "Secret", CVar.SERVERONLY);
 
     /// <summary>
-    /// The id of the sound collection to randomly choose a sound from and play when the round ends.
+    ///     The id of the sound collection to randomly choose a sound from and play when the round ends.
     /// </summary>
     public static readonly CVarDef<string> RoundEndSoundCollection =
         CVarDef.Create("game.round_end_sound_collection", "RoundEnd", CVar.SERVERONLY);
 
     /// <summary>
-    /// Set to true to enable the dynamic hostname system.
-    /// Automatically updates the hostname to include current map and preset.
-    /// Configure what that looks like for you in Resources/Prototypes/Locale/en-US/dynamichostname/hostname.ftl
+    ///     Whether or not to add every player as a global override to PVS at round end.
+    ///     This will allow all players to see their clothing in the round screen player list screen,
+    ///     but may cause lag during round end with very high player counts.
     /// </summary>
-    public static readonly CVarDef<bool> UseDynamicHostname =
-        CVarDef.Create("game.use_dynamic_hostname", false, CVar.SERVERONLY);
+    public static readonly CVarDef<bool> RoundEndPVSOverrides =
+        CVarDef.Create("game.round_end_pvs_overrides", true, CVar.SERVERONLY);
+
+    /// <summary>
+    ///     If true, players can place objects onto tabletop games like chess boards.
+    /// </summary>
+    /// <remarks>
+    ///     This feature is currently highly abusable and can easily be used to crash the server,
+    ///     so it's off by default.
+    /// </remarks>
+    public static readonly CVarDef<bool> GameTabletopPlace =
+        CVarDef.Create("game.tabletop_place", false, CVar.SERVERONLY);
+
+    /// <summary>
+    ///     If true, contraband severity can be viewed in the examine menu
+    /// </summary>
+    public static readonly CVarDef<bool> ContrabandExamine =
+        CVarDef.Create("game.contraband_examine", true, CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    ///     If true, contraband examination is only possible while wearing an item with `ShowContrabandDetailsComponent`. Requires `ContrabandExamine` to be true as well.
+    /// </summary>
+    public static readonly CVarDef<bool> ContrabandExamineOnlyInHUD =
+        CVarDef.Create("game.contraband_examine_only_in_hud", false, CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    ///     Size of the lookup area for adding entities to the context menu
+    /// </summary>
+    public static readonly CVarDef<float> GameEntityMenuLookup =
+        CVarDef.Create("game.entity_menu_lookup", 0.25f, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    ///     Should the clients window show the server hostname in the title?
+    /// </summary>
+    public static readonly CVarDef<bool> GameHostnameInTitlebar =
+        CVarDef.Create("game.hostname_in_titlebar", true, CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    /// The maximum amount of tiles you can stack on top of each other. 0 is unlimited.
+    /// </summary>
+    /// <remarks>
+    /// Having it too high can result in "doomstacking" tiles - this messes with efficiency of explosions, deconstruction of tiles, and might result in memory problems.
+    /// </remarks>
+    public static readonly CVarDef<int> TileStackLimit =
+        CVarDef.Create("game.tile_stack_limit", 5, CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    /// The list of jobs that will be enabled on newly created characters.
+    /// The first job will be set to High priority, subsequent ones to Medium.
+    /// </summary>
+    /// <remarks>
+    /// When setting multiple values in server config, separate them with commas, like "Captain, SecurityOfficer,Janitor"
+    /// Spaces between entries can be either used or omitted.
+    /// </remarks>
+    public static readonly CVarDef<string> NewCharacterJobs =
+        CVarDef.Create("game.new_character_jobs", "Passenger", CVar.REPLICATED);
+
+    /// <summary>
+    /// If true, shows a new player indicator over the heads of newly joined players.
+    /// Only visible to whitelisted players.
+    /// </summary>
+    public static readonly CVarDef<bool> ShowNewPlayerIcons =
+        CVarDef.Create("game.show_new_player_icons", true, CVar.REPLICATED | CVar.CLIENT | CVar.ARCHIVE);
+
+    /// <summary>
+    /// The minutes under which a new player will have an indicator above their sprite, when <see cref="ShowNewPlayerIcons"/> is true.
+    /// </summary>
+    public static readonly CVarDef<float> NewPlayerTimeTotalMinutes =
+        CVarDef.Create("game.new_player_time_total_minutes", 90f, CVar.REPLICATED | CVar.SERVER);
+
+    /// <summary>
+    /// Determines whether wall-mounted entities are hidden when viewed from outside their facing arc.
+    /// </summary>
+    public static readonly CVarDef<bool> WallMountDirectionalVisibility =
+        CVarDef.Create("game.wallmount_directional_visibility", true, CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    /// Whether wall-mounted entities fade in/out when entering or leaving the facing arc.
+    /// </summary>
+    public static readonly CVarDef<bool> WallMountFade =
+        CVarDef.Create("game.wallmount_fade", true, CVar.SERVER | CVar.REPLICATED);
 }

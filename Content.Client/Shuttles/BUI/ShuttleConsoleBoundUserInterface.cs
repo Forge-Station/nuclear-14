@@ -8,7 +8,7 @@ using Robust.Shared.Map;
 namespace Content.Client.Shuttles.BUI;
 
 [UsedImplicitly]
-public sealed partial class ShuttleConsoleBoundUserInterface : BoundUserInterface // Frontier: added partial
+public sealed class ShuttleConsoleBoundUserInterface : BoundUserInterface
 {
     [ViewVariables]
     private ShuttleConsoleWindow? _window;
@@ -26,7 +26,6 @@ public sealed partial class ShuttleConsoleBoundUserInterface : BoundUserInterfac
         _window.RequestBeaconFTL += OnFTLBeaconRequest;
         _window.DockRequest += OnDockRequest;
         _window.UndockRequest += OnUndockRequest;
-        NfOpen(); // Frontier
     }
 
     private void OnUndockRequest(NetEntity entity)

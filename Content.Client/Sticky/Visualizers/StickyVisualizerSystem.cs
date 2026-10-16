@@ -3,32 +3,28 @@ using Robust.Client.GameObjects;
 
 namespace Content.Client.Sticky.Visualizers;
 
-public sealed class StickyVisualizerSystem : VisualizerSystem<StickyVisualizerComponent>
+public sealed partial class StickyVisualizerSystem : VisualizerSystem<StickyVisualizerComponent>
 {
-    public override void Initialize()
-    {
-        base.Initialize();
-        SubscribeLocalEvent<StickyVisualizerComponent, ComponentInit>(OnInit);
-    }
+    [Dependency] private EntityQuery<SpriteComponent> _spriteQuery = default!;
 
-    private void OnInit(EntityUid uid, StickyVisualizerComponent component, ComponentInit args)
+    [SubscribeLocalEvent]
+    private void OnInit(Entity<StickyVisualizerComponent> ent, ref ComponentInit args)
     {
-        if (!TryComp(uid, out SpriteComponent? sprite))
+        if (!_spriteQuery.TryComp(ent, out var sprite))
             return;
 
-        component.DefaultDrawDepth = sprite.DrawDepth;
+        ent.Comp.OriginalDrawDepth = sprite.DrawDepth;
     }
 
-    protected override void OnAppearanceChange(EntityUid uid, StickyVisualizerComponent component, ref AppearanceChangeEvent args)
+    protected override void OnAppearanceChange(EntityUid uid, StickyVisualizerComponent comp, ref AppearanceChangeEvent args)
     {
         if (args.Sprite == null)
             return;
 
-        if (!AppearanceSystem.TryGetData<bool>(uid, StickyVisuals.IsStuck, out var isStuck, args.Component))
+        if (!args.TryGetData<bool>(StickyVisuals.IsStuck, out var isStuck))
             return;
 
-        var drawDepth = isStuck ? component.StuckDrawDepth : component.DefaultDrawDepth;
-        args.Sprite.DrawDepth = drawDepth;
-
+        var drawDepth = isStuck ? comp.StuckDrawDepth : comp.OriginalDrawDepth;
+        SpriteSystem.SetDrawDepth((uid, args.Sprite), drawDepth);
     }
 }

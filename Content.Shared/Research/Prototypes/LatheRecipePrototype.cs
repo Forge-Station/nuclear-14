@@ -3,13 +3,12 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Lathe.Prototypes;
 using Content.Shared.Materials;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Research.Prototypes
 {
-    [NetSerializable, Serializable, Prototype]
+    [Prototype]
     public sealed partial class LatheRecipePrototype : IPrototype, IInheritingPrototype
     {
         [ViewVariables]
@@ -18,12 +17,12 @@ namespace Content.Shared.Research.Prototypes
 
         /// <inheritdoc/>
         [ParentDataField(typeof(AbstractPrototypeIdArraySerializer<LatheRecipePrototype>))]
-        public string[]? Parents { get; set; }
+        public string[]? Parents { get; private set; }
 
         /// <inheritdoc />
         [NeverPushInheritance]
         [AbstractDataField]
-        public bool Abstract { get; set; }
+        public bool Abstract { get; private set; }
 
         /// <summary>
         ///     Name displayed in the lathe GUI.
@@ -66,10 +65,10 @@ namespace Content.Shared.Research.Prototypes
         public bool ApplyMaterialDiscount = true;
 
         /// <summary>
-        /// A category used for visually sorting lathe recipes in the UI.
+        /// List of categories used for visually sorting lathe recipes in the UI.
         /// </summary>
         [DataField]
-        public ProtoId<LatheCategoryPrototype>? Category;
+        public List<ProtoId<LatheCategoryPrototype>> Categories = new();
 
         /// <summary>
         /// DeltaV: Number of mining points this recipe adds to an oreproc when printed.

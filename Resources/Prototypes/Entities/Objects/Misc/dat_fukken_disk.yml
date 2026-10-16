@@ -1,6 +1,6 @@
 - type: entity
   name: nuclear authentication disk
-  parent: BaseItem
+  parent: [BaseItem, BaseGrandTheftContraband]
   id: NukeDisk
   description: A nuclear auth disk, capable of arming a nuke if used along with a code. Note from nanotrasen reads "THIS IS YOUR MOST IMPORTANT POSESSION, SECURE DAT FUKKEN DISK!"
   components:
@@ -16,22 +16,17 @@
   - type: ArrivalsBlacklist
   - type: WarpPoint
     follow: true
-    location: nuke disk
+    location: location-nuke-disk
   - type: Tag
     tags:
     - HighRiskItem
   - type: StealTarget
-    stealGroup: NukeDisk
-  - type: EmitSoundOnPickup
-    sound: /Audio/SimpleStation14/Items/Handling/disk_pickup.ogg
-  - type: EmitSoundOnDrop
-    sound: /Audio/SimpleStation14/Items/Handling/disk_drop.ogg
-  - type: EmitSoundOnLand
-    sound: /Audio/SimpleStation14/Items/Handling/disk_drop.ogg
+    stealGroup:
+    - NukeDisk
 
 - type: entity
   name: nuclear authentication disk
-  parent: BaseItem
+  parent: [BaseItem, BaseGrandTheftContraband]
   id: NukeDiskFake
   suffix: Fake
   description: A nuclear auth disk, capable of arming a nuke if used along with a code. Note from nanotrasen reads "THIS IS YOUR MOST IMPORTANT POSESSION, SECURE DAT FUKKEN DISK!"
@@ -41,9 +36,6 @@
     state: icon
   - type: StaticPrice
     price: 1 # it's worth even less than normal items. Perfection.
-  - type: EmitSoundOnPickup
-    sound: /Audio/SimpleStation14/Items/Handling/disk_pickup.ogg
-  - type: EmitSoundOnDrop
-    sound: /Audio/SimpleStation14/Items/Handling/disk_drop.ogg
-  - type: EmitSoundOnLand
-    sound: /Audio/SimpleStation14/Items/Handling/disk_drop.ogg
+  - type: Tag
+    tags:
+    - FakeNukeDisk

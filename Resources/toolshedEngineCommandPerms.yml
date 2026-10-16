@@ -1,4 +1,4 @@
-﻿- Flags: QUERY
+- Flags: QUERY
   Commands:
     - entities
     - nearby
@@ -43,14 +43,6 @@
     - allcomps
     - entitysystemupdateorder
     - mind
-
-- Flags: HOST
-  Commands:
-    - methods
-    - ioc
-
-- Flags: ADMIN
-  Commands:
     - fuck
     - '=>'
     - '?'
@@ -82,7 +74,7 @@
     - '%'
     - '%/'
     - '&~'
-    - '|~'
+    - bitornot
     - '^~'
     - '~'
     - '<'
@@ -96,7 +88,7 @@
     - '*/'
     - '//'
     - '&'
-    - '|'
+    - bitor
     - '^'
     - neg
     - abs

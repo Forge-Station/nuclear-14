@@ -1,6 +1,8 @@
-using System.Numerics;
-using Content.Shared.Construction.Components;
+using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Administration.Logs;
+using Content.Shared.Construction.Components;
+using Content.Shared.Construction.EntitySystems;
+using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Database;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
@@ -9,29 +11,28 @@ using Content.Shared.Popups;
 using Content.Shared.Tools.Systems;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
-using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Network;
-using Robust.Shared.Physics.Components;
+using Robust.Shared.Physics;
+using Robust.Shared.Physics.Systems;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Construction;
 
-public abstract class SharedFlatpackSystem : EntitySystem
+public abstract partial class SharedFlatpackSystem : EntitySystem
 {
-    [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
-    [Dependency] private readonly INetManager _net = default!;
-    [Dependency] protected readonly IPrototypeManager PrototypeManager = default!;
-    [Dependency] protected readonly SharedAppearanceSystem Appearance = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedContainerSystem _container = default!;
-    [Dependency] private readonly EntityLookupSystem _entityLookup = default!;
-    [Dependency] private readonly SharedMapSystem _map = default!;
-    [Dependency] protected readonly MachinePartSystem MachinePart = default!;
-    [Dependency] protected readonly SharedMaterialStorageSystem MaterialStorage = default!;
-    [Dependency] private readonly MetaDataSystem _metaData = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedToolSystem _tool = default!;
+    [Dependency] private ISharedAdminLogManager _adminLogger = default!;
+    [Dependency] private INetManager _net = default!;
+    [Dependency] private AnchorableSystem _anchorable = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedMapSystem _map = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedToolSystem _tool = default!;
+    [Dependency] protected MachinePartSystem MachinePart = default!;
+    [Dependency] protected SharedAppearanceSystem Appearance = default!;
+    [Dependency] protected SharedMaterialStorageSystem MaterialStorage = default!;
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -39,7 +40,21 @@ public abstract class SharedFlatpackSystem : EntitySystem
         SubscribeLocalEvent<FlatpackComponent, InteractUsingEvent>(OnFlatpackInteractUsing);
         SubscribeLocalEvent<FlatpackComponent, ExaminedEvent>(OnFlatpackExamined);
 
-        SubscribeLocalEvent<FlatpackCreatorComponent, ContainerIsRemovingAttemptEvent>(OnCreatorRemovingAttempt);
+        SubscribeLocalEvent<FlatpackCreatorComponent, ItemSlotInsertAttemptEvent>(OnInsertAttempt);
+    }
+
+    private void OnInsertAttempt(Entity<FlatpackCreatorComponent> ent, ref ItemSlotInsertAttemptEvent args)
+    {
+        if (args.Slot.ID != ent.Comp.SlotId || args.Cancelled)
+            return;
+
+        if (HasComp<MachineBoardComponent>(args.Item))
+            return;
+
+        if (TryComp<ComputerBoardComponent>(args.Item, out var computer) && computer.Prototype != null)
+            return;
+
+        args.Cancelled = true;
     }
 
     private void OnFlatpackInteractUsing(Entity<FlatpackComponent> ent, ref InteractUsingEvent args)
@@ -64,31 +79,26 @@ public abstract class SharedFlatpackSystem : EntitySystem
             return;
         }
 
-        var buildPos = _map.TileIndicesFor(grid, gridComp, xform.Coordinates);
-        var coords = _map.ToCenterCoordinates(grid, buildPos);
-
-        var intersecting = _entityLookup.GetEntitiesIntersecting(coords, LookupFlags.Dynamic | LookupFlags.Static);
-
-        // todo make this logic smarter.
-        // This should eventually allow for shit like building microwaves on tables and such.
-        foreach (var intersect in intersecting)
+        if (!ProtoMan.Resolve(comp.Entity, out var proto) ||
+            !proto.TryComp<FixturesComponent>(out var fixture, EntityManager.ComponentFactory))
         {
-            if (!TryComp<PhysicsComponent>(intersect, out var intersectBody))
-                continue;
+            return;
+        }
 
-            if (!intersectBody.Hard || !intersectBody.CanCollide)
-                continue;
+        var (layer, mask) = SharedPhysicsSystem.GetHardCollision(fixture);
+        var buildPos = _map.TileIndicesFor(grid, gridComp, xform.Coordinates);
 
-            // this popup is on the server because the mispredicts on the intersection is crazy
-            if (_net.IsServer)
-                _popup.PopupEntity(Loc.GetString("flatpack-unpack-no-room"), uid, args.User);
+        if (!_anchorable.TileFree((grid, gridComp), buildPos, layer, mask))
+        {
+            _popup.PopupEntity(Loc.GetString("flatpack-unpack-no-room"), uid, args.User);
             return;
         }
 
         if (_net.IsServer)
         {
             var spawn = Spawn(comp.Entity, _map.GridTileToLocal(grid, gridComp, buildPos));
-            _adminLogger.Add(LogType.Construction, LogImpact.Low,
+            _adminLogger.Add(LogType.Construction,
+                LogImpact.Low,
                 $"{ToPrettyString(args.User):player} unpacked {ToPrettyString(spawn):entity} at {xform.Coordinates} from {ToPrettyString(uid):entity}");
             QueueDel(uid);
         }
@@ -103,46 +113,50 @@ public abstract class SharedFlatpackSystem : EntitySystem
         args.PushMarkup(Loc.GetString("flatpack-examine"));
     }
 
-    private void OnCreatorRemovingAttempt(Entity<FlatpackCreatorComponent> ent, ref ContainerIsRemovingAttemptEvent args)
-    {
-        if (args.Container.ID == ent.Comp.SlotId && ent.Comp.Packing)
-            args.Cancel();
-    }
-
-    public void SetupFlatpack(Entity<FlatpackComponent?> ent, EntityUid? board)
+    protected void SetupFlatpack(Entity<FlatpackComponent?> ent, EntProtoId proto, EntityUid board)
     {
         if (!Resolve(ent, ref ent.Comp))
             return;
 
-        var machinePrototypeId = new EntProtoId();
-        if (TryComp<MachineBoardComponent>(board, out var machineBoard) && machineBoard.Prototype is not null)
-            machinePrototypeId = machineBoard.Prototype;
-        else if (TryComp<ComputerBoardComponent>(board, out var computerBoard) && computerBoard.Prototype is not null)
-            machinePrototypeId = computerBoard.Prototype;
-
-        var comp = ent.Comp!;
-        var machinePrototype = PrototypeManager.Index(machinePrototypeId);
+        ent.Comp.Entity = proto;
+        var machinePrototype = ProtoMan.Index(proto);
 
         var meta = MetaData(ent);
         _metaData.SetEntityName(ent, Loc.GetString("flatpack-entity-name", ("name", machinePrototype.Name)), meta);
         _metaData.SetEntityDescription(ent, Loc.GetString("flatpack-entity-description", ("name", machinePrototype.Name)), meta);
 
-        comp.Entity = machinePrototypeId;
-        Dirty(ent, comp);
-
-        if (board is null)
-            return;
-
-        Appearance.SetData(ent, FlatpackVisuals.Machine, MetaData(board.Value).EntityPrototype?.ID ?? string.Empty);
+        Dirty(ent, meta);
+        Appearance.SetData(ent, FlatpackVisuals.Machine, MetaData(board).EntityPrototype?.ID ?? string.Empty);
     }
 
-    public Dictionary<string, int> GetFlatpackCreationCost(Entity<FlatpackCreatorComponent> entity, Entity<MachineBoardComponent>? machineBoard = null)
+    /// <summary>
+    /// Returns the prototype from a board that the flatpacker will create.
+    /// </summary>
+    public bool TryGetFlatpackResultPrototype(EntityUid board, [NotNullWhen(true)] out EntProtoId? prototype)
     {
-        Dictionary<string, int> cost = new();
+        prototype = null;
+
+        if (TryComp<MachineBoardComponent>(board, out var machine))
+            prototype = machine.Prototype;
+        else if (TryComp<ComputerBoardComponent>(board, out var computer))
+            prototype = computer.Prototype;
+        return prototype is not null;
+    }
+
+    /// <summary>
+    /// Tries to get the cost to produce an item, fails if unable to produce it.
+    /// </summary>
+    /// <param name="entity">The flatpacking machine</param>
+    /// <param name="machineBoard">The machine board to pack. If null, this implies we are packing a computer board</param>
+    /// <param name="cost">Cost to produce</param>
+    public bool TryGetFlatpackCreationCost(Entity<FlatpackCreatorComponent> entity, EntityUid machineBoard, out Dictionary<string, int> cost)
+    {
+        cost = new();
         Dictionary<ProtoId<MaterialPrototype>, int> baseCost;
-        if (machineBoard is not null)
+        if (TryComp<MachineBoardComponent>(machineBoard, out var machineBoardComp))
         {
-            cost = MachinePart.GetMachineBoardMaterialCost(machineBoard.Value, -1);
+            if (!MachinePart.TryGetMachineBoardMaterialCost((machineBoard, machineBoardComp), out cost, -1))
+                return false;
             baseCost = entity.Comp.BaseMachineCost;
         }
         else
@@ -154,6 +168,6 @@ public abstract class SharedFlatpackSystem : EntitySystem
             cost[mat] -= amount;
         }
 
-        return cost;
+        return true;
     }
 }

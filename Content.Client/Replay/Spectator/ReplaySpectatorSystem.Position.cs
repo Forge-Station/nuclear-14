@@ -1,4 +1,5 @@
 using Content.Shared.Movement.Components;
+using Content.Shared.Station.Components;
 using Robust.Shared.GameStates;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -78,7 +79,7 @@ public sealed partial class ReplaySpectatorSystem
         if (_player.LocalUser != DefaultUser)
             return; // Already spectating some session.
 
-        if (_player.LocalEntity is not {} uid)
+        if (_player.LocalEntity is not { } uid)
             return;
 
         var netEnt = GetNetEntity(uid);
@@ -126,18 +127,15 @@ public sealed partial class ReplaySpectatorSystem
 
         if (data.Local != null && data.Local.Value.Coords.IsValid(EntityManager))
         {
-            var newXform = SpawnSpectatorGhost(data.Local.Value.Coords, false);
-            newXform.LocalRotation = data.Local.Value.Rot;
+            SpawnSpectatorGhost(data.Local.Value.Coords, false, data.Local.Value.Rot);
         }
         else if (data.World != null && data.World.Value.Coords.IsValid(EntityManager))
         {
-            var newXform = SpawnSpectatorGhost(data.World.Value.Coords, true);
-            newXform.LocalRotation = data.World.Value.Rot;
+            SpawnSpectatorGhost(data.World.Value.Coords, true, data.World.Value.Rot);
         }
         else if (TryFindFallbackSpawn(out var coords))
         {
-            var newXform = SpawnSpectatorGhost(coords, true);
-            newXform.LocalRotation = 0;
+            SpawnSpectatorGhost(coords, true);
         }
         else
         {
@@ -164,14 +162,25 @@ public sealed partial class ReplaySpectatorSystem
         float? maxSize = null;
         var gridQuery = EntityQueryEnumerator<MapGridComponent>();
 
+        var stationFound = false;
         while (gridQuery.MoveNext(out var uid, out var grid))
         {
             var size = grid.LocalAABB.Size.LengthSquared();
-            if (maxSize == null || size > maxSize)
-            {
-                maxUid = (uid, grid);
-                maxSize = size;
-            }
+
+            var station = HasComp<StationMemberComponent>(uid);
+
+            //We want the first station grid to overwrite any previous non-station grids no matter the size, in case the vgroid was found first
+            if (maxSize is not null && size < maxSize && !(!stationFound && station))
+                continue;
+
+            if (!station && stationFound)
+                continue;
+
+            maxUid = (uid, grid);
+            maxSize = size;
+
+            if (station)
+                stationFound = true;
         }
 
         coords = new EntityCoordinates(maxUid ?? default, default);

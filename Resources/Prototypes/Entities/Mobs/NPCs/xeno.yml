@@ -1,8 +1,8 @@
 # Hacky for the stress test so don't even consider adding to this
 - type: entity
-  name: Burrower
+  name: burrower
   id: MobXeno
-  parent: SimpleSpaceMobBase
+  parent: [ SimpleSpaceMobBase, MobNightVision, BaseMobDestructible ]
   description: They mostly come at night. Mostly.
   components:
   - type: Insulated
@@ -21,15 +21,10 @@
         true
       NavSmash: !type:Bool
         true
-  - type: Tool
-    speedModifier: 1.5
-    qualities:
-      - Prying
   - type: Prying
-    pryPowered: !type:Bool
-        true
-    force: !type:Bool
-      true
+    pryPowered: true
+    force: true
+    speedModifier: 1.5
     useSound:
       path: /Audio/Items/crowbar.ogg
   - type: Reactive
@@ -59,26 +54,23 @@
         layer:
         - MobLayer
   - type: MobState
-  - type: Deathgasp
-  - type: MobStateActions
-    actions:
-      Critical:
-      - ActionCritSuccumb
-      - ActionCritFakeDeath
-      - ActionCritLastWords
+    allowedStates:
+    - Alive
+    - Dead
   - type: MobThresholds
     thresholds:
       0: Alive
-      50: Critical
-      100: Dead
+      50: Dead
   - type: SlowOnDamage
     speedModifierThresholds:
       25: 0.5
   - type: Stamina
-    critThreshold: 200
+    baseCritThreshold: 200
   - type: Bloodstream
-    bloodReagent: FluorosulfuricAcid
-    bloodMaxVolume: 650
+    bloodReferenceSolution:
+      reagents:
+      - ReagentId: FluorosulfuricAcid
+        Quantity: 1300
   - type: MeleeWeapon
     altDisarm: false
     angle: 0
@@ -86,10 +78,9 @@
      collection: AlienClaw
     animation: WeaponArcBite
     damage:
-      groups:
-        Brute: 6
+      types:
+        Piercing: 6
   - type: DamageStateVisuals
-    rotate: true
     states:
       Alive:
         Base: running
@@ -98,9 +89,7 @@
       Dead:
         Base: dead
   - type: Puller
-    needsHands: false
   - type: Butcherable
-    butcheringType: Spike
     spawned:
     - id: FoodMeatXeno
       amount: 5
@@ -116,10 +105,9 @@
   - type: GhostTakeoverAvailable
   - type: TypingIndicator
     proto: alien
-  - type: Temperature
+  - type: TemperatureDamage
     heatDamageThreshold: 360
     coldDamageThreshold: -150
-    currentTemperature: 310.15
   - type: Tag
     tags:
       - CannotSuicide
@@ -130,28 +118,11 @@
     molsPerSecondPerUnitMass: 0.0005
   - type: Speech
     speechVerb: LargeMob
-  - type: Psionic
-    removable: false
-    roller: false
-  - type: InnatePsionicPowers
-    powersToAdd:
-      - TelepathyPower
-  - type: LanguageKnowledge
-    speaks:
-    - Xeno
-    understands:
-    - Xeno
-  - type: ThermalVision
-    isActive: true
-    lightRadius: 15
-    color: "#808080"
-    activateSound: null
-    deactivateSound: null
 
 - type: entity
-  name: Praetorian
+  name: praetorian
   parent: MobXeno
-  id: MobXenoPraetorianNPC # Delta V - These no longer inherit the ghost takeover comp
+  id: MobXenoPraetorian
   components:
   - type: Sprite
     drawdepth: Mobs
@@ -163,10 +134,9 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      100: Critical
-      150: Dead
+      100: Dead
   - type: Stamina
-    critThreshold: 300
+    baseCritThreshold: 300
   - type: SlowOnDamage
     speedModifierThresholds:
       50: 0.7
@@ -183,9 +153,9 @@
         - MobLayer
 
 - type: entity
-  name: Drone
+  name: drone
   parent: MobXeno
-  id: MobXenoDroneNPC # Delta V - These no longer inherit the ghost takeover comp
+  id: MobXenoDrone
   components:
   - type: Sprite
     drawdepth: Mobs
@@ -197,15 +167,14 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      80: Critical
-      130: Dead
+      80: Dead
   - type: SlowOnDamage
     speedModifierThresholds:
       40: 0.7
   - type: MeleeWeapon
     damage:
-      groups:
-        Brute: 6
+      types:
+        Slash: 6
   - type: MovementSpeedModifier
     baseSprintSpeed: 4
   - type: Fixtures
@@ -221,9 +190,9 @@
         - MobLayer
 
 - type: entity
-  name: Queen
+  name: queen
   parent: MobXeno
-  id: MobXenoQueenNPC # Delta V - These no longer inherit the ghost takeover comp
+  id: MobXenoQueen
   components:
   - type: Sprite
     drawdepth: Mobs
@@ -235,16 +204,15 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      300: Critical
-      350: Dead
+      300: Dead
   - type: SlowOnDamage
     speedModifierThresholds:
       150: 0.7
   - type: MovementSpeedModifier
   - type: MeleeWeapon
     damage:
-     groups:
-       Brute: 12
+      types:
+        Slash: 12
   - type: Fixtures
     fixtures:
       fix1:
@@ -259,18 +227,11 @@
   - type: Tag
     tags:
     - CannotSuicide
-  - type: LanguageKnowledge
-    speaks:
-    - TauCetiBasic
-    - Xeno
-    understands:
-    - TauCetiBasic
-    - Xeno
 
 - type: entity
-  name: Ravager
+  name: ravager
   parent: MobXeno
-  id: MobXenoRavagerNPC # Delta V - These no longer inherit the ghost takeover comp
+  id: MobXenoRavager
   components:
   - type: Sprite
     drawdepth: Mobs
@@ -282,14 +243,13 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      100: Critical
-      150: Dead
+      100: Dead
   - type: MovementSpeedModifier
     baseSprintSpeed: 4
   - type: MeleeWeapon
     damage:
-     groups:
-       Brute: 10
+      types:
+        Slash: 10
   - type: SlowOnDamage
     speedModifierThresholds:
       50: 0.7
@@ -306,9 +266,9 @@
         - MobLayer
 
 - type: entity
-  name: Runner
+  name: runner
   parent: MobXeno
-  id: MobXenoRunnerNPC # Delta V - These no longer inherit the ghost takeover comp
+  id: MobXenoRunner
   components:
   - type: Sprite
     drawdepth: Mobs
@@ -321,8 +281,8 @@
     baseSprintSpeed: 6.0
   - type: MeleeWeapon
     damage:
-     groups:
-       Brute: 10
+      types:
+        Slash: 5
   - type: Fixtures
     fixtures:
       fix1:
@@ -336,25 +296,23 @@
         - MobLayer
 
 - type: entity
-  name: Rouny
-  parent: MobXenoRunnerNPC # Delta V - These no longer inherit the ghost takeover comp
-  id: MobXenoRounyNPC # Delta V - These no longer inherit the ghost takeover comp
+  name: rouny
+  parent: MobXenoRunner
+  id: MobXenoRouny
   components:
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Aliens/Xenos/rouny.rsi
     offset: 0,0.6
-    scale: 0.7, 0.7
   - type: Butcherable
-    butcheringType: Spike
     spawned:
     - id: FoodMeatRouny
       amount: 3
 
 - type: entity
-  name: Spitter
+  name: spitter
   parent: MobXeno
-  id: MobXenoSpitterNPC # Delta V - These no longer inherit the ghost takeover comp
+  id: MobXenoSpitter
   components:
   - type: Sprite
     drawdepth: Mobs
@@ -400,7 +358,7 @@
 
 - type: entity
   name: space adder
-  parent: SimpleSpaceMobBase
+  parent: [SimpleSpaceMobBase, BaseSlicingRefinableButchering, BaseMobDestructible]
   id: MobPurpleSnake
   description: A menacing purple snake from Kepler-283c.
   components:
@@ -418,6 +376,10 @@
         Base: dead_purple_snake
       Dead:
         Base: dead_purple_snake
+  - type: ToolRefinable
+    refineResult:
+    - id: FoodMeatSnake
+      amount: 4
   - type: Grammar
     attributes:
       proper: true
@@ -430,18 +392,16 @@
   - type: NpcFactionMember
     factions:
     - Xeno
+    - SimpleHostile
   - type: MeleeWeapon
     angle: 0
     animation: WeaponArcBite
     damage:
       types:
         Piercing: 5
-  - type: SolutionContainerManager
+  - type: SolutionManager
     solutions:
-      melee:
-        reagents:
-        - ReagentId: Toxin
-          Quantity: 50
+    - SolutionVenomPurpleSnake
   - type: MeleeChemicalInjector
     solution: melee
   - type: Fixtures
@@ -464,8 +424,19 @@
     - FootstepSound
 
 - type: entity
+  parent: [SolutionWeapon, SolutionTiny]
+  id: SolutionVenomPurpleSnake
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Toxin
+        Quantity: 30
+
+- type: entity
   name: space adder
-  parent: MobPurpleSnake
+  parent: [MobPurpleSnake, BaseSlicingRefinableButchering]
   id: MobSmallPurpleSnake
   suffix: small
   description: A smaller version of the menacing purple snake from Kepler-283c.
@@ -484,5 +455,134 @@
         Base: dead_small_purple_snake
       Dead:
         Base: dead_small_purple_snake
+  - type: ToolRefinable
+    refineResult:
+    - id: FoodMeatSnake
+      amount: 2
   - type: SolutionTransfer
     maxTransferAmount: 1
+
+# Mob mapped to Xeno Station that can not be ghostrole / pry
+
+- type: entity
+  name: '"Dale"'
+  description: A praetorian left over from the station's initial security sweep. Has a pair of bloodied dog tags engraved with the name "Pvt. Dale" stuck in its maw.
+  parent: [SimpleSpaceMobBase, BaseMobDestructible]
+  id: MobXenoLonePraetorianNoGhost
+  components:
+  - type: Insulated
+  - type: CombatMode
+  - type: InputMover
+  - type: MobMover
+  - type: HTN
+    rootTask:
+      task: XenoCompound
+    blackboard:
+      NavClimb: !type:Bool
+        true
+      NavInteract: !type:Bool
+        true
+      NavPry: !type:Bool
+        true
+      NavSmash: !type:Bool
+        true
+  - type: Reactive
+    groups:
+      Flammable: [Touch]
+      Extinguish: [Touch]
+  - type: NpcFactionMember
+    factions:
+    - Xeno
+  - type: Hands
+  - type: ComplexInteraction
+  - type: MobState
+  - type: Stamina
+    baseCritThreshold: 200
+  - type: Bloodstream
+    bloodReferenceSolution:
+      reagents:
+      - ReagentId: FluorosulfuricAcid
+        Quantity: 600
+  - type: MeleeWeapon
+    altDisarm: false
+    angle: 0
+    soundHit:
+     collection: AlienClaw
+    animation: WeaponArcBite
+    damage:
+      types:
+        Slash: 5
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: running
+      Critical:
+        Base: crit
+      Dead:
+        Base: dead
+  - type: Puller
+  - type: Butcherable
+    spawned:
+    - id: FoodMeatXeno
+      amount: 5
+  - type: TypingIndicator
+    proto: alien
+  - type: TemperatureDamage
+    heatDamageThreshold: 360
+    coldDamageThreshold: -150
+  - type: NoSlip
+  - type: Perishable #Ummmm the acid kills a lot of the bacteria or something
+    molsPerSecondPerUnitMass: 0.0005
+  - type: Speech
+    speechVerb: LargeMob
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: Mobs/Aliens/Xenos/praetorian.rsi
+    offset: 0,0.4
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base"]
+      state: running
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      -1: Critical
+      250: Dead
+  - type: SlowOnDamage
+    speedModifierThresholds:
+      120: 0.7
+  - type: MovementSpeedModifier
+    baseSprintSpeed: 3.7
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.45
+        density: 15500
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: Tag
+    tags:
+    - CannotSuicide
+  - type: SolutionManager # Being hit speeds you up so you can escape
+    solutions:
+    - SolutionVenomDale
+  - type: MeleeChemicalInjector
+    transferAmount: 1
+    solution: melee
+    pierceArmor: true
+
+- type: entity
+  parent: [SolutionWeapon, SolutionNormal]
+  id: SolutionVenomDale
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Stimulants
+        Quantity: 50
+      - ReagentId: TranexamicAcid
+        Quantity: 50

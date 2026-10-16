@@ -1,6 +1,5 @@
 using System.Numerics;
 using Content.Shared.Atmos;
-using Content.Shared.Explosion;
 using Content.Shared.Explosion.Components;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -11,7 +10,7 @@ namespace Content.Server.Explosion.EntitySystems;
 // A good portion of it is focused around keeping track of what tile-indices on a grid correspond to tiles that border
 // space. AFAIK no other system currently needs to track these "edge-tiles". If they do, this should probably be a
 // property of the grid itself?
-public sealed partial class ExplosionSystem : EntitySystem
+public sealed partial class ExplosionSystem
 {
     /// <summary>
     ///     Set of tiles of each grid that are directly adjacent to space, along with the directions that face space.
@@ -28,16 +27,16 @@ public sealed partial class ExplosionSystem : EntitySystem
         Dictionary<Vector2i, NeighborFlag> edges = new();
         _gridEdges[ev.EntityUid] = edges;
 
-        foreach (var tileRef in grid.GetAllTiles())
+        foreach (var tileRef in _map.GetAllTiles(ev.EntityUid, grid))
         {
-            if (IsEdge(grid, tileRef.GridIndices, out var dir))
+            if (IsEdge((ev.EntityUid, grid), tileRef.GridIndices, out var dir))
                 edges.Add(tileRef.GridIndices, dir);
         }
     }
 
     private void OnGridRemoved(GridRemovalEvent ev)
     {
-        _airtightMap.Remove(ev.EntityUid);
+        OnAirtightGridRemoved(ev.EntityUid);
         _gridEdges.Remove(ev.EntityUid);
 
         // this should be a small enough set that iterating all of them is fine
@@ -70,8 +69,7 @@ public sealed partial class ExplosionSystem : EntitySystem
         {
             var targetGrid = Comp<MapGridComponent>(referenceGrid.Value);
             var xform = Transform(referenceGrid.Value);
-            targetAngle = xform.WorldRotation;
-            targetMatrix = xform.InvWorldMatrix;
+            (_, targetAngle, targetMatrix) = _transformSystem.GetWorldPositionRotationInvMatrix(xform);
             tileSize = targetGrid.TileSize;
         }
 
@@ -102,9 +100,8 @@ public sealed partial class ExplosionSystem : EntitySystem
                 continue;
             }
 
-            var xforms = EntityManager.GetEntityQuery<TransformComponent>();
-            var xform = xforms.GetComponent(gridToTransform);
-            var  (_, gridWorldRotation, gridWorldMatrix, invGridWorldMatrid) = xform.GetWorldPositionRotationMatrixWithInv(xforms);
+            var xform = Transform(gridToTransform);
+            var  (_, gridWorldRotation, gridWorldMatrix, invGridWorldMatrid) = _transformSystem.GetWorldPositionRotationMatrixWithInv(xform);
 
             var localEpicentre = (Vector2i) Vector2.Transform(epicentre.Position, invGridWorldMatrid);
             var matrix = offsetMatrix * gridWorldMatrix * targetMatrix;
@@ -242,10 +239,10 @@ public sealed partial class ExplosionSystem : EntitySystem
             if (!change.NewTile.IsEmpty && !change.OldTile.IsEmpty)
                 continue;
 
-            if (!_gridEdges.TryGetValue(ev.Entity.Owner, out var edges))
+            if (!_gridEdges.TryGetValue(ev.Entity, out var edges))
             {
                 edges = new();
-                _gridEdges[ev.Entity.Owner] = edges;
+                _gridEdges[ev.Entity] = edges;
             }
 
             if (change.NewTile.IsEmpty)
@@ -258,9 +255,9 @@ public sealed partial class ExplosionSystem : EntitySystem
                 {
                     var neighbourIndex = change.GridIndices + NeighbourVectors[i];
 
-                    if (grid.TryGetTileRef(neighbourIndex, out var neighbourTile) && !neighbourTile.Tile.IsEmpty)
+                    if (_map.TryGetTileRef(ev.Entity, grid, neighbourIndex, out var neighbourTile) && !neighbourTile.Tile.IsEmpty)
                     {
-                        var oppositeDirection = (NeighborFlag) (1 << ((i + 4) % 8));
+                        var oppositeDirection = (NeighborFlag)(1 << ((i + 4) % 8));
                         edges[neighbourIndex] = edges.GetValueOrDefault(neighbourIndex) | oppositeDirection;
                     }
                 }
@@ -276,7 +273,7 @@ public sealed partial class ExplosionSystem : EntitySystem
 
                 if (edges.TryGetValue(neighbourIndex, out var neighborSpaceDir))
                 {
-                    var oppositeDirection = (NeighborFlag) (1 << ((i + 4) % 8));
+                    var oppositeDirection = (NeighborFlag)(1 << ((i + 4) % 8));
                     neighborSpaceDir &= ~oppositeDirection;
                     if (neighborSpaceDir == NeighborFlag.Invalid)
                     {
@@ -290,7 +287,7 @@ public sealed partial class ExplosionSystem : EntitySystem
             }
 
             // finally check if the new tile is itself an edge tile
-            if (IsEdge(grid, change.GridIndices, out var spaceDir))
+            if (IsEdge((ev.Entity, grid), change.GridIndices, out var spaceDir))
                 edges.Add(change.GridIndices, spaceDir);
         }
     }
@@ -302,12 +299,12 @@ public sealed partial class ExplosionSystem : EntitySystem
     ///     Optionally ignore a specific Vector2i. Used by <see cref="OnTileChanged"/> when we already know that a
     ///     given tile is not space. This avoids unnecessary TryGetTileRef calls.
     /// </remarks>
-    private bool IsEdge(MapGridComponent grid, Vector2i index, out NeighborFlag spaceDirections)
+    private bool IsEdge(Entity<MapGridComponent> grid, Vector2i index, out NeighborFlag spaceDirections)
     {
         spaceDirections = NeighborFlag.Invalid;
         for (var i = 0; i < NeighbourVectors.Length; i++)
         {
-            if (!grid.TryGetTileRef(index + NeighbourVectors[i], out var neighborTile) || neighborTile.Tile.IsEmpty)
+            if (!_map.TryGetTileRef(grid, grid.Comp, index + NeighbourVectors[i], out var neighborTile) || neighborTile.Tile.IsEmpty)
                 spaceDirections |= (NeighborFlag) (1 << i);
         }
 
@@ -337,6 +334,10 @@ public sealed partial class ExplosionSystem : EntitySystem
         Any = Cardinal | Diagonal
     }
 
+    /// <summary>
+    /// A simple utility to check for overlap between a NeighborFlag and AtmosDirection value.
+    /// </summary>
+    /// <returns>Returns true if any of the neighbors flag directions are blocked.</returns>
     public static bool AnyNeighborBlocked(NeighborFlag neighbors, AtmosDirection blockedDirs)
     {
         if ((neighbors & NeighborFlag.North) == NeighborFlag.North && (blockedDirs & AtmosDirection.North) == AtmosDirection.North)

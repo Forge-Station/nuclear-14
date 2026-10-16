@@ -1,4 +1,3 @@
-using Content.Shared.Contests;
 using Content.Shared.Damage;
 using Content.Shared.FixedPoint;
 using Robust.Shared.Audio;
@@ -25,7 +24,7 @@ public sealed partial class MeleeWeaponComponent : Component
     /// <summary>
     /// Should the melee weapon's damage stats be examinable.
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public bool Hidden;
 
     /// <summary>
@@ -38,34 +37,8 @@ public sealed partial class MeleeWeaponComponent : Component
     /// <summary>
     /// Starts attack cooldown when equipped if true.
     /// </summary>
-    [DataField]
-    public bool ResetOnHandSelected = true;
-
-    /// <summary>
-    ///   If true, swaps the keybinds for light attacks and heavy attacks.
-    /// </summary>
-    [DataField]
-    public bool SwapKeys = false;
-
-    /// <summary>
-    ///   If true, disables heavy attacks for this weapon, and prevents the heavy damage values appearing
-    ///   when the damage values are examined.
-    /// </summary>
-    [DataField]
-    public bool DisableHeavy = false;
-
-    /// <summary>
-    ///   If true, disables single-target attacks for this weapon, and prevents the single-target damage values appearing
-    ///   when the damage values are examined.
-    /// </summary>
-    [DataField]
-    public bool DisableClick = false;
-
-    /// <summary>
-    ///   If true, when a light attack misses, the weapon will perform a power attack instead.
-    /// </summary>
     [DataField, AutoNetworkedField]
-    public bool HeavyOnLightMiss = false;
+    public bool ResetOnHandSelected = true;
 
     /*
      * Melee combat works based around 2 types of attacks:
@@ -74,16 +47,11 @@ public sealed partial class MeleeWeaponComponent : Component
      */
 
     /// <summary>
-    /// How many seconds between attacks must you wait in order to swing.
+    /// How many times we can attack per second.
     /// </summary>
     [DataField, AutoNetworkedField]
     public float AttackRate = 1f;
 
-    /// <summary>
-    ///     When power attacking, the required cooldown between swings is multiplied by this amount.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public float HeavyRateModifier = 1.2f;
     /// <summary>
     /// Are we currently holding down the mouse for an attack.
     /// Used so we can't just hold the mouse button and attack constantly.
@@ -100,30 +68,23 @@ public sealed partial class MeleeWeaponComponent : Component
     /// <summary>
     /// If true, attacks will bypass armor resistances.
     /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite), AutoNetworkedField]
+    [DataField, AutoNetworkedField]
     public bool ResistanceBypass = false;
 
     /// <summary>
     /// Base damage for this weapon. Can be modified via heavy damage or other means.
     /// </summary>
-    [DataField(required: true)]
-    [AutoNetworkedField]
+    [DataField(required: true), AutoNetworkedField]
     public DamageSpecifier Damage = default!;
 
     [DataField, AutoNetworkedField]
-    public FixedPoint2 BluntStaminaDamageFactor = FixedPoint2.New(1f);
+    public FixedPoint2 BluntStaminaDamageFactor = FixedPoint2.New(0.5f);
 
     /// <summary>
     /// Multiplies damage by this amount for single-target attacks.
     /// </summary>
     [DataField, AutoNetworkedField]
     public FixedPoint2 ClickDamageModifier = FixedPoint2.New(1);
-
-    /// <summary>
-    ///     Part damage is multiplied by this amount for single-target attacks
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public float ClickPartDamageMultiplier = 1.00f;
 
     // TODO: Temporarily 1.5 until interactionoutline is adjusted to use melee, then probably drop to 1.2
     /// <summary>
@@ -133,31 +94,13 @@ public sealed partial class MeleeWeaponComponent : Component
     public float Range = 1.5f;
 
     /// <summary>
-    ///     Attack range for heavy swings
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public float HeavyRangeModifier = 1f;
-
-    /// <summary>
-    ///     Weapon damage is multiplied by this amount for heavy swings
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public float HeavyDamageBaseModifier = 1.2f;
-
-    /// <summary>
-    ///     Part damage is multiplied by this amount for heavy swings
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public float HeavyPartDamageMultiplier = 0.5f;
-
-    /// <summary>
     /// Total width of the angle for wide attacks.
     /// </summary>
     [DataField, AutoNetworkedField]
     public Angle Angle = Angle.FromDegrees(60);
 
     [DataField, AutoNetworkedField]
-    public EntProtoId Animation = "WeaponArcPunch";
+    public EntProtoId Animation = "WeaponArcThrust";
 
     [DataField, AutoNetworkedField]
     public EntProtoId WideAnimation = "WeaponArcSlash";
@@ -169,57 +112,85 @@ public sealed partial class MeleeWeaponComponent : Component
     [DataField, AutoNetworkedField]
     public Angle WideAnimationRotation = Angle.Zero;
 
-    [DataField]
+    /// <summary>
+    /// Attack animation direction.
+    /// </summary>
+    [DataField, AutoNetworkedField]
     public bool SwingLeft;
 
+    /// <summary>
+    /// Change <see cref="SwingLeft"/> after every attack. Allows each attack to take turns being either left or right.
+    /// Thats looks cool visually
+    /// </summary>
     [DataField, AutoNetworkedField]
-    public float HeavyStaminaCost = 2.5f;
+    public bool SwingBeverage = true;
 
+    /// <summary>
+    /// How far away from the player the animation should be played.
+    /// We don't connect it with attack range, because different weapons have different sprites,
+    /// and this value should be adjusted manually for every weapon ideally
+    /// </summary>
     [DataField, AutoNetworkedField]
-    public int MaxTargets = 3;
+    public float AnimationOffset = 1f;
 
     // Sounds
 
     /// <summary>
     /// This gets played whenever a melee attack is done. This is predicted by the client.
     /// </summary>
-    [DataField, AutoNetworkedField]
-    public SoundSpecifier SoundSwing { get; set; } = new SoundPathSpecifier("/Audio/Weapons/punchmiss.ogg")
+    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField("soundSwing"), AutoNetworkedField]
+    public SoundSpecifier SwingSound { get; set; } = new SoundPathSpecifier("/Audio/Weapons/punchmiss.ogg")
     {
-        Params = AudioParams.Default.WithVolume(-3f).WithVariation(0.025f),
+        Params = AudioParams.Default.AddVolume(-3f).WithVariation(0.025f),
     };
 
     // We do not predict the below sounds in case the client thinks but the server disagrees. If this were the case
     // then a player may doubt if the target actually took damage or not.
     // If overwatch and apex do this then we probably should too.
 
-    [DataField, AutoNetworkedField]
-    public SoundSpecifier? SoundHit;
+    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField("soundHit"), AutoNetworkedField]
+    public SoundSpecifier? HitSound;
 
     /// <summary>
     /// Plays if no damage is done to the target entity.
     /// </summary>
-    [DataField, AutoNetworkedField]
-    public SoundSpecifier SoundNoDamage { get; set; } = new SoundCollectionSpecifier("WeakHit");
+    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField("soundNoDamage"), AutoNetworkedField]
+    public SoundSpecifier NoDamageSound { get; set; } = new SoundCollectionSpecifier("WeakHit");
 
     /// <summary>
-    ///     Arguments for the MeleeContestInteractions constructor
-    /// </summary>
-    [DataField]
-    public ContestArgs ContestArgs = new ContestArgs
-    {
-        DoStaminaInteraction = true,
-        StaminaDisadvantage = true,
-        DoHealthInteraction = true,
-    };
-
-    /// <summary>
-    ///     If true, the weapon must be equipped for it to be used.
-    ///     E.g boxing gloves must be equipped to your gloves,
-    ///     not just held in your hand to be used.
+    /// If true, the weapon must be equipped for it to be used.
+    /// E.g boxing gloves must be equipped to your gloves,
+    /// not just held in your hand to be used.
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool MustBeEquippedToUse = false;
+
+    /// <summary>
+    /// The last entity hit that the weapon was unable to damage.
+    /// Used to track <see cref="UndamagedSwings"/>.
+    /// <remarks>Only dealt with clientside; therefore not networked.</remarks>
+    /// </summary>
+    [ViewVariables(VVAccess.ReadOnly)]
+    public EntityUid? LastUndamagedHitEntity;
+
+    /// <summary>
+    /// The number of failed swings against an entity required to display a pop-up that the weapon isn't dealing any damage.
+    /// If set to 0, no pop-up will be displayed.
+    /// <remarks>Only dealt with clientside; therefore not networked.</remarks>
+    /// </summary>
+    [DataField]
+    public int UndamagedAlertThreshold = 5;
+
+    /// <summary>
+    /// Tracks the number of swings that dealt no damage to <see cref="LastUndamagedHitEntity"/>.
+    /// <seealso cref="UndamagedAlertThreshold"/>
+    /// <remarks>Only dealt with clientside; therefore not networked.</remarks>
+    /// </summary>
+    [ViewVariables(VVAccess.ReadOnly)]
+    public int UndamagedSwings = 0;
 
     // Goobstation
     [DataField, AutoNetworkedField]

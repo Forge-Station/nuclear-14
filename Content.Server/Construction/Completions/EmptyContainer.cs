@@ -21,9 +21,10 @@ namespace Content.Server.Construction.Completions
 
         public void PerformAction(EntityUid uid, EntityUid? userUid, IEntityManager entityManager)
         {
-            var containerSys = entityManager.EntitySysManager.GetEntitySystem<ContainerSystem>();
+            var containerSys = entityManager.EntitySysManager.GetEntitySystem<SharedContainerSystem>();
+
             if (!entityManager.TryGetComponent(uid, out ContainerManagerComponent? containerManager) ||
-                !containerSys.TryGetContainer(uid, Container, out var container)) return;
+                !containerSys.TryGetContainer(uid, Container, out var container, containerManager)) return;
 
             var handSys = entityManager.EntitySysManager.GetEntitySystem<HandsSystem>();
 
@@ -33,7 +34,7 @@ namespace Content.Server.Construction.Completions
             foreach (var ent in containerSys.EmptyContainer(container, true, reparent: !pickup))
             {
                 if (pickup)
-                    handSys.PickupOrDrop(userUid, ent, handsComp: hands);
+                    handSys.PickupOrDrop(userUid, ent, dropNear: true, handsComp: hands);
             }
         }
     }

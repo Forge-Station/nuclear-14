@@ -1,9 +1,8 @@
 - type: entity
-  name: bola
   abstract: true
+  parent: [BaseItem, BaseSecurityContraband]
   id: BaseBola
-  parent: BaseItem
-  description: High velocity entanglement tool.
+  name: bola
   components:
   - type: Item
     size: Normal
@@ -14,38 +13,11 @@
     sound: /Audio/Weapons/bolathrow.ogg
   - type: EmitSoundOnLand
     sound: /Audio/Effects/snap.ogg
-  - type: DamageOnLand
-    damage:
-      types:
-        Blunt: 5
-  - type: Ensnaring
-    freeTime: 2.0
-    breakoutTime: 3.5
-    walkSpeed: 0.7
-    sprintSpeed: 0.7
-    staminaDamage: 55
-    canThrowTrigger: true
-    canMoveBreakout: true
-
-- type: entity
-  name: bola
-  parent: [BaseBola]
-  id: Bola
-  description: Linked together with some spare cuffs and metal.
-  components:
-  - type: Construction
-    graph: Bola
-    node: bola
   - type: Damageable
+  - type: Injurable
     damageContainer: Inorganic
   - type: Destructible
     thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 75
-      behaviors:
-        - !type:DoActsBehavior
-          acts: [ "Destruction" ]
     - trigger:
         !type:DamageTrigger
         damage: 15
@@ -55,26 +27,60 @@
           collection: MetalBreak
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-
-- type: entity
-  name: energy bola
-  id: BolaEnergy
-  parent: BaseBola
-  description: An advanced hardlight criminal entangling tool. Otherwise known as an expensive piece of string.
-  components:
-  - type: Sprite
-    sprite: Objects/Weapons/Throwable/energy_bola.rsi
   - type: DamageOnLand
     damage:
       types:
-      Heat: 5
+        Blunt: 5
   - type: Ensnaring
-    destroyOnRemove: true
-    freeTime: 2.0
-    breakoutTime: 3.5 #all bola should generally be fast to remove
-    walkSpeed: 0.7 #makeshift bola shouldn't slow too much
-    sprintSpeed: 0.7
-    staminaDamage: 55 # Sudden weight increase sapping stamina
+    freeTime: 1.5
+    breakoutTime: 2.0 #all bola should generally be fast to remove
+    walkSpeed: 0.65 #makeshift bola shouldn't slow too much
+    sprintSpeed: 0.65
+    staminaDamage: 0 # anything but this is gamebreaking
     canThrowTrigger: true
     canMoveBreakout: true
+    maxEnsnares: 1
   - type: LandAtCursor
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PhysShapeCircle
+          radius: 0.4
+        density: 20 # derived from base_item
+        mask:
+        - ItemMask
+        restitution: 0.3
+        friction: 0.2
+
+- type: entity
+  parent: BaseBola
+  id: Bola
+  name: makeshift bola
+  description: A makeshift bola, cobbled together with some spare cuffs and metal. It doesn't look like it's going to stay together for very long.
+  components:
+  - type: Construction
+    graph: Bola
+    node: bola
+
+- type: entity
+  parent: BaseBola
+  id: SecurityBola
+  name: tactical bola
+  description: A bola, comprised of steel anchors linked together with a wire cable. Reliable and reusable.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Throwable/securitybola.rsi
+    state: icon
+  - type: DamageOnLand
+    damage:
+      types:
+        Blunt: 0 #reusable, in contrast to makeshift
+  - type: Ensnaring
+    freeTime: 2.0 #slightly slower free time than makeshift
+    breakoutTime: 2.5 #slightly slower breakout time than makeshift
+    walkSpeed: 0.65
+    sprintSpeed: 0.65
+    staminaDamage: 0 # anything but this is gamebreaking
+    canThrowTrigger: true
+    canMoveBreakout: true
+    maxEnsnares: 1

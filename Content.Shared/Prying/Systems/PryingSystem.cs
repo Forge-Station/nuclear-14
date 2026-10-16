@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Administration.Logs;
+using Content.Shared.Alert;
 using Content.Shared.Database;
 using Content.Shared.DoAfter;
 using Content.Shared.Doors.Components;
@@ -16,21 +17,41 @@ namespace Content.Shared.Prying.Systems;
 /// <summary>
 /// Handles prying of entities (e.g. doors)
 /// </summary>
-public sealed class PryingSystem : EntitySystem
+public sealed partial class PryingSystem : EntitySystem
 {
-    [Dependency] private readonly ISharedAdminLogManager _adminLog = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfterSystem = default!;
-    [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
-    [Dependency] private readonly SharedPopupSystem Popup = default!;
+    [Dependency] private ISharedAdminLogManager _adminLog = default!;
+    [Dependency] private SharedDoAfterSystem _doAfterSystem = default!;
+    [Dependency] private SharedAudioSystem _audioSystem = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private AlertsSystem _alerts = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
+        SubscribeLocalEvent<PryingComponent, ComponentStartup>(OnPryingStartup);
+        SubscribeLocalEvent<PryingComponent, ComponentShutdown>(OnPryingShutdown);
+
         // Mob prying doors
         SubscribeLocalEvent<DoorComponent, GetVerbsEvent<AlternativeVerb>>(OnDoorAltVerb);
         SubscribeLocalEvent<DoorComponent, DoorPryDoAfterEvent>(OnDoAfter);
         SubscribeLocalEvent<DoorComponent, InteractUsingEvent>(TryPryDoor);
+    }
+
+    private void OnPryingStartup(Entity<PryingComponent> ent, ref ComponentStartup args)
+    {
+        if (ent.Comp.PryingAlertProtoId == null)
+            return;
+
+        _alerts.ShowAlert(ent.Owner, ent.Comp.PryingAlertProtoId.Value);
+    }
+
+    private void OnPryingShutdown(Entity<PryingComponent> ent, ref ComponentShutdown args)
+    {
+        if (ent.Comp.PryingAlertProtoId == null)
+            return;
+
+        _alerts.ClearAlert(ent.Owner, ent.Comp.PryingAlertProtoId.Value);
     }
 
     private void TryPryDoor(EntityUid uid, DoorComponent comp, InteractUsingEvent args)
@@ -46,7 +67,7 @@ public sealed class PryingSystem : EntitySystem
         if (!args.CanInteract || !args.CanAccess)
             return;
 
-        if (!TryComp<PryingComponent>(args.User, out var tool))
+        if (!TryComp<PryingComponent>(args.User, out _))
             return;
 
         args.Verbs.Add(new AlternativeVerb()
@@ -74,7 +95,7 @@ public sealed class PryingSystem : EntitySystem
         if (!CanPry(target, user, out var message, comp))
         {
             if (!string.IsNullOrWhiteSpace(message))
-                Popup.PopupClient(Loc.GetString(message), target, user);
+                _popup.PopupEntity(Loc.GetString(message), target, user);
             // If we have reached this point we want the event that caused this
             // to be marked as handled.
             return true;
@@ -93,33 +114,33 @@ public sealed class PryingSystem : EntitySystem
         id = null;
 
         // We don't care about displaying a message if no tool was used.
-        if (!CanPry(target, user, out _))
+        if (!TryComp<PryUnpoweredComponent>(target, out var unpoweredComp) || !CanPry(target, user, out _, unpoweredComp: unpoweredComp))
             // If we have reached this point we want the event that caused this
             // to be marked as handled.
             return true;
 
         // hand-prying is much slower
-        var modifier = CompOrNull<PryingComponent>(user)?.SpeedModifier ?? 0.1f;
+        var modifier = CompOrNull<PryingComponent>(user)?.SpeedModifier ?? unpoweredComp.PryModifier;
         return StartPry(target, user, null, modifier, out id);
     }
 
-    private bool CanPry(EntityUid target, EntityUid user, out string? message, PryingComponent? comp = null)
+    private bool CanPry(EntityUid target, EntityUid user, out string? message, PryingComponent? comp = null, PryUnpoweredComponent? unpoweredComp = null)
     {
         BeforePryEvent canev;
 
         if (comp != null || Resolve(user, ref comp, false))
         {
-            canev = new BeforePryEvent(user, comp.PryPowered, comp.Force);
+            canev = new BeforePryEvent(user, comp.PryPowered, comp.Force, true);
         }
         else
         {
-            if (!TryComp<PryUnpoweredComponent>(target, out _))
+            if (!Resolve(target, ref unpoweredComp))
             {
                 message = null;
                 return false;
             }
 
-            canev = new BeforePryEvent(user, false, false);
+            canev = new BeforePryEvent(user, false, false, false);
         }
 
         RaiseLocalEvent(target, ref canev);
@@ -134,13 +155,14 @@ public sealed class PryingSystem : EntitySystem
         var modEv = new GetPryTimeModifierEvent(user);
 
         RaiseLocalEvent(target, ref modEv);
-        var doAfterArgs = new DoAfterArgs(EntityManager, user, TimeSpan.FromSeconds(modEv.BaseTime * modEv.PryTimeModifier / toolModifier), new DoorPryDoAfterEvent(), target, target, tool)
+        var doAfterArgs = new DoAfterArgs(EntityManager, user, modEv.BaseTime * modEv.PryTimeModifier / toolModifier, new DoorPryDoAfterEvent(), target, target, tool)
         {
             BreakOnDamage = true,
             BreakOnMove = true,
+            NeedHand = tool != user,
         };
 
-        if (tool != null)
+        if (tool != user && tool != null)
         {
             _adminLog.Add(LogType.Action, LogImpact.Low, $"{ToPrettyString(user)} is using {ToPrettyString(tool.Value)} to pry {ToPrettyString(target)}");
         }
@@ -163,7 +185,7 @@ public sealed class PryingSystem : EntitySystem
         if (!CanPry(uid, args.User, out var message, comp))
         {
             if (!string.IsNullOrWhiteSpace(message))
-                Popup.PopupClient(Loc.GetString(message), uid, args.User);
+                _popup.PopupEntity(Loc.GetString(message), uid, args.User);
             return;
         }
 
@@ -178,6 +200,4 @@ public sealed class PryingSystem : EntitySystem
 }
 
 [Serializable, NetSerializable]
-public sealed partial class DoorPryDoAfterEvent : SimpleDoAfterEvent
-{
-}
+public sealed partial class DoorPryDoAfterEvent : SimpleDoAfterEvent;

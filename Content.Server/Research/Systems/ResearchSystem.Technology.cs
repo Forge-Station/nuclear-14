@@ -2,6 +2,7 @@ using Content.Shared.Database;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
 using JetBrains.Annotations;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Research.Systems;
 
@@ -23,7 +24,7 @@ public sealed partial class ResearchSystem
 
         Dirty(primaryUid, primaryDb);
 
-        var ev = new TechnologyDatabaseModifiedEvent();
+        var ev = new TechnologyDatabaseSynchronizedEvent();
         RaiseLocalEvent(primaryUid, ref ev);
     }
 
@@ -54,7 +55,7 @@ public sealed partial class ResearchSystem
         ResearchClientComponent? component = null,
         TechnologyDatabaseComponent? clientDatabase = null)
     {
-        if (!PrototypeManager.TryIndex<TechnologyPrototype>(prototypeid, out var prototype))
+        if (!ProtoMan.TryIndex<TechnologyPrototype>(prototypeid, out var prototype))
             return false;
 
         return UnlockTechnology(client, prototype, user, component, clientDatabase);
@@ -70,23 +71,18 @@ public sealed partial class ResearchSystem
         ResearchClientComponent? component = null,
         TechnologyDatabaseComponent? clientDatabase = null)
     {
-        if (!Resolve(client, ref component, ref clientDatabase, false)
-            || !TryGetClientServer(client, out var serverEnt, out _, component)
-            || !CanServerUnlockTechnology(client, prototype, clientDatabase, component)
-            || !PrototypeManager.TryIndex(prototype.Discipline, out var disciplinePrototype)
-            || !TryComp<ResearchServerComponent>(serverEnt.Value, out var researchServer)
-            || prototype.Cost * clientDatabase.SoftCapMultiplier > researchServer.Points)
+        if (!Resolve(client, ref component, ref clientDatabase, false))
             return false;
 
-        if (prototype.Tier >= disciplinePrototype.LockoutTier)
-        {
-            clientDatabase.SoftCapMultiplier *= prototype.SoftCapContribution;
-            researchServer.CurrentSoftCapMultiplier *= prototype.SoftCapContribution;
-        }
+        if (!TryGetClientServer(client, out var serverEnt, out _, component))
+            return false;
+
+        if (!CanServerUnlockTechnology(client, prototype, clientDatabase, component))
+            return false;
 
         AddTechnology(serverEnt.Value, prototype);
         TrySetMainDiscipline(prototype, serverEnt.Value);
-        ModifyServerPoints(serverEnt.Value, -(int) (prototype.Cost * clientDatabase.SoftCapMultiplier));
+        ModifyServerPoints(serverEnt.Value, -prototype.Cost);
         UpdateTechnologyCards(serverEnt.Value);
 
         _adminLog.Add(LogType.Action, LogImpact.Medium,
@@ -103,7 +99,7 @@ public sealed partial class ResearchSystem
         if (!Resolve(uid, ref component))
             return;
 
-        if (!PrototypeManager.TryIndex<TechnologyPrototype>(technology, out var prototype))
+        if (!ProtoMan.TryIndex<TechnologyPrototype>(technology, out var prototype))
             return;
         AddTechnology(uid, prototype, component);
     }
@@ -124,15 +120,17 @@ public sealed partial class ResearchSystem
         }
 
         component.UnlockedTechnologies.Add(technology.ID);
+        var addedRecipes = new List<string>();
         foreach (var unlock in technology.RecipeUnlocks)
         {
             if (component.UnlockedRecipes.Contains(unlock))
                 continue;
             component.UnlockedRecipes.Add(unlock);
+            addedRecipes.Add(unlock);
         }
         Dirty(uid, component);
 
-        var ev = new TechnologyDatabaseModifiedEvent();
+        var ev = new TechnologyDatabaseModifiedEvent(addedRecipes);
         RaiseLocalEvent(uid, ref ev);
     }
 
@@ -156,7 +154,7 @@ public sealed partial class ResearchSystem
         if (!IsTechnologyAvailable(database, technology))
             return false;
 
-        if (technology.Cost * database.SoftCapMultiplier > serverComp.Points)
+        if (technology.Cost > serverComp.Points)
             return false;
 
         return true;
@@ -168,9 +166,9 @@ public sealed partial class ResearchSystem
             return;
         component.MainDiscipline = null;
         component.CurrentTechnologyCards = new List<string>();
-        component.SupportedDisciplines = new List<string>();
-        component.UnlockedTechnologies = new List<string>();
-        component.UnlockedRecipes = new List<string>();
+        component.SupportedDisciplines = new List<ProtoId<TechDisciplinePrototype>>();
+        component.UnlockedTechnologies = new List<ProtoId<TechnologyPrototype>>();
+        component.UnlockedRecipes = new List<ProtoId<LatheRecipePrototype>>();
         Dirty(uid, component);
     }
 }

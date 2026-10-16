@@ -1,8 +1,10 @@
-using Content.Shared.Tools;
+using Content.Shared.Popups;
 using Content.Shared.Storage;
+using Content.Shared.Tools.Systems;
+using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
-using Content.Shared.Tools.Systems;
+using Robust.Shared.Utility;
 
 namespace Content.Shared.Tools.Components;
 
@@ -13,15 +15,86 @@ namespace Content.Shared.Tools.Components;
 [RegisterComponent, NetworkedComponent, Access(typeof(ToolRefinableSystem))]
 public sealed partial class ToolRefinableComponent : Component
 {
+    /// <summary>
+    /// The items created when the item is refined.
+    /// </summary>
     [DataField(required: true)]
-    public HashSet<EntitySpawnEntry> RefineResult;
+    public List<EntitySpawnEntry> RefineResult;
 
+    /// <summary>
+    /// The amount of time it takes to refine a given item.
+    /// </summary>
     [DataField]
-    public float RefineTime = 2f;
+    public TimeSpan RefineTime = TimeSpan.FromSeconds(2);
 
+    /// <summary>
+    /// The amount of fuel it takes to refine a given item.
+    /// </summary>
     [DataField]
     public float RefineFuel = 3f;
 
+    /// <summary>
+    /// The tool type needed in order to refine this item.
+    /// </summary>
     [DataField]
     public ProtoId<ToolQualityPrototype> QualityNeeded = "Welding";
+
+    /// <summary>
+    /// Sound that will be played after refine process finished.
+    /// </summary>
+    [DataField]
+    public SoundSpecifier? Sound;
+
+    /// <summary>
+    /// Refine verb text. If there is no text, verb will not be added.
+    /// </summary>
+    [DataField]
+    public LocId? VerbText;
+
+    /// <summary>
+    /// Icon for refine verb.
+    /// </summary>
+    [DataField]
+    public SpriteSpecifier? VerbIcon;
+
+    /// <summary>
+    /// Default tooltip text for refine verb.
+    /// </summary>
+    [DataField]
+    public LocId? VerbDefaultTooltip;
+
+    /// <summary>
+    /// Verb tooltip in case currently used tool
+    /// is missing required (<see cref="QualityNeeded"/>) quality.
+    /// </summary>
+    [DataField]
+    public LocId? ToolMissingQualityTooltip;
+
+    /// <summary>
+    /// Popup text to display for action performer
+    /// on refine action performed (end of DoAfter).
+    /// </summary>
+    [DataField]
+    public LocId? PopupForUser;
+
+    /// <summary>
+    /// Popup text to display for players near action performer
+    /// on action performed (end of DoAfter).
+    /// </summary>
+    [DataField]
+    public LocId? PopupForOther;
+
+    /// <summary>
+    /// What type of popup should be used for <see cref="PopupForUser"/> and <see cref="PopupForOther"/>.
+    /// </summary>
+    [DataField]
+    public PopupType PopupType = PopupType.Small;
+
+    /// <summary>
+    /// Text to display on the examine tooltip for a refinable entity.
+    /// This has a `$target` parameter, representing the refinable entity,
+    /// and a `$quality` parameter, representing the name of the tool quality to use.
+    /// </summary>
+    [DataField]
+    public LocId? TooltipQualityHint = "tool-refinable-component-hint";
 }

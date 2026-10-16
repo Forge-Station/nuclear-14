@@ -7,11 +7,11 @@ using Robust.Shared.Configuration;
 
 namespace Content.Client.Audio;
 
-public sealed class AudioUIController : UIController
+public sealed partial class AudioUIController : UIController
 {
-    [Dependency] private readonly IAudioManager _audioManager = default!;
-    [Dependency] private readonly IConfigurationManager _configManager = default!;
-    [Dependency] private readonly IResourceCache _cache = default!;
+    [Dependency] private IAudioManager _audioManager = default!;
+    [Dependency] private IConfigurationManager _configManager = default!;
+    [Dependency] private IResourceCache _cache = default!;
 
     private float _interfaceGain;
     private IAudioSource? _clickSource;
@@ -54,7 +54,7 @@ public sealed class AudioUIController : UIController
     {
         if (!string.IsNullOrEmpty(value))
         {
-            var resource = _cache.GetResource<AudioResource>(value);
+            var resource = GetSoundOrFallback(value, CCVars.UIClickSound.DefaultValue);
             var source =
                 _audioManager.CreateAudioSource(resource);
 
@@ -77,7 +77,7 @@ public sealed class AudioUIController : UIController
     {
         if (!string.IsNullOrEmpty(value))
         {
-            var hoverResource = _cache.GetResource<AudioResource>(value);
+            var hoverResource = GetSoundOrFallback(value, CCVars.UIHoverSound.DefaultValue);
             var hoverSource =
                 _audioManager.CreateAudioSource(hoverResource);
 
@@ -94,5 +94,13 @@ public sealed class AudioUIController : UIController
         {
             UIManager.SetHoverSound(null);
         }
+    }
+
+    private AudioResource GetSoundOrFallback(string path, string fallback)
+    {
+        if (!_cache.TryGetResource(path, out AudioResource? resource))
+            return _cache.GetResource<AudioResource>(fallback);
+
+        return resource;
     }
 }

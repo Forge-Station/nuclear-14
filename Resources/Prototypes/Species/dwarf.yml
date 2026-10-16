@@ -1,16 +1,14 @@
 - type: species
   id: Dwarf
   name: species-name-dwarf
-  roundStart: false # DeltaV - Disable dwarf
+  roundStart: true
   prototype: MobDwarf
-  sprites: MobHumanSprites
-  defaultSkinTone: "#c0967f"
-  markingLimits: MobHumanMarkingLimits
-  dollPrototype: MobDwarfDummy
+  dollPrototype: AppearanceDwarf
   skinColoration: HumanToned
-  minHeight: 0.6
-  defaultHeight: 0.8
-  maxHeight: 0.8
-  minWidth: 0.55
-  defaultWidth: 0.8
-  maxWidth: 0.85
+  defaultSoundsBySex:
+  - UnisexDwarf
+  - FemaleDwarf
+  - UnisexDwarf
+  voices:
+  - UnisexDwarf
+  - FemaleDwarf

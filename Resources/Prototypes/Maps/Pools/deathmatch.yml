@@ -1,4 +1,5 @@
 - type: gameMapPool
   id: DeathMatchMapPool
   maps:
-  - Sunnyvale
+  - MeteorArena
+  - dm01-entryway

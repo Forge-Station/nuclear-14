@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 using Content.Client.Hands.Systems;
@@ -9,6 +9,7 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Input;
 using Content.Shared.Item;
 using Content.Shared.Storage;
+using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
@@ -20,9 +21,9 @@ using Robust.Shared.Utility;
 
 namespace Content.Client.UserInterface.Systems.Storage.Controls;
 
-public sealed class StorageWindow : BaseWindow
+public sealed partial class StorageWindow : BaseWindow
 {
-    [Dependency] private readonly IEntityManager _entity = default!;
+    [Dependency] private IEntityManager _entity = default!;
     private readonly StorageUIController _storageController;
 
     public EntityUid? StorageEntity;
@@ -40,6 +41,9 @@ public sealed class StorageWindow : BaseWindow
 
     private ValueList<EntityUid> _contained = new();
     private ValueList<EntityUid> _toRemove = new();
+
+    // Manually store this because you can't have a 0x0 GridContainer but we still need to add child controls for 1x1 containers.
+    private Vector2i _pieceGridSize;
 
     private TextureButton? _backButton;
 
@@ -68,11 +72,6 @@ public sealed class StorageWindow : BaseWindow
     private Texture? _sidebarBottomTexture;
     private readonly string _sidebarFatTexturePath = "Storage/sidebar_fat";
     private Texture? _sidebarFatTexture;
-    // Corvax-Change-Start
-    public event Action? OnCraftButtonPressed;
-    private readonly string _craftTexturePath = "Storage/craft";
-    private Texture? _craftTexture;
-    // Corvax-Change-End
 
     public StorageWindow()
     {
@@ -112,7 +111,7 @@ public sealed class StorageWindow : BaseWindow
             HorizontalExpand = true,
             Name = "StorageLabel",
             ClipText = true,
-            Text = "Dummy",
+            Text = Loc.GetString("comp-storage-window-dummy"),
             StyleClasses =
             {
                 "FancyWindowTitle",
@@ -173,7 +172,6 @@ public sealed class StorageWindow : BaseWindow
         _sidebarMiddleTexture = Theme.ResolveTextureOrNull(_sidebarMiddleTexturePath)?.Texture;
         _sidebarBottomTexture = Theme.ResolveTextureOrNull(_sidebarBottomTexturePath)?.Texture;
         _sidebarFatTexture = Theme.ResolveTextureOrNull(_sidebarFatTexturePath)?.Texture;
-        _craftTexture = Theme.ResolveTextureOrNull(_craftTexturePath)?.Texture; // Corvax-Change
     }
 
     public void UpdateContainer(Entity<StorageComponent>? entity)
@@ -194,6 +192,26 @@ public sealed class StorageWindow : BaseWindow
         }
 
         BuildGridRepresentation();
+    }
+
+    private void CloseParent()
+    {
+        if (StorageEntity == null)
+            return;
+
+        var containerSystem = _entity.System<SharedContainerSystem>();
+        var uiSystem = _entity.System<UserInterfaceSystem>();
+
+        if (containerSystem.TryGetContainingContainer(StorageEntity.Value, out var container) &&
+            _entity.TryGetComponent(container.Owner, out StorageComponent? storage) &&
+            storage.Container.Contains(StorageEntity.Value) &&
+            uiSystem
+                .TryGetOpenUi<StorageBoundUserInterface>(container.Owner,
+                    StorageComponent.StorageUiKey.Key,
+                    out var parentBui))
+        {
+            parentBui.CloseWindow(Position);
+        }
     }
 
     private void BuildGridRepresentation()
@@ -218,7 +236,9 @@ public sealed class StorageWindow : BaseWindow
         };
         exitButton.OnPressed += _ =>
         {
+            // Close ourselves and all parent BUIs.
             Close();
+            CloseParent();
         };
         exitButton.OnKeyBindDown += args =>
         {
@@ -226,6 +246,7 @@ public sealed class StorageWindow : BaseWindow
             if (!args.Handled && args.Function == ContentKeyFunctions.ActivateItemInWorld)
             {
                 Close();
+                CloseParent();
                 args.Handle();
             }
         };
@@ -250,36 +271,7 @@ public sealed class StorageWindow : BaseWindow
         };
 
         _sidebar.AddChild(exitContainer);
-
         var offset = 2;
-
-        // Corvax-Change-Start
-        if (comp.Craft)
-        {
-            offset++;
-            var craftButton = new TextureButton
-            {
-                TextureNormal = _craftTexture,
-                Scale = new Vector2(2, 2),
-            };
-            craftButton.OnPressed += _ => OnCraftButtonPressed?.Invoke();
-
-            var craftContainer = new BoxContainer
-            {
-                Children =
-                {
-                    new TextureRect
-                    {
-                        Texture = rows == 1 ? _sidebarBottomTexture : _sidebarMiddleTexture,
-                        TextureScale = new Vector2(2, 2),
-                        Children = { craftButton }
-                    }
-                }
-            };
-
-            _sidebar.AddChild(craftContainer);
-        }
-        // Corvax-Change-End
 
         if (_entity.System<StorageSystem>().NestedStorage && rows > 0)
         {
@@ -293,7 +285,8 @@ public sealed class StorageWindow : BaseWindow
                 var containerSystem = _entity.System<SharedContainerSystem>();
 
                 if (containerSystem.TryGetContainingContainer(StorageEntity.Value, out var container) &&
-                    _entity.TryGetComponent(container.Owner, out StorageComponent? storage))
+                    _entity.TryGetComponent(container.Owner, out StorageComponent? storage) &&
+                    storage.Container.Contains(StorageEntity.Value))
                 {
                     Close();
 
@@ -302,7 +295,7 @@ public sealed class StorageWindow : BaseWindow
                             StorageComponent.StorageUiKey.Key,
                             out var parentBui))
                     {
-                        parentBui.Show();
+                        parentBui.Show(Position);
                     }
                 }
             };
@@ -407,9 +400,6 @@ public sealed class StorageWindow : BaseWindow
 
     public void BuildItemPieces()
     {
-        if (!_entity.EntityExists(StorageEntity))
-            return;
-
         if (!_entity.TryGetComponent<StorageComponent>(StorageEntity, out var storageComp))
             return;
 
@@ -421,11 +411,14 @@ public sealed class StorageWindow : BaseWindow
         _contained.Clear();
         _contained.AddRange(storageComp.Container.ContainedEntities.Reverse());
 
+        var width = boundingGrid.Width + 1;
+        var height = boundingGrid.Height + 1;
+
         // Build the grid representation
-        if (_pieceGrid.Rows - 1 != boundingGrid.Height || _pieceGrid.Columns - 1 != boundingGrid.Width)
+         if (_pieceGrid.Rows != _pieceGridSize.Y || _pieceGrid.Columns != _pieceGridSize.X)
         {
-            _pieceGrid.Rows = boundingGrid.Height + 1;
-            _pieceGrid.Columns = boundingGrid.Width + 1;
+            _pieceGrid.Rows = height;
+            _pieceGrid.Columns = width;
             _controlGrid.Clear();
 
             for (var y = boundingGrid.Bottom; y <= boundingGrid.Top; y++)
@@ -443,6 +436,7 @@ public sealed class StorageWindow : BaseWindow
             }
         }
 
+        _pieceGridSize = new(width, height);
         _toRemove.Clear();
 
         // Remove entities no longer relevant / Update existing ones
@@ -450,6 +444,8 @@ public sealed class StorageWindow : BaseWindow
         {
             if (storageComp.StoredItems.TryGetValue(ent, out var updated))
             {
+                data.Control.Marked = IsMarked(ent);
+
                 if (data.Loc.Equals(updated))
                 {
                     DebugTools.Assert(data.Control.Location == updated);
@@ -488,12 +484,7 @@ public sealed class StorageWindow : BaseWindow
                 var gridPiece = new ItemGridPiece((ent, itemEntComponent), loc, _entity)
                 {
                     MinSize = size,
-                    Marked = _contained.IndexOf(ent) switch
-                    {
-                        0 => ItemGridPieceMarks.First,
-                        1 => ItemGridPieceMarks.Second,
-                        _ => null,
-                    }
+                    Marked = IsMarked(ent),
                 };
                 gridPiece.OnPiecePressed += OnPiecePressed;
                 gridPiece.OnPieceUnpressed += OnPieceUnpressed;
@@ -503,6 +494,16 @@ public sealed class StorageWindow : BaseWindow
                 _pieces[ent] = (loc, gridPiece);
             }
         }
+    }
+
+    private ItemGridPieceMarks? IsMarked(EntityUid uid)
+    {
+        return _contained.IndexOf(uid) switch
+        {
+            0 => ItemGridPieceMarks.First,
+            1 => ItemGridPieceMarks.Second,
+            _ => null,
+        };
     }
 
     protected override void FrameUpdate(FrameEventArgs args)
@@ -524,8 +525,9 @@ public sealed class StorageWindow : BaseWindow
         {
             if (StorageEntity != null && _entity.System<StorageSystem>().NestedStorage)
             {
+                // If parent container nests us then show back button
                 if (containerSystem.TryGetContainingContainer(StorageEntity.Value, out var container) &&
-                    _entity.HasComponent<StorageComponent>(container.Owner))
+                    _entity.TryGetComponent(container.Owner, out StorageComponent? storageComp) && storageComp.Container.Contains(StorageEntity.Value))
                 {
                     _backButton.Visible = true;
                 }

@@ -1,8 +1,11 @@
 using System.Numerics;
+using Content.Client.Graphics;
+using Content.Client.Light.EntitySystems;
 using Content.Client.Parallax;
 using Content.Client.Weather;
-using Content.Shared._NC.Clouds; // NC - Clouds
 using Content.Shared.Salvage;
+using Content.Shared.StatusEffectNew;
+using Content.Shared.StatusEffectNew.Components;
 using Content.Shared.Weather;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
@@ -18,88 +21,77 @@ namespace Content.Client.Overlays;
 /// </summary>
 public sealed partial class StencilOverlay : Overlay
 {
-    [Dependency] private readonly IClyde _clyde = default!;
-    [Dependency] private readonly IEntityManager _entManager = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
-    [Dependency] private readonly IPrototypeManager _protoManager = default!;
+    private static readonly ProtoId<ShaderPrototype> CircleShader = "WorldGradientCircle";
+    private static readonly ProtoId<ShaderPrototype> StencilMask = "StencilMask";
+    private static readonly ProtoId<ShaderPrototype> StencilDraw = "StencilDraw";
+
+    [Dependency] private IClyde _clyde = default!;
+    [Dependency] private IEntityManager _entManager = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IPrototypeManager _protoManager = default!;
     private readonly ParallaxSystem _parallax;
     private readonly SharedTransformSystem _transform;
+    private readonly SharedMapSystem _map;
     private readonly SpriteSystem _sprite;
     private readonly WeatherSystem _weather;
+    private readonly StatusEffectsSystem _statusEffects;
+    private GridStencilSystem _gridStencil = default!;
+    private HashSet<Entity<WeatherStatusEffectComponent, StatusEffectComponent>>? _weatherSet = new();
 
     public override OverlaySpace Space => OverlaySpace.WorldSpaceBelowFOV;
 
-    private IRenderTexture? _blep;
+    private readonly OverlayResourceCache<CachedResources> _resources = new();
 
     private readonly ShaderInstance _shader;
 
-    public StencilOverlay(ParallaxSystem parallax, SharedTransformSystem transform, SpriteSystem sprite, WeatherSystem weather)
+    public StencilOverlay(ParallaxSystem parallax, SharedTransformSystem transform, SharedMapSystem map, SpriteSystem sprite, WeatherSystem weather, StatusEffectsSystem statusEffects)
     {
         ZIndex = ParallaxSystem.ParallaxZIndex + 1;
         _parallax = parallax;
         _transform = transform;
+        _map = map;
         _sprite = sprite;
         _weather = weather;
+        _statusEffects = statusEffects;
         IoCManager.InjectDependencies(this);
-        _shader = _protoManager.Index<ShaderPrototype>("WorldGradientCircle").InstanceUnique();
+        _gridStencil = _entManager.System<GridStencilSystem>();
+        _shader = _protoManager.Index(CircleShader).InstanceUnique();
     }
 
     protected override void Draw(in OverlayDrawArgs args)
     {
-        var mapUid = _mapManager.GetMapEntityId(args.MapId);
+        var mapUid = _map.GetMapOrInvalid(args.MapId);
         var invMatrix = args.Viewport.GetWorldToLocalMatrix();
 
-        if (_blep?.Texture.Size != args.Viewport.Size)
+        var res = _resources.GetForViewport(args.Viewport, static _ => new CachedResources());
+
+        if (res.Blep?.Texture.Size != args.Viewport.Size)
         {
-            _blep?.Dispose();
-            _blep = _clyde.CreateRenderTarget(args.Viewport.Size, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), name: "overlay-stencil"); // #Forge-Change
+            res.Blep?.Dispose();
+            res.Blep = _clyde.CreateRenderTarget(args.Viewport.Size, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), name: "weather-stencil");
         }
 
-        if (_entManager.TryGetComponent<WeatherComponent>(mapUid, out var comp))
-        {
-            var maskPrepared = false; // #Forge-Change: one mask preparation for all weather effects.
-            foreach (var (proto, weather) in comp.Weather)
-            {
-                if (!_protoManager.TryIndex<WeatherPrototype>(proto, out var weatherProto))
-                    continue;
-                if (weatherProto.Sprite == null)
-                    continue;
-                // #Forge-Change-Start: prepare once per viewport draw, rather than once per effect.
-                if (!maskPrepared)
-                {
-                    UpdateWeatherMask(args, invMatrix);
-                    maskPrepared = true;
-                }
-                // #Forge-Change-End
-                var alpha = _weather.GetPercent(weather, mapUid);
-                DrawWeather(args, weatherProto, alpha); // #Forge-Change
-            }
-        }
-
-        // NC - Clouds
-        if (_entManager.TryGetComponent<NCCloudLayerComponent>(mapUid, out var cloudLayer))
-        {
-            DrawCloudLayer(args, cloudLayer, invMatrix);
-        }
-        // NC - Clouds
+        if (_statusEffects.TryEffectsWithComp(mapUid, out _weatherSet))
+            DrawWeather(args, _weatherSet);
 
         if (_entManager.TryGetComponent<RestrictedRangeComponent>(mapUid, out var restrictedRangeComponent))
-        {
-            DrawRestrictedRange(args, restrictedRangeComponent, invMatrix);
-        }
-
-        args.WorldHandle.UseShader(null);
-        args.WorldHandle.SetTransform(Matrix3x2.Identity);
+            DrawRestrictedRange(args, res, restrictedRangeComponent, invMatrix);
     }
 
-    // #Forge-Change-Start: release the cached weather mask and other owned rendering resources.
     protected override void DisposeBehavior()
     {
-        _blep?.Dispose();
-        _weatherMask?.Dispose();
-        _shader.Dispose();
+        _resources.Dispose();
+
         base.DisposeBehavior();
     }
-    // #Forge-Change-End
+
+    private sealed class CachedResources : IDisposable
+    {
+        public IRenderTexture? Blep;
+
+        public void Dispose()
+        {
+            Blep?.Dispose();
+        }
+    }
 }

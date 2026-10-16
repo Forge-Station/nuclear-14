@@ -12,7 +12,9 @@ using Content.Client.Verbs.UI;
 using Content.Shared.CCVar;
 using Content.Shared.Input;
 using Content.Shared.Interaction;
+using Content.Shared.Pointing;
 using Content.Shared.Storage;
+using Robust.Client.GameObjects;
 using Robust.Client.Input;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
@@ -21,11 +23,10 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Configuration;
 using Robust.Shared.Input;
 using Robust.Shared.Timing;
-using Content.Shared.Crafting.Events; // Corvax-Change
 
 namespace Content.Client.UserInterface.Systems.Storage;
 
-public sealed class StorageUIController : UIController, IOnSystemChanged<StorageSystem>
+public sealed partial class StorageUIController : UIController, IOnSystemChanged<StorageSystem>
 {
     /*
      * Things are a bit over the shop but essentially
@@ -36,16 +37,13 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
      * - StorageSystem handles any sim stuff around open windows.
      */
 
-    [Dependency] private readonly IConfigurationManager _configuration = default!;
-    [Dependency] private readonly IInputManager _input = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly CloseRecentWindowUIController _closeRecentWindowUIController = default!;
+    [Dependency] private IConfigurationManager _configuration = default!;
+    [Dependency] private IInputManager _input = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private CloseRecentWindowUIController _closeRecentWindowUIController = default!;
     [UISystemDependency] private readonly StorageSystem _storage = default!;
-
-    /// <summary>
-    /// Cached positions for opening nested storage.
-    /// </summary>
-    private readonly Dictionary<EntityUid, Vector2> _reservedStorage = new();
+    [UISystemDependency] private readonly UserInterfaceSystem _ui = default!;
+    [UISystemDependency] private readonly Pointing.PointingSystem _pointing = default!;
 
     private readonly DragDropHelper<ItemGridPiece> _menuDragHelper;
 
@@ -69,8 +67,6 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
     {
         base.Initialize();
 
-        UIManager.OnScreenChanged += OnScreenChange;
-
         _configuration.OnValueChanged(CCVars.StaticStorageUI, OnStaticStorageChanged, true);
         _configuration.OnValueChanged(CCVars.OpaqueStorageWindow, OnOpaqueWindowChanged, true);
         _configuration.OnValueChanged(CCVars.StorageWindowTitle, OnStorageWindowTitle, true);
@@ -80,32 +76,6 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
     private void OnStorageLimitChanged(int obj)
     {
         _openStorageLimit = obj;
-    }
-
-    private void OnScreenChange((UIScreen? Old, UIScreen? New) obj)
-    {
-        // Handle reconnects with hotbargui.
-
-        // Essentially HotbarGui / the screen gets loaded AFTER gamestates at the moment (because clientgameticker manually changes it via event)
-        // and changing this may be a massive change.
-        // So instead we'll just manually reload it for now.
-        if (!StaticStorageUIEnabled ||
-            obj.New == null ||
-            !EntityManager.TryGetComponent(_player.LocalEntity, out UserInterfaceUserComponent? userComp))
-        {
-            return;
-        }
-
-        // UISystemDependency not injected at this point so do it the old fashion way, I love ordering issues.
-        var uiSystem = EntityManager.System<SharedUserInterfaceSystem>();
-
-        foreach (var bui in uiSystem.GetActorUis((_player.LocalEntity.Value, userComp)))
-        {
-            if (!uiSystem.TryGetOpenUi<StorageBoundUserInterface>(bui.Entity, StorageComponent.StorageUiKey.Key, out var storageBui))
-                continue;
-
-            storageBui.ReOpen();
-        }
     }
 
     private void OnStorageWindowTitle(bool obj)
@@ -123,7 +93,7 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
         StaticStorageUIEnabled = obj;
     }
 
-    public StorageWindow CreateStorageWindow(EntityUid uid)
+    public StorageWindow CreateStorageWindow(StorageBoundUserInterface sBui)
     {
         var window = new StorageWindow();
         window.MouseFilter = Control.MouseFilterMode.Pass;
@@ -136,12 +106,7 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
         {
             OnPieceUnpressed(args, window, piece);
         };
-        window.OnCraftButtonPressed += () =>
-        {
-            if (window.StorageEntity is not { } storageEnt)
-                return;
-            EntityManager.RaisePredictiveEvent(new CraftStartedEvent(EntityManager.GetNetEntity(storageEnt)));
-        };
+
         if (StaticStorageUIEnabled)
         {
             var hotbar = UIManager.GetActiveUIWidgetOrNull<HotbarGui>();
@@ -163,9 +128,15 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
                 child.SetPositionInParent(invisibleIndex);
             };
 
+            if (hotbar != null)
+            {
+                hotbar.DoubleStorageContainer.Visible = _openStorageLimit == 2;
+                hotbar.SingleStorageContainer.Visible = _openStorageLimit != 2;
+            }
+
             if (_openStorageLimit == 2)
             {
-                if (hotbar?.LeftStorageContainer.Children.Count(c => c.Visible) == 0)
+                if (hotbar?.LeftStorageContainer.Children.Any(c => c.Visible) == false) // we're comparing booleans because it's bool? and not bool from the optional chaining
                 {
                     hotbar?.LeftStorageContainer.AddChild(window);
                     reorder(hotbar?.LeftStorageContainer, window);
@@ -181,19 +152,30 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
                 hotbar?.SingleStorageContainer.AddChild(window);
                 reorder(hotbar?.SingleStorageContainer, window);
             }
-
             _closeRecentWindowUIController.SetMostRecentlyInteractedWindow(window);
         }
         else
         {
-            window.OpenCenteredLeft();
-
-            if (_reservedStorage.Remove(uid, out var pos))
+            // Open at parent position if it's open.
+            if (_storage.TryGetContainingStorage(sBui.Owner, out var parentStorage) &&
+                _ui.TryGetOpenUi<StorageBoundUserInterface>(parentStorage.Value.Owner,
+                    StorageComponent.StorageUiKey.Key, out var bui) && bui.Position != null)
             {
-                LayoutContainer.SetPosition(window, pos);
+                window.Open(bui.Position.Value);
+            }
+            // Open at the saved position if it exists.
+            else if (_ui.TryGetPosition(sBui.Owner, StorageComponent.StorageUiKey.Key, out var pos))
+            {
+                window.Open(pos);
+            }
+            // Open at the default position.
+            else
+            {
+                window.OpenCenteredLeft();
             }
         }
 
+        _ui.RegisterControl(sBui, window);
         return window;
     }
 
@@ -244,6 +226,10 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
             return;
 
         if (!IsDragging && EntityManager.System<HandsSystem>().GetActiveHandEntity() == null)
+            return;
+
+        // Do not rotate items unless we are either dragging them or hovering over a storage window.
+        if (DraggingGhost is null && UIManager.CurrentlyHovered is not StorageWindow)
             return;
 
         //clamp it to a cardinal.
@@ -299,6 +285,11 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
             EntityManager.RaisePredictiveEvent(new InteractInventorySlotEvent(EntityManager.GetNetEntity(control.Entity), altInteract: true));
             args.Handle();
         }
+        else if (args.Function == ContentKeyFunctions.Point)
+        {
+            _pointing.TryPointAtEntity(EntityManager.GetNetEntity(control.Entity));
+            args.Handle();
+        }
 
         window.FlagDirty();
     }
@@ -340,12 +331,19 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
                 var position = targetStorage.GetMouseGridPieceLocation(dragEnt, dragLoc);
                 var newLocation = new ItemStorageLocation(DraggingRotation, position);
 
-                EntityManager.RaisePredictiveEvent(new StorageSetItemLocationEvent(
-                    EntityManager.GetNetEntity(draggingGhost.Entity),
-                    EntityManager.GetNetEntity(sourceStorage),
-                    newLocation));
+                if (!_storage.ItemFitsInGridLocation(dragEnt, sourceStorage, newLocation))
+                {
+                    window.Reclaim(control.Location, control);
+                }
+                else
+                {
+                    EntityManager.RaisePredictiveEvent(new StorageSetItemLocationEvent(
+                        EntityManager.GetNetEntity(draggingGhost.Entity),
+                        EntityManager.GetNetEntity(sourceStorage),
+                        newLocation));
 
-                window.Reclaim(newLocation, control);
+                    window.Reclaim(newLocation, control);
+                }
             }
             // Dragging to new storage
             else if (targetStorage?.StorageEntity != null && targetStorage != window)
@@ -406,6 +404,17 @@ public sealed class StorageUIController : UIController, IOnSystemChanged<Storage
     {
         if (DraggingGhost == null)
             return false;
+
+        var player = _player.LocalEntity;
+
+        // If the attached storage is closed then stop dragging
+        if (player == null ||
+            !_storage.TryGetContainingStorage(DraggingGhost.Entity, out var storage) ||
+            !_ui.IsUiOpen(storage.Value.Owner, StorageComponent.StorageUiKey.Key, player.Value))
+        {
+            DraggingGhost.Orphan();
+            return false;
+        }
 
         SetDraggingRotation();
         return true;

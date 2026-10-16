@@ -14,15 +14,14 @@ public sealed partial class SpillableComponent : Component
     [DataField("solution")]
     public string SolutionName = "puddle";
 
-    /// <summary>
-    ///     Should this item be spilled when worn as clothing?
-    ///     Doesn't count for pockets or hands.
-    /// </summary>
-    [DataField]
-    public bool SpillWorn = true;
-
     [DataField]
     public float? SpillDelay;
+
+    /// <summary>
+    /// If you can spill the reagent from the container from your hands with the the spill verb
+    /// </summary>
+    [DataField]
+    public bool CanSpillFromHand = true;
 
     /// <summary>
     ///     At most how much reagent can be splashed on someone at once?
@@ -35,4 +34,12 @@ public sealed partial class SpillableComponent : Component
     /// </summary>
     [DataField]
     public bool SpillWhenThrown = true;
+
+    /// <summary>
+    ///     If true, melee processing will stop if any reagent is transferred.
+    ///     Otherwise, melee processing keeps occuring allowing both reagent
+    ///     transfer and melee damage to happen.
+    /// </summary>
+    [DataField]
+    public bool PreventMelee = true;
 }

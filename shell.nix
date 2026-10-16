@@ -12,12 +12,13 @@
 
 let
   dependencies = with pkgs; [
-    dotnetCorePackages.sdk_9_0
+    dotnet-sdk_10
+    icu
     glfw
-    SDL2
     libGL
     openal
     freetype
+    fontconfig
     fluidsynth
     soundfont-fluid
     gtk3
@@ -33,18 +34,23 @@ let
     libdrm
     expat
     libxkbcommon
-    xorg.libxcb
-    xorg.libX11
-    xorg.libXcomposite
-    xorg.libXdamage
-    xorg.libXext
-    xorg.libXfixes
-    xorg.libXrandr
-    xorg.libxshmfence
+    libxcb
+    libX11
+    libXcomposite
+    libXdamage
+    libXext
+    libXfixes
+    libXrandr
+    libxshmfence
     mesa
     alsa-lib
+    pipewire
     dbus
     at-spi2-core
+    cups
+    python3
+    wayland
+    nixfmt
   ];
 in
 pkgs.mkShell {
@@ -56,7 +62,5 @@ pkgs.mkShell {
     export ROBUST_SOUNDFONT_OVERRIDE=${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2
     export XDG_DATA_DIRS=$GSETTINGS_SCHEMAS_PATH
     export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath dependencies}
-    export DOTNET_ROOT=${pkgs.dotnetCorePackages.sdk_8_0_1xx}
-    export PATH="$PATH:/home/$(whoami)/.dotnet/tools"
   '';
 }

@@ -17,9 +17,6 @@ public sealed partial class MobThresholdsComponent : Component
     [DataField]
     public bool TriggersAlerts = true;
 
-    [DataField]
-    public MobState CurrentThresholdState;
-
     /// <summary>
     /// The health alert that should be displayed for player controlled entities.
     /// Used for alternate health alerts (silicons, for example)
@@ -29,7 +26,6 @@ public sealed partial class MobThresholdsComponent : Component
     {
         {MobState.Alive, "HumanHealth"},
         {MobState.Critical, "HumanCrit"},
-        {MobState.SoftCritical, "HumanCrit"},
         {MobState.Dead, "HumanDead"},
     };
 
@@ -47,13 +43,6 @@ public sealed partial class MobThresholdsComponent : Component
     /// </summary>
     [DataField]
     public bool AllowRevives;
-
-    /// <summary>
-    /// Track initial trashholds to modify thresholds in runtime depending on curent special value.
-    /// </summary>
-    [DataField("initialThresholds")]
-    public SortedDictionary<FixedPoint2, MobState> BaseThresholds = new();
-
 }
 
 [Serializable, NetSerializable]
@@ -73,7 +62,6 @@ public sealed class MobThresholdsComponentState : ComponentState
 
     public MobThresholdsComponentState(Dictionary<FixedPoint2, MobState> unsortedThresholds,
         bool triggersAlerts,
-        MobState currentThresholdState,
         Dictionary<MobState,
         ProtoId<AlertPrototype>> stateAlertDict,
         bool showOverlays,
@@ -81,7 +69,6 @@ public sealed class MobThresholdsComponentState : ComponentState
     {
         UnsortedThresholds = unsortedThresholds;
         TriggersAlerts = triggersAlerts;
-        CurrentThresholdState = currentThresholdState;
         StateAlertDict = stateAlertDict;
         ShowOverlays = showOverlays;
         AllowRevives = allowRevives;

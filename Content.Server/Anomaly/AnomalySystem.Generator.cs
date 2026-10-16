@@ -1,7 +1,5 @@
 using Content.Server.Anomaly.Components;
-using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
-using Content.Server.Station.Components;
 using Content.Shared.Anomaly;
 using Content.Shared.CCVar;
 using Content.Shared.Materials;
@@ -11,10 +9,7 @@ using Content.Shared.Physics;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
-using Robust.Shared.Map;
-using System.Numerics;
 using Content.Shared.Power;
-using Robust.Server.GameObjects;
 
 namespace Content.Server.Anomaly;
 
@@ -25,8 +20,9 @@ namespace Content.Server.Anomaly;
 /// </summary>
 public sealed partial class AnomalySystem
 {
-    [Dependency] private readonly SharedMapSystem _mapSystem = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private SharedMapSystem _mapSystem = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private EntityQuery<PhysicsComponent> _physicsQuery = default!;
 
     private void InitializeGenerator()
     {
@@ -81,7 +77,9 @@ public sealed partial class AnomalySystem
 
         var generating = EnsureComp<GeneratingAnomalyGeneratorComponent>(uid);
         generating.EndTime = Timing.CurTime + component.GenerationLength;
-        generating.AudioStream = Audio.PlayPvs(component.GeneratingSound, uid, AudioParams.Default.WithLoop(true))?.Entity;
+        var audioParams = component.GeneratingSound?.Params ?? AudioParams.Default;
+        audioParams = audioParams.WithLoop(true);
+        generating.AudioStream = Audio.PlayPvs(component.GeneratingSound, uid, audioParams)?.Entity;
         component.CooldownEndTime = Timing.CurTime + component.CooldownLength;
         UpdateGeneratorUi(uid, component);
     }
@@ -105,19 +103,18 @@ public sealed partial class AnomalySystem
 
             // no air-blocked areas.
             if (_atmosphere.IsTileSpace(grid, xform.MapUid, tile) ||
-                _atmosphere.IsTileAirBlocked(grid, tile, mapGridComp: gridComp))
+                _atmosphere.IsTileAirBlockedCached(grid, tile))
             {
                 continue;
             }
 
             // don't spawn inside of solid objects
-            var physQuery = GetEntityQuery<PhysicsComponent>();
             var valid = true;
 
             // TODO: This should be using static lookup.
-            foreach (var ent in gridComp.GetAnchoredEntities(tile))
+            foreach (var ent in _mapSystem.GetAnchoredEntities(grid, gridComp, tile))
             {
-                if (!physQuery.TryGetComponent(ent, out var body))
+                if (!_physicsQuery.TryGetComponent(ent, out var body))
                     continue;
                 if (body.BodyType != BodyType.Static ||
                     !body.Hard ||
@@ -131,10 +128,10 @@ public sealed partial class AnomalySystem
                 continue;
 
             var pos = _mapSystem.GridTileToLocal(grid, gridComp, tile);
-            var mapPos = pos.ToMap(EntityManager, _transform);
+            var mapPos = _transform.ToMapCoordinates(pos);
             // don't spawn in AntiAnomalyZones
             var antiAnomalyZonesQueue = AllEntityQuery<AntiAnomalyZoneComponent, TransformComponent>();
-            while (antiAnomalyZonesQueue.MoveNext(out var uid, out var zone, out var antiXform))
+            while (antiAnomalyZonesQueue.MoveNext(out _, out var zone, out var antiXform))
             {
                 if (antiXform.MapID != mapPos.MapId)
                     continue;
@@ -168,8 +165,7 @@ public sealed partial class AnomalySystem
         var xform = Transform(uid);
 
         if (_station.GetStationInMap(xform.MapID) is not { } station ||
-            !TryComp<StationDataComponent>(station, out var data) ||
-            _station.GetLargestGrid(data) is not { } grid)
+            _station.GetLargestGrid(station) is not { } grid)
         {
             if (xform.GridUid == null)
                 return;
@@ -182,7 +178,7 @@ public sealed partial class AnomalySystem
         Audio.PlayPvs(component.GeneratingFinishedSound, uid);
 
         var message = Loc.GetString("anomaly-generator-announcement");
-        _radio.SendRadioMessage(uid, message, _prototype.Index<RadioChannelPrototype>(component.ScienceChannel), uid);
+        _radio.SendRadioMessage(uid, message, ProtoMan.Index<RadioChannelPrototype>(component.ScienceChannel), uid);
     }
 
     private void UpdateGenerator()

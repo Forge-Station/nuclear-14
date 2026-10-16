@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Content.Server.Database;
 using Content.Shared.CCVar;
-using Content.Shared.Players;
 using Content.Shared.Players.PlayTimeTracking;
 using Robust.Shared.Asynchronous;
 using Robust.Shared.Collections;
@@ -57,13 +56,13 @@ public delegate void CalcPlayTimeTrackersCallback(ICommonSession player, HashSet
 /// </remarks>
 public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IPostInjectInit
 {
-    [Dependency] private readonly IServerDbManager _db = default!;
-    [Dependency] private readonly IServerNetManager _net = default!;
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly ITaskManager _task = default!;
-    [Dependency] private readonly IRuntimeLog _runtimeLog = default!;
-    [Dependency] private readonly UserDbDataManager _userDb = default!;
+    [Dependency] private IServerDbManager _db = default!;
+    [Dependency] private IServerNetManager _net = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private ITaskManager _task = default!;
+    [Dependency] private IRuntimeLog _runtimeLog = default!;
+    [Dependency] private UserDbDataManager _userDb = default!;
 
     private ISawmill _sawmill = default!;
 
@@ -82,12 +81,13 @@ public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IP
 
     public event CalcPlayTimeTrackersCallback? CalcTrackers;
 
+    public event Action<ICommonSession>? SessionPlayTimeUpdated;
+
     public void Initialize()
     {
         _sawmill = Logger.GetSawmill("play_time");
 
         _net.RegisterNetMessage<MsgPlayTime>();
-        _net.RegisterNetMessage<MsgWhitelist>(); // Nyanotrasen - Whitelist status
 
         _cfg.OnValueChanged(CCVars.PlayTimeSaveInterval, f => _saveInterval = TimeSpan.FromSeconds(f), true);
     }
@@ -134,12 +134,6 @@ public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IP
             {
                 SendPlayTimes(player);
                 data.NeedSendTimers = false;
-            }
-
-            if (data.NeedRefreshWhitelist) // Nyanotrasen - Whitelist status
-            {
-                SendWhitelistCached(player);
-                data.NeedRefreshWhitelist = false;
             }
 
             data.IsDirty = false;
@@ -210,7 +204,7 @@ public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IP
         }
     }
 
-    public Dictionary<string, TimeSpan> GetPlayTimes(ICommonSession session)
+    public IReadOnlyDictionary<string, TimeSpan> GetPlayTimes(ICommonSession session)
     {
         return GetTrackerTimes(session);
     }
@@ -225,6 +219,7 @@ public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IP
         };
 
         _net.ServerSendMessage(msg, pSession.Channel);
+        SessionPlayTimeUpdated?.Invoke(pSession);
     }
 
     /// <summary>
@@ -322,16 +317,14 @@ public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IP
         cancel.ThrowIfCancellationRequested();
 
         foreach (var timer in playTimes)
+        {
             data.TrackerTimes.Add(timer.Tracker, timer.TimeSpent);
-
-        if (session.ContentData() != null)
-            session.ContentData()!.Whitelisted = await _db.GetWhitelistStatusAsync(session.UserId);
+        }
 
         data.Initialized = true;
 
         QueueRefreshTrackers(session);
         QueueSendTimers(session);
-        QueueSendWhitelist(session); // Nyanotrasen - Whitelist status
     }
 
     public void ClientDisconnected(ICommonSession session)
@@ -450,7 +443,6 @@ public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IP
         public bool IsDirty;
         public bool NeedRefreshTackers;
         public bool NeedSendTimers;
-        public bool NeedRefreshWhitelist; // Nyanotrasen - Whitelist status
 
         // Active tracking info
         public readonly HashSet<string> ActiveTrackers = new();

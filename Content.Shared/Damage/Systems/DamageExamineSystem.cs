@@ -9,10 +9,9 @@ using Robust.Shared.Utility;
 
 namespace Content.Shared.Damage.Systems;
 
-public sealed class DamageExamineSystem : EntitySystem
+public sealed partial class DamageExamineSystem : EntitySystem
 {
-    [Dependency] private readonly ExamineSystemShared _examine = default!;
-    [Dependency] private readonly IPrototypeManager _prototype = default!;
+    [Dependency] private ExamineSystemShared _examine = default!;
 
     public override void Initialize()
     {
@@ -57,11 +56,17 @@ public sealed class DamageExamineSystem : EntitySystem
 
         if (string.IsNullOrEmpty(type))
         {
-            msg.AddMarkup(Loc.GetString("damage-examine"));
+            msg.AddMarkupOrThrow(Loc.GetString("damage-examine"));
         }
         else
         {
-            msg.AddMarkup(Loc.GetString("damage-examine-type", ("type", type)));
+            if (damageSpecifier.GetTotal() == FixedPoint2.Zero && !damageSpecifier.AnyPositive())
+            {
+                msg.AddMarkupOrThrow(Loc.GetString("damage-none"));
+                return msg;
+            }
+
+            msg.AddMarkupOrThrow(Loc.GetString("damage-examine-type", ("type", type)));
         }
 
         foreach (var damage in damageSpecifier.DamageDict)
@@ -69,7 +74,7 @@ public sealed class DamageExamineSystem : EntitySystem
             if (damage.Value != FixedPoint2.Zero)
             {
                 msg.PushNewline();
-                msg.AddMarkup(Loc.GetString("damage-value", ("type", _prototype.Index<DamageTypePrototype>(damage.Key).LocalizedName), ("amount", damage.Value)));
+                msg.AddMarkupOrThrow(Loc.GetString("damage-value", ("type", ProtoMan.Index<DamageTypePrototype>(damage.Key).LocalizedName), ("amount", damage.Value)));
             }
         }
 

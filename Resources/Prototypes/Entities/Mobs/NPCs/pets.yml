@@ -1,10 +1,21 @@
 # Bounds Guide
 #1D2L3U4R
 
+# This prototype is used as a parent by unique named pets (e.g Pun Pun, Ian, Hamlet)
 - type: entity
-  name: Ian
-  parent: MobCorgi
+  abstract: true
+  id: BaseUniquePet
+  components:
+  - type: Grammar
+    attributes:
+      proper: true # Makes the pet's ingame name count as a proper noun (e.g, they have colored names when that accessibility setting is enabled)
+  - type: NameIdentifier
+    group: null # Strips the numeric identifier from the pet's ingame name
+
+- type: entity
+  parent: [ BaseUniquePet, MobCorgi, BaseSlicingRefinableButchering ]
   id: MobCorgiIan
+  name: Ian
   description: Favorite pet corgi.
   components:
   - type: Sprite
@@ -13,6 +24,25 @@
     layers:
     - map: ["enum.DamageStateVisualLayers.Base"]
       state: ian
+  - type: Inventory
+    speciesId: dog
+    templateId: Corgi
+    displacements:
+      head:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/displacements.rsi
+            state: corgi_head_displacement
+      eyes:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/displacements.rsi
+            state: corgi_eyes_displacement
+      mask:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/displacements.rsi
+            state: corgi_mask_displacement
   - type: DamageStateVisuals
     states:
       Alive:
@@ -25,8 +55,8 @@
     attributes:
       proper: true
       gender: male
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeatCorgi
       amount: 2
     - id: MaterialHideCorgi
@@ -35,18 +65,13 @@
     - CannotSuicide
     - VimPilot
   - type: StealTarget
-    stealGroup: AnimalIan
-  - type: LanguageKnowledge
-    speaks:
-    - Dog
-    understands:
-    - TauCetiBasic
-    - Dog
+    stealGroup:
+    - AnimalIan
 
 - type: entity
-  name: Old Ian
-  parent: MobCorgiIan
+  parent: [ MobCorgiIan, BaseSlicingRefinableButchering ]
   id: MobCorgiIanOld
+  name: Old Ian
   description: Still the favorite pet corgi. Love his wheels.
   components:
   - type: Sprite
@@ -61,17 +86,17 @@
         Base: old_ian_dead
       Dead:
         Base: old_ian_dead
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeatCorgi
       amount: 2
     - id: SheetSteel1
     - id: MaterialHideCorgi
 
 - type: entity
-  name: Lisa
   parent: MobCorgiIan
   id: MobCorgiLisa
+  name: Lisa
   description: Ian's favorite corgi.
   components:
   - type: Sprite
@@ -90,27 +115,73 @@
     attributes:
       proper: true
       gender: female
+  - type: Inventory
+    speciesId: dog
+    templateId: Corgi
+    displacements:
+      head:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/displacements.rsi
+            state: lisa_head_displacement
+      eyes:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/displacements.rsi
+            state: corgi_eyes_displacement
+      mask:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/displacements.rsi
+            state: corgi_mask_displacement
 
 - type: entity
-  name: Puppy Ian
-  parent: MobCorgiPuppy
+  parent: MobCorgiIan
+  id: MobCorgiMouse
+  name: real mouse
+  description: It's 100% a real hungry mouse.
+  components:
+  - type: Sprite
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base"]
+      state: real_mouse
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: real_mouse
+      Critical:
+        Base: real_mouse_dead
+      Dead:
+        Base: real_mouse_dead
+  - type: Grammar
+    attributes:
+      proper: true
+      gender: female
+  - type: SpeakOnException
+
+- type: entity
+  parent: [ MobCorgiPuppy, BaseSlicingRefinableButchering ]
   id: MobCorgiIanPup
+  name: Puppy Ian
   description: Favourite puppy corgi. Awww.
   components:
   - type: Grammar
     attributes:
       proper: true
       gender: male
-  - type: Butcherable # A puppy? You monster...
-    spawned:
+  - type: ToolRefinable # A puppy? You monster...
+    refineResult:
     - id: FoodMeatCorgi
       amount: 2
     - id: MaterialHideCorgi
+  - type: StealTarget
+    stealGroup:
+    - AnimalIan
 
 - type: entity
-  name: Runtime
-  parent: MobCat
+  parent: [ BaseUniquePet, MobCat ]
   id: MobCatRuntime
+  name: Runtime
   description: Professional mouse hunter. Escape artist.
   components:
   - type: NpcFactionMember
@@ -127,22 +198,25 @@
     tags:
     - CannotSuicide
     - VimPilot
-  - type: LanguageKnowledge
-    speaks:
-    - Cat
-    understands:
-    - TauCetiBasic
-    - Cat
+  - type: StealTarget
+    stealGroup:
+    - AnimalNamedCat
+  - type: SpeakOnException
+    speechCooldown: 3m
+    chanceSpeakNoAccent: 0.01
 
 - type: entity
-  name: Exception
+  parent: [ BaseUniquePet, MobCatCalico ]
   id: MobCatException
-  parent: MobCatCalico
+  name: Exception
   description: Ask nicely, and maybe they'll give you one of their spare lives.
   components:
   - type: NpcFactionMember
     factions:
       - PetsNT
+  - type: SpeakOnException
+    speechCooldown: 2m
+    chanceSpeakNoAccent: 0.007
   - type: Grammar
     attributes:
       proper: true
@@ -151,17 +225,14 @@
     tags:
     - CannotSuicide
     - VimPilot
-  - type: LanguageKnowledge
-    speaks:
-    - Cat
-    understands:
-    - TauCetiBasic
-    - Cat
+  - type: StealTarget
+    stealGroup:
+    - AnimalNamedCat
 
 - type: entity
-  name: Floppa
+  parent: [ BaseUniquePet, MobCatCaracal ]
   id: MobCatFloppa
-  parent: MobCatCaracal
+  name: Floppa
   description: He out here.
   components:
   - type: Fixtures
@@ -182,11 +253,14 @@
     tags:
     - CannotSuicide
     - VimPilot
+  - type: StealTarget
+    stealGroup:
+    - AnimalNamedCat
 
 - type: entity
-  name: Bandito
-  parent: MobFerret
+  parent: [ BaseUniquePet, MobFerret ]
   id: MobBandito
+  name: Bandito
   description: Just a silly little guy!
   components:
   - type: Grammar
@@ -199,9 +273,9 @@
     - VimPilot
 
 - type: entity
-  name: Bingus
-  parent: SimpleMobBase
+  parent: [ BaseUniquePet, SimpleMobBase, StripableInventoryBase, BaseSlicingRefinableButchering , BaseMobDestructible ]
   id: MobBingus
+  name: Bingus
   description: Bingus my beloved...
   components:
   - type: Sprite
@@ -225,12 +299,6 @@
   - type: Inventory
     speciesId: cat
     templateId: pet
-  - type: InventorySlots
-  - type: Strippable
-  - type: UserInterface
-    interfaces:
-      enum.StrippingUiKey.Key:
-        type: StrippableBoundUserInterface
   - type: DamageStateVisuals
     states:
       Alive:
@@ -239,8 +307,8 @@
         Base: bingus_dead
       Dead:
         Base: bingus_dead
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeat
       amount: 2
   - type: InteractionPopup
@@ -259,12 +327,13 @@
     - CannotSuicide
     - VimPilot
   - type: StealTarget
-    stealGroup: AnimalBingus
+    stealGroup:
+    - AnimalNamedCat
 
 - type: entity
-  name: McGriff
-  parent: SimpleMobBase
+  parent: [ BaseUniquePet, SimpleMobBase, StripableInventoryBase, BaseSlicingRefinableButchering , BaseMobDestructible ]
   id: MobMcGriff
+  name: McGriff
   description: This dog can tell something smells around here, and that something is CRIME!
   components:
   - type: Sprite
@@ -273,6 +342,8 @@
     layers:
     - map: ["enum.DamageStateVisualLayers.Base"]
       state: mcgriff
+    - map: [ "head" ]
+    - map: [ "eyes" ]
   - type: Physics
   - type: Fixtures
     fixtures:
@@ -287,13 +358,18 @@
         - MobLayer
   - type: Inventory
     speciesId: puppy
-    templateId: pet
-  - type: InventorySlots
-  - type: Strippable
-  - type: UserInterface
-    interfaces:
-      enum.StrippingUiKey.Key:
-        type: StrippableBoundUserInterface
+    templateId: petAdvanced
+    displacements:
+      head:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/displacements.rsi
+            state: mcgriff_head_displacement
+      eyes:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/displacements.rsi
+            state: mcgriff_eyes_displacement
   - type: DamageStateVisuals
     states:
       Alive:
@@ -302,16 +378,12 @@
         Base: mcgriff_dead
       Dead:
         Base: mcgriff_dead
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeat
       amount: 2
-  - type: LanguageKnowledge
-    speaks:
-    - Dog
-    understands:
-    - TauCetiBasic
-    - Dog
+  - type: ReplacementAccent
+    accent: dog
   - type: InteractionPopup
     successChance: 0.5
     interactSuccessString: petting-success-dog
@@ -323,20 +395,22 @@
     attributes:
       proper: true
       gender: male
+  - type: Speech
+    speechVerb: Canine
+    speechSounds: Dog
   - type: Tag
     tags:
     - CannotSuicide
     - VimPilot
   - type: StealTarget
-    stealGroup: AnimalMcGriff
-  - type: RandomBark
-    barkType: dog
-    barkMultiplier: 1.3
+    stealGroup:
+    - AnimalMcGriff
+  - type: MessyDrinker
 
 - type: entity
-  name: Paperwork
-  parent: MobSloth
+  parent: [ BaseUniquePet, MobSloth, BaseSlicingRefinableButchering ]
   id: MobPaperwork
+  name: Paperwork
   description: Took up a new job sorting books in the library after he got transferred from Space Station 13. He seems to be just as slow at this.
   components:
   - type: Sprite
@@ -353,8 +427,8 @@
         Base: paperwork_dead
       Dead:
         Base: paperwork_dead
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeat
       amount: 3
   - type: InteractionPopup
@@ -368,9 +442,9 @@
       gender: male
 
 - type: entity
-  name: Walter
-  parent: SimpleMobBase
+  parent: [ BaseUniquePet, SimpleMobBase, StripableInventoryBase, BaseSlicingRefinableButchering , BaseMobDestructible ]
   id: MobWalter
+  name: Walter
   description: He likes chems and treats. Walter.
   components:
   - type: Sprite
@@ -394,12 +468,6 @@
   - type: Inventory
     speciesId: dog
     templateId: pet
-  - type: InventorySlots
-  - type: Strippable
-  - type: UserInterface
-    interfaces:
-      enum.StrippingUiKey.Key:
-        type: StrippableBoundUserInterface
   - type: DamageStateVisuals
     states:
       Alive:
@@ -408,16 +476,12 @@
         Base: walter_dead
       Dead:
         Base: walter_dead
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeat
       amount: 3
-  - type: LanguageKnowledge
-    speaks:
-    - Dog
-    understands:
-    - TauCetiBasic
-    - Dog
+  - type: ReplacementAccent
+    accent: dog
   - type: InteractionPopup
     successChance: 0.7
     interactSuccessString: petting-success-dog
@@ -434,15 +498,17 @@
     - CannotSuicide
     - VimPilot
   - type: StealTarget
-    stealGroup: AnimalWalter
-  - type: RandomBark
-    barkType: dog
-    barkMultiplier: 1.1
+    stealGroup:
+    - AnimalWalter
+  - type: Speech
+    speechVerb: Canine
+    speechSounds: Dog
+  - type: MessyDrinker
 
 - type: entity
-  name: Morty
-  parent: MobPossum
+  parent: [ BaseUniquePet, MobPossum ]
   id: MobPossumMorty
+  name: Morty
   description: The station's resident Didelphis virginiana. A sensitive but resilient kind of guy.
   components:
   - type: InteractionPopup
@@ -461,12 +527,13 @@
     - CannotSuicide
     - VimPilot
   - type: StealTarget
-    stealGroup: AnimalMorty
+    stealGroup:
+    - AnimalMorty
 
 - type: entity
-  name: Morty
   parent: MobPossumMorty
   id: MobPossumMortyOld
+  name: Morty
   suffix: Old sprite
   components:
   - type: Sprite
@@ -483,9 +550,9 @@
         Base: possum_dead_old
 
 - type: entity
-  name: Poppy # the Safety Possum
   parent: MobPossumMorty
   id: MobPossumPoppy
+  name: Poppy # the Safety Possum
   description: It's an opossum, a small scavenging marsupial. It's wearing appropriate personal protective equipment.
   components:
   - type: Grammar
@@ -506,9 +573,9 @@
         Base: poppy_dead
 
 - type: entity
-  name: Morticia
-  parent: MobRaccoon
+  parent: [ BaseUniquePet, MobRaccoon ]
   id: MobRaccoonMorticia
+  name: Morticia
   description: A powerful creature of the night. Her eyeshadow is always on point.
   components:
   - type: InteractionPopup
@@ -528,9 +595,9 @@
     - VimPilot
 
 - type: entity
-  name: Alexander
-  parent: MobPig
+  parent: [ BaseUniquePet, MobPig ]
   id: MobAlexander
+  name: Alexander
   description: Chef's finest colleague.
   components:
   - type: InteractionPopup
@@ -550,9 +617,9 @@
     - VimPilot
 
 - type: entity
-  name: Renault
-  parent: MobFox
+  parent: [ BaseUniquePet, MobFox, BaseSlicingRefinableButchering ]
   id: MobFoxRenault
+  name: Renault
   description: The captain's trustworthy fox.
   components:
   - type: InteractionPopup
@@ -562,8 +629,8 @@
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
       collection: Fox
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeat
       amount: 3
     - id: Telecrystal5
@@ -577,18 +644,13 @@
     - CannotSuicide
     - VimPilot
   - type: StealTarget
-    stealGroup: AnimalRenault
-  - type: LanguageKnowledge
-    speaks:
-    - Fox
-    understands:
-    - TauCetiBasic
-    - Fox
+    stealGroup:
+    - AnimalRenault
 
 - type: entity
-  name: Hamlet
-  parent: MobHamster
+  parent: [ BaseUniquePet, MobHamster, BaseSlicingRefinableButchering ]
   id: MobHamsterHamlet
+  name: Hamlet
   description: A grumpy, cute and fluffy hamster.
   components:
   - type: Sprite
@@ -610,6 +672,7 @@
     allowMovement: true
     name: ghost-role-information-hamlet-name
     description: ghost-role-information-hamlet-description
+    rules: ghost-role-information-nonantagonist-rules
   - type: GhostTakeoverAvailable
   - type: InteractionPopup
     successChance: 1
@@ -618,8 +681,8 @@
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
       path: /Audio/Animals/fox_squeak.ogg
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeat
       amount: 1
   - type: Grammar
@@ -631,26 +694,34 @@
     - CannotSuicide
     - Hamster
     - VimPilot
-  - type: LanguageKnowledge
-    speaks:
-    - Mouse
-    understands:
-    - TauCetiBasic
-    - Mouse
+    - ChefPilot
+  - type: FlavorProfile
+    flavors:
+    - meaty
+    - sadness
 
 - type: entity
-  name: Shiva
-  parent: MobGiantSpider
+  parent: MobHamsterHamlet
+  id: MobHamsterHamletSlippery
+  suffix: Slippery
+  components:
+  - type: Slippery
+  - type: StepTrigger
+    requiredTriggeredSpeed: 1
+  - type: TriggerOnStepTrigger
+  - type: GibOnTrigger
+  - type: EmitSoundOnTrigger
+    sound:
+      path: "/Audio/Animals/mouse_squeak.ogg"
+    positional: true
+    predicted: true
+
+- type: entity
+  parent: [ BaseUniquePet, MobSpiderBase ]
   id: MobSpiderShiva
+  name: Shiva
   description: The first defender of the station.
   components:
-  - type: GhostRole # DeltaV
-    makeSentient: true
-    allowSpeech: true
-    allowMovement: true
-    name: ghost-role-information-shiva-name
-    description: ghost-role-information-shiva-description
-  - type: GhostTakeoverAvailable # DeltaV
   - type: InteractionPopup
     successChance: 0.5 # spider is mean
     interactSuccessString: petting-success-tarantula
@@ -689,6 +760,7 @@
       0: Alive
       150: Dead
   - type: MeleeWeapon
+    altDisarm: false
     angle: 0
     animation: WeaponArcBite
     soundHit:
@@ -697,6 +769,8 @@
       types:
         Piercing: 8
         Poison: 8
+  - type: Spider
+    spawnsWebsAsNonPlayer: false
   - type: Grammar
     attributes:
       proper: true
@@ -708,12 +782,13 @@
     - DoorBumpOpener
     - FootstepSound
   - type: StealTarget
-    stealGroup: AnimalShiva
+    stealGroup:
+    - AnimalShiva
 
 - type: entity
-  name: Willow
-  parent: MobKangaroo
+  parent: [ BaseUniquePet, MobKangaroo ]
   id: MobKangarooWillow
+  name: Willow
   description: Willow the boxing kangaroo.
   components:
   - type: InteractionPopup
@@ -736,14 +811,15 @@
     prob: 0.25
     name: ghost-role-information-willow-name
     description: ghost-role-information-willow-description
+    rules: ghost-role-information-nonantagonist-rules
   - type: GhostTakeoverAvailable
   - type: Loadout
     prototypes: [ BoxingKangarooGear ]
 
 - type: entity
-  name: Smile
+  parent: [ BaseUniquePet, MobAdultSlimes, StripableInventoryBase, BaseSlicingRefinableButchering ]
   id: MobSlimesPet
-  parent: MobAdultSlimes
+  name: Smile
   description: This masterpiece has gone through thousands of experiments. But it is the sweetest creature in the world. Smile Slime!
   components:
   - type: Sprite
@@ -753,15 +829,23 @@
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: aslime-_3
       shader: unshaded
+    - map: [ "head" ]
+  - type: Inventory
+    speciesId: slime
+    templateId: head
+    displacements:
+      head:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/Smile/smile_displacement.rsi
+            state: head
   - type: MobThresholds
     thresholds:
       0: Alive
       200: Dead
   - type: FootstepModifier
     footstepSoundCollection:
-      path: /Audio/Effects/Footsteps/slime1.ogg
-      params:
-        volume: -6
+      collection: FootstepSlime
   - type: Tag
     tags:
     - FootstepSound
@@ -775,8 +859,8 @@
         BaseUnshaded: aslime-_3
       Dead:
         Base: rainbow_baby_slime_dead
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: FoodMeatSlime
       amount: 1
     - id: MaterialSmileExtract
@@ -789,6 +873,7 @@
         Bloodloss:
           -0.8
   - type: Temperature
+  - type: TemperatureDamage
     heatDamageThreshold: 800
     coldDamageThreshold: 0
   - type: MeleeWeapon
@@ -798,67 +883,58 @@
         Caustic: 1
   - type: MultiHandedItem
   - type: Item
+    sprite: Mobs/Pets/Smile/smile.rsi
     size: Huge
-  - type: SentienceTarget
-    flavorKind: station-event-random-sentience-flavor-slime
   - type: MobPrice
     price: 3000 # it is a truly valuable creature
   - type: GhostRole
     name: ghost-role-information-smile-name
     description: ghost-role-information-smile-description
-    rules: ghost-role-information-smile-rules
+    rules: ghost-role-information-nonantagonist-rules
+    raffle: null
   - type: Grammar
     attributes:
       proper: true
       gender: female
-  - type: LanguageKnowledge
-    speaks:
-    - Bubblish
-    understands:
-    - TauCetiBasic
-    - Bubblish
-  - type: TTS # Corvax-TTS
-    voice: WindrangerDota2
 
 - type: entity
-  name: Pun Pun
-  parent: MobMonkey
+  parent: [ BaseUniquePet, MobMonkey ]
   id: MobMonkeyPunpun
+  name: Pun Pun
   description: A prominent representative of monkeys with unlimited access to alcohol.
   components:
+  - type: GhostRole
+    prob: 1
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: ghost-role-information-punpun-name
+    description: ghost-role-information-punpun-description
+    rules: ghost-role-information-nonantagonist-rules
   - type: GhostTakeoverAvailable
   - type: Butcherable
-    butcheringType: Spike
     spawned:
     - id: FoodMeat
       amount: 3
     - id: DrinkTequilaBottleFull
       amount: 1
-  - type: Flashable
   - type: Tag
     tags:
     - CannotSuicide
     - DoorBumpOpener
     - VimPilot
+    - AnomalyHost
   - type: Loadout
     prototypes: [ MobMonkeyGear ]
   - type: Grammar
     attributes:
       proper: true
       gender: male
-  - type: LanguageKnowledge
-    speaks:
-    - Monkey
-    understands:
-    - TauCetiBasic
-    - Monkey
-    - Kobold
-  - type: Punpun
 
 - type: entity
-  name: Tropico
-  parent: MobCrab
+  parent: [ BaseUniquePet, MobCrab ]
   id: MobCrabAtmos
+  name: Tropico
   description: The noble and stalwart defender of Atmosia. Viva!
   components:
 #  - type: GhostRole
@@ -868,8 +944,8 @@
 #    allowMovement: true
 #    name: ghost-role-information-tropico-name
 #    description: ghost-role-information-tropico-description
+#    rules: ghost-role-information-nonantagonist-rules
 #  - type: GhostTakeoverAvailable
-#  - type: Flashable
   - type: Tag
     tags:
     - VimPilot
@@ -880,10 +956,28 @@
       gender: male
 #  - type: AlwaysRevolutionaryConvertible
   - type: StealTarget
-    stealGroup: AnimalTropico
-  - type: LanguageKnowledge
-    speaks:
-    - Crab
-    understands:
-    - TauCetiBasic
-    - Crab
+    stealGroup:
+    - AnimalTropico
+
+- type: entity
+  parent: [ BaseUniquePet, MobParrotBase ]
+  id: MobPollyParrot
+  name: Polly the parrot
+  description: An expert in quantum cracker theory.
+  components:
+  - type: Vocalizer
+    maxVocalizeInterval: 240 # polly is chattier
+  - type: RadioVocalizer
+    radioAttemptChance: 0.8 # polly wants to share with the world
+  - type: Grammar
+    attributes:
+      proper: true
+      gender: male
+  - type: Loadout
+    prototypes: [ MobPollyGear ]
+  - type: SentienceTarget
+    flavorKind: station-event-random-sentience-flavor-organic
+  - type: Tag
+    tags:
+    - CannotSuicide
+

@@ -1,175 +1,204 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using Content.Shared.CCVar;
 using Robust.Shared.Configuration;
 
 namespace Content.Server.Chat.Managers;
 
-public sealed class ChatSanitizationManager : IChatSanitizationManager
+/// <summary>
+///     Sanitizes messages!
+///     It currently ony removes the shorthands for emotes (like "lol" or "^-^") from a chat message and returns the last
+///     emote in their message
+/// </summary>
+public sealed partial class ChatSanitizationManager : IChatSanitizationManager
 {
-    [Dependency] private readonly IConfigurationManager _configurationManager = default!;
-
-    private static readonly Dictionary<string, string> SmileyToEmote = new()
-    {
-        // I could've done this with regex, but felt it wasn't the right idea.
-        { ":)", "chatsan-smiles" },
-        { ":]", "chatsan-smiles" },
-        { "=)", "chatsan-smiles" },
-        { "=]", "chatsan-smiles" },
-        { "(:", "chatsan-smiles" },
-        { "[:", "chatsan-smiles" },
-        { "(=", "chatsan-smiles" },
-        { "[=", "chatsan-smiles" },
-        { "^^", "chatsan-smiles" },
-        { "^-^", "chatsan-smiles" },
-        { ":(", "chatsan-frowns" },
-        { ":[", "chatsan-frowns" },
-        { "=(", "chatsan-frowns" },
-        { "=[", "chatsan-frowns" },
-        { "):", "chatsan-frowns" },
-        { ")=", "chatsan-frowns" },
-        { "]:", "chatsan-frowns" },
-        { "]=", "chatsan-frowns" },
-        { ":D", "chatsan-smiles-widely" },
-        { "D:", "chatsan-frowns-deeply" },
-        { ":O", "chatsan-surprised" },
-        { ":3", "chatsan-smiles" }, //nope
-        { ":S", "chatsan-uncertain" },
-        { ":>", "chatsan-grins" },
-        { ":<", "chatsan-pouts" },
-        { "xD", "chatsan-laughs" },
-        { ":'(", "chatsan-cries" },
-        { ":'[", "chatsan-cries" },
-        { "='(", "chatsan-cries" },
-        { "='[", "chatsan-cries" },
-        { ")':", "chatsan-cries" },
-        { "]':", "chatsan-cries" },
-        { ")'=", "chatsan-cries" },
-        { "]'=", "chatsan-cries" },
-        { ";-;", "chatsan-cries" },
-        { ";_;", "chatsan-cries" },
-        { "qwq", "chatsan-cries" },
-        { ":u", "chatsan-smiles-smugly" },
-        { ":v", "chatsan-smiles-smugly" },
-        { ">:i", "chatsan-annoyed" },
-        { ":i", "chatsan-sighs" },
-        { ":|", "chatsan-sighs" },
-        { ":p", "chatsan-stick-out-tongue" },
-        { ";p", "chatsan-stick-out-tongue" },
-        { ":b", "chatsan-stick-out-tongue" },
-        { "0-0", "chatsan-wide-eyed" },
-        { "o-o", "chatsan-wide-eyed" },
-        { "o.o", "chatsan-wide-eyed" },
-        { "._.", "chatsan-surprised" },
-        { ".-.", "chatsan-confused" },
-        { "-_-", "chatsan-unimpressed" },
-        { "smh", "chatsan-unimpressed" },
-        { "o/", "chatsan-waves" },
-        { "^^/", "chatsan-waves" },
-        { ":/", "chatsan-uncertain" },
-        { ":\\", "chatsan-uncertain" },
-        { "lmao", "chatsan-laughs" },
-        { "lmao.", "chatsan-laughs" },
-        { "lol", "chatsan-laughs" },
-        { "lol.", "chatsan-laughs" },
-        { "lel", "chatsan-laughs" },
-        { "lel.", "chatsan-laughs" },
-        { "kek", "chatsan-laughs" },
-        { "kek.", "chatsan-laughs" },
-        { "rofl", "chatsan-laughs" },
-        { "o7", "chatsan-salutes" },
-        { ";_;7", "chatsan-tearfully-salutes"},
-        { "idk", "chatsan-shrugs" },
-        { "idk.", "chatsan-shrugs" },
-        { ";)", "chatsan-winks" },
-        { ";]", "chatsan-winks" },
-        { "(;", "chatsan-winks" },
-        { "[;", "chatsan-winks" },
-        { ":')", "chatsan-tearfully-smiles" },
-        { ":']", "chatsan-tearfully-smiles" },
-        { "=')", "chatsan-tearfully-smiles" },
-        { "=']", "chatsan-tearfully-smiles" },
-        { "(':", "chatsan-tearfully-smiles" },
-        { "[':", "chatsan-tearfully-smiles" },
-        { "('=", "chatsan-tearfully-smiles" },
-        { "['=", "chatsan-tearfully-smiles" },
+    private static readonly (Regex regex, string emoteKey)[] ShorthandToEmote =
+    [
+        Entry(":)", "chatsan-smiles"),
+        Entry(":]", "chatsan-smiles"),
+        Entry("=)", "chatsan-smiles"),
+        Entry("=]", "chatsan-smiles"),
+        Entry("(:", "chatsan-smiles"),
+        Entry("[:", "chatsan-smiles"),
+        Entry("(=", "chatsan-smiles"),
+        Entry("[=", "chatsan-smiles"),
+        Entry("^^", "chatsan-smiles"),
+        Entry("^-^", "chatsan-smiles"),
+        Entry(":(", "chatsan-frowns"),
+        Entry(":[", "chatsan-frowns"),
+        Entry("=(", "chatsan-frowns"),
+        Entry("=[", "chatsan-frowns"),
+        Entry("):", "chatsan-frowns"),
+        Entry(")=", "chatsan-frowns"),
+        Entry("]:", "chatsan-frowns"),
+        Entry("]=", "chatsan-frowns"),
+        Entry(":D", "chatsan-smiles-widely"),
+        Entry("D:", "chatsan-frowns-deeply"),
+        Entry(":O", "chatsan-surprised"),
+        Entry(":3", "chatsan-smiles"),
+        Entry(":S", "chatsan-uncertain"),
+        Entry(":>", "chatsan-grins"),
+        Entry(":<", "chatsan-pouts"),
+        Entry("xD", "chatsan-laughs"),
+        Entry(":'(", "chatsan-cries"),
+        Entry(":'[", "chatsan-cries"),
+        Entry("='(", "chatsan-cries"),
+        Entry("='[", "chatsan-cries"),
+        Entry(")':", "chatsan-cries"),
+        Entry("]':", "chatsan-cries"),
+        Entry(")'=", "chatsan-cries"),
+        Entry("]'=", "chatsan-cries"),
+        Entry(";-;", "chatsan-cries"),
+        Entry(";_;", "chatsan-cries"),
+        Entry("qwq", "chatsan-cries"),
+        Entry(":u", "chatsan-smiles-smugly"),
+        Entry(":v", "chatsan-smiles-smugly"),
+        Entry(">:i", "chatsan-annoyed"),
+        Entry(":i", "chatsan-sighs"),
+        Entry(":|", "chatsan-sighs"),
+        Entry(":p", "chatsan-stick-out-tongue"),
+        Entry(";p", "chatsan-stick-out-tongue"),
+        Entry(":b", "chatsan-stick-out-tongue"),
+        Entry("0-0", "chatsan-wide-eyed"),
+        Entry("o-o", "chatsan-wide-eyed"),
+        Entry("o.o", "chatsan-wide-eyed"),
+        Entry("._.", "chatsan-surprised"),
+        Entry(".-.", "chatsan-confused"),
+        Entry("-_-", "chatsan-unimpressed"),
+        Entry("smh", "chatsan-unimpressed"),
+        Entry(":?", "chatsan-shrugs"),
+        Entry("o/", "chatsan-waves"),
+        Entry("^^/", "chatsan-waves"),
+        Entry(":/", "chatsan-uncertain"),
+        Entry(":\\", "chatsan-uncertain"),
+        Entry("lmao", "chatsan-laughs"),
+        Entry("lmfao", "chatsan-laughs"),
+        Entry("lol", "chatsan-laughs"),
+        Entry("lel", "chatsan-laughs"),
+        Entry("kek", "chatsan-laughs"),
+        Entry("rofl", "chatsan-laughs"),
+        Entry("o7", "chatsan-salutes"),
+        Entry(";_;7", "chatsan-tearfully-salutes"),
+        Entry(";)", "chatsan-winks"),
+        Entry(";]", "chatsan-winks"),
+        Entry("(;", "chatsan-winks"),
+        Entry("[;", "chatsan-winks"),
+        Entry(":')", "chatsan-tearfully-smiles"),
+        Entry(":']", "chatsan-tearfully-smiles"),
+        Entry("=')", "chatsan-tearfully-smiles"),
+        Entry("=']", "chatsan-tearfully-smiles"),
+        Entry("(':", "chatsan-tearfully-smiles"),
+        Entry("[':", "chatsan-tearfully-smiles"),
+        Entry("('=", "chatsan-tearfully-smiles"),
+        Entry("['=", "chatsan-tearfully-smiles"),
         // Corvax-Localization-Start
-        { "хд", "chatsan-laughs" },
-        { "о-о", "chatsan-wide-eyed" }, // cyrillic о
-        { "о.о", "chatsan-wide-eyed" }, // cyrillic о
-        { "0_о", "chatsan-wide-eyed" }, // cyrillic о
-        { "о/", "chatsan-waves" }, // cyrillic о
-        { "о7", "chatsan-salutes" }, // cyrillic о
-        { "0_o", "chatsan-wide-eyed" },
-        { "лмао", "chatsan-laughs" },
-        { "рофл", "chatsan-laughs" },
-        { "яхз", "chatsan-shrugs" },
-        { ":0", "chatsan-surprised" },
-        { ":р", "chatsan-stick-out-tongue" }, // cyrillic р
-        { "кек", "chatsan-laughs" },
-        { "T_T", "chatsan-cries" },
-        { "Т_Т", "chatsan-cries" }, // cyrillic T
-        { "=_(", "chatsan-cries" },
-        { "!с", "chatsan-laughs" },
-        { "!в", "chatsan-sighs" },
-        { "!х", "chatsan-claps" },
-        { "!щ", "chatsan-snaps" },
-        { "))", "chatsan-smiles-widely" },
-        { ")", "chatsan-smiles" },
-        { "((", "chatsan-frowns-deeply" },
-        { "(", "chatsan-frowns" },
-        { "дрочит", "молится" },
-        { "ебет", "молится" },
-        { "ебёт", "молится" },
-        { "трахает", "молится" },
-        { "срёт", "молится" },
-        { "срет", "молится" },
-        { "ссыт", "молится" },
-        { "обоссал", "помолился" },
-        { "зигует", "бьёт себя по лицу" },
-        { "зиганул", "бьёт себя по лицу" },
-        { "кинул плотную", "бьёт себя по лицу" },
-        { "кинул потную", "бьёт себя по лицу" },
+        Entry("хд", "chatsan-laughs"),
+        Entry("о-о", "chatsan-wide-eyed"),
+        Entry("о.о", "chatsan-wide-eyed"),
+        Entry("0_о", "chatsan-wide-eyed"),
+        Entry("о/", "chatsan-waves"),
+        Entry("о7", "chatsan-salutes"),
+        Entry("0_o", "chatsan-wide-eyed"),
+        Entry("лмао", "chatsan-laughs"),
+        Entry("рофл", "chatsan-laughs"),
+        Entry("яхз", "chatsan-shrugs"),
+        Entry(":0", "chatsan-surprised"),
+        Entry(":р", "chatsan-stick-out-tongue"),
+        Entry("кек", "chatsan-laughs"),
+        Entry("T_T", "chatsan-cries"),
+        Entry("Т_Т", "chatsan-cries"),
+        Entry("=_(", "chatsan-cries"),
+        Entry("!с", "chatsan-laughs"),
+        Entry("!в", "chatsan-sighs"),
+        Entry("!х", "chatsan-claps"),
+        Entry("!щ", "chatsan-snaps"),
+        Entry("))", "chatsan-smiles-widely"),
+        Entry(")", "chatsan-smiles"),
+        Entry("((", "chatsan-frowns-deeply"),
+        Entry("(", "chatsan-frowns"),
+        Entry("дрочит", "молится"),
+        Entry("ебет", "молится"),
+        Entry("ебёт", "молится"),
+        Entry("трахает", "молится"),
+        Entry("срёт", "молится"),
+        Entry("срет", "молится"),
+        Entry("ссыт", "молится"),
+        Entry("обоссал", "помолился"),
+        Entry("зигует", "бьёт себя по лицу"),
+        Entry("зиганул", "бьёт себя по лицу"),
+        Entry("кинул плотную", "бьёт себя по лицу"),
+        Entry("кинул потную", "бьёт себя по лицу"),
         // Corvax-Localization-End
-    };
+    ];
+
+    [Dependency] private IConfigurationManager _configurationManager = default!;
+    [Dependency] private ILocalizationManager _loc = default!;
 
     private bool _doSanitize;
-
-    // Anti-Goida
-    private static readonly Regex GoydaRegex = new(@"[ГгGg][ОоOo]+[ЙйYy][ДдDd][АаAa]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     public void Initialize()
     {
         _configurationManager.OnValueChanged(CCVars.ChatSanitizerEnabled, x => _doSanitize = x, true);
     }
 
-    public bool TrySanitizeOutSmilies(string input, EntityUid speaker, out string sanitized, [NotNullWhen(true)] out string? emote)
+    /// <summary>
+    ///     Remove the shorthands from the message, returning the last one found as the emote
+    /// </summary>
+    /// <param name="message">The pre-sanitized message</param>
+    /// <param name="speaker">The speaker</param>
+    /// <param name="sanitized">The sanitized message with shorthands removed</param>
+    /// <param name="emote">The localized emote</param>
+    /// <returns>True if emote has been sanitized out</returns>
+    public bool TrySanitizeEmoteShorthands(string message,
+        EntityUid speaker,
+        out string sanitized,
+        [NotNullWhen(true)] out string? emote)
     {
-        if (!_doSanitize)
-        {
-            sanitized = input;
-            emote = null;
-            return false;
-        }
-
-        input = input.TrimEnd();
-
-        // Apply Anti-Goida filter
-        input = GoydaRegex.Replace(input, "Я долбоёб");
-
-        foreach (var (smiley, replacement) in SmileyToEmote)
-        {
-            if (input.EndsWith(smiley, true, CultureInfo.InvariantCulture))
-            {
-                sanitized = input.Remove(input.Length - smiley.Length).TrimEnd();
-                emote = Loc.GetString(replacement, ("ent", speaker));
-                return true;
-            }
-        }
-
-        sanitized = input;
         emote = null;
-        return false;
+        sanitized = message;
+
+        if (!_doSanitize)
+            return false;
+
+        // -1 is just a canary for nothing found yet
+        var lastEmoteIndex = -1;
+
+        foreach (var (r, emoteKey) in ShorthandToEmote)
+        {
+            // We're using sanitized as the original message until the end so that we can make sure the indices of
+            // the emotes are accurate.
+            var lastMatch = r.Match(sanitized);
+
+            if (!lastMatch.Success)
+                continue;
+
+            if (lastMatch.Index > lastEmoteIndex)
+            {
+                lastEmoteIndex = lastMatch.Index;
+                emote = _loc.GetString(emoteKey, ("ent", speaker));
+            }
+
+            message = r.Replace(message, string.Empty);
+        }
+
+        sanitized = message.Trim();
+        return emote is not null;
+    }
+
+    private static (Regex regex, string emoteKey) Entry(string shorthand, string emoteKey)
+    {
+        // We have to escape it because shorthands like ":)" or "-_-" would break the regex otherwise.
+        var escaped = Regex.Escape(shorthand);
+
+        // So there are 2 cases:
+        // - If there is whitespace before it and after it is either punctuation, whitespace, or the end of the line
+        //   Delete the word and the whitespace before
+        // - If it is at the start of the string and is followed by punctuation, whitespace, or the end of the line
+        //   Delete the word and the punctuation if it exists.
+        var pattern = new Regex(
+            $@"\s{escaped}(?=\p{{P}}|\s|$)|^{escaped}(?:\p{{P}}|(?=\s|$))",
+            RegexOptions.RightToLeft | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        return (pattern, emoteKey);
     }
 }

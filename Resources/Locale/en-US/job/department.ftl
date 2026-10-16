@@ -1,10 +1,14 @@
 department-Cargo = Cargo
 department-Civilian = Civilian
 department-Command = Command
+department-CentralCommand = Central Command
 department-Engineering = Engineering
 department-Medical = Medical
-department-Security = Security
 department-Science = Science
-department-Silicon = Silicons
+department-Security = Security
+department-Service = Service
+department-Silicon = Silicon
+department-Task-Force = Task Force
 department-Specific = Station specific
-department-Dignitary = Dignitary
+
+department-Unknown = Unknown

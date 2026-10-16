@@ -1,105 +1,110 @@
-// Corvax-Change-Start
-using Content.Shared.Humanoid;
-using Content.Shared.Mobs;
-using Content.Shared.Mobs.Components;
-using Content.Shared.SSDIndicator;
-using Robust.Server.GameObjects;
+using Content.Server.Spawners.Components;
+using Content.Shared.Humanoid; // Corvax-Change
+using Content.Shared.Mobs; // Corvax-Change
+using Content.Shared.Mobs.Components; // Corvax-Change
+using Content.Shared.SSDIndicator; // Corvax-Change
+using Robust.Server.GameObjects; // Corvax-Change
 using Robust.Shared.Random;
+using Robust.Shared.Timing;
 
 namespace Content.Server.Spawners.EntitySystems;
 
-public sealed class SpawnerSystem : EntitySystem
+public sealed partial class SpawnerSystem : EntitySystem
 {
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
-    [Dependency] private readonly TransformSystem _transform = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private EntityLookupSystem _lookup = default!; // Corvax-Change
+    [Dependency] private TransformSystem _transform = default!; // Corvax-Change
 
-    private const float SpawnBlockRange = 15f;
-    private EntityQuery<TransformComponent> _xformQuery;
+    private const float SpawnBlockRange = 15f; // Corvax-Change
 
     public override void Initialize()
     {
         base.Initialize();
-        _xformQuery = GetEntityQuery<TransformComponent>();
+
+        SubscribeLocalEvent<TimedSpawnerComponent, MapInitEvent>(OnMapInit);
     }
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
+        var curTime = _timing.CurTime;
         var query = EntityQueryEnumerator<TimedSpawnerComponent>();
-        while (query.MoveNext(out var uid, out var component))
+        while (query.MoveNext(out var uid, out var timedSpawner))
         {
-            component.TimeElapsed += frameTime;
-
-            if (component.TimeElapsed < component.IntervalSeconds)
+            if (timedSpawner.NextFire > curTime)
                 continue;
 
-            var intervalsPassed = (int) (component.TimeElapsed / component.IntervalSeconds);
-            component.TimeElapsed -= intervalsPassed * component.IntervalSeconds;
+            OnTimerFired(uid, timedSpawner);
 
-            for (var i = 0; i < intervalsPassed; i++)
-            {
-                OnTimerFired(uid, component);
-            }
+            timedSpawner.NextFire += timedSpawner.IntervalSeconds;
         }
+    }
+
+    private void OnMapInit(Entity<TimedSpawnerComponent> ent, ref MapInitEvent args)
+    {
+        ent.Comp.NextFire = _timing.CurTime + ent.Comp.IntervalSeconds;
     }
 
     private void OnTimerFired(EntityUid uid, TimedSpawnerComponent component)
     {
-        if (ShouldBlockSpawn(uid, component))
+        if (ShouldBlockSpawn(uid, component)) // Corvax-Change
             return;
 
         if (!_random.Prob(component.Chance))
             return;
 
-        var xform = _xformQuery.GetComponent(uid);
-        var coordinates = xform.Coordinates;
+        var number = _random.Next(component.MinimumEntitiesSpawned, component.MaximumEntitiesSpawned);
+        var coordinates = Transform(uid).Coordinates;
 
-        var spawnCount = _random.Next(component.MinimumEntitiesSpawned, component.MaximumEntitiesSpawned + 1);
-        for (var i = 0; i < spawnCount; i++)
+        for (var i = 0; i < number; i++)
         {
             var entity = _random.Pick(component.Prototypes);
-            SpawnAtPosition(entity, coordinates);
+            if (component.AllowContainerPlacement)
+                SpawnNextToOrDrop(entity, uid);
+            else
+                SpawnAtPosition(entity, coordinates);
         }
     }
 
+    // Corvax-Change-Start: do not spawn mobs right next to awake players
     private bool ShouldBlockSpawn(EntityUid uid, TimedSpawnerComponent component)
     {
         if (component.IgnoreSpawnBlock)
             return false;
 
-        if (!_xformQuery.TryGetComponent(uid, out var xform) || xform.MapUid == null)
+        if (!TryComp<TransformComponent>(uid, out var xform) || xform.MapUid == null)
             return true;
 
         var mapPos = _transform.GetMapCoordinates(uid, xform: xform);
 
         foreach (var entity in _lookup.GetEntitiesInRange(mapPos, SpawnBlockRange))
         {
-            if (!Exists(entity)) continue;
-            if (entity == uid) continue;
+            if (entity == uid || !Exists(entity))
+                continue;
 
-            if (TryComp(entity, out MobStateComponent? mob) &&
-                (mob.CurrentState == MobState.Alive || mob.CurrentState == MobState.Critical))
+            if (!TryComp<MobStateComponent>(entity, out var mob)
+                || mob.CurrentState != MobState.Alive && mob.CurrentState != MobState.Critical)
+                continue;
+
+            if (HasComp<HumanoidProfileComponent>(entity))
             {
-                if (HasComp<HumanoidAppearanceComponent>(entity))
-                {
-                    if (!TryComp<SSDIndicatorComponent>(entity, out var ssd) || !ssd.IsSSD)
-                        return true;
-                    continue;
-                }
-
-                if (TryComp(entity, out MetaDataComponent? meta) &&
-                    meta.EntityPrototype?.ID is { } prototypeId &&
-                    component.Prototypes.Contains(prototypeId))
+                // An SSD player does not block the spawner.
+                if (!TryComp<SSDIndicatorComponent>(entity, out var ssd) || !ssd.IsSSD)
                     return true;
+
+                continue;
             }
 
-            else
-                continue;
+            // Already enough of this spawner's own mobs around.
+            if (TryComp<MetaDataComponent>(entity, out var meta)
+                && meta.EntityPrototype?.ID is { } prototypeId
+                && component.Prototypes.Contains(prototypeId))
+                return true;
         }
 
         return false;
     }
+    // Corvax-Change-End
 }
-// Corvax-Change-End

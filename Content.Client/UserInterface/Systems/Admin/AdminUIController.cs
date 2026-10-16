@@ -1,13 +1,11 @@
-﻿using Content.Client.Administration.Managers;
+using Content.Client.Administration.Managers;
 using Content.Client.Administration.Systems;
 using Content.Client.Administration.UI;
 using Content.Client.Administration.UI.Tabs.ObjectsTab;
 using Content.Client.Administration.UI.Tabs.PanicBunkerTab;
-using Content.Client.Administration.UI.Tabs.BabyJailTab;
 using Content.Client.Administration.UI.Tabs.PlayerTab;
 using Content.Client.Gameplay;
 using Content.Client.Lobby;
-using Content.Client.Mapping;
 using Content.Client.UserInterface.Controls;
 using Content.Client.Verbs.UI;
 using Content.Shared.Administration.Events;
@@ -25,28 +23,25 @@ using static Robust.Client.UserInterface.Controls.BaseButton;
 namespace Content.Client.UserInterface.Systems.Admin;
 
 [UsedImplicitly]
-public sealed class AdminUIController : UIController,
+public sealed partial class AdminUIController : UIController,
     IOnStateEntered<GameplayState>,
     IOnStateEntered<LobbyState>,
-    IOnStateEntered<MappingState>,
     IOnSystemChanged<AdminSystem>
 {
-    [Dependency] private readonly IClientAdminManager _admin = default!;
-    [Dependency] private readonly IClientConGroupController _conGroups = default!;
-    [Dependency] private readonly IClientConsoleHost _conHost = default!;
-    [Dependency] private readonly IInputManager _input = default!;
-    [Dependency] private readonly VerbMenuUIController _verb = default!;
+    [Dependency] private IClientAdminManager _admin = default!;
+    [Dependency] private IClientConGroupController _conGroups = default!;
+    [Dependency] private IClientConsoleHost _conHost = default!;
+    [Dependency] private IInputManager _input = default!;
+    [Dependency] private VerbMenuUIController _verb = default!;
 
     private AdminMenuWindow? _window;
     private MenuButton? AdminButton => UIManager.GetActiveUIWidgetOrNull<MenuBar.Widgets.GameTopMenuBar>()?.AdminButton;
     private PanicBunkerStatus? _panicBunker;
-    private BabyJailStatus? _babyJail;
 
     public override void Initialize()
     {
         base.Initialize();
         SubscribeNetworkEvent<PanicBunkerChangedEvent>(OnPanicBunkerUpdated);
-        // SubscribeNetworkEvent<BabyJailChangedEvent>(OnBabyJailUpdated); // Forge-Change not use BabyJail
     }
 
     private void OnPanicBunkerUpdated(PanicBunkerChangedEvent msg, EntitySessionEventArgs args)
@@ -60,18 +55,6 @@ public sealed class AdminUIController : UIController,
             UIManager.CreateWindow<PanicBunkerStatusWindow>().OpenCentered();
         }
     }
-    // Forge-Change not use BabyJail
-    // private void OnBabyJailUpdated(BabyJailChangedEvent msg, EntitySessionEventArgs args)
-    // {
-    //     var showDialog = _babyJail == null && msg.Status.Enabled;
-    //     _babyJail = msg.Status;
-    //     _window?.BabyJailControl.UpdateStatus(msg.Status);
-    //
-    //     if (showDialog)
-    //     {
-    //         UIManager.CreateWindow<BabyJailStatusWindow>().OpenCentered();
-    //     }
-    // }
 
     public void OnStateEntered(GameplayState state)
     {
@@ -80,12 +63,6 @@ public sealed class AdminUIController : UIController,
     }
 
     public void OnStateEntered(LobbyState state)
-    {
-        EnsureWindow();
-        AdminStatusUpdated();
-    }
-
-    public void OnStateEntered(MappingState state)
     {
         EnsureWindow();
         AdminStatusUpdated();
@@ -123,13 +100,6 @@ public sealed class AdminUIController : UIController,
 
         if (_panicBunker != null)
             _window.PanicBunkerControl.UpdateStatus(_panicBunker);
-
-        /*
-         * TODO: Remove baby jail code once a more mature gateway process is established. This code is only being issued as a stopgap to help with potential tiding in the immediate future.
-         */
-
-        // if (_babyJail != null) // Forge-Change not use BabyJail
-        //     _window.BabyJailControl.UpdateStatus(_babyJail);
 
         _window.PlayerTabControl.OnEntryKeyBindDown += PlayerTabEntryKeyBindDown;
         _window.ObjectsTabControl.OnEntryKeyBindDown += ObjectsTabEntryKeyBindDown;

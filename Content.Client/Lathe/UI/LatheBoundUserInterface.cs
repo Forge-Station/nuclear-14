@@ -19,11 +19,12 @@ namespace Content.Client.Lathe.UI
         {
             base.Open();
 
-            _menu = this.CreateWindow<LatheMenu>();
+            _menu = this.CreateWindowCenteredRight<LatheMenu>();
             _menu.SetEntity(Owner);
-            _menu.OpenCenteredRight();
 
-            _menu.OnServerListButtonPressed += _ =>
+            _menu.OnClaimMiningPoints += () => SendMessage(new LatheClaimMiningPointsMessage()); // DeltaV
+
+        _menu.OnServerListButtonPressed += _ =>
             {
                 SendMessage(new ConsoleServerSelectionMessage());
             };
@@ -32,8 +33,10 @@ namespace Content.Client.Lathe.UI
             {
                 SendMessage(new LatheQueueRecipeMessage(recipe, amount));
             };
-
-            _menu.OnClaimMiningPoints += () => SendMessage(new LatheClaimMiningPointsMessage()); // DeltaV
+            _menu.QueueDeleteAction += index => SendMessage(new LatheDeleteRequestMessage(index));
+            _menu.QueueMoveUpAction += index => SendMessage(new LatheMoveRequestMessage(index, -1));
+            _menu.QueueMoveDownAction += index => SendMessage(new LatheMoveRequestMessage(index, 1));
+            _menu.DeleteFabricatingAction += () => SendMessage(new LatheAbortFabricationMessage());
         }
 
         protected override void UpdateState(BoundUserInterfaceState state)

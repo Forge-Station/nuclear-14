@@ -1,4 +1,4 @@
-﻿ <cartridges:LogProbeUiFragment xmlns="https://spacestation14.io"
+ <cartridges:LogProbeUiFragment xmlns="https://spacestation14.io"
                                 xmlns:cartridges="clr-namespace:Content.Client.CartridgeLoader.Cartridges"
                                 xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
                                 Orientation="Vertical"
@@ -26,16 +26,20 @@
                    Visible="False"/>
             <!-- DeltaV end -->
 
-            <!-- DeltaV begin - Adjust column headers -->
             <BoxContainer Orientation="Horizontal">
                 <Label Align="Right" SetWidth="26" ClipText="True" Text="{Loc 'log-probe-label-number'}"/>
                 <Label Align="Center" SetWidth="100" ClipText="True" Text="{Loc 'log-probe-label-time'}"/>
+                <!-- DeltaV - named for NanoChat view -->
                 <Label Name="ContentLabel" Align="Left" SetWidth="390" ClipText="True" Text="{Loc 'log-probe-label-accessor'}"/>
             </BoxContainer>
-            <!-- DeltaV end -->
         </BoxContainer>
     </PanelContainer>
     <ScrollContainer VerticalExpand="True" HScrollEnabled="True">
         <BoxContainer Orientation="Vertical" Name="ProbedDeviceContainer"/>
     </ScrollContainer>
+    <BoxContainer Orientation="Horizontal" Margin="4 8">
+        <Button Name="PrintButton" HorizontalAlignment="Left" Text="{Loc 'log-probe-print-button'}" Disabled="True"/>
+        <BoxContainer HorizontalExpand="True"/>
+        <Label Name="EntityName" Align="Right"/>
+    </BoxContainer>
 </cartridges:LogProbeUiFragment>

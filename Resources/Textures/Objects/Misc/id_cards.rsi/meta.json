@@ -1,175 +1,39 @@
 {
     "version": 1,
     "license": "CC-BY-SA-3.0",
-    "copyright": "Taken from https://github.com/tgstation/tgstation // Icon Edit by FoxxoTrystan",
+	"copyright": "Taken and modified from /tg/station 13 at commit https://github.com/tgstation/tgstation/commit/d917f4c, edited by AJCM-git, CrudeWax, and DinnerCalzone (github) | inhands taken and modified from /vg/station13 at https://github.com/vgstation-coders/vgstation13/blob/2c2b9966ea0d03b10e6e9c59626f72bbe8475d9d/icons/mob/in-hand/left/items_lefthand.dmi | pirate made by brainfood1183 (github) | wizard by ScarkKy0 (github) | stripe_cluwne by brainfood1183 (github) | black-inhands by DinnerCalzone (github), ninja made by ThatGuyUSA (github)",
     "size": {
         "x": 32,
         "y": 32
     },
     "states": [
         {
-            "name": "default"
-        },
-        {
-            "name": "centcom"
-        },
-        {
-            "name": "idcentcom"
-        },
-        {
-            "name": "gold"
-        },
-        {
-            "name": "silver"
-        },
-        {
-            "name": "rainbow"
-        },
-        {
-            "name": "prisoner"
-        },
-        {
-            "name": "flame"
-        },
-        {
-            "name": "rpg"
-        },
-        {
-            "name": "carp"
+            "name": "admin"
         },
         {
             "name": "black"
         },
         {
-            "name": "department"
-        },
-        {
-            "name": "departmenthead"
-        },
-        {
-            "name": "subdepartment"
-        },
-        {
-            "name": "captain"
-        },
-        {
-            "name": "passenger"
-        },
-        {
-            "name": "assistant"
-        },
-        {
-            "name": "securityofficer"
-        },
-        {
-            "name": "warden"
-        },
-        {
-            "name": "stationengineer"
-        },
-        {
-            "name": "medicaldoctor"
-        },
-        {
-            "name": "paramedic"
-        },
-        {
-            "name": "chemist"
-        },
-        {
-            "name": "cargotechnician"
-        },
-        {
-            "name": "shaftminer"
-        },
-        {
-            "name": "scientist"
-        },
-        {
-            "name": "clown"
-        },
-        {
-            "name": "mime"
-        },
-        {
-            "name": "chaplain"
-        },
-        {
-            "name": "janitor"
-        },
-        {
-            "name": "bartender"
-        },
-        {
-            "name": "cook"
-        },
-        {
-            "name": "botanist"
-        },
-        {
-            "name": "curator"
-        },
-        {
-            "name": "lawyer"
-        },
-        {
-            "name": "headofpersonnel"
-        },
-        {
-            "name": "cc"
-        },
-        {
-            "name": "musician"
-        },
-        {
-            "name": "death"
-        },
-        {
-            "name": "roboticist"
-        },
-        {
-            "name": "atmospherictechnician"
-        },
-        {
-            "name": "syndicate"
-        },
-        {
-            "name": "geneticist"
-        },
-        {
-            "name": "zookeeper"
-        },
-        {
-            "name": "detective"
-        },
-        {
-            "name": "senior"
-        },
-        {
-            "name": "mailcarrier"
-        },
-        {
-            "name": "prisonguard"
-        },
-        {
-            "name": "psychologist"
-        },
-        {
-            "name": "boxer"
-        },
-        {
-            "name": "gladiator"
-        },
-        {
-            "name": "martialartist"
-        },
-        {
-            "name": "gold-inhand-left",
+            "name": "black-inhand-left",
             "directions": 4
         },
         {
-            "name": "gold-inhand-right",
+            "name": "black-inhand-right",
             "directions": 4
+        },
+        {
+            "name": "blue-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "blue-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "centcom"
+        },
+        {
+            "name": "default"
         },
         {
             "name": "default-inhand-left",
@@ -180,12 +44,49 @@
             "directions": 4
         },
         {
-            "name": "silver-inhand-left",
+            "name": "gold"
+        },
+        {
+            "name": "gold-inhand-left",
             "directions": 4
         },
         {
-            "name": "silver-inhand-right",
+            "name": "gold-inhand-right",
             "directions": 4
+        },
+        {
+            "name": "green-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "green-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "icon-captain"
+        },
+        {
+            "name": "makeshift"
+        },
+        {
+            "name": "makeshift_base"
+        },
+        {
+            "name": "makeshift_soldered"
+        },
+        {
+            "name": "makeshift-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "makeshift-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "ninja"
+        },
+        {
+            "name": "orange"
         },
         {
             "name": "orange-inhand-left",
@@ -196,12 +97,30 @@
             "directions": 4
         },
         {
-            "name": "blue-inhand-left",
+            "name": "pirate"
+        },
+        {
+            "name": "silver"
+        },
+        {
+            "name": "silver-inhand-left",
             "directions": 4
         },
         {
-            "name": "blue-inhand-right",
+            "name": "silver-inhand-right",
             "directions": 4
+        },
+        {
+            "name": "stripe_bottom"
+        },
+        {
+            "name": "stripe_clown"
+        },
+        {
+            "name": "stripe_top"
+        },
+        {
+            "name": "wizard"
         }
     ]
 }

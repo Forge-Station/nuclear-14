@@ -1,10 +1,9 @@
-﻿<Control xmlns="https://spacestation14.io"
+<Control xmlns="https://spacestation14.io"
          xmlns:pt="clr-namespace:Content.Client.Administration.UI.Tabs.PlayerTab"
-         xmlns:cc="clr-namespace:Content.Client.Administration.UI.CustomControls"
          xmlns:co="clr-namespace:Content.Client.UserInterface.Controls">
     <BoxContainer Orientation="Vertical">
         <BoxContainer Orientation="Horizontal">
-            <Label Name="PlayerCount" HorizontalExpand="True" Text="{Loc Player Count}" />
+            <Label Name="PlayerCount" HorizontalExpand="True" Text="{Loc player-tab-player-count}" />
             <LineEdit Name="SearchLineEdit" HorizontalExpand="True"
                       PlaceHolder="{Loc player-tab-filter-line-edit-placeholder}" />
             <Button Name="ShowDisconnectedButton" HorizontalExpand="True"
@@ -13,7 +12,7 @@
         </BoxContainer>
         <Control MinSize="0 5"/>
         <pt:PlayerTabHeader Name="ListHeader"/>
-        <cc:HSeparator/>
+        <co:Separator StyleClasses="LowDivider" MinWidth="2" />
         <co:SearchListContainer Name="SearchList" Access="Public" VerticalExpand="True"/>
     </BoxContainer>
 </Control>

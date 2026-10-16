@@ -6,8 +6,10 @@ using Robust.Shared.Console;
 namespace Content.Server.Atmos.Commands
 {
     [AdminCommand(AdminFlags.Debug)]
-    public sealed class ShowAtmos : IConsoleCommand
+    public sealed partial class ShowAtmos : IConsoleCommand
     {
+        [Dependency] private IEntityManager _e = default!;
+
         public string Command => "showatmos";
         public string Description => "Toggles seeing atmos debug overlay.";
         public string Help => $"Usage: {Command}";
@@ -21,7 +23,7 @@ namespace Content.Server.Atmos.Commands
                 return;
             }
 
-            var atmosDebug = EntitySystem.Get<AtmosDebugOverlaySystem>();
+            var atmosDebug = _e.System<AtmosDebugOverlaySystem>();
             var enabled = atmosDebug.ToggleObserver(player);
 
             shell.WriteLine(enabled

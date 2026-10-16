@@ -1,12 +1,10 @@
-﻿using Content.Server.Anomaly.Components;
-using Content.Server.Construction;
+using Content.Server.Anomaly.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Shared.Anomaly;
 using Content.Shared.Anomaly.Components;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Research.Components;
-using Content.Server.Psionics.Glimmer;
 
 namespace Content.Server.Anomaly;
 
@@ -21,24 +19,10 @@ public sealed partial class AnomalySystem
     {
         SubscribeLocalEvent<AnomalyVesselComponent, ComponentShutdown>(OnVesselShutdown);
         SubscribeLocalEvent<AnomalyVesselComponent, MapInitEvent>(OnVesselMapInit);
-        SubscribeLocalEvent<AnomalyVesselComponent, UpgradeExamineEvent>(OnUpgradeExamine);
         SubscribeLocalEvent<AnomalyVesselComponent, InteractUsingEvent>(OnVesselInteractUsing);
         SubscribeLocalEvent<AnomalyVesselComponent, ExaminedEvent>(OnExamined);
         SubscribeLocalEvent<AnomalyVesselComponent, ResearchServerGetPointsPerSecondEvent>(OnVesselGetPointsPerSecond);
-        SubscribeLocalEvent<AnomalyShutdownEvent>(OnShutdown);
-        SubscribeLocalEvent<AnomalyStabilityChangedEvent>(OnStabilityChanged);
-    }
-
-    private void OnStabilityChanged(ref AnomalyStabilityChangedEvent args)
-    {
-        OnVesselAnomalyStabilityChanged(ref args);
-        OnScannerAnomalyStabilityChanged(ref args);
-    }
-
-    private void OnShutdown(ref AnomalyShutdownEvent args)
-    {
-        OnVesselAnomalyShutdown(ref args);
-        OnScannerAnomalyShutdown(ref args);
+        SubscribeLocalEvent<AnomalyShutdownEvent>(OnVesselAnomalyShutdown);
     }
 
     private void OnExamined(EntityUid uid, AnomalyVesselComponent component, ExaminedEvent args)
@@ -67,11 +51,6 @@ public sealed partial class AnomalySystem
         UpdateVesselAppearance(uid,  component);
     }
 
-    private void OnUpgradeExamine(EntityUid uid, AnomalyVesselComponent component, UpgradeExamineEvent args)
-    {
-        args.AddPercentageUpgrade("anomaly-vessel-component-upgrade-output", component.PointMultiplier);
-    }
-
     private void OnVesselInteractUsing(EntityUid uid, AnomalyVesselComponent component, InteractUsingEvent args)
     {
         if (component.Anomaly != null ||
@@ -83,14 +62,6 @@ public sealed partial class AnomalySystem
 
         if (!TryComp<AnomalyComponent>(anomaly, out var anomalyComponent) || anomalyComponent.ConnectedVessel != null)
             return;
-
-        // Nyano - Summary - Begin modified code block: tie anomaly harvesting to glimmer rate.
-        if (this.IsPowered(uid, EntityManager) &&
-            TryComp<GlimmerSourceComponent>(anomaly, out var glimmerSource))
-        {
-            glimmerSource.Active = true;
-        }
-        // Nyano - End modified code block.
 
         component.Anomaly = scanner.ScannedAnomaly;
         anomalyComponent.ConnectedVessel = uid;
@@ -157,21 +128,10 @@ public sealed partial class AnomalySystem
         if (_pointLight.TryGetLight(uid, out var pointLightComponent))
             _pointLight.SetEnabled(uid, on, pointLightComponent);
 
-        // arbitrary value for the generic visualizer to use.
-        // i didn't feel like making an enum for this.
-        var value = 1;
-        if (TryComp<AnomalyComponent>(component.Anomaly, out var anomalyComp))
-        {
-            if (anomalyComp.Stability <= anomalyComp.DecayThreshold)
-            {
-                value = 2;
-            }
-            else if (anomalyComp.Stability >= anomalyComp.GrowthThreshold)
-            {
-                value = 3;
-            }
-        }
-        Appearance.SetData(uid, AnomalyVesselVisuals.AnomalyState, value, appearanceComponent);
+        if (component.Anomaly == null || !TryGetStabilityVisual(component.Anomaly.Value, out var visual))
+            visual = AnomalyStabilityVisuals.Stable;
+
+        Appearance.SetData(uid, AnomalyVesselVisuals.AnomalySeverity, visual, appearanceComponent);
 
         _ambient.SetAmbience(uid, on);
     }

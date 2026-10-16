@@ -1,4 +1,4 @@
-﻿using Content.Server.NPC.Systems;
+using Content.Server.NPC.Systems;
 
 namespace Content.Server.NPC.Components;
 
@@ -21,10 +21,4 @@ public sealed partial class NPCRetaliationComponent : Component
     /// todo: this needs to support timeoffsetserializer at some point
     [DataField("attackMemories")]
     public Dictionary<EntityUid, TimeSpan> AttackMemories = new();
-
-    /// <summary>
-    ///     Whether this NPC will retaliate against a "Friendly" NPC.
-    /// </summary>
-    [DataField]
-    public bool RetaliateFriendlies;
 }

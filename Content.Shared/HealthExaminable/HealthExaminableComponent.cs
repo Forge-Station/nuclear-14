@@ -7,12 +7,8 @@ namespace Content.Shared.HealthExaminable;
 [RegisterComponent, Access(typeof(HealthExaminableSystem))]
 public sealed partial class HealthExaminableComponent : Component
 {
-    // <summary>
-    //     The thresholds for determining the examine text for certain amounts of damage.
-    //     These are calculated as a percentage of the entity's critical threshold.
-    // </summary>
     public List<FixedPoint2> Thresholds = new()
-        { FixedPoint2.New(0.10), FixedPoint2.New(0.25), FixedPoint2.New(0.50), FixedPoint2.New(0.75) };
+        { FixedPoint2.New(8), FixedPoint2.New(15), FixedPoint2.New(30), FixedPoint2.New(50), FixedPoint2.New(75), FixedPoint2.New(100), FixedPoint2.New(200) };
 
     [DataField(required: true)]
     public HashSet<ProtoId<DamageTypePrototype>> ExaminableTypes = default!;

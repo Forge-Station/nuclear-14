@@ -1,8 +1,9 @@
 - type: gameMap
-  id: CentCommMain
+  id: CentComm
+  isGrid: true # Did you know that centcomm is the only "game map" that isn't actually a map? Send help.
   mapName: 'Central Command'
-  mapPath: /Maps/CentralCommand/main.yml
-  minPlayers: 0
+  mapPath: /Maps/centcomm.yml
+  minPlayers: 10
   stations:
     centcomm:
       stationProto: NanotrasenCentralCommand

@@ -1,6 +1,6 @@
 - type: entity
   abstract: true
-  parent: BaseItem
+  parent: BaseSheet
   id: SheetMetalBase
   description: A sheet of metal, used often on the station in various applications.
   components:
@@ -8,29 +8,16 @@
     sprite: Objects/Materials/Sheets/metal.rsi
   - type: Item
     sprite: Objects/Materials/Sheets/metal.rsi
-    size: Normal
-  - type: StaticPrice
-    price: 0
   - type: Tag
     tags:
     - Sheet
     - Metal
-    - NoPaint
+    - ConstructionMaterial
   - type: Damageable
-    damageContainer: Inorganic
     damageModifierSet: Metallic
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-  - type: SolutionContainerManager
-    solutions:
-      steel:
-        canReact: false
+  - type: GuideHelp
+    guides:
+    - ExpandingRepairingStation
 
 - type: entity
   parent: SheetMetalBase
@@ -56,98 +43,13 @@
       map: ["base"]
   - type: Item
     heldPrefix: steel
-  - type: Appearance
-  - type: FloorTile
-    outputs:
-    - Plating
-  - type: Extractable
-    grindableSolutionName: steel
-  - type: SolutionContainerManager
-    solutions:
-      steel:
-        reagents:
-        - ReagentId: Iron
-          Quantity: 9
-        - ReagentId: Carbon
-          Quantity: 1
-  - type: UserInterface
-    interfaces:
-      enum.RadialSelectorUiKey.Key:
-        type: RadialSelectorMenuBUI
-  - type: ActivatableUI
-    key: enum.RadialSelectorUiKey.Key
-    inHandsOnly: true
-    requireActiveHand: false
-  - type: ShortConstruction
-    entries:
-    - prototype: Girder
-    - prototype: MetalRod
-    #- category:
-       # name: Tiles
-       # icon:
-       #   sprite: Objects/Tiles/tile.rsi
-       #   state: steel
-       # entries:
-       # - prototype: TileSteel
-       # - prototype: TileWhite
-       # - prototype: TileDark
-    #- category:
-     #   name: Electronics
-      #  icon:
-       #   sprite: Structures/Machines/computers.rsi
-        #  state: computer-datatheory
-       # entries:
-        #- prototype: MachineFrame
-        #- prototype: Computer
-        #- prototype: Windoor
-        #- prototype: LightTubeFixture
-        #- prototype: APC
-        #- prototype: AirAlarmFixture
-        #- prototype: AirSensor
-        #- prototype: FireAlarm
-    #- category:
-        #name: Atmospherics
-        #icon:
-          #sprite: Structures/Piping/Atmospherics/vent.rsi
-          #state: vent_out
-        #entries:
-        #- prototype: GasPort
-        #- prototype: GasOutletInjector
-        #- prototype: GasVentScrubber
-        #- prototype: GasPassiveVent
-        #- prototype: GasVentPump
-        #- prototype: GasMixer
-        #- prototype: GasFilter
-        #- prototype: GasVolumePump
-        #- prototype: GasPressurePump
-        #- prototype: GasValve
-    #- category:
-        #name: Piping
-        #icon:
-        #  sprite: Structures/Piping/Atmospherics/pipe.rsi
-        #  state: pipeFourway
-        #entries:
-        #- prototype: HeatExchanger
-        #- prototype: GasPipeBend
-        #- prototype: GasPipeFourway
-        #- prototype: GasPipeHalf
-        #- prototype: GasPipeStraight
-        #- prototype: GasPipeTJunction
-    #- category:
-       # name: Disposals
-       # icon:
-       #   sprite: Structures/Piping/disposal.rsi
-       #   state: disposal
-       # entries:
-       # - prototype: DisposalPipe
-       # - prototype: DisposalBend
-       # - prototype: DisposalJunction
-       # - prototype: DisposalYJunction
-       # - prototype: DisposalRouter
-       # - prototype: DisposalTagger
-       # - prototype: DisposalTrunk
-       # - prototype: DisposalUnit
-   # - prototype: CrateGenericSteel
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Iron
+        Quantity: 9
+      - ReagentId: Carbon
+        Quantity: 1
 
 - type: entity
   parent: SheetSteel
@@ -174,22 +76,12 @@
     count: 1
 
 - type: entity
-  parent: SheetSteel
-  id: SheetSteelLingering0
-  suffix: Lingering, 0
-  components:
-  - type: Stack
-    lingering: true
-    count: 0
-
-- type: entity
   parent: SheetMetalBase
   id: SheetBrass
   name: brass
   description: A sheet of brass, primarily used by clockwork enthusiasts and the remnants of Ratvarian cults.
   suffix: Full
   components:
-  - type: Material
   - type: PhysicalComposition
     materialComposition:
       Brass: 100
@@ -207,20 +99,11 @@
       map: ["base"]
   - type: Item
     heldPrefix: brass
-  - type: Appearance
-  - type: FloorTile
-    outputs:
-    - PlatingBrass
-  - type: Extractable
-    grindableSolutionName: brass
-  - type: SolutionContainerManager
-    solutions:
-      brass:
-        reagents:
-        - ReagentId: Zinc
-          Quantity: 3.3
-        - ReagentId: Copper
-          Quantity: 6.7
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Brass
+        Quantity: 10
 
 - type: entity
   parent: SheetBrass
@@ -252,7 +135,6 @@
   name: plasteel
   suffix: Full
   components:
-  - type: Material
   - type: PhysicalComposition
     materialComposition:
       Plasteel: 100
@@ -270,34 +152,16 @@
       map: ["base"]
   - type: Item
     heldPrefix: plasteel
-  - type: Appearance
-  - type: Extractable
-    grindableSolutionName: plasteel
-  - type: SolutionContainerManager
-    solutions:
-      plasteel:
-        reagents:
-        - ReagentId: Plasma
-          Quantity: 10
-        - ReagentId: Iron
-          Quantity: 9
-        - ReagentId: Carbon
-          Quantity: 1
-        canReact: false
-  - type: UserInterface
-    interfaces:
-      enum.RadialSelectorUiKey.Key:
-        type: RadialSelectorMenuBUI
-  - type: ActivatableUI
-    key: enum.RadialSelectorUiKey.Key
-    inHandsOnly: true
-    requireActiveHand: false
-  - type: ShortConstruction
-    entries:
-    - prototype: ReinforcedGirder # Forge-Add
-    # - prototype: SecureWindoor # Forge-Delete
-  - type: TwistedConstructionTarget
-    replacementProto: RunedMetal1
+  - type: Solution
+    solution:
+      maxVol: 20
+      reagents:
+      - ReagentId: Plasma
+        Quantity: 10
+      - ReagentId: Iron
+        Quantity: 9
+      - ReagentId: Carbon
+        Quantity: 1
 
 - type: entity
   parent: SheetPlasteel

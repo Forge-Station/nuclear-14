@@ -1,8 +1,6 @@
-using System.Threading.Tasks;
 using Content.Server.Administration;
 using Content.Shared.Administration;
 using Content.Shared.Procedural;
-using Content.Shared.Procedural.DungeonGenerators;
 using Robust.Shared.Console;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -31,7 +29,7 @@ public sealed partial class DungeonSystem
 
         var mapId = new MapId(mapInt);
 
-        if (!_prototype.TryIndex<DungeonConfigPrototype>(args[1], out var dungeon))
+        if (!ProtoMan.TryIndex<DungeonConfigPrototype>(args[1], out var dungeon))
         {
             shell.WriteError(Loc.GetString("cmd-dungen-config"));
             return;
@@ -44,13 +42,15 @@ public sealed partial class DungeonSystem
         }
 
         var position = new Vector2i(posX, posY);
-        var dungeonUid = _mapManager.GetMapEntityId(mapId);
+        var dungeonUid = _maps.GetMapOrInvalid(mapId);
 
         if (!TryComp<MapGridComponent>(dungeonUid, out var dungeonGrid))
         {
             dungeonUid = EntityManager.CreateEntityUninitialized(null, new EntityCoordinates(dungeonUid, position));
-            dungeonGrid = EntityManager.AddComponent<MapGridComponent>(dungeonUid);
+            dungeonGrid = AddComp<MapGridComponent>(dungeonUid);
             EntityManager.InitializeAndStartEntity(dungeonUid, mapId);
+            // If we created a grid (e.g. space dungen) then offset it so we don't double-apply positions
+            position = Vector2i.Zero;
         }
 
         int seed;
@@ -81,7 +81,7 @@ public sealed partial class DungeonSystem
 
         if (args.Length == 2)
         {
-            return CompletionResult.FromHintOptions(CompletionHelper.PrototypeIDs<DungeonConfigPrototype>(proto: _prototype), Loc.GetString("cmd-dungen-hint-config"));
+            return CompletionResult.FromHintOptions(CompletionHelper.PrototypeIDs<DungeonConfigPrototype>(proto: ProtoMan), Loc.GetString("cmd-dungen-hint-config"));
         }
 
         if (args.Length == 3)
@@ -116,9 +116,9 @@ public sealed partial class DungeonSystem
         }
 
         var mapId = new MapId(mapInt);
-        var mapUid = _mapManager.GetMapEntityId(mapId);
+        var mapUid = _maps.GetMapOrInvalid(mapId);
 
-        if (!_prototype.TryIndex<DungeonRoomPackPrototype>(args[1], out var pack))
+        if (!ProtoMan.TryIndex<DungeonRoomPackPrototype>(args[1], out var pack))
         {
             return;
         }
@@ -154,7 +154,7 @@ public sealed partial class DungeonSystem
             }
         }
 
-        grid.SetTiles(tiles);
+        _maps.SetTiles(mapUid, grid, tiles);
         shell.WriteLine(Loc.GetString("cmd-dungen_pack_vis"));
     }
 
@@ -172,9 +172,9 @@ public sealed partial class DungeonSystem
         }
 
         var mapId = new MapId(mapInt);
-        var mapUid = _mapManager.GetMapEntityId(mapId);
+        var mapUid =_maps.GetMapOrInvalid(mapId);
 
-        if (!_prototype.TryIndex<DungeonPresetPrototype>(args[1], out var preset))
+        if (!ProtoMan.TryIndex<DungeonPresetPrototype>(args[1], out var preset))
         {
             return;
         }
@@ -195,7 +195,7 @@ public sealed partial class DungeonSystem
             }
         }
 
-        grid.SetTiles(tiles);
+        _maps.SetTiles(mapUid, grid, tiles);
         shell.WriteLine(Loc.GetString("cmd-dungen_pack_vis"));
     }
 
@@ -208,7 +208,7 @@ public sealed partial class DungeonSystem
 
         if (args.Length == 2)
         {
-            return CompletionResult.FromOptions(CompletionHelper.PrototypeIDs<DungeonPresetPrototype>(proto: _prototype));
+            return CompletionResult.FromOptions(CompletionHelper.PrototypeIDs<DungeonPresetPrototype>(proto: ProtoMan));
         }
 
         return CompletionResult.Empty;
@@ -223,7 +223,7 @@ public sealed partial class DungeonSystem
 
         if (args.Length == 2)
         {
-            return CompletionResult.FromOptions(CompletionHelper.PrototypeIDs<DungeonRoomPackPrototype>(proto: _prototype));
+            return CompletionResult.FromOptions(CompletionHelper.PrototypeIDs<DungeonRoomPackPrototype>(proto: ProtoMan));
         }
 
         return CompletionResult.Empty;

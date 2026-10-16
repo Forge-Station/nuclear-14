@@ -6,7 +6,6 @@
   - type: Tag
     tags:
     - Knife
-  - type: Sharp
   - type: Execution
     doAfterDuration: 4.0
   - type: Utensil
@@ -14,43 +13,24 @@
       - Knife
   - type: MeleeWeapon
     wideAnimationRotation: -135
-    attackRate: .8
-    range: 1.5
     damage:
       types:
-        Slash: 8
-    heavyRateModifier: 1.25
-    heavyDamageBaseModifier: 1.2
-    maxTargets: 3
-    angle: 40
+        Slash: 10
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
-  - type: DamageOtherOnHit
-    staminaCost: 5
-  - type: EmbeddableProjectile
-    sound: /Audio/Weapons/star_hit.ogg
-  - type: EmbedPassiveDamage
   - type: Sprite
   - type: Item
     size: Small
   - type: Tool
     qualities:
-      - Slicing
+    - Slicing
     useSound:
       path: /Audio/Items/Culinary/chop.ogg
-  # Shitmed Change
-  - type: Scalpel
-    speed: 0.65
-  - type: SurgeryTool
-    startSound:
-      path: /Audio/Medical/Surgery/scalpel1.ogg
-    endSound:
-      path: /Audio/Medical/Surgery/scalpel2.ogg
 
 - type: entity
-  name: kitchen knife
   parent: BaseKnife
   id: KitchenKnife
+  name: kitchen knife
   description: A general purpose Chef's Knife made by Asters Merchant Guild. Guaranteed to stay sharp for years to come..
   components:
   - type: Tag
@@ -60,13 +40,28 @@
   - type: Sprite
     sprite: Objects/Weapons/Melee/kitchen_knife.rsi
     state: icon
-  - type: ThrowingAngle
-    angle: 225
   - type: Item
     sprite: Objects/Weapons/Melee/kitchen_knife.rsi
+    storedOffset: -1,1
+    storedRotation: -45
   - type: GuideHelp
     guides:
     - Chef
+    - FoodRecipes
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PolygonShape
+          vertices:
+          - -0.35,-0.2
+          - -0.2,-0.35
+          - 0.4,0.25
+          - 0.25,0.4
+        density: 20 # derived from base_item
+        mask:
+        - ItemMask
+        restitution: 0.3
+        friction: 0.2
 
 - type: entity
   name: butcher's cleaver
@@ -83,30 +78,35 @@
     state: butch
   - type: MeleeWeapon
     wideAnimationRotation: -115
-    attackRate: 1
+    attackRate: 1.5
     damage:
       types:
-        Slash: 8
-        Blunt: 1
-  - type: DamageOtherOnHit
-    staminaCost: 7.5
-  - type: ThrowingAngle
-    angle: 245
+        Slash: 13
   - type: Item
     size: Normal
     sprite: Objects/Weapons/Melee/cleaver.rsi
   - type: GuideHelp
     guides:
     - Chef
-  # Shitmed Change
-  - type: Scalpel
-    speed: 0.3
-  - type: BoneSaw
-    speed: 0.5
+    - FoodRecipes
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PolygonShape
+          vertices:
+          - -0.48,-0.15
+          - -0.3,-0.48
+          - 0.48,-0.075
+          - 0.3,0.3
+        density: 20 # derived from base_item
+        mask:
+        - ItemMask
+        restitution: 0.3
+        friction: 0.2
 
 - type: entity
   name: combat knife
-  parent: BaseKnife
+  parent: [BaseKnife, BaseSecurityContraband]
   id: CombatKnife
   description: A deadly knife intended for melee confrontations.
   components:
@@ -119,47 +119,60 @@
     state: icon
   - type: MeleeWeapon
     wideAnimationRotation: -135
-    attackRate: .6666
+    attackRate: 1.5
     damage:
       types:
         Slash: 12
   - type: EmbeddableProjectile
     sound: /Audio/Weapons/star_hit.ogg
+    offset: -0.15,0.0
   - type: LandAtCursor
   - type: DamageOtherOnHit
     damage:
       types:
-        Slash: 9
-  - type: ThrowingAngle
-    angle: 225
+        Slash: 10
   - type: Item
     sprite: Objects/Weapons/Melee/combat_knife.rsi
+    storedSprite:
+      state: storage
+      sprite: Objects/Weapons/Melee/combat_knife.rsi
   - type: DisarmMalus
     malus: 0.225
+  - type: ThrowingAngle
+    angle: 225
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PolygonShape
+          vertices:
+          - -0.4,-0.2
+          - -0.2,-0.4
+          - 0.4,0.2
+          - 0.2,0.4
+        density: 20 # derived from base_item
+        mask:
+        - ItemMask
+        restitution: 0.3
+        friction: 0.2
 
 - type: entity
   name: survival knife
-  parent: CombatKnife
+  parent: [BaseSecurityCargoContraband, CombatKnife]
   id: SurvivalKnife
   description: Weapon of first and last resort for combatting space carp.
   components:
   - type: Sprite
     sprite: Objects/Weapons/Melee/survival_knife.rsi
     state: icon
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: .8
-    damage:
-      types:
-        Slash: 8
-  - type: ThrowingAngle
-    angle: 225
   - type: Item
     sprite: Objects/Weapons/Melee/survival_knife.rsi
+    storedSprite:
+      state: storage
+      sprite: Objects/Weapons/Melee/survival_knife.rsi
 
 - type: entity
   name: kukri knife
-  parent: CombatKnife
+  parent: [BaseSecurityCargoContraband, CombatKnife]
   id: KukriKnife
   description: Professionals have standards. Be polite. Be efficient. Have a plan to kill everyone you meet.
   components:
@@ -168,17 +181,43 @@
     state: icon
   - type: MeleeWeapon
     attackRate: 1.0
-    range: 1.75
+    damage:
+      types:
+        Slash: 15
+  - type: Item
+    sprite: Objects/Weapons/Melee/kukri_knife.rsi
+    storedSprite: null
+
+- type: entity
+  parent: [ BaseXenoborgContraband, CombatKnife ]
+  id: XenoborgBioKnife
+  name: bio knife
+  description: Melds itself to specific metabolizers and will deal extra damage to those targets!
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/bioknife.rsi
+    state: icon
+  - type: MeleeWeapon
+    attackRate: 1.0
     damage:
       types:
         Slash: 10
-  - type: ThrowingAngle
-    angle: 225
   - type: Item
-    sprite: Objects/Weapons/Melee/kukri_knife.rsi
+    sprite: Objects/Weapons/Melee/bioknife.rsi
+  - type: BonusDamageOnMetabolism
+    selectedMetabolizer: Human
+    excludedMetabolizers:
+    - Vox # Their biology is resistant to this!
+    # The rest of these are just so we don't clog up the menu with useless items.
+    - Bloodsucker
+    - Dragon
+    - Changeling
+    damage:
+      types:
+        Poison: 10
 
 - type: entity
-  parent: ClothingHeadHatGreyFlatcap
+  parent: [ClothingHeadHatGreyFlatcap, BaseMinorContraband]
   id: BladedFlatcapGrey
   name: grey flatcap
   description: Fashionable for both the working class and old man Jenkins. It has glass shards hidden in the brim.
@@ -189,15 +228,15 @@
     node: icon
   - type: MeleeWeapon
     wideAnimationRotation: 90
-    attackRate: .83
+    attackRate: 1.2
     damage:
       types:
         Slash: 5
   - type: DamageOtherOnHit
-    staminaCost: 5
+    damage:
+      types:
+        Slash: 10
   - type: LandAtCursor
-  - type: EmbeddableProjectile
-  - type: EmbedPassiveDamage
   - type: Sprite
     sprite: Clothing/Head/Hats/greyflatcap.rsi
   - type: Clothing
@@ -207,7 +246,7 @@
   parent: BladedFlatcapGrey
   id: BladedFlatcapBrown
   name: brown flatcap
-  description: Stupid clown! You made me look bad! It has glass shards hidden in the brim.
+  description: "\"Stupid clown! You made me look bad!\" It has glass shards hidden in the brim."
   components:
   - type: Construction
     graph: BladedFlatcapBrown
@@ -218,7 +257,7 @@
 
 - type: entity
   name: shiv
-  parent: BaseKnife
+  parent: [BaseKnife, BaseMinorContraband]
   id: Shiv
   description: A crude weapon fashioned from a piece of cloth and a glass shard.
   components:
@@ -234,17 +273,28 @@
     sprite: Objects/Weapons/Melee/shiv.rsi
     state: icon
   - type: MeleeWeapon
-    attackRate: .57
-    range: 1.4
+    attackRate: 1.5
     damage:
       types:
         Slash: 5.5
-  - type: ThrowingAngle
-    angle: 200
   - type: Item
     sprite: Objects/Weapons/Melee/shiv.rsi
   - type: DisarmMalus
     malus: 0.225
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PolygonShape
+          vertices:
+          - -0.365,-0.265
+          - 0.077,-0.45
+          - 0.364,0.323
+          - -0.0735,0.49
+        density: 20 # derived from base_item
+        mask:
+        - ItemMask
+        restitution: 0.3
+        friction: 0.2
 
 - type: entity
   name: reinforced shiv
@@ -256,6 +306,7 @@
     graph: ReinforcedShiv
     node: icon
   - type: MeleeWeapon
+    attackRate: 1.5
     damage:
       types:
         Slash: 7 #each "tier" grants an additional 2 damage
@@ -274,9 +325,10 @@
     graph: PlasmaShiv
     node: icon
   - type: MeleeWeapon
+    attackRate: 1.5
     damage:
       types:
-        Slash: 8.5
+        Slash: 9
   - type: Item
     sprite: Objects/Weapons/Melee/plasma_shiv.rsi
   - type: Sprite
@@ -292,9 +344,10 @@
     graph: UraniumShiv
     node: icon
   - type: MeleeWeapon
+    attackRate: 1.5
     damage:
       types:
-        Slash: 6.5
+        Slash: 7
         Radiation: 4
   - type: Item
     sprite: Objects/Weapons/Melee/uranium_shiv.rsi
@@ -303,9 +356,9 @@
 
 - type: entity
   name: throwing knife
-  parent: BaseKnife
+  parent: [BaseKnife, BaseSyndicateContraband]
   id: ThrowingKnife
-  description: This bloodred knife is very aerodynamic and easy to throw, but good luck trying to fight someone hand-to-hand.
+  description: This blood-red knife is very aerodynamic and easy to throw, but good luck trying to fight someone hand-to-hand.
   components:
   - type: Tag
     tags:
@@ -316,18 +369,105 @@
     state: icon
   - type: MeleeWeapon
     wideAnimationRotation: -135
-    attackRate: .5
+    attackRate: 2
     damage:
       types:
         Slash: 5
   - type: EmbeddableProjectile
     sound: /Audio/Weapons/star_hit.ogg
+    offset: -0.15,0.0
+    removalTime: 1.5
   - type: LandAtCursor
   - type: DamageOtherOnHit
-    # Forge Change: ignoreResistances: true
+    ignoreResistances: true
     damage:
       types:
         Slash: 10
         Piercing: 15
   - type: Item
     sprite: Objects/Weapons/Melee/throwing_knife.rsi
+  - type: ThrowingAngle
+    angle: 225
+  - type: StaticPrice
+    price: 500 # 4000 for a set of 8
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PolygonShape
+          radius: 0.01
+          vertices:
+          - -0.35,-0.2
+          - -0.2,-0.35
+          - 0.4,0.25
+          - 0.25,0.4
+        density: 20 # derived from base_item
+        mask:
+        - ItemMask
+        restitution: 0.3
+        friction: 0.2
+
+- type: entity
+  name: utility knife
+  parent: BaseItem
+  id: UtilityKnife
+  description: A knife with a retractable, tiny blade. Useful as a box cutter and letter opener, among other things.
+  components:
+  - type: Appearance
+  - type: ComponentToggler
+    components:
+    - type: Execution
+      doAfterDuration: 4.0
+    - type: Utensil
+      types:
+      - Knife
+    - type: Tool
+      qualities:
+      - Slicing
+      useSound:
+        path: /Audio/Items/Culinary/chop.ogg
+  - type: Item
+    size: Tiny
+    sprite: Objects/Weapons/Melee/utility_knife.rsi
+  - type: ItemToggleExaminableStatus
+    onText: item-toggle-examined-active
+    offText: item-toggle-examined-not-active
+  - type: ItemToggle
+    soundActivate:
+      path: /Audio/Weapons/utilityknifeopen.ogg
+    soundDeactivate:
+      path: /Audio/Weapons/utilityknifeclose.ogg
+  - type: ItemToggleMeleeWeapon
+    activatedSoundOnHit:
+      path: /Audio/Weapons/bladeslice.ogg
+    activatedDamage:
+      types:
+        Slash: 4
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    attackRate: 1
+    damage:
+      types:
+        Blunt: 1
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 50
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/utility_knife.rsi
+    layers:
+    - state: utility_knife_handle
+    - state: utility_knife_blade
+      visible: false
+      map: [ "blade" ]
+  - type: Tag
+    tags:
+    - Knife
+    - UtilityKnife
+  - type: ToggleableVisuals
+    spriteLayer: blade
+    inhandVisuals:
+      left:
+      - state: inhand-left-blade
+      right:
+      - state: inhand-right-blade
+  - type: UseDelay
+    delay: 0.2

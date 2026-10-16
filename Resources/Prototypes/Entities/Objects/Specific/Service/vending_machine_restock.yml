@@ -1,7 +1,7 @@
 - type: entity
-  parent: BaseItem
-  id: BaseVendingMachineRestock
   abstract: true
+  parent: [ BaseItem, BaseItemDestructible ]
+  id: BaseVendingMachineRestock
   name: vending machine restock box
   description: A box for restocking vending machines with corporate goodies.
   components:
@@ -28,26 +28,17 @@
   - type: Item
     size: Normal
   - type: Damageable
-    damageContainer: Inorganic
     damageModifierSet: Metallic
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 40
-      behaviors:
-        - !type:DoActsBehavior
-          acts: [ "Destruction" ]
-    - trigger:
-        !type:DamageTrigger
-        damage: 20
+        damage: 50
       behaviors:
       - !type:PlaySoundBehavior
         sound:
           collection: MetalBreak
       - !type:DumpRestockInventory
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
 
 - type: entity
   parent: BaseVendingMachineRestock
@@ -286,6 +277,8 @@
     canRestock:
     - NanoMedInventory
     - NanoMedPlusInventory
+    - NanoMedCivilianInventory
+    - NanoMedCivilianWallInventory
   - type: Sprite
     layers:
     - state: base
@@ -341,6 +334,7 @@
     - SpaceUpInventory
     - SodaInventory
     - DrGibbInventory
+    - SmiteInventory
   - type: Sprite
     layers:
     - state: base
@@ -466,7 +460,7 @@
   parent: BaseVendingMachineRestock
   id: VendingMachineRestockHappyHonk
   name: Happy Honk restock box
-  description: place this box full of fun into the restock slot on the Happy Honk Dispenser to begin.
+  description: Place this box full of fun into the restock slot on the Happy Honk Dispenser to begin.
   components:
   - type: VendingMachineRestock
     canRestock:

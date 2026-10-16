@@ -45,6 +45,7 @@ public sealed partial class DoAfterArgs
     [DataField]
     public EntityUid? ShowTo;
 
+    [DataField]
     public NetEntity? NetShowTo;
 
     /// <summary>
@@ -53,9 +54,11 @@ public sealed partial class DoAfterArgs
     [DataField]
     public bool Hidden;
 
-    /// Whether the delay multiplier event should be raised
+    /// <summary>
+    ///     String that will be added to the examine window of the entity.
+    /// </summary>
     [DataField]
-    public bool MultiplyDelay = true;
+    public string? ExamineText;
 
     #region Event options
     /// <summary>
@@ -96,6 +99,18 @@ public sealed partial class DoAfterArgs
     public bool NeedHand;
 
     /// <summary>
+    /// Whether or not this do after requires your active hand to be empty,
+    /// </summary>
+    [DataField]
+    public bool NeedFreeHand;
+
+    /// <summary>
+    /// Whether or not this do after requires you to have any empty hand,
+    /// </summary>
+    [DataField]
+    public bool NeedAnyFreeHand;
+
+    /// <summary>
     ///     Whether we need to keep our active hand as is (i.e. can't change hand or change item). This also covers
     ///     requiring the hand to be free (if applicable). This does nothing if <see cref="NeedHand"/> is false.
     /// </summary>
@@ -133,7 +148,7 @@ public sealed partial class DoAfterArgs
     ///     Threshold for distance user from the used OR target entities.
     /// </summary>
     [DataField]
-    public float? DistanceThreshold;
+    public float? DistanceThreshold = 1.5f;
 
     /// <summary>
     ///     Whether damage will cancel the DoAfter. See also <see cref="DamageThreshold"/>.
@@ -228,6 +243,10 @@ public sealed partial class DoAfterArgs
         NetShowTo = entManager.GetNetEntity(ShowTo); // Goobstation - Show doAfter popup to another entity
     }
 
+    private DoAfterArgs()
+    {
+    }
+
     /// <summary>
     ///     Creates a new set of DoAfter arguments.
     /// </summary>
@@ -258,10 +277,14 @@ public sealed partial class DoAfterArgs
         Delay = other.Delay;
         Target = other.Target;
         Used = other.Used;
+        ShowTo = other.ShowTo; // Goobstation - Show doAfter popup to another entity
         Hidden = other.Hidden;
+        ExamineText = other.ExamineText;
         EventTarget = other.EventTarget;
         Broadcast = other.Broadcast;
         NeedHand = other.NeedHand;
+        NeedFreeHand = other.NeedFreeHand;
+        NeedAnyFreeHand = other.NeedAnyFreeHand;
         BreakOnHandChange = other.BreakOnHandChange;
         BreakOnDropItem = other.BreakOnDropItem;
         BreakOnMove = other.BreakOnMove;
@@ -275,16 +298,13 @@ public sealed partial class DoAfterArgs
         BlockDuplicate = other.BlockDuplicate;
         CancelDuplicate = other.CancelDuplicate;
         DuplicateCondition = other.DuplicateCondition;
-        ShowTo = other.ShowTo; // Goobstation - Show doAfter popup to another entity
-
-        MultiplyDelay = other.MultiplyDelay; // Goobstation
 
         // Networked
         NetUser = other.NetUser;
         NetTarget = other.NetTarget;
         NetUsed = other.NetUsed;
-        NetEventTarget = other.NetEventTarget;
         NetShowTo = other.NetShowTo; // Goobstation - Show doAfter popup to another entity
+        NetEventTarget = other.NetEventTarget;
 
         Event = other.Event.Clone();
     }
@@ -334,6 +354,7 @@ public enum DuplicateConditions : byte
     All = SameTool | SameTarget | SameEvent,
 }
 
+[Serializable, NetSerializable]
 public enum AttemptFrequency : byte
 {
     /// <summary>

@@ -1,8 +1,8 @@
 using Content.Server.Antag.Components;
 using Content.Server.Objectives;
+using Content.Shared.Antag;
 using Content.Shared.Mind;
 using Content.Shared.Objectives.Components;
-using Content.Shared.Objectives.Systems;
 using Robust.Shared.Random;
 
 namespace Content.Server.Antag;
@@ -10,11 +10,11 @@ namespace Content.Server.Antag;
 /// <summary>
 /// Adds fixed objectives to an antag made with <c>AntagRandomObjectivesComponent</c>.
 /// </summary>
-public sealed class AntagRandomObjectivesSystem : EntitySystem
+public sealed partial class AntagRandomObjectivesSystem : EntitySystem
 {
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly SharedMindSystem _mind = default!;
-    [Dependency] private readonly ObjectivesSystem _objectives = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private SharedMindSystem _mind = default!;
+    [Dependency] private ObjectivesSystem _objectives = default!;
 
     public override void Initialize()
     {
@@ -39,7 +39,8 @@ public sealed class AntagRandomObjectivesSystem : EntitySystem
 
             for (var pick = 0; pick < set.MaxPicks && ent.Comp.MaxDifficulty > difficulty; pick++)
             {
-                if (_objectives.GetRandomObjective(mindId, mind, set.Groups) is not {} objective)
+                var remainingDifficulty = ent.Comp.MaxDifficulty - difficulty;
+                if (_objectives.GetRandomObjective(mindId, mind, set.Groups, remainingDifficulty) is not { } objective)
                     continue;
 
                 _mind.AddObjective(mindId, mind, objective);

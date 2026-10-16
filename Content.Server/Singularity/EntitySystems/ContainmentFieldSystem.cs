@@ -1,6 +1,6 @@
-﻿using Content.Server.Popups;
-using Content.Server.Shuttles.Components;
+using Content.Server.Popups;
 using Content.Server.Singularity.Events;
+using Content.Shared.Shuttles.Components;
 using Content.Shared.Popups;
 using Content.Shared.Singularity.Components;
 using Content.Shared.Throwing;
@@ -9,10 +9,11 @@ using Robust.Shared.Physics.Events;
 
 namespace Content.Server.Singularity.EntitySystems;
 
-public sealed class ContainmentFieldSystem : EntitySystem
+public sealed partial class ContainmentFieldSystem : EntitySystem
 {
-    [Dependency] private readonly ThrowingSystem _throwing = default!;
-    [Dependency] private readonly PopupSystem _popupSystem = default!;
+    [Dependency] private ThrowingSystem _throwing = default!;
+    [Dependency] private PopupSystem _popupSystem = default!;
+    [Dependency] private SharedTransformSystem _transformSystem = default!;
 
     public override void Initialize()
     {
@@ -26,7 +27,7 @@ public sealed class ContainmentFieldSystem : EntitySystem
     {
         var otherBody = args.OtherEntity;
 
-        if (HasComp<SpaceGarbageComponent>(otherBody))
+        if (component.DestroyGarbage && HasComp<SpaceGarbageComponent>(otherBody))
         {
             _popupSystem.PopupEntity(Loc.GetString("comp-field-vaporized", ("entity", otherBody)), uid, PopupType.LargeCaution);
             QueueDel(otherBody);
@@ -34,8 +35,8 @@ public sealed class ContainmentFieldSystem : EntitySystem
 
         if (TryComp<PhysicsComponent>(otherBody, out var physics) && physics.Mass <= component.MaxMass && physics.Hard)
         {
-            var fieldDir = Transform(uid).WorldPosition;
-            var playerDir = Transform(otherBody).WorldPosition;
+            var fieldDir = _transformSystem.GetWorldPosition(uid);
+            var playerDir = _transformSystem.GetWorldPosition(otherBody);
 
             _throwing.TryThrow(otherBody, playerDir-fieldDir, baseThrowSpeed: component.ThrowForce);
         }

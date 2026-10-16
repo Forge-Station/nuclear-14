@@ -1,11 +1,5 @@
-﻿- type: decal
-  id: Markup
-  parent: Overlays
-  abstract: true
-
 - type: decal
   id: MarkupSquare
-  parent: Markup
   tags: ["overlay"]
   defaultCustomColor: true
   sprite:
@@ -14,7 +8,6 @@
 
 - type: decal
   id: MarkupRectangle1x2
-  parent: Markup
   tags: ["overlay"]
   defaultCustomColor: true
   sprite:
@@ -23,7 +16,6 @@
 
 - type: decal
   id: MarkupRectangle1x2Center
-  parent: Markup
   tags: ["overlay"]
   defaultCustomColor: true
   sprite:
@@ -32,7 +24,6 @@
 
 - type: decal
   id: MarkupSquareQuater
-  parent: Markup
   tags: ["overlay"]
   defaultCustomColor: true
   sprite:
@@ -41,7 +32,6 @@
 
 - type: decal
   id: MarkupSquareQuaterCenter
-  parent: Markup
   tags: ["overlay"]
   defaultCustomColor: true
   sprite:

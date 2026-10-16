@@ -12,13 +12,12 @@ namespace Content.Server.Physics.Controllers;
 /// <summary>
 /// A component which makes its entity periodically chaotic jumps arounds
 /// </summary>
-public sealed class ChaoticJumpSystem : VirtualController
+public sealed partial class ChaoticJumpSystem : VirtualController
 {
-    [Dependency] private readonly IGameTiming _gameTiming = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly SharedPhysicsSystem _physics = default!;
-    [Dependency] private readonly SharedTransformSystem _xform = default!;
+    [Dependency] private IGameTiming _gameTiming = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private SharedPhysicsSystem _physics = default!;
 
     public override void Initialize()
     {
@@ -73,6 +72,6 @@ public sealed class ChaoticJumpSystem : VirtualController
 
         Spawn(component.Effect, transform.Coordinates);
 
-        _xform.SetWorldPosition(uid, targetPos);
+        _transform.SetWorldPosition(uid, targetPos);
     }
 }

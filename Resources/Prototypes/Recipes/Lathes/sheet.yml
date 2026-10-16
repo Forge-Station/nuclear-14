@@ -1,8 +1,6 @@
 - type: latheRecipe
   id: SheetSteel
   result: SheetSteel1
-  applyMaterialDiscount: false
-  miningPoints: 1
   completetime: 0
   materials:
     RawIron: 100
@@ -19,8 +17,6 @@
 - type: latheRecipe
   id: SheetGlass1
   result: SheetGlass1
-  applyMaterialDiscount: false
-  miningPoints: 1
   completetime: 0
   materials:
     RawQuartz: 100
@@ -32,15 +28,24 @@
   materials:
     RawQuartz: 3000
 
+# This version is for the autolathe
 - type: latheRecipe
   id: SheetRGlass
   result: SheetRGlass1
-  applyMaterialDiscount: false
-  miningPoints: 1
+  applyMaterialDiscount: false # obvious dupe capabilities
   completetime: 0
   materials:
     Glass: 100
     Steel: 50
+
+# This version is for the ore processor
+- type: latheRecipe
+  id: SheetRGlassRaw
+  result: SheetRGlass1
+  completetime: 0
+  materials:
+    RawQuartz: 100
+    RawIron: 50
     Coal: 15
 
 - type: latheRecipe
@@ -56,7 +61,6 @@
   id: SheetPGlass1
   result: SheetPGlass1
   completetime: 0
-  miningPoints: 16
   materials:
     RawQuartz: 100
     RawPlasma: 100
@@ -73,7 +77,6 @@
   id: SheetRPGlass1
   result: SheetRPGlass1
   completetime: 0
-  miningPoints: 16
   materials:
     RawQuartz: 100
     RawPlasma: 100
@@ -94,7 +97,6 @@
   id: SheetPlasma1
   result: SheetPlasma1
   completetime: 0
-  miningPoints: 15
   materials:
     RawPlasma: 100
 
@@ -109,7 +111,6 @@
   id: SheetPlasteel1
   result: SheetPlasteel1
   completetime: 0
-  miningPoints: 17
   materials:
     RawPlasma: 100
     RawIron: 200 #Twice as durable as steel, Twice the material cost
@@ -135,7 +136,6 @@
   id: SheetUGlass1
   result: SheetUGlass1
   completetime: 0
-  miningPoints: 31
   materials:
     RawUranium: 100
     RawQuartz: 100
@@ -152,7 +152,6 @@
   id: SheetRUGlass1
   result: SheetRUGlass1
   completetime: 0
-  miningPoints: 31
   materials:
     RawUranium: 100
     RawQuartz: 100
@@ -194,7 +193,6 @@
   id: MaterialDiamond
   result: MaterialDiamond1
   completetime: 0
-  miningPoints: 50
   materials:
     RawDiamond: 100
 
@@ -202,7 +200,6 @@
   id: SheetUranium1
   result: SheetUranium1
   completetime: 0
-  miningPoints: 30
   materials:
     RawUranium: 100
 
@@ -210,7 +207,6 @@
   id: IngotGold1
   result: IngotGold1
   completetime: 0
-  miningPoints: 18
   materials:
     RawGold: 100
 
@@ -218,7 +214,6 @@
   id: IngotSilver1
   result: IngotSilver1
   completetime: 0
-  miningPoints: 16
   materials:
     RawSilver: 100
 
@@ -234,7 +229,6 @@
   id: MaterialBananium1
   result: MaterialBananium1
   completetime: 0
-  miningPoints: 60
   materials:
     RawBananium: 100
 
@@ -253,35 +247,17 @@
     Wood: 50
 
 - type: latheRecipe
-  id: CoreSilver
-  icon:
-    sprite: Objects/Misc/guardian_info.rsi
-    state: icon
-  result: CoreSilver
-  completetime: 10
+  id: MaterialClothCotton
+  result: MaterialCloth1
+  completetime: 1
   materials:
-    Bluespace: 500
-    Silver: 1000
-    Plastic: 1000
+    Cotton: 200 #my pyrocloth keeps catching on fire whenever I make it!
 
 - type: latheRecipe
-  id: BluespaceCrystal
-  icon:
-    sprite: Objects/Materials/materials.rsi
-    state: bluespace
-  result: MaterialBluespace1
+  id: MaterialDurathread
+  result: MaterialDurathread1
   applyMaterialDiscount: false
-  completetime: 4
+  completetime: 0
   materials:
-    RawBluespace: 100
-
-- type: latheRecipe
-  id: NormalityCrystal
-  icon:
-    sprite: Objects/Materials/materials.rsi
-    state: normality
-  result: MaterialNormality1
-  applyMaterialDiscount: false
-  completetime: 4
-  materials:
-    RawNormality: 100
+    Cloth: 100
+    Plastic: 100

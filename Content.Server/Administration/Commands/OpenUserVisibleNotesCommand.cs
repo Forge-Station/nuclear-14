@@ -7,10 +7,10 @@ using Robust.Shared.Console;
 namespace Content.Server.Administration.Commands;
 
 [AnyCommand]
-public sealed class OpenUserVisibleNotesCommand : IConsoleCommand
+public sealed partial class OpenUserVisibleNotesCommand : IConsoleCommand
 {
-    [Dependency] private readonly IConfigurationManager _configuration = default!;
-    [Dependency] private readonly IAdminNotesManager _notes = default!;
+    [Dependency] private IConfigurationManager _configuration = default!;
+    [Dependency] private IAdminNotesManager _notes = default!;
 
     public const string CommandName = "adminremarks";
 
@@ -28,7 +28,7 @@ public sealed class OpenUserVisibleNotesCommand : IConsoleCommand
 
         if (shell.Player is not { } player)
         {
-            shell.WriteError("This does not work from the server console.");
+            shell.WriteError(Loc.GetString("shell-cannot-run-command-from-server"));
             return;
         }
 

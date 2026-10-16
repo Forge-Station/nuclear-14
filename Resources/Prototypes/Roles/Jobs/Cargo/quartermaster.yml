@@ -3,27 +3,28 @@
   name: job-name-qm
   description: job-description-qm
   playTimeTracker: JobQuartermaster
-  antagAdvantage: 6 # DeltaV - Reduced TC: Head of Staff
-  # requirements:
-    # - !type:CharacterTraitRequirement
-      # inverted: true
-      # traits:
-        # - Foreigner
-        # - ForeignerLight
-  weight: 10
+  requirements:
+    - !type:RoleTimeRequirement
+      role: JobCargoTechnician
+      time: 5h
+    - !type:RoleTimeRequirement
+      role: JobSalvageSpecialist
+      time: 2.5h
+    - !type:DepartmentTimeRequirement
+      department: Cargo
+      time: 10h
   startingGear: QuartermasterGear
   icon: "JobIconQuarterMaster"
   supervisors: job-supervisors-captain
-  canBeAntag: false
+  guides: [ Command ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Cargo
   - Salvage
-  - Mail # Nyanotrasen - MailCarrier, see Resources/Prototypes/Nyanotrasen/Roles/Jobs/Cargo/mail-carrier.yml
   - Quartermaster
   - Maintenance
+  - External
   - Command
-  - Orders # DeltaV - Orders, see Resources/Prototypes/DeltaV/Access/cargo.yml
-  - External # DeltaV - for promoting salvage specialists
+  - Brig
   - Cryogenics
   special:
   - !type:AddImplantSpecial
@@ -31,32 +32,26 @@
   - !type:AddComponentSpecial
     components:
       - type: CommandStaff
-  afterLoadoutSpecial:
-  - !type:ModifyEnvirosuitSpecial
-    charges: 8
-  setPreference: false
 
 - type: startingGear
   id: QuartermasterGear
-  subGear:
-  - QuartermasterPlasmamanGear
   equipment:
-    head: ClothingHeadHatBeretLogi
-    jumpsuit: ClothingUniformJumpsuitQM
-    back: ClothingBackpackQuartermasterFilled
-    shoes: ClothingShoesColorBrown
     id: QuartermasterPDA
     ears: ClothingHeadsetQM
-    belt: BoxFolderClipboard
+    belt: BoxFolderClipboardThreePapers
     pocket1: AppraisalTool
-  innerClothingSkirt: ClothingUniformJumpskirtQM
-  satchel: ClothingBackpackSatchelQuartermasterFilled
-  duffelbag: ClothingBackpackDuffelQuartermasterFilled
+  storage:
+    back:
+    - Flash
 
-- type: startingGear
-  id: QuartermasterPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: QuartermasterChameleonOutfit
+  job: Quartermaster
+  hasMindShield: true
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitQM
-    head: ClothingHeadEnvirohelmQM
-    gloves: ClothingHandsGlovesEnviroglovesCargo
+    head: ClothingHeadHatQMsoft
+    eyes: ClothingEyesGlassesSunglasses
+    mask: ClothingMaskBreath
+    outerClothing: ClothingOuterWinterQM
+    neck: ClothingNeckCloakQm
+    gloves: ClothingHandsKnuckleDustersQM

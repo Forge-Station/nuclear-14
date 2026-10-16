@@ -1,44 +1,33 @@
 - type: entity
-  id: BaseShowcaseRobot
   abstract: true
-  parent: BaseStructure
+  parent: BaseStatue
+  id: BaseShowcaseRobot
   name: security robot showcase
   description: A non-functional replica of an old security robot.
-  categories: [ HideSpawnMenu ]
   components:
-    - type: Anchorable
-    - type: Damageable
-      damageContainer: Inorganic
-      damageModifierSet: Metallic
-    - type: Destructible
-      thresholds:
-        - trigger:
-            !type:DamageTrigger
-            damage: 150
-          behaviors:
-            - !type:DoActsBehavior
-              acts: [ "Destruction" ]
-        - trigger:
-            !type:DamageTrigger
-            damage: 75
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                PartRodMetal1:
-                  min: 5
-                  max: 10
-            - !type:DoActsBehavior
-              acts: [ "Destruction" ]
+  - type: Sprite
+    noRot: true
+  - type: Anchorable
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 80
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          PartRodMetal1:
+            min: 5
+            max: 10
 
 - type: entity
   id: ShowcaseRobot
   parent: BaseShowcaseRobot
   name: security robot showcase
   description: A non-functional replica of an old security robot.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Structures/Decoration/showcase.rsi
@@ -49,7 +38,6 @@
   parent: BaseShowcaseRobot
   name: white robot showcase
   description: A non-functional replica of an old robot.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Structures/Decoration/showcase.rsi
@@ -60,7 +48,6 @@
   parent: BaseShowcaseRobot
   name: cargo robot showcase
   description: A non-functional replica of an old cargo robot.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Structures/Decoration/showcase.rsi
@@ -71,7 +58,6 @@
   parent: BaseShowcaseRobot
   name: marauder showcase
   description: A non-functional replica of a marauder, painted green.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Structures/Decoration/showcase.rsi

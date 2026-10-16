@@ -3,50 +3,50 @@
   name: job-name-cadet
   description: job-description-cadet
   playTimeTracker: JobSecurityCadet
-  # requirements:
-    # - !type:CharacterTraitRequirement
-      # inverted: true
-      # traits:
-        # - Foreigner
-        # - ForeignerLight
-        # - Muted
-        # - Blindness
-        # - Pacifist
-        # - BrittleBoneDisease
+  requirements:
+    - !type:OverallPlaytimeRequirement
+      time: 10h
+    - !type:DepartmentTimeRequirement
+      department: Security
+      time: 10h
+      inverted: true # stop playing intern if you're good at security!
   startingGear: SecurityCadetGear
   icon: "JobIconSecurityCadet"
   supervisors: job-supervisors-security
-  canBeAntag: false
+  guides: [ Security ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Security
-  #- Brig # Delta V: Removed
+  - Brig
   - Maintenance
-  - Service
   - External
   - Cryogenics
   special:
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
-  afterLoadoutSpecial:
-  - !type:ModifyEnvirosuitSpecial
-    charges: 6
-  - !type:ModifyEnvirohelmSpecial
-    powerCell: PowerCellHigh
-  setPreference: false
 
 - type: startingGear
   id: SecurityCadetGear
-  subGear:
-  - SecurityOfficerPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitColorRed
-    back: ClothingBackpackSecurity
-    shoes: ClothingShoesBootsCombatFilled
-    outerClothing: ClothingOuterArmorDuraVest # DeltaV - ClothingOuterArmorBasic replaced in favour of stab vest. Sucks to suck, cadets
+    shoes: ClothingShoesBootsJackFilled
+    outerClothing: ClothingOuterArmorBasic
     id: SecurityCadetPDA
     ears: ClothingHeadsetSecurity
     belt: ClothingBeltSecurityFilled
+    pocket1: WeaponPistolMk58
     pocket2: BookSecurity
-  innerClothingSkirt: ClothingUniformJumpskirtColorRed
-  satchel: ClothingBackpackSatchelSecurity
-  duffelbag: ClothingBackpackDuffelSecurity
+  storage:
+    back:
+    - Flash
+    - MagazinePistol
+
+- type: chameleonOutfit
+  id: SecurityCadetChameleonOutfit
+  job: SecurityCadet
+  hasMindShield: true
+  equipment:
+    head: ClothingHeadHelmetBasic
+    eyes: ClothingEyesHudSecurity
+    mask: ClothingMaskGasSecurity
+    neck: ClothingNeckScarfStripedRed
+    belt: ClothingBeltSecurity
+    gloves: ClothingHandsGlovesColorBlack

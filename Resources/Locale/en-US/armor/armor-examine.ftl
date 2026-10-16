@@ -17,4 +17,4 @@ armor-damage-type-cold = Cold
 armor-damage-type-poison = Poison
 armor-damage-type-shock = Shock
 armor-damage-type-structural = Structural
-armor-examine-stamina = - [color=cyan]Stamina[/color] damage reduced by [color=lightblue]{$num}%[/color].
+armor-damage-type-holy = Holy

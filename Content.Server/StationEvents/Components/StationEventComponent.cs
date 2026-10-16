@@ -5,6 +5,7 @@ namespace Content.Server.StationEvents.Components;
 
 /// <summary>
 ///     Defines basic data for a station event
+///     // TODO: Cut this component into pieces, much of it already exists in GameRuleComponent, and we don't need activation conditions in the same component as Announcements
 /// </summary>
 [RegisterComponent, AutoGenerateComponentPause]
 public sealed partial class StationEventComponent : Component
@@ -19,10 +20,22 @@ public sealed partial class StationEventComponent : Component
     public float Weight = WeightNormal;
 
     [DataField]
-    public bool StartAnnouncement;
+    public string? StartAnnouncement;
 
     [DataField]
-    public bool EndAnnouncement;
+    public string? EndAnnouncement;
+
+    [DataField]
+    public Color StartAnnouncementColor = Color.Gold;
+
+    [DataField]
+    public Color EndAnnouncementColor = Color.Gold;
+
+    [DataField]
+    public SoundSpecifier? StartAudio;
+
+    [DataField]
+    public SoundSpecifier? EndAudio;
 
     /// <summary>
     ///     In minutes, when is the first round time this event can start
@@ -35,12 +48,6 @@ public sealed partial class StationEventComponent : Component
     /// </summary>
     [DataField]
     public int ReoccurrenceDelay = 30;
-
-    /// <summary>
-    ///     How long after being added does the event start
-    /// </summary>
-    [DataField]
-    public TimeSpan StartDelay = TimeSpan.Zero;
 
     /// <summary>
     ///     How long the event lasts.
@@ -70,16 +77,15 @@ public sealed partial class StationEventComponent : Component
     public int? MaxOccurrences;
 
     /// <summary>
-    /// When the station event starts.
-    /// </summary>
-    [DataField("startTime", customTypeSerializer: typeof(TimeOffsetSerializer))]
-    [AutoPausedField]
-    public TimeSpan StartTime;
-
-    /// <summary>
     /// When the station event ends.
     /// </summary>
     [DataField("endTime", customTypeSerializer: typeof(TimeOffsetSerializer))]
     [AutoPausedField]
     public TimeSpan? EndTime;
+
+    /// <summary>
+    /// If false, the event won't trigger after the evacuation shuttle is called and cannot be recalled anymore.
+    /// </summary>
+    [DataField]
+    public bool OccursDuringRoundEnd = true;
 }

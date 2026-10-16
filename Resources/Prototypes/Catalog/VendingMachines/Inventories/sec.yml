@@ -16,19 +16,14 @@
     ClothingBeltSecurityWebbing: 5
     CombatKnife: 3
     Zipties: 12
-    BolaEnergy: 6
     RiotShield: 2
     RiotLaserShield: 2
     RiotBulletShield: 2
     RadioHandheldSecurity: 5
-    ClothingHeadHelmetInsulated: 2
-    ClothingHeadCage: 2
-    ClothingOuterArmorPlateCarrier: 2
-    ClothingOuterArmorDuraVest: 2
-    ClothingHeadHelmetBasic: 2
-    BreachingCharge: 8
+    SecurityBola: 6
   # security officers need to follow a diet regimen!
   contrabandInventory:
+    WeaponMeleeNeedle: 2
     FoodDonutHomer: 12
     FoodBoxDonut: 2
     #box evidence

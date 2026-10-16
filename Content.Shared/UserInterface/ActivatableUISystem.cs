@@ -1,6 +1,6 @@
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration.Managers;
-using Content.Shared.Ghost;
+using Content.Shared.Ghost.Components;
 using Content.Shared.Hands;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
@@ -10,20 +10,17 @@ using Content.Shared.Popups;
 using Content.Shared.Verbs;
 using Content.Shared.Whitelist;
 using Robust.Shared.Utility;
-using Content.Shared.Whitelist;
-using Robust.Shared.Containers;
 
 namespace Content.Shared.UserInterface;
 
 public sealed partial class ActivatableUISystem : EntitySystem
 {
-    [Dependency] private readonly ISharedAdminManager _adminManager = default!;
-    [Dependency] private readonly ActionBlockerSystem _blockerSystem = default!;
-    [Dependency] private readonly EntityWhitelistSystem _entityWhitelist = default!;
-    [Dependency] private readonly SharedUserInterfaceSystem _uiSystem = default!;
-    [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
+    [Dependency] private ISharedAdminManager _adminManager = default!;
+    [Dependency] private ActionBlockerSystem _blockerSystem = default!;
+    [Dependency] private SharedUserInterfaceSystem _uiSystem = default!;
+    [Dependency] private SharedPopupSystem _popupSystem = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private EntityWhitelistSystem _whitelistSystem = default!;
 
     public override void Initialize()
     {
@@ -36,6 +33,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
         SubscribeLocalEvent<ActivatableUIComponent, HandDeselectedEvent>(OnHandDeselected);
         SubscribeLocalEvent<ActivatableUIComponent, GotUnequippedHandEvent>(OnHandUnequipped);
         SubscribeLocalEvent<ActivatableUIComponent, BoundUIClosedEvent>(OnUIClose);
+        SubscribeLocalEvent<ActivatableUIComponent, BoundUserInterfaceMessageAttempt>(OnBoundInterfaceOpenAttempt);
         SubscribeLocalEvent<ActivatableUIComponent, GetVerbsEvent<ActivationVerb>>(GetActivationVerb);
         SubscribeLocalEvent<ActivatableUIComponent, GetVerbsEvent<Verb>>(GetVerb);
 
@@ -101,8 +99,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
         if (!args.CanAccess)
             return false;
 
-        if (_whitelistSystem.IsWhitelistFail(component.RequiredItems, args.Using ?? default)
-            || _whitelistSystem.IsWhitelistFail(component.UserWhitelist, args.User))
+        if (_whitelistSystem.IsWhitelistFail(component.RequiredItems, args.Using ?? default))
             return false;
 
         if (component.RequiresComplex)
@@ -112,15 +109,18 @@ public sealed partial class ActivatableUISystem : EntitySystem
 
             if (component.InHandsOnly)
             {
-                if (!_hands.IsHolding(args.User, uid, out var hand, args.Hands))
+                if (!_hands.IsHolding((args.User, args.Hands), uid, out var hand))
                     return false;
 
-                if (component.RequireActiveHand && args.Hands.ActiveHand != hand)
+                if (component.RequireActiveHand && args.Hands.ActiveHandId != hand)
                     return false;
             }
         }
 
-        return args.CanInteract || HasComp<GhostComponent>(args.User) && !component.BlockSpectators;
+        return ((args.CanInteract
+            || HasComp<GhostComponent>(args.User)
+            && !component.BlockSpectators))
+            && RaiseCanOpenEventChecks(args.User, uid, silent: true); // silent to prevent popups or sounds when only looking at the verb
     }
 
     private void OnUseInHand(EntityUid uid, ActivatableUIComponent component, UseInHandEvent args)
@@ -159,8 +159,10 @@ public sealed partial class ActivatableUISystem : EntitySystem
         if (component.VerbOnly)
             return;
 
-        if (_whitelistSystem.IsWhitelistFailOrNull(component.RequiredItems, args.Used) ||
-            !_whitelistSystem.IsWhitelistFail(component.UserWhitelist, args.User))
+        if (component.RequiredItems == null)
+            return;
+
+        if (_whitelistSystem.IsWhitelistFail(component.RequiredItems, args.Used))
             return;
 
         args.Handled = InteractUI(args.User, uid, component);
@@ -177,6 +179,16 @@ public sealed partial class ActivatableUISystem : EntitySystem
             return;
 
         SetCurrentSingleUser(uid, null, component);
+    }
+
+    private void OnBoundInterfaceOpenAttempt(Entity<ActivatableUIComponent> ent,
+        ref BoundUserInterfaceMessageAttempt args)
+    {
+        if (args.Message is not OpenBoundInterfaceMessage || ent.Comp.Key != args.UiKey)
+            return;
+
+        if (!RaiseCanOpenEventChecks(args.Actor, ent.Owner))
+            args.Cancel();
     }
 
     private bool InteractUI(EntityUid user, EntityUid uiEntity, ActivatableUIComponent aui)
@@ -204,10 +216,10 @@ public sealed partial class ActivatableUISystem : EntitySystem
             if (!TryComp(user, out HandsComponent? hands))
                 return false;
 
-            if (!_hands.IsHolding(user, uiEntity, out var hand, hands))
+            if (!_hands.IsHolding((user, hands), uiEntity, out var hand))
                 return false;
 
-            if (aui.RequireActiveHand && hands.ActiveHand != hand)
+            if (aui.RequireActiveHand && hands.ActiveHandId != hand)
                 return false;
         }
 
@@ -227,11 +239,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
 
         // If we've gotten this far, fire a cancellable event that indicates someone is about to activate this.
         // This is so that stuff can require further conditions (like power).
-        var oae = new ActivatableUIOpenAttemptEvent(user);
-        var uae = new UserOpenActivatableUIAttemptEvent(user, uiEntity);
-        RaiseLocalEvent(user, uae);
-        RaiseLocalEvent(uiEntity, oae);
-        if (oae.Cancelled || uae.Cancelled)
+        if (!RaiseCanOpenEventChecks(user, uiEntity))
             return false;
 
         // Give the UI an opportunity to prepare itself if it needs to do anything
@@ -243,7 +251,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
         _uiSystem.OpenUi(uiEntity, aui.Key, user);
 
         //Let the component know a user opened it so it can do whatever it needs to do
-        var aae = new AfterActivatableUIOpenEvent(user, user);
+        var aae = new AfterActivatableUIOpenEvent(user);
         RaiseLocalEvent(uiEntity, aae);
 
         return true;
@@ -287,5 +295,24 @@ public sealed partial class ActivatableUISystem : EntitySystem
     {
         if (ent.Comp.InHandsOnly)
             CloseAll(ent, ent);
+    }
+
+    private bool RaiseCanOpenEventChecks(EntityUid user, EntityUid uiEntity, bool silent = false)
+    {
+        // If we've gotten this far, fire a cancellable event that indicates someone is attempting to activate this UI.
+        // This is so that stuff can require further conditions (like power).
+        var uae = new UserOpenActivatableUIAttemptEvent(user, uiEntity, silent);
+        RaiseLocalEvent(user, uae);
+
+        if (uae.Cancelled)
+            return false;
+
+        var oae = new ActivatableUIOpenAttemptEvent(user, silent);
+        RaiseLocalEvent(uiEntity, oae);
+
+        if (oae.Cancelled)
+            return false;
+
+        return true;
     }
 }

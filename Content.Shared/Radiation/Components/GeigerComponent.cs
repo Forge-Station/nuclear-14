@@ -29,12 +29,14 @@ public sealed partial class GeigerComponent : Component
     /// <summary>
     ///     Should it shows examine message with current radiation level?
     /// </summary>
+    [ViewVariables(VVAccess.ReadWrite)]
     [DataField]
     public bool ShowExamine;
 
     /// <summary>
     ///     Should it shows item control when equipped by player?
     /// </summary>
+    [ViewVariables(VVAccess.ReadWrite)]
     [DataField]
     public bool ShowControl;
 
@@ -53,7 +55,7 @@ public sealed partial class GeigerComponent : Component
     /// <summary>
     ///     Current radiation level in rad per second.
     /// </summary>
-    [DataField, AutoNetworkedField]
+    [ViewVariables(VVAccess.ReadOnly), AutoNetworkedField]
     public float CurrentRadiation;
 
     /// <summary>
@@ -64,6 +66,8 @@ public sealed partial class GeigerComponent : Component
 
     /// <summary>
     ///     Current player that equipped geiger counter.
+    ///     Because sound is annoying, geiger counter clicks will play
+    ///     only for player that equipped it.
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly), AutoNetworkedField]
     public EntityUid? User;
@@ -81,17 +85,22 @@ public sealed partial class GeigerComponent : Component
     public EntityUid? Stream;
 
     /// <summary>
-    ///     Controls whether the geiger counter plays only for the local player, or plays for everyone nearby.
-    ///     Useful for things like hardsuits with integrated geigers. Alternatively, to create stationary radiation alarm objects.
+    ///     Mark true if the audio should be heard by everyone around the device
     /// </summary>
     [DataField]
-    public bool LocalSoundOnly = false;
+    public bool BroadcastAudio = false;
 
     /// <summary>
-    ///     Used for all geiger counter audio controls, allowing entities to override default audio parameters.
+    ///     The distance within which the broadcast tone can be heard.
     /// </summary>
     [DataField]
-    public AudioParams AudioParameters;
+    public float BroadcastRange = 4f;
+
+    /// <summary>
+    ///     The volume of the warning tone.
+    /// </summary>
+    [DataField]
+    public float Volume = -4f;
 }
 
 [Serializable, NetSerializable]

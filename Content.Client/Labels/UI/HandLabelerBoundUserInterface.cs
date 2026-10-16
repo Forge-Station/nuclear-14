@@ -8,9 +8,9 @@ namespace Content.Client.Labels.UI
     /// <summary>
     /// Initializes a <see cref="HandLabelerWindow"/> and updates it when new server messages are received.
     /// </summary>
-    public sealed class HandLabelerBoundUserInterface : BoundUserInterface
+    public sealed partial class HandLabelerBoundUserInterface : BoundUserInterface
     {
-        [Dependency] private readonly IEntityManager _entManager = default!;
+        [Dependency] private IEntityManager _entManager = default!;
 
         [ViewVariables]
         private HandLabelerWindow? _window;
@@ -26,8 +26,14 @@ namespace Content.Client.Labels.UI
 
             _window = this.CreateWindow<HandLabelerWindow>();
 
+            if (_entManager.TryGetComponent(Owner, out HandLabelerComponent? labeler))
+            {
+                _window.SetMaxLabelLength(labeler!.MaxLabelChars);
+            }
+
             _window.OnLabelChanged += OnLabelChanged;
             Reload();
+            _window.SetInitialLabelState(); // Must be after Reload() has set the label text
         }
 
         private void OnLabelChanged(string newLabel)

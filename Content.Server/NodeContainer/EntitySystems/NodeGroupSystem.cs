@@ -2,9 +2,9 @@ using System.Diagnostics;
 using System.Linq;
 using Content.Server.Administration.Managers;
 using Content.Server.NodeContainer.NodeGroups;
-using Content.Server.NodeContainer.Nodes;
 using Content.Shared.Administration;
 using Content.Shared.NodeContainer;
+using Content.Shared.NodeContainer.NodeGroups;
 using JetBrains.Annotations;
 using Robust.Server.Player;
 using Robust.Shared.Enums;
@@ -19,12 +19,13 @@ namespace Content.Server.NodeContainer.EntitySystems
     /// </summary>
     /// <seealso cref="NodeContainerSystem"/>
     [UsedImplicitly]
-    public sealed class NodeGroupSystem : EntitySystem
+    public sealed partial class NodeGroupSystem : EntitySystem
     {
-        [Dependency] private readonly IPlayerManager _playerManager = default!;
-        [Dependency] private readonly IAdminManager _adminManager = default!;
-        [Dependency] private readonly INodeGroupFactory _nodeGroupFactory = default!;
-        [Dependency] private readonly ILogManager _logManager = default!;
+        [Dependency] private IPlayerManager _playerManager = default!;
+        [Dependency] private IAdminManager _adminManager = default!;
+        [Dependency] private INodeGroupFactory _nodeGroupFactory = default!;
+        [Dependency] private EntityQuery<NodeContainerComponent> _nodeContainerQuery = default!;
+        [Dependency] private EntityQuery<TransformComponent> _xformQuery = default!;
 
         private readonly List<int> _visDeletes = new();
         private readonly List<BaseNodeGroup> _visSends = new();
@@ -58,7 +59,7 @@ namespace Content.Server.NodeContainer.EntitySystems
         {
             base.Initialize();
 
-            _sawmill = _logManager.GetSawmill("nodegroup");
+            _sawmill = LogManager.GetSawmill("nodegroup");
 
             _playerManager.PlayerStatusChanged += OnPlayerStatusChanged;
 
@@ -149,6 +150,13 @@ namespace Content.Server.NodeContainer.EntitySystems
             }
         }
 
+        // used to manually force an update for the groups
+        // the VisDoUpdate will be done with the next scheduled update
+        public void ForceUpdate()
+        {
+            DoGroupUpdates();
+        }
+
         private void DoGroupUpdates()
         {
             // "Why is there a separate queue for group remakes and node refloods when they both cause eachother"
@@ -158,9 +166,6 @@ namespace Content.Server.NodeContainer.EntitySystems
                 return;
 
             var sw = Stopwatch.StartNew();
-
-            var xformQuery = GetEntityQuery<TransformComponent>();
-            var nodeQuery = GetEntityQuery<NodeContainerComponent>();
 
             foreach (var toRemove in _toRemove)
             {
@@ -207,7 +212,7 @@ namespace Content.Server.NodeContainer.EntitySystems
                 // based on position & anchored neighbours However, here more than one node could be attached to the
                 // same parent. So there is probably a better way of doing this.
 
-                foreach (var compatible in GetCompatibleNodes(node, xformQuery, nodeQuery))
+                foreach (var compatible in GetCompatibleNodes(node))
                 {
                     ClearReachableIfNecessary(compatible);
 
@@ -339,20 +344,20 @@ namespace Content.Server.NodeContainer.EntitySystems
             return allNodes;
         }
 
-        private IEnumerable<Node> GetCompatibleNodes(Node node, EntityQuery<TransformComponent> xformQuery, EntityQuery<NodeContainerComponent> nodeQuery)
+        private IEnumerable<Node> GetCompatibleNodes(Node node)
         {
-            var xform = xformQuery.GetComponent(node.Owner);
-            TryComp<MapGridComponent>(xform.GridUid, out var grid);
+            var xform = Transform(node.Owner);
+            Entity<MapGridComponent>? gridEnt = TryComp<MapGridComponent>(xform.GridUid, out var grid) ? (xform.GridUid.Value, grid) : null;
 
             if (!node.Connectable(EntityManager, xform))
                 yield break;
 
-            foreach (var reachable in node.GetReachableNodes(xform, nodeQuery, xformQuery, grid, EntityManager))
+            foreach (var reachable in node.GetReachableNodes((node.Owner, xform), _nodeContainerQuery, _xformQuery, gridEnt, EntityManager))
             {
                 DebugTools.Assert(reachable != node, "GetReachableNodes() should not include self.");
 
                 if (reachable.NodeGroupID == node.NodeGroupID
-                    && reachable.Connectable(EntityManager, xformQuery.GetComponent(reachable.Owner)))
+                    && reachable.Connectable(EntityManager, Transform(reachable.Owner)))
                 {
                     yield return reachable;
                 }
@@ -439,6 +444,7 @@ namespace Content.Server.NodeContainer.EntitySystems
                 NodeGroupID.Pipe => Color.Blue,
                 NodeGroupID.WireNet => Color.DarkMagenta,
                 NodeGroupID.Teg => Color.Red,
+                NodeGroupID.ExCable => Color.Pink,
                 _ => Color.White
             };
         }

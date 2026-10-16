@@ -1,28 +1,28 @@
-﻿using Content.Server.Administration.Logs;
+using Content.Server.Administration.Logs;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Chat.Managers;
 using Content.Server.GameTicking;
-using Content.Server.Station.Components;
-using Content.Server.Station.Systems;
 using Content.Shared.Database;
+using Content.Shared.GameTicking;
 using Content.Shared.Maps;
 using Content.Shared.Physics;
 using Content.Shared.Respawn;
+using Content.Shared.Station.Components;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Random;
 
 namespace Content.Server.Respawn;
 
-public sealed class SpecialRespawnSystem : SharedSpecialRespawnSystem
+public sealed partial class SpecialRespawnSystem : SharedSpecialRespawnSystem
 {
-    [Dependency] private readonly IAdminLogManager _adminLog = default!;
-    [Dependency] private readonly ITileDefinitionManager _tileDefinitionManager = default!;
-    [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly TurfSystem _turf = default!;
-    [Dependency] private readonly IChatManager _chat = default!;
+    [Dependency] private IAdminLogManager _adminLog = default!;
+    [Dependency] private AtmosphereSystem _atmosphere = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private SharedMapSystem _map = default!;
+    [Dependency] private TurfSystem _turf = default!;
+    [Dependency] private IChatManager _chat = default!;
 
     public override void Initialize()
     {
@@ -87,6 +87,10 @@ public sealed class SpecialRespawnSystem : SharedSpecialRespawnSystem
         if (!TryComp<MapGridComponent>(entityGridUid, out var grid) || MetaData(entityGridUid.Value).EntityLifeStage >= EntityLifeStage.Terminating)
             return;
 
+        //Invalid prototype
+        if (!ProtoMan.HasIndex(component.Prototype))
+            return;
+
         if (TryFindRandomTile(entityGridUid.Value, entityMapUid.Value, 10, out var coords))
             Respawn(uid, component.Prototype, coords);
 
@@ -100,12 +104,12 @@ public sealed class SpecialRespawnSystem : SharedSpecialRespawnSystem
 
             var found = false;
 
-            foreach (var tile in grid.GetTilesIntersecting(circle))
+            foreach (var tile in _map.GetTilesIntersecting(entityGridUid.Value, grid, circle))
             {
-                if (tile.IsSpace(_tileDefinitionManager)
+                if (_turf.IsSpace(tile)
                     || _turf.IsTileBlocked(tile, CollisionGroup.MobMask)
                     || !_atmosphere.IsTileMixtureProbablySafe(entityGridUid, entityMapUid.Value,
-                        grid.TileIndicesFor(mapPos)))
+                        _map.TileIndicesFor((entityGridUid.Value, grid), mapPos)))
                 {
                     continue;
                 }
@@ -130,7 +134,7 @@ public sealed class SpecialRespawnSystem : SharedSpecialRespawnSystem
     private void Respawn(EntityUid oldEntity, string prototype, EntityCoordinates coords)
     {
         var entity = Spawn(prototype, coords);
-        _adminLog.Add(LogType.Respawn, LogImpact.High, $"{ToPrettyString(oldEntity)} was deleted and was respawned at {coords.ToMap(EntityManager, _transform)} as {ToPrettyString(entity)}");
+        _adminLog.Add(LogType.Respawn, LogImpact.Extreme, $"{ToPrettyString(oldEntity)} was deleted and was respawned at {_transform.ToMapCoordinates(coords)} as {ToPrettyString(entity)}");
         _chat.SendAdminAlert($"{MetaData(oldEntity).EntityName} was deleted and was respawned as {ToPrettyString(entity)}");
     }
 
@@ -151,33 +155,33 @@ public sealed class SpecialRespawnSystem : SharedSpecialRespawnSystem
 
         var xform = Transform(targetGrid);
 
-        if (!grid.TryGetTileRef(xform.Coordinates, out var tileRef))
+        if (!_map.TryGetTileRef(targetGrid, grid, xform.Coordinates, out var tileRef))
             return false;
 
         var tile = tileRef.GridIndices;
 
         var found = false;
-        var (gridPos, _, gridMatrix) = xform.GetWorldPositionRotationMatrix();
+        var (gridPos, _, gridMatrix) = _transform.GetWorldPositionRotationMatrix(xform);
         var gridBounds = gridMatrix.TransformBox(grid.LocalAABB);
 
         //Obviously don't put anything ridiculous in here
         for (var i = 0; i < maxAttempts; i++)
         {
-            var randomX = _random.Next((int) gridBounds.Left, (int) gridBounds.Right);
-            var randomY = _random.Next((int) gridBounds.Bottom, (int) gridBounds.Top);
+            var randomX = _random.Next((int)gridBounds.Left, (int)gridBounds.Right);
+            var randomY = _random.Next((int)gridBounds.Bottom, (int)gridBounds.Top);
 
-            tile = new Vector2i(randomX - (int) gridPos.X, randomY - (int) gridPos.Y);
-            var mapPos = grid.GridTileToWorldPos(tile);
-            var mapTarget = grid.WorldToTile(mapPos);
+            tile = new Vector2i(randomX - (int)gridPos.X, randomY - (int)gridPos.Y);
+            var mapPos = _map.GridTileToWorldPos(targetGrid, grid, tile);
+            var mapTarget = _map.WorldToTile(targetGrid, grid, mapPos);
             var circle = new Circle(mapPos, 2);
 
-            foreach (var newTileRef in grid.GetTilesIntersecting(circle))
+            foreach (var newTileRef in _map.GetTilesIntersecting(targetGrid, grid, circle))
             {
-                if (newTileRef.IsSpace(_tileDefinitionManager) || newTileRef.IsBlockedTurf(true) || !_atmosphere.IsTileMixtureProbablySafe(targetGrid, targetMap, mapTarget))
+                if (_turf.IsSpace(newTileRef) || _turf.IsTileBlocked(newTileRef, CollisionGroup.MobMask) || !_atmosphere.IsTileMixtureProbablySafe(targetGrid, targetMap, mapTarget))
                     continue;
 
                 found = true;
-                targetCoords = grid.GridTileToLocal(tile);
+                targetCoords = _map.GridTileToLocal(targetGrid, grid, tile);
                 break;
             }
 

@@ -1,4 +1,4 @@
-﻿- type: reaction
+- type: reaction
   id: Napalm
   reactants:
     Oil:
@@ -10,24 +10,24 @@
   products:
     Napalm: 3
 
-#- type: reaction # Corvax-Change
-#  id: Phlogiston
-#  reactants:
-#    Phosphorus:
-#      amount: 1
-#    SulfuricAcid:
-#      amount: 1
-#    Plasma:
-#      amount: 1
-#  effects:
-#  - !type:CreateGas
-#    gas: Plasma
-#  - !type:PopupMessage
-#    visualType: LargeCaution
-#    messages: [ "phlogiston-plasma-created" ]
-#    type: Pvs
-#  products:
-#    Phlogiston: 3
+- type: reaction
+  id: Phlogiston
+  reactants:
+    Phosphorus:
+      amount: 1
+    SulfuricAcid:
+      amount: 1
+    Plasma:
+      amount: 1
+  effects:
+  - !type:CreateGas
+    gas: Plasma
+  - !type:PopupMessage
+    visualType: LargeCaution
+    messages: [ "phlogiston-plasma-created" ]
+    type: Pvs
+  products:
+    Phlogiston: 3
 
 - type: reaction
   id: ChlorineTrifluoride
@@ -39,7 +39,7 @@
     Fluorine:
       amount: 3
   effects:
-  - !type:ExplosionReactionEffect
+  - !type:Explosion
     explosionType: Default # 15 damage per intensity.
     maxIntensity: 200
     intensityPerUnit: 5
@@ -52,14 +52,14 @@
   products:
     ChlorineTrifluoride: 4
 
-# - type: reaction
-#   id: Ash
-#   minTemp: 520
-#   reactants:
-#     Oil:
-#       amount: 1
-#   products:
-#     Ash: 1
+- type: reaction
+  id: Ash
+  minTemp: 520
+  reactants:
+    Oil:
+      amount: 1
+  products:
+    Ash: 1
 
 - type: reaction
   id: WeldingFuelBreakdown

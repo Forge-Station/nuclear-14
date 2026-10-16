@@ -3,10 +3,10 @@ using Robust.Shared.Player;
 
 namespace Content.Server.Effects;
 
-public sealed class ColorFlashEffectSystem : SharedColorFlashEffectSystem
+public sealed partial class ColorFlashEffectSystem : SharedColorFlashEffectSystem
 {
-    public override void RaiseEffect(Color color, List<EntityUid> entities, Filter filter, float? animationLength = null)
+    public override void RaiseEffect(Color color, List<EntityUid> entities, Filter filter)
     {
-        RaiseNetworkEvent(new ColorFlashEffectEvent(color, GetNetEntityList(entities), animationLength), filter);
+        RaiseNetworkEvent(new ColorFlashEffectEvent(color, GetNetEntityList(entities)), filter);
     }
 }

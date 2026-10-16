@@ -1,5 +1,5 @@
 reagent-name-toxin = toxin
-reagent-desc-toxin = An unsurprisingly toxic chemical. Available at an emagged chem dispenser.
+reagent-desc-toxin = An unsurprisingly toxic chemical.
 
 reagent-name-carpotoxin = carpotoxin
 reagent-desc-carpotoxin = A highly toxic reagent found in space carps. Causes a painful burning sensation.
@@ -35,7 +35,7 @@ reagent-name-lexorin = lexorin
 reagent-desc-lexorin = A fast-acting chemical used to asphyxiate people rapidly.
 
 reagent-name-mindbreaker-toxin = mindbreaker toxin
-reagent-desc-mindbreaker-toxin = A potent, brain damaging poison that can remove psionics.
+reagent-desc-mindbreaker-toxin = A potent hallucinogenic compound that is formerly known as LSD.
 
 reagent-name-histamine = histamine
 reagent-desc-histamine = A chemical caused by allergenics reacting with antibodies. Lethal at large quantities.
@@ -44,7 +44,7 @@ reagent-name-theobromine = theobromine
 reagent-desc-theobromine = A bitter alkaloid of the cacao plant, commonly found in chocolate. Do not feed to animals.
 
 reagent-name-amatoxin = amatoxin
-reagent-desc-amatoxin = A deadly toxin found in some mushrooms, primarily fly amanita. Small dosages can be lethal.
+reagent-desc-amatoxin = A deadly toxin found in some mushrooms, primarily fly amanita. Small doses can be lethal.
 
 reagent-name-vent-crud = vent crud
 reagent-desc-vent-crud = A jet black substance found in poorly maintained ventilation systems. Can cause vent cough.
@@ -65,13 +65,13 @@ reagent-name-honk = honk
 reagent-desc-honk = A toxin found in bananium. Causes severe honking and internal bleeding, may also cause the patient to mutate.
 
 reagent-name-lead = lead
-reagent-desc-lead = A slow-acting but incredibly lethal toxin found in steel, albiet in trace amounts. Tasteless.
+reagent-desc-lead = A slow-acting but incredibly lethal toxin found in steel, albeit in trace amounts. Tasteless.
 
 reagent-name-bungotoxin = bungotoxin
 reagent-desc-bungotoxin = A moderately slow-acting poison found within the pit of the bungo fruit.
 
 reagent-name-vestine = vestine
-reagent-desc-vestine = Has an adverse reaction within the body causing major jittering. While not particularly useful on it's own, it can be used to produce a small variety of chemicals.
+reagent-desc-vestine = Has an adverse reaction within the body causing major jittering. While not particularly useful on its own, it can be used to produce a small variety of chemicals.
 
 reagent-name-tazinide = tazinide
 reagent-desc-tazinide = A highly dangerous metallic mixture which can interfere with most movement through an electrifying current.
@@ -79,11 +79,20 @@ reagent-desc-tazinide = A highly dangerous metallic mixture which can interfere 
 reagent-name-lipolicide = lipolicide
 reagent-desc-lipolicide = A powerful toxin that will destroy fat cells, massively reducing body weight in a short time. Deadly to those without nutriment in their body.
 
-reagent-name-soulbreaker-toxin = soulbreaker toxin
-reagent-desc-soulbreaker-toxin = An anti-psionic about 4 times as powerful as mindbreaker toxin.
+reagent-name-mechanotoxin = mechanotoxin
+reagent-desc-mechanotoxin = A neurotoxin used as venom by some species of spider. Degrades movement when built up.
 
-reagent-name-lotophagoi-oil = lotophagoi oil
-reagent-desc-lotophagoi-oil = A super potent drug that is much better at inducing psionics than normal hallucinogens, but with worse side effects.
+reagent-name-toxintrash = reprocessed material
+reagent-desc-toxintrash = An awful-smelling slurry efficiently refined from discarded matter. It represents a perfect, zero-waste conversion of salvage into Vox sustenance, though it is a violent poison to others.
 
-reagent-name-ectoplasm = ectoplasm
-reagent-desc-ectoplasm = The physical component of semi-corporeal spirits.
+reagent-name-hemorrhinol = hemorrhinol
+reagent-desc-hemorrhinol = A close cousin of Lexorin. Specifically targets and destroys blood cells, causing rapid blood loss.
+
+reagent-name-hivarol = hivarol
+reagent-desc-hivarol = A toxin that attacks specific types of cells in the body, damaging hivemind communication and causing severe pain if one is present.
+
+reagent-name-phosphoric-acid = phosphoric acid
+reagent-desc-phosphoric-acid = An acidic chemical often used in agriculture. Keep away from your eyes.
+
+reagent-name-hardlight-toxin = hardlight toxin
+reagent-desc-hardlight-toxin = A highly advanced toxin which inundates a victim's nervous system with ionizing radiation when metabolized.

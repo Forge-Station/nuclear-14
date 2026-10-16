@@ -1,21 +1,20 @@
 using System.Numerics;
-using Content.Shared.Traits.Assorted.Systems;
+using Content.Shared.Traits.Assorted;
 using Robust.Shared.Random;
 using Robust.Client.Player;
 using Robust.Shared.Player;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Timing;
-using Content.Shared.Traits.Assorted.Components;
 
 namespace Content.Client.Traits;
 
-public sealed class ParacusiaSystem : SharedParacusiaSystem
+public sealed partial class ParacusiaSystem : SharedParacusiaSystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     public override void Initialize()
     {
@@ -68,13 +67,9 @@ public sealed class ParacusiaSystem : SharedParacusiaSystem
             );
 
         var newCoords = Transform(uid).Coordinates.Offset(randomOffset);
-        var sound = _audio.PlayStatic(paracusia.Sounds, uid, newCoords);
-
-        if (sound == null)
-            return;
 
         // Play the sound
-        paracusia.Stream = sound!.Value.Entity;
+        paracusia.Stream = _audio.PlayStatic(paracusia.Sounds, uid, newCoords)?.Entity;
     }
 
 }

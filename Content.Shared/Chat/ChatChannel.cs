@@ -3,7 +3,7 @@ namespace Content.Shared.Chat
     /// <summary>
     ///     Represents chat channels that the player can filter chat tabs by.
     /// </summary>
-    [Flags, Serializable]
+    [Flags]
     public enum ChatChannel : ushort
     {
         None = 0,
@@ -86,15 +86,30 @@ namespace Content.Shared.Chat
         Unspecified = 1 << 14,
 
         /// <summary>
-        ///     Nyano - Summary:: Telepathic channel for all psionic entities.
-        /// </summary>
-        Telepathic = 1 << 15,
-
-        /// <summary>
         ///     Channels considered to be IC.
         /// </summary>
-        IC = Local | Whisper | Radio | Dead | Emotes | Damage | Visual | Telepathic | Notifications, //Nyano - Summary: Adds telepathic as an 'IC' labelled chat..
+        IC = Local | Whisper | Radio | Dead | Emotes | Damage | Visual | Notifications,
 
         AdminRelated = Admin | AdminAlert | AdminChat,
+    }
+
+    /// <summary>
+    /// Contains extension methods for <see cref="ChatChannel"/>
+    /// </summary>
+    public static class ChatChannelExt
+    {
+        /// <summary>
+        /// Gets a string representation of a chat channel.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when this channel does not have a string representation set.</exception>
+        public static string GetString(this ChatChannel channel)
+        {
+            return channel switch
+            {
+                ChatChannel.OOC => Loc.GetString("chat-channel-humanized-ooc"),
+                ChatChannel.AdminChat => Loc.GetString("chat-channel-humanized-admin"),
+                _ => throw new ArgumentOutOfRangeException(nameof(channel), channel, null)
+            };
+        }
     }
 }

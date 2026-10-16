@@ -32,6 +32,12 @@
     duration: 10
     igniteSound:
       path: /Audio/Items/match_strike.ogg
+      params:
+        volume: -0.125
+        variation: 0.125
+  - type: IgnitionSource
+    ignited: false
+    temperature: 400.0
   - type: PointLight
     enabled: false
     radius: 1.1
@@ -41,23 +47,6 @@
     unlitIcon: match_unlit
     litIcon: match_lit
     burntIcon: match_burnt
-  # Shitmed Change
-  - type: Cautery
-    speed: 0.2
-  - type: SurgeryTool
-    startSound:
-      path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
-    endSound:
-      path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
-  - type: Extractable # Forge-Add-Start
-    grindableSolutionName: matchstick
-  - type: SolutionContainerManager
-    solutions:
-      matchstick:
-        maxVol: 1
-        reagents:
-        - ReagentId: Sulfur
-          Quantity: 1 # Forge-Add-End
 
 - type: entity
   parent: Matchstick
@@ -69,15 +58,6 @@
       - state: match_burnt
   - type: Matchstick
     state: Burnt
-  - type: Extractable # Forge-Add-Start
-    grindableSolutionName: matchstick
-  - type: SolutionContainerManager
-    solutions:
-      matchstick:
-        maxVol: 0
-        reagents:
-        - ReagentId: Sulfur
-          Quantity: 0 # Forge-Add-End
 
 - type: entity
   name: match box
@@ -85,10 +65,6 @@
   id: Matchbox
   description: A small box of Almost But Not Quite Plasma Premium Matches.
   components:
-  - type: EmitSoundOnPickup
-    sound: /Audio/SimpleStation14/Items/Handling/matchbox_pickup.ogg
-  - type: EmitSoundOnDrop
-    sound: /Audio/SimpleStation14/Items/Handling/matchbox_drop.ogg
   - type: EmitSoundOnLand
     sound:
       path: /Audio/Items/matchbox_drop.ogg
@@ -115,9 +91,10 @@
   - type: Storage
     grid:
     - 0,0,2,1
-  - type: StorageFill
-    contents:
-      - id: Matchstick
+  - type: EntityTableContainerFill
+    containers:
+      storagebase:
+        id: Matchstick
         amount: 6
   - type: ItemCounter
     count:
@@ -132,3 +109,44 @@
     tags:
     - Trash
   - type: SpaceGarbage
+
+- type: entity
+  parent: [Matchbox, BaseSyndicateContraband]
+  id: GorlexMatchbox
+  name: Gorlex match box
+  description: "A pneumatic match box styled after the Gorlex Marauders' equipment. Contains 24 matches."
+  components:
+  - type: Sprite
+    sprite: Objects/Tools/Lighters/gorlex.rsi
+  - type: Item
+    sprite: Objects/Tools/Lighters/gorlex.rsi
+  - type: Storage
+    grid:
+    - 0,0,11,1
+  - type: EntityTableContainerFill
+    containers:
+      storagebase:
+        id: GorlexMatchstick
+        amount: 24
+  - type: Matchbox
+
+- type: entity
+  name: match stick
+  parent: [Matchstick, BaseSyndicateContraband]
+  id: GorlexMatchstick
+  description: A military grade match stick, used for lighting fine smokables and noncombatants alike.
+  components:
+  - type: Sprite
+    sprite: Objects/Tools/Lighters/gorlexmatch.rsi
+    layers:
+      - state: match_unlit
+  - type: Item
+    sprite: Objects/Tools/Lighters/gorlexmatch.rsi
+    heldPrefix: unlit
+    size: Tiny
+  - type: PointLight
+    enabled: false
+    radius: 3
+    color: green
+  - type: Matchstick
+    duration: 30

@@ -1,4 +1,4 @@
-﻿- type: entity
+- type: entity
   abstract: true
   id: BaseStationNanotrasen
   components:
@@ -15,20 +15,17 @@
     - BaseStationJobsSpawning
     - BaseStationRecords
     - BaseStationArrivals
-    - BaseStationGateway
     - BaseStationShuttles
     - BaseStationCentcomm
     - BaseStationEvacuation
     - BaseStationAlertLevels
     - BaseStationMagnet
     - BaseStationExpeditions
-    - BaseStationSiliconLawAsimov
+    - BaseStationSalvageJobs
+    - BaseStationSiliconLawCrewsimov
     - BaseStationAllEventsEligible
     - BaseStationNanotrasen
-    - BaseRandomStation
-    - BaseStationMail # Nyano component, required for station mail to function
-    - BaseStationCaptainState # DeltaV
-    - BaseStationStockMarket # DeltaV
+    - BaseStationDeliveries
   categories: [ HideSpawnMenu ]
   components:
     - type: Transform
@@ -50,31 +47,6 @@
   - BaseStationJobsSpawning
   - BaseStationRecords
   - BaseStationNanotrasen
-  categories: [ HideSpawnMenu ]
-  components:
-    - type: Transform
-
-- type: entity
-  id: StandardNanotrasenStationNoATS
-  parent:
-    - BaseStation
-    - BaseStationNews
-    - BaseStationCargo
-    - BaseStationJobsSpawning
-    - BaseStationRecords
-    - BaseStationArrivals
-    - BaseStationGateway
-    - BaseStationShuttlesSalvageOnly
-    - BaseStationCentcomm
-    - BaseStationEvacuation
-    - BaseStationAlertLevels
-    - BaseStationMagnet
-    - BaseStationExpeditions
-    - BaseStationSiliconLawAsimov
-    - BaseStationAllEventsEligible
-    - BaseStationNanotrasen
-    - BaseRandomStation
-    - BaseStationMail
   categories: [ HideSpawnMenu ]
   components:
     - type: Transform

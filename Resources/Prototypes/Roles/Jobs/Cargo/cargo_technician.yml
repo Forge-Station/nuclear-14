@@ -3,38 +3,36 @@
   name: job-name-cargotech
   description: job-description-cargotech
   playTimeTracker: JobCargoTechnician
-  antagAdvantage: 2 # DeltaV - Reduced TC: External Access
   startingGear: CargoTechGear
   icon: "JobIconCargoTechnician"
   supervisors: job-supervisors-qm
+  guides: [ Cargo ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Cargo
   - Maintenance
   extendedAccess:
   - Salvage
-  - Orders # DeltaV - Orders, see Resources/Prototypes/DeltaV/Access/cargo.yml
-  setPreference: false
+  special:
+  - !type:GiveItemOnHolidaySpecial
+    holiday: BoxingDay
+    prototype: BoxCardboard
 
 - type: startingGear
   id: CargoTechGear
-  subGear:
-  - CargoTechPlasmamanGear
   equipment:
-    head: ClothingHeadHatCargosoft
-    jumpsuit: ClothingUniformJumpsuitCargo
-    back: ClothingBackpackCargoFilled
-    shoes: ClothingShoesColorBlack
-    id: CargoPDA
     ears: ClothingHeadsetCargo
     pocket1: AppraisalTool
-  innerClothingSkirt: ClothingUniformJumpskirtCargo
-  satchel: ClothingBackpackSatchelCargoFilled
-  duffelbag: ClothingBackpackDuffelCargoFilled
+  #storage:
+    #back:
+    #- Stuff
 
-- type: startingGear
-  id: CargoTechPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: CargoTechnicianChameleonOutfit
+  job: CargoTechnician
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitCargo
-    head: ClothingHeadEnvirohelmCargo
-    gloves: ClothingHandsGlovesEnviroglovesCargo
+    head: ClothingHeadHatCargosoft
+    eyes: ClothingEyesGlassesCheapSunglasses
+    mask: ClothingMaskBreath
+    outerClothing: ClothingOuterWinterCargo
+    neck: ClothingNeckScarfStripedBrown
+    gloves: ClothingHandsGlovesFingerless

@@ -1,6 +1,9 @@
 using Content.Client.Movement.Systems;
 using Content.Shared.Actions;
-using Content.Shared.Ghost;
+using Content.Shared.Ghost.Components;
+using Content.Shared.Ghost.Systems;
+using Content.Shared.NightVision;
+using Content.Shared.Overlays;
 using Robust.Client.Console;
 using Robust.Client.GameObjects;
 using Robust.Client.Player;
@@ -8,21 +11,23 @@ using Robust.Shared.Player;
 
 namespace Content.Client.Ghost
 {
-    public sealed class GhostSystem : SharedGhostSystem
+    public sealed partial class GhostSystem : SharedGhostSystem
     {
-        [Dependency] private readonly IClientConsoleHost _console = default!;
-        [Dependency] private readonly IPlayerManager _playerManager = default!;
-        [Dependency] private readonly SharedActionsSystem _actions = default!;
-        [Dependency] private readonly ContentEyeSystem _contentEye = default!;
+        [Dependency] private IClientConsoleHost _console = default!;
+        [Dependency] private IPlayerManager _playerManager = default!;
+        [Dependency] private SharedActionsSystem _actions = default!;
+        [Dependency] private ContentEyeSystem _contentEye = default!;
+        [Dependency] private SpriteSystem _sprite = default!;
+        [Dependency] private SharedNightVisionSystem _nv = default!;
 
         public int AvailableGhostRoleCount { get; private set; }
 
         private bool _ghostVisibility = true;
 
-        private bool GhostVisibility
+        public bool GhostVisibility
         {
             get => _ghostVisibility;
-            set
+            private set
             {
                 if (_ghostVisibility == value)
                 {
@@ -34,7 +39,7 @@ namespace Content.Client.Ghost
                 var query = AllEntityQuery<GhostComponent, SpriteComponent>();
                 while (query.MoveNext(out var uid, out _, out var sprite))
                 {
-                    sprite.Visible = value || uid == _playerManager.LocalEntity;
+                    _sprite.SetVisible((uid, sprite), value || uid == _playerManager.LocalEntity);
                 }
             }
         }
@@ -71,7 +76,7 @@ namespace Content.Client.Ghost
         private void OnStartup(EntityUid uid, GhostComponent component, ComponentStartup args)
         {
             if (TryComp(uid, out SpriteComponent? sprite))
-                sprite.Visible = GhostVisibility || uid == _playerManager.LocalEntity;
+                _sprite.SetVisible((uid, sprite), GhostVisibility || uid == _playerManager.LocalEntity);
         }
 
         private void OnToggleLighting(EntityUid uid, EyeComponent component, ToggleLightingActionEvent args)
@@ -79,8 +84,25 @@ namespace Content.Client.Ghost
             if (args.Handled)
                 return;
 
-            Popup.PopupEntity(Loc.GetString("ghost-gui-toggle-lighting-manager-popup"), args.Performer);
-            _contentEye.RequestToggleLight(uid, component);
+            if (!component.DrawLight)
+            {
+                // normal lighting
+                Popup.PopupEntity(Loc.GetString("ghost-gui-toggle-lighting-manager-popup-normal"), args.Performer);
+                _contentEye.RequestEye(component.DrawFov, true);
+            }
+            else if (TryComp<NightVisionComponent>(uid, out var nv) && !nv.Enabled)
+            {
+                Popup.PopupEntity(Loc.GetString("ghost-gui-toggle-lighting-manager-popup-half-bright"), args.Performer);
+                _nv.SetEnabled((uid, nv), true);
+            }
+            else
+            {
+                // fullbright mode
+                Popup.PopupEntity(Loc.GetString("ghost-gui-toggle-lighting-manager-popup-fullbright"), args.Performer);
+                _contentEye.RequestEye(component.DrawFov, false);
+                _nv.SetEnabled((uid, nv), false);
+            }
+
             args.Handled = true;
         }
 
@@ -99,8 +121,8 @@ namespace Content.Client.Ghost
             if (args.Handled)
                 return;
 
-            Popup.PopupEntity(Loc.GetString("ghost-gui-toggle-ghost-visibility-popup"), args.Performer);
-
+            var locId = GhostVisibility ? "ghost-gui-toggle-ghost-visibility-popup-off" : "ghost-gui-toggle-ghost-visibility-popup-on";
+            Popup.PopupEntity(Loc.GetString(locId), args.Performer);
             if (uid == _playerManager.LocalEntity)
                 ToggleGhostVisibility();
 
@@ -130,7 +152,7 @@ namespace Content.Client.Ghost
         private void OnGhostState(EntityUid uid, GhostComponent component, ref AfterAutoHandleStateEvent args)
         {
             if (TryComp<SpriteComponent>(uid, out var sprite))
-                sprite.LayerSetColor(0, component.color);
+                _sprite.LayerSetColor((uid, sprite), 0, component.Color);
 
             if (uid != _playerManager.LocalEntity)
                 return;
@@ -184,12 +206,6 @@ namespace Content.Client.Ghost
         public void ToggleGhostVisibility(bool? visibility = null)
         {
             GhostVisibility = visibility ?? !GhostVisibility;
-        }
-
-        public void ReturnToRound()
-        {
-            var msg = new GhostReturnToRoundRequest();
-            RaiseNetworkEvent(msg);
         }
     }
 }

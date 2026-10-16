@@ -1,31 +1,39 @@
 using Content.Shared.Administration.Logs;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Database;
 using Content.Shared.Inventory;
-using Robust.Shared.Network;
-using Content.Shared.Popups;
-using Content.Shared.StatusEffect;
+using Content.Shared.Movement.Components;
+using Content.Shared.Movement.Systems;
+using Content.Shared.Standing;
+using Content.Shared.StatusEffectNew;
 using Content.Shared.StepTrigger.Systems;
 using Content.Shared.Stunnable;
 using Content.Shared.Throwing;
-using Content.Shared.Mood;
 using JetBrains.Annotations;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
-using Robust.Shared.Utility;
+using Robust.Shared.Physics.Events;
 
 namespace Content.Shared.Slippery;
 
 [UsedImplicitly]
-public sealed class SlipperySystem : EntitySystem
+public sealed partial class SlipperySystem : EntitySystem
 {
-    [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedStunSystem _stun = default!;
-    [Dependency] private readonly StatusEffectsSystem _statusEffects = default!;
-    [Dependency] private readonly SharedContainerSystem _container = default!;
-    [Dependency] private readonly SharedPhysicsSystem _physics = default!;
+    [Dependency] private ISharedAdminLogManager _adminLogger = default!;
+    [Dependency] private MovementModStatusSystem _movementMod = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedStunSystem _stun = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
+    [Dependency] private SharedStaminaSystem _stamina = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedPhysicsSystem _physics = default!;
+    [Dependency] private SpeedModifierContactsSystem _speedModifier = default!;
+
+    [Dependency] private EntityQuery<KnockedDownComponent> _knockedDownQuery = default!;
+    [Dependency] private EntityQuery<PhysicsComponent> _physicsQuery = default!;
+    [Dependency] private EntityQuery<SlidingComponent> _slidingQuery = default!;
 
     public override void Initialize()
     {
@@ -34,10 +42,12 @@ public sealed class SlipperySystem : EntitySystem
         SubscribeLocalEvent<SlipperyComponent, StepTriggerAttemptEvent>(HandleAttemptCollide);
         SubscribeLocalEvent<SlipperyComponent, StepTriggeredOffEvent>(HandleStepTrigger);
         SubscribeLocalEvent<NoSlipComponent, SlipAttemptEvent>(OnNoSlipAttempt);
+        SubscribeLocalEvent<SlowedOverSlipperyComponent, SlipAttemptEvent>(OnSlowedOverSlipAttempt);
         SubscribeLocalEvent<ThrownItemComponent, SlipCausingAttemptEvent>(OnThrownSlipAttempt);
-        // as long as slip-resistant mice are never added, this should be fine (otherwise a mouse-hat will transfer it's power to the wearer).
         SubscribeLocalEvent<NoSlipComponent, InventoryRelayedEvent<SlipAttemptEvent>>((e, c, ev) => OnNoSlipAttempt(e, c, ev.Args));
-        SubscribeLocalEvent<SlippableModifierComponent, SlippedEvent>(OnSlippableModifierSlipped);
+        SubscribeLocalEvent<SlowedOverSlipperyComponent, InventoryRelayedEvent<SlipAttemptEvent>>((e, c, ev) => OnSlowedOverSlipAttempt(e, c, ev.Args));
+        SubscribeLocalEvent<SlowedOverSlipperyComponent, InventoryRelayedEvent<GetSlowedOverSlipperyModifierEvent>>(OnGetSlowedOverSlipperyModifier);
+        SubscribeLocalEvent<SlipperyComponent, EndCollideEvent>(OnEntityExit);
     }
 
     private void HandleStepTrigger(EntityUid uid, SlipperyComponent component, ref StepTriggeredOffEvent args)
@@ -55,7 +65,12 @@ public sealed class SlipperySystem : EntitySystem
 
     private static void OnNoSlipAttempt(EntityUid uid, NoSlipComponent component, SlipAttemptEvent args)
     {
-        args.Cancel();
+        args.NoSlip = true;
+    }
+
+    private void OnSlowedOverSlipAttempt(EntityUid uid, SlowedOverSlipperyComponent component, SlipAttemptEvent args)
+    {
+        args.SlowOverSlippery = true;
     }
 
     private void OnThrownSlipAttempt(EntityUid uid, ThrownItemComponent comp, ref SlipCausingAttemptEvent args)
@@ -63,25 +78,35 @@ public sealed class SlipperySystem : EntitySystem
         args.Cancelled = true;
     }
 
-    private void OnSlippableModifierSlipped(EntityUid uid, SlippableModifierComponent comp, ref SlippedEvent args)
+    private void OnGetSlowedOverSlipperyModifier(EntityUid uid, SlowedOverSlipperyComponent comp, ref InventoryRelayedEvent<GetSlowedOverSlipperyModifierEvent> args)
     {
-        args.ParalyzeTime *= comp.ParalyzeTimeMultiplier;
+        args.Args.SlowdownModifier *= comp.SlowdownModifier;
+    }
+
+    private void OnEntityExit(EntityUid uid, SlipperyComponent component, ref EndCollideEvent args)
+    {
+        if (HasComp<SpeedModifiedByContactComponent>(args.OtherEntity))
+            _speedModifier.AddModifiedEntity(args.OtherEntity);
     }
 
     private bool CanSlip(EntityUid uid, EntityUid toSlip)
     {
         return !_container.IsEntityInContainer(uid)
-                && _statusEffects.CanApplyEffect(toSlip, "Stun"); //Should be KnockedDown instead?
+                && _status.CanAddStatusEffect(toSlip, SharedStunSystem.StunId); //Should be KnockedDown instead?
     }
 
-    private void TrySlip(EntityUid uid, SlipperyComponent component, EntityUid other)
+    public void TrySlip(EntityUid uid, SlipperyComponent component, EntityUid other, bool requiresContact = true)
     {
-        if (HasComp<KnockedDownComponent>(other) && !component.SuperSlippery)
+        var knockedDown = _knockedDownQuery.HasComp(other);
+        if (knockedDown && !component.SlipData.SuperSlippery)
             return;
 
-        var attemptEv = new SlipAttemptEvent();
+        var attemptEv = new SlipAttemptEvent(uid);
         RaiseLocalEvent(other, attemptEv);
-        if (attemptEv.Cancelled)
+        if (attemptEv.SlowOverSlippery)
+            _speedModifier.AddModifiedEntity(other);
+
+        if (attemptEv.NoSlip)
             return;
 
         var attemptCausingEv = new SlipCausingAttemptEvent();
@@ -92,44 +117,62 @@ public sealed class SlipperySystem : EntitySystem
         var ev = new SlipEvent(other);
         RaiseLocalEvent(uid, ref ev);
 
-        var slippedEv = new SlippedEvent(uid, component.ParalyzeTime);
-        RaiseLocalEvent(other, ref slippedEv);
-
-        if (TryComp(other, out PhysicsComponent? physics) && !HasComp<SlidingComponent>(other))
+        if (_physicsQuery.TryComp(other, out var physics) && !_slidingQuery.HasComp(other))
         {
-            _physics.SetLinearVelocity(other, physics.LinearVelocity * component.LaunchForwardsMultiplier, body: physics);
+            _physics.SetLinearVelocity(other, physics.LinearVelocity * component.SlipData.LaunchForwardsMultiplier, body: physics);
 
-            if (component.SuperSlippery)
-            {
-                var sliding = EnsureComp<SlidingComponent>(other);
-                sliding.CollidingEntities.Add(uid);
-                DebugTools.Assert(_physics.GetContactingEntities(other, physics).Contains(uid));
-            }
+            if (component.AffectsSliding && requiresContact)
+                EnsureComp<SlidingComponent>(other);
         }
 
-        var playSound = !_statusEffects.HasStatusEffect(other, "KnockedDown");
-
-        _stun.TryParalyze(other, TimeSpan.FromSeconds(slippedEv.ParalyzeTime), true);
-
-        RaiseLocalEvent(other, new MoodEffectEvent("MobSlipped"));
-
-        // Preventing from playing the slip sound when you are already knocked down.
-        if (playSound)
+        // Preventing from playing the slip sound and stunning when you are already knocked down.
+        if (!knockedDown)
         {
+            var evDropHands = new DropHandItemsEvent();
+            RaiseLocalEvent(uid, ref evDropHands);
+
+            // Status effects should handle a TimeSpan of 0 properly...
+            _stun.TryUpdateStunDuration(other, component.SlipData.StunTime);
+
+            // Don't make a new status effect entity if the entity wouldn't do anything
+            if (!MathHelper.CloseTo(component.SlipData.SlipFriction, 1f))
+            {
+                _movementMod.TryUpdateFrictionModDuration(
+                    other,
+                    component.FrictionStatusTime,
+                    component.SlipData.SlipFriction
+                );
+            }
+
+            _stamina.TakeStaminaDamage(other, component.StaminaDamage); // Note that this can StamCrit
+
             _audio.PlayPredicted(component.SlipSound, other, other);
         }
 
-        _adminLogger.Add(LogType.Slip, LogImpact.Low,
-            $"{ToPrettyString(other):mob} slipped on collision with {ToPrettyString(uid):entity}");
+        // Slippery is so tied to knockdown that we really just need to force it here.
+        _stun.TryKnockdown(other, component.SlipData.KnockdownTime, force: true);
+
+        _adminLogger.Add(LogType.Slip, LogImpact.Low, $"{ToPrettyString(other):mob} slipped on collision with {ToPrettyString(uid):entity}");
     }
 }
 
 /// <summary>
 ///     Raised on an entity to determine if it can slip or not.
 /// </summary>
-public sealed class SlipAttemptEvent : CancellableEntityEventArgs, IInventoryRelayEvent
+public sealed class SlipAttemptEvent : EntityEventArgs, IInventoryRelayEvent
 {
+    public bool NoSlip;
+
+    public bool SlowOverSlippery;
+
+    public EntityUid? SlipCausingEntity;
+
     public SlotFlags TargetSlots { get; } = SlotFlags.FEET;
+
+    public SlipAttemptEvent(EntityUid? slipCausingEntity)
+    {
+        SlipCausingEntity = slipCausingEntity;
+    }
 }
 
 /// <summary>
@@ -143,19 +186,3 @@ public record struct SlipCausingAttemptEvent (bool Cancelled);
 /// <param name="Slipped">The entity being slipped</param>
 [ByRefEvent]
 public readonly record struct SlipEvent(EntityUid Slipped);
-
-/// Raised on an entity that slipped.
-/// <param name="Slipper">The entity that caused the slip</param>
-/// <param name="ParalyzeTime">How many seconds the entity will be paralyzed for, modifiable with this event.</param>
-[ByRefEvent]
-public record struct SlippedEvent
-{
-    public readonly EntityUid Slipper;
-    public float ParalyzeTime;
-
-    public SlippedEvent(EntityUid slipper, float paralyzeTime)
-    {
-        Slipper = slipper;
-        ParalyzeTime = paralyzeTime;
-    }
-}

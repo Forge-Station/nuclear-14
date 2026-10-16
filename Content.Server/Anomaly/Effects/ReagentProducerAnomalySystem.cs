@@ -1,18 +1,17 @@
 using Content.Server.Anomaly.Components;
-using Content.Server.Chemistry.Containers.EntitySystems;
+using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Anomaly.Components;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Sprite;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
-using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
 namespace Content.Server.Anomaly.Effects;
 
 /// <see cref="ReagentProducerAnomalyComponent"/>
 
-public sealed class ReagentProducerAnomalySystem : EntitySystem
+public sealed partial class ReagentProducerAnomalySystem : EntitySystem
 {
     //The idea is to divide substances into several categories.
     //The anomaly will choose one of the categories with a given chance based on severity.
@@ -28,11 +27,10 @@ public sealed class ReagentProducerAnomalySystem : EntitySystem
     //Useful:
     //Those reagents that the players are hunting for. Very low percentage of loss.
 
-    [Dependency] private readonly SolutionContainerSystem _solutionContainer = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly PointLightSystem _light = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private SharedSolutionContainerSystem _solutionContainer = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private PointLightSystem _light = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     public const string FallbackReagent = "Water";
 
@@ -76,7 +74,7 @@ public sealed class ReagentProducerAnomalySystem : EntitySystem
             if (anomaly.Severity >= 0.97) reagentProducingAmount *= component.SupercriticalReagentProducingModifier;
 
             newSol.AddReagent(component.ProducingReagent, reagentProducingAmount);
-            _solutionContainer.TryAddSolution(component.Solution.Value, newSol); //TO DO - the container is not fully filled. 
+            _solutionContainer.TryAddSolution(component.Solution.Value, newSol); // TODO - the container is not fully filled.
 
             component.AccumulatedFrametime = 0;
 
@@ -87,7 +85,7 @@ public sealed class ReagentProducerAnomalySystem : EntitySystem
             // and nothing worked out for me. So for now it will be like this.
             if (component.NeedRecolor)
             {
-                var color = producerSolution.GetColor(_prototypeManager);
+                var color = producerSolution.GetColor(ProtoMan);
                 _light.SetColor(uid, color);
                 if (TryComp<RandomSpriteComponent>(uid, out var randomSprite))
                 {

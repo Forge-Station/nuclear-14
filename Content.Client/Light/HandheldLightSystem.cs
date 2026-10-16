@@ -8,10 +8,10 @@ using Content.Client.Light.EntitySystems;
 
 namespace Content.Client.Light;
 
-public sealed class HandheldLightSystem : SharedHandheldLightSystem
+public sealed partial class HandheldLightSystem : SharedHandheldLightSystem
 {
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
-    [Dependency] private readonly LightBehaviorSystem _lightBehavior = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private LightBehaviorSystem _lightBehavior = default!;
 
     public override void Initialize()
     {
@@ -21,47 +21,52 @@ public sealed class HandheldLightSystem : SharedHandheldLightSystem
         SubscribeLocalEvent<HandheldLightComponent, AppearanceChangeEvent>(OnAppearanceChange);
     }
 
-    private void OnAppearanceChange(EntityUid uid, HandheldLightComponent? component, ref AppearanceChangeEvent args)
+    /// <remarks>
+    ///     TODO: Not properly predicted yet. Don't call this function if you want a the actual return value!
+    /// </remarks>
+    public override bool TurnOff(Entity<HandheldLightComponent> ent, bool makeNoise = true)
     {
-        if (!Resolve(uid, ref component))
-        {
+        return true;
+    }
+
+    /// <remarks>
+    ///     TODO: Not properly predicted yet. Don't call this function if you want a the actual return value!
+    /// </remarks>
+    public override bool TurnOn(EntityUid user, Entity<HandheldLightComponent> uid)
+    {
+        return true;
+    }
+
+    private void OnAppearanceChange(EntityUid uid, HandheldLightComponent component, ref AppearanceChangeEvent args)
+    {
+        if (!args.TryGetData<bool>(ToggleableVisuals.Enabled, out var enabled))
             return;
+
+        if (!args.TryGetData<HandheldLightPowerStates>(HandheldLightVisuals.Power, out var state))
+            return;
+
+        if (!TryComp<LightBehaviourComponent>(uid, out var lightBehaviour))
+            return;
+
+        // Reset any running behaviour to reset the animated properties back to the original value, to avoid conflicts between resets
+        if (_lightBehavior.HasRunningBehaviours((uid, lightBehaviour)))
+        {
+            _lightBehavior.StopLightBehaviour((uid, lightBehaviour), resetToOriginalSettings: true);
         }
 
-        if (!_appearance.TryGetData<bool>(uid, ToggleableLightVisuals.Enabled, out var enabled, args.Component))
-        {
+        if (!enabled)
             return;
-        }
 
-        if (!_appearance.TryGetData<HandheldLightPowerStates>(uid, HandheldLightVisuals.Power, out var state, args.Component))
+        switch (state)
         {
-            return;
-        }
-
-        if (TryComp<LightBehaviourComponent>(uid, out var lightBehaviour))
-        {
-            // Reset any running behaviour to reset the animated properties back to the original value, to avoid conflicts between resets
-            if (_lightBehavior.HasRunningBehaviours((uid, lightBehaviour)))
-            {
-                _lightBehavior.StopLightBehaviour((uid, lightBehaviour), resetToOriginalSettings: true);
-            }
-
-            if (!enabled)
-            {
-                return;
-            }
-
-            switch (state)
-            {
-                case HandheldLightPowerStates.FullPower:
-                    break; // We just needed to reset all behaviours
-                case HandheldLightPowerStates.LowPower:
-                    _lightBehavior.StartLightBehaviour((uid, lightBehaviour), component.RadiatingBehaviourId);
-                    break;
-                case HandheldLightPowerStates.Dying:
-                    _lightBehavior.StartLightBehaviour((uid, lightBehaviour), component.BlinkingBehaviourId);
-                    break;
-            }
+            case HandheldLightPowerStates.FullPower:
+                break; // We just needed to reset all behaviours
+            case HandheldLightPowerStates.LowPower:
+                _lightBehavior.StartLightBehaviour((uid, lightBehaviour), component.RadiatingBehaviourId);
+                break;
+            case HandheldLightPowerStates.Dying:
+                _lightBehavior.StartLightBehaviour((uid, lightBehaviour), component.BlinkingBehaviourId);
+                break;
         }
     }
 }

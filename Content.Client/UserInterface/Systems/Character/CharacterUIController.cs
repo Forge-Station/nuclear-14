@@ -1,11 +1,15 @@
 using System.Linq;
 using Content.Client.CharacterInfo;
 using Content.Client.Gameplay;
+using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Controls;
 using Content.Client.UserInterface.Systems.Character.Controls;
 using Content.Client.UserInterface.Systems.Character.Windows;
 using Content.Client.UserInterface.Systems.Objectives.Controls;
 using Content.Shared.Input;
+using Content.Shared.Mind;
+using Content.Shared.Mind.Components;
+using Content.Shared.Roles;
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
 using Robust.Client.Player;
@@ -13,6 +17,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Input.Binding;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using static Content.Client.CharacterInfo.CharacterInfoSystem;
 using static Robust.Client.UserInterface.Controls.BaseButton;
@@ -20,11 +25,21 @@ using static Robust.Client.UserInterface.Controls.BaseButton;
 namespace Content.Client.UserInterface.Systems.Character;
 
 [UsedImplicitly]
-public sealed class CharacterUIController : UIController, IOnStateEntered<GameplayState>, IOnStateExited<GameplayState>, IOnSystemChanged<CharacterInfoSystem>
+public sealed partial class CharacterUIController : UIController, IOnStateEntered<GameplayState>, IOnStateExited<GameplayState>, IOnSystemChanged<CharacterInfoSystem>
 {
-    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private IEntityManager _ent = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
+
     [UISystemDependency] private readonly CharacterInfoSystem _characterInfo = default!;
     [UISystemDependency] private readonly SpriteSystem _sprite = default!;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        SubscribeNetworkEvent<MindRoleTypeChangedEvent>(OnRoleTypeChanged);
+    }
 
     private CharacterWindow? _window;
     private MenuButton? CharacterButton => UIManager.GetActiveUIWidgetOrNull<MenuBar.Widgets.GameTopMenuBar>()?.CharacterButton;
@@ -36,19 +51,20 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
         _window = UIManager.CreateWindow<CharacterWindow>();
         LayoutContainer.SetAnchorPreset(_window, LayoutContainer.LayoutPreset.CenterTop);
 
-
+        _window.OnClose += DeactivateButton;
+        _window.OnOpen += ActivateButton;
 
         CommandBinds.Builder
             .Bind(ContentKeyFunctions.OpenCharacterMenu,
-                 InputCmdHandler.FromDelegate(_ => ToggleWindow()))
-             .Register<CharacterUIController>();
+                InputCmdHandler.FromDelegate(_ => ToggleWindow()))
+            .Register<CharacterUIController>();
     }
 
     public void OnStateExited(GameplayState state)
     {
         if (_window != null)
         {
-            _window.Dispose();
+            _window.Close();
             _window = null;
         }
 
@@ -85,18 +101,27 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
         }
 
         CharacterButton.OnPressed += CharacterButtonPressed;
+    }
 
-        if (_window == null)
+    private void DeactivateButton()
+    {
+        if (CharacterButton == null)
         {
             return;
         }
 
-        _window.OnClose += DeactivateButton;
-        _window.OnOpen += ActivateButton;
+        CharacterButton.Pressed = false;
     }
 
-    private void DeactivateButton() => CharacterButton!.Pressed = false;
-    private void ActivateButton() => CharacterButton!.Pressed = true;
+    private void ActivateButton()
+    {
+        if (CharacterButton == null)
+        {
+            return;
+        }
+
+        CharacterButton.Pressed = true;
+    }
 
     private void CharacterUpdated(CharacterData data)
     {
@@ -105,15 +130,16 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
             return;
         }
 
-        var (entity, job, objectives, briefing, entityName, specials) = data;
+        var (entity, objectives, briefing, jobId, entityName) = data;
 
         _window.SpriteView.SetEntity(entity);
+
+        UpdateRoleType();
+        var job = _prototypeManager.Index(jobId);
         _window.NameLabel.Text = entityName;
-        _window.SubText.Text = job;
+        _window.SubText.Text = job != null ? Loc.GetString(job.Name) : null;
         _window.Objectives.RemoveAllChildren();
         _window.ObjectivesLabel.Visible = objectives.Any();
-        _window.Specials.RemoveAllChildren();
-        _window.SpecialsLabel.Visible = specials.Any();
 
         foreach (var (groupId, conditions) in objectives)
         {
@@ -123,11 +149,17 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
                 Modulate = Color.Gray
             };
 
-            objectiveControl.AddChild(new Label
+
+            var objectiveText = new FormattedMessage();
+            objectiveText.TryAddMarkup(groupId, out _);
+
+            var objectiveLabel = new RichTextLabel
             {
-                Text = groupId,
-                Modulate = Color.LightSkyBlue
-            });
+                StyleClasses = { StyleClass.TooltipTitle }
+            };
+            objectiveLabel.SetMessage(objectiveText);
+
+            objectiveControl.AddChild(objectiveLabel);
 
             foreach (var condition in conditions)
             {
@@ -158,25 +190,6 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
             _window.Objectives.AddChild(briefingControl);
         }
 
-        //Nuclear14 Special
-        foreach (var special in specials)
-        {
-            var specialControl = new BoxContainer()
-            {
-                Orientation = BoxContainer.LayoutOrientation.Vertical,
-                Modulate = Color.Gray
-            };
-
-            specialControl.AddChild(new Label
-            {
-                Text = special,
-            });
-            _window.Specials.AddChild(specialControl);
-        }
-
-        _window.SpecialsPlaceholder.Visible = specials == null;
-        //Nuclear14 end
-
         var controls = _characterInfo.GetCharacterInfoControls(entity);
         foreach (var control in controls)
         {
@@ -184,6 +197,30 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
         }
 
         _window.RolePlaceholder.Visible = briefing == null && !controls.Any() && !objectives.Any();
+    }
+
+    private void OnRoleTypeChanged(MindRoleTypeChangedEvent ev, EntitySessionEventArgs _)
+    {
+        UpdateRoleType();
+    }
+
+    private void UpdateRoleType()
+    {
+        if (_window == null || !_window.IsOpen)
+            return;
+
+        if (!_ent.TryGetComponent<MindContainerComponent>(_player.LocalEntity, out var container)
+            || container.Mind is null)
+            return;
+
+        if (!_ent.TryGetComponent<MindComponent>(container.Mind.Value, out var mind))
+            return;
+
+        if (!_prototypeManager.TryIndex(mind.RoleType, out var proto))
+            Log.Error($"Player '{_player.LocalSession}' has invalid Role Type '{mind.RoleType}'. Displaying default instead");
+
+        _window.RoleType.Text = Loc.GetString(proto?.Name ?? "role-type-crew-aligned-name");
+        _window.RoleType.FontColorOverride = proto?.Color ?? Color.White;
     }
 
     private void CharacterDetached(EntityUid uid)
@@ -206,10 +243,7 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
         if (_window == null)
             return;
 
-        if (CharacterButton != null)
-        {
-            CharacterButton.SetClickPressed(!_window.IsOpen);
-        }
+        CharacterButton?.SetClickPressed(!_window.IsOpen);
 
         if (_window.IsOpen)
         {

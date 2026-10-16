@@ -21,8 +21,8 @@
   name: engineering duffel bag
   description: A large duffel bag for holding extra tools and supplies.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/engineering.rsi
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/engineering.rsi
 
 - type: entity
   parent: ClothingBackpackDuffel
@@ -30,8 +30,8 @@
   name: atmospherics duffel bag
   description: A large duffel bag made of fire resistant fibers. Smells like plasma.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/atmospherics.rsi
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/atmospherics.rsi
 
 - type: entity
   parent: ClothingBackpackDuffel
@@ -39,17 +39,17 @@
   name: medical duffel bag
   description: A large duffel bag for holding extra medical supplies.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/medical.rsi
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/medical.rsi
 
 - type: entity
-  parent: ClothingBackpackDuffel
+  parent: [ClothingBackpackDuffel, BaseCommandContraband]
   id: ClothingBackpackDuffelCaptain
   name: captain's duffel bag
   description: A large duffel bag for holding extra captainly goods.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/captain.rsi
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/captain.rsi
 
 - type: entity
   parent: ClothingBackpackDuffel
@@ -57,29 +57,35 @@
   name: clown duffel bag
   description: A large duffel bag for holding extra honk goods.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/clown.rsi
-    - type: Storage
-      storageOpenSound:
-        collection: BikeHorn
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/clown.rsi
+  - type: Storage
+    storageOpenSound:
+      collection: BikeHorn
+      params:
+        variation: 0.125
+    storageInsertSound:
+      collection: FootstepClown
+      params:
+        variation: 0.125
 
 - type: entity
-  parent: ClothingBackpackDuffel
+  parent: [ClothingBackpackDuffel, BaseSecurityContraband]
   id: ClothingBackpackDuffelSecurity
   name: security duffel bag
   description: A large duffel bag for holding extra security related goods.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/security.rsi
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/security.rsi
 
 - type: entity
-  parent: ClothingBackpackDuffel
+  parent: [ClothingBackpackDuffel, BaseSecurityContraband]
   id: ClothingBackpackDuffelBrigmedic
-  name: corpsman duffel bag # DeltaV - rename brigmedic to corpsman
+  name: brigmedic duffel bag
   description: A large duffel bag for holding extra medical related goods.
   components:
   - type: Sprite
-    sprite: DeltaV/Clothing/Back/Duffels/brigmedic.rsi # DeltaV - resprite
+    sprite: Clothing/Back/Duffels/brigmedic.rsi
 
 - type: entity
   parent: ClothingBackpackDuffel
@@ -87,8 +93,8 @@
   name: chemistry duffel bag
   description: A large duffel bag for holding extra beakers and test tubes.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/chemistry.rsi
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/chemistry.rsi
 
 - type: entity
   parent: ClothingBackpackDuffel
@@ -96,8 +102,8 @@
   name: virology duffel bag
   description: A large duffel bag made of hypo-allergenic fibers. It's designed to help prevent the spread of disease. Smells like monkey.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/virology.rsi
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/virology.rsi
 
 - type: entity
   parent: ClothingBackpackDuffel
@@ -105,8 +111,8 @@
   name: genetics duffel bag
   description: A large duffel bag for holding extra genetic mutations.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/genetics.rsi
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/genetics.rsi
 
 - type: entity
   parent: ClothingBackpackDuffel
@@ -114,30 +120,20 @@
   name: mime duffel bag
   description: A large duffel bag for holding... mime... stuff.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/mime.rsi
-      storageOpenSound:
-        collection: null
-      storageInsertSound:
-        collection: null
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/mime.rsi
+  - type: Storage
+    storageOpenSound: null
+    storageInsertSound: null
 
 - type: entity
   parent: ClothingBackpackDuffel
   id: ClothingBackpackDuffelScience
-  name: epistemics duffel bag # DeltaV - Epistemics Department replacing Science
+  name: science duffel bag
   description: A large duffel bag for holding extra science related goods.
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/science.rsi
-
-- type: entity
-  parent: ClothingBackpackDuffel
-  id: ClothingBackpackDuffelRobotics
-  name: robotics duffel bag
-  description: A large and sturdy duffel bag to fit everything needed to build a cyborg.
-  components:
   - type: Sprite
-    sprite: Clothing/Back/Duffels/robotics.rsi
+    sprite: Clothing/Back/Duffels/science.rsi
 
 - type: entity
   parent: ClothingBackpackDuffel
@@ -151,8 +147,8 @@
 - type: entity
   parent: ClothingBackpackDuffel
   id: ClothingBackpackDuffelCargo
-  name: logistics duffel bag # DeltaV - Logistics Department replacing Cargo
-  description: A large duffel bag for stealing logistics's precious loot. # DeltaV - Logistics Department replacing Cargo
+  name: cargo duffel bag
+  description: A large duffel bag for stealing cargo's precious loot.
   components:
     - type: Sprite
       sprite: Clothing/Back/Duffels/cargo.rsi
@@ -167,7 +163,7 @@
       sprite: Clothing/Back/Duffels/salvage.rsi
 
 - type: entity
-  parent: ClothingBackpackDuffel
+  parent: [ClothingBackpackDuffel, BaseSyndicateContraband]
   id: ClothingBackpackDuffelSyndicate
   name: syndicate duffel bag
   description: A large duffel bag for holding various traitor goods.
@@ -181,60 +177,70 @@
     - 0,0,8,4
 
 - type: entity
-  parent: ClothingBackpackDuffelSyndicate
+  parent: [ ClothingBackpackDuffelSyndicate, BaseSyndicateContraband ]
   id: ClothingBackpackDuffelSyndicateBundle
   abstract: true
   components:
-    - type: Tag
-      tags: [] # ignore "WhitelistChameleon" tag
+  - type: Tag
+    tags:
+    - Backpack # ignore "WhitelistChameleon" tag
+
+- type: entity
+  parent: ClothingBackpackDuffel
+  id: ClothingBackpackDuffelBundle
+  abstract: true
+  components:
+  - type: Tag
+    tags:
+    - Backpack # ignore "WhitelistChameleon" tag
 
 - type: entity
   parent: ClothingBackpackDuffelSyndicate
   id: ClothingBackpackDuffelSyndicateAmmo
-  name: syndicate duffel bag
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/syndicate.rsi
-      state: icon-ammo
-    - type: Item
-      heldPrefix: ammo
-    - type: Clothing
-      equippedPrefix: ammo
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/syndicate.rsi
+    state: icon-ammo
+  - type: Item
+    heldPrefix: ammo
+  - type: Clothing
+    equippedPrefix: ammo
 
 - type: entity
   parent: ClothingBackpackDuffelSyndicateAmmo
   id: ClothingBackpackDuffelSyndicateAmmoBundle
   abstract: true
   components:
-    - type: Tag
-      tags: [] # ignore "WhitelistChameleon" tag
+  - type: Tag
+    tags:
+    - Backpack # ignore "WhitelistChameleon" tag
 
 - type: entity
   parent: ClothingBackpackDuffelSyndicate
   id: ClothingBackpackDuffelSyndicateMedical
-  name: syndicate duffel bag
   components:
-    - type: Sprite
-      sprite: Clothing/Back/Duffels/syndicate.rsi
-      state: icon-med
-    - type: Item
-      heldPrefix: med
-    - type: Clothing
-      equippedPrefix: med
+  - type: Sprite
+    sprite: Clothing/Back/Duffels/syndicate.rsi
+    state: icon-med
+  - type: Item
+    heldPrefix: med
+  - type: Clothing
+    equippedPrefix: med
 
 - type: entity
   parent: ClothingBackpackDuffelSyndicateMedical
   id: ClothingBackpackDuffelSyndicateMedicalBundle
   abstract: true
   components:
-    - type: Tag
-      tags: [] # ignore "WhitelistChameleon" tag
+  - type: Tag
+    tags:
+    - Backpack # ignore "WhitelistChameleon" tag
 
 - type: entity
-  parent: ClothingBackpackDuffel
+  parent: ClothingBackpackHoldingBase #Standardized Bluespace Bags
   id: ClothingBackpackDuffelHolding
-  name: duffelbag of holding
-  description: A duffelbag that opens into a localized pocket of bluespace.
+  name: duffel bag of holding
+  description: A duffel bag that opens into a localized pocket of bluespace.
   components:
   - type: Sprite
     sprite: Clothing/Back/Duffels/holding.rsi
@@ -243,18 +249,9 @@
     - state: icon
     - state: icon-unlit
       shader: unshaded
-  - type: Item
-    size: Ginormous
-  - type: Storage
-    maxItemSize: Huge
-    grid:
-    - 0,0,19,9
-  - type: ClothingSpeedModifier
-    sprintModifier: 1 # makes its stats identical to other variants of bag of holding
-  - type: HeldSpeedModifier
 
 - type: entity
-  parent: ClothingBackpackDuffel
+  parent: [ ClothingBackpackDuffel, BaseCBURNContraband ]
   id: ClothingBackpackDuffelCBURN
   name: CBURN duffel bag
   description: A duffel bag containing a variety of biological containment equipment.
@@ -265,3 +262,6 @@
     walkModifier: 1
     sprintModifier: 1
   - type: HeldSpeedModifier
+  - type: Tag
+    tags:
+    - Backpack # ignore "WhitelistChameleon" tag. Maybe make a unique CBURN duffel sprite?

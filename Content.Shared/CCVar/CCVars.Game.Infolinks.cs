@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Configuration;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
 
@@ -51,4 +51,10 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<string> InfoLinksAppeal =
         CVarDef.Create("infolinks.appeal", "", CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    ///     Link to Telegram channel to show in the launcher.
+    /// </summary>
+    public static readonly CVarDef<string> InfoLinksTelegram =
+        CVarDef.Create("infolinks.telegram", "", CVar.SERVER | CVar.REPLICATED);
 }

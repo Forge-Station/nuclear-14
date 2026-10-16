@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Linq;
 using Content.Client.Message;
+using Content.Client.Replay;
 using Content.Client.UserInterface.Systems.EscapeMenu;
 using Robust.Client;
 using Robust.Client.Replays.Loading;
@@ -21,16 +22,17 @@ namespace Content.Replay.Menu;
 /// <summary>
 /// Main menu screen for selecting and loading replays.
 /// </summary>
-public sealed class ReplayMainScreen : State
+public sealed partial class ReplayMainScreen : State
 {
-    [Dependency] private readonly IResourceManager _resMan = default!;
-    [Dependency] private readonly IComponentFactory _factory = default!;
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IReplayLoadManager _loadMan = default!;
-    [Dependency] private readonly IResourceCache _resourceCache = default!;
-    [Dependency] private readonly IGameController _controllerProxy = default!;
-    [Dependency] private readonly IClientRobustSerializer _serializer = default!;
-    [Dependency] private readonly IUserInterfaceManager _userInterfaceManager = default!;
+    [Dependency] private IResourceManager _resMan = default!;
+    [Dependency] private IComponentFactory _factory = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private IReplayLoadManager _loadMan = default!;
+    [Dependency] private IResourceCache _resourceCache = default!;
+    [Dependency] private IGameController _controllerProxy = default!;
+    [Dependency] private IClientRobustSerializer _serializer = default!;
+    [Dependency] private IUserInterfaceManager _userInterfaceManager = default!;
+    [Dependency] private ContentReplayPlaybackManager _replayMan = default!;
 
     private ReplayMainMenuControl _mainMenuControl = default!;
     private SelectReplayWindow? _selectWindow;
@@ -207,12 +209,13 @@ public sealed class ReplayMainScreen : State
 
     private void OnLoadPressed(BaseButton.ButtonEventArgs obj)
     {
-        if (_selected.HasValue)
-        {
-            var fileReader = new ReplayFileReaderZip(
-                new ZipArchive(_resMan.UserData.OpenRead(_selected.Value)), ReplayZipFolder);
-            _loadMan.LoadAndStartReplay(fileReader);
-        }
+        if (!_selected.HasValue)
+            return;
+
+        _replayMan.LastLoad = (_selected.Value, ReplayZipFolder);
+        var fileReader = new ReplayFileReaderZip(
+            new ZipArchive(_resMan.UserData.OpenRead(_selected.Value)), ReplayZipFolder);
+        _loadMan.LoadAndStartReplay(fileReader);
     }
 
     private void RefreshReplays()

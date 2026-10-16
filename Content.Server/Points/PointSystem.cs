@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Content.Shared.FixedPoint;
 using Content.Shared.Points;
 using JetBrains.Annotations;
@@ -10,10 +10,10 @@ using Robust.Shared.Utility;
 namespace Content.Server.Points;
 
 /// <inheritdoc/>
-public sealed class PointSystem : SharedPointSystem
+public sealed partial class PointSystem : SharedPointSystem
 {
-    [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly PvsOverrideSystem _pvsOverride = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private PvsOverrideSystem _pvsOverride = default!;
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -76,7 +76,7 @@ public sealed class PointSystem : SharedPointSystem
             if (!_player.TryGetPlayerData(id, out var data))
                 continue;
 
-            msg.AddMarkup(Loc.GetString("point-scoreboard-list",
+            msg.AddMarkupOrThrow(Loc.GetString("point-scoreboard-list",
                 ("place", place),
                 ("name", data.UserName),
                 ("points", points.Int())));

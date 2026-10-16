@@ -22,8 +22,7 @@
       - Armory
       - Atmospherics
       - Bar
-      #- Brig #Delta V: Removed Brig Access
-      - Boxer #Delta V: Add Boxer Access
+      - Brig
       - Detective
       - Captain
       - Cargo
@@ -31,8 +30,6 @@
       - Chemistry
       - ChiefEngineer
       - ChiefMedicalOfficer
-      - Clown #Delta V: Add Clown Access
-      - Corpsman # DeltaV: Add Corpsman access
       - Command
       - Engineering
       - External
@@ -42,30 +39,21 @@
       - Janitor
       - Kitchen
       - Lawyer
-      - Library #Delta V: Add Library Access
       - Maintenance
       - Medical
-      - Mime #Delta V: Add Mime Access
-      - Musician #Delta V: Add Musician Access
-      - Paramedic # Delta V - adds Paramedic access
-      - Psychologist #Delta V: Add Psychologist Access
       - Quartermaster
-      - Reporter #Delta V: Add Reporter Access
       - Research
       - ResearchDirector
       - Salvage
       - Security
       - Service
       - Theatre
-      - Zookeeper #Delta V: Add Zookeeper Access
-      - ChiefJustice  #Delta V: Add Chief Justice Access
-      - Prosecutor  #Delta V: Add Prosecutor Access
-      - Justice  #Delta V: Add Justice Access
+      - GenpopEnter
+      - GenpopLeave
       privilegedIdSlot:
         name: id-card-console-privileged-id
         ejectSound: /Audio/Machines/id_swipe.ogg
         insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
-        ejectOnBreak: true
         swap: false
         whitelist:
           components:
@@ -82,7 +70,103 @@
       requiresComplex: true
       requireActiveHand: false
       singleUser: true
+      inHandsOnly: true
     - type: ItemSlots
     - type: ContainerContainer
       containers:
         AccessOverrider-privilegedId: !type:ContainerSlot
+
+- type: entity
+  parent: AccessConfigurator
+  id: AccessConfiguratorUniversal
+  name: universal access configurator
+  suffix: Admin
+  description: A modified access configurator used only by the mythical Administrator.
+  components:
+  - type: Sprite
+    sprite: Objects/Tools/universal_access_configurator.rsi
+  - type: Clothing
+    sprite: Objects/Tools/universal_access_configurator.rsi
+  - type: AccessOverrider
+    accessLevels:
+    - Armory
+    - Atmospherics
+    - Bar
+    - BasicSilicon
+    - Borg
+    - Brig
+    - Detective
+    - Captain
+    - Cargo
+    - Chapel
+    - Chemistry
+    - ChiefEngineer
+    - ChiefMedicalOfficer
+    - Command
+    - Cryogenics
+    - EmergencyShuttleRepealAll
+    - Engineering
+    - External
+    - HeadOfPersonnel
+    - HeadOfSecurity
+    - Hydroponics
+    - Janitor
+    - Kitchen
+    - Lawyer
+    - Maintenance
+    - Medical
+    - Quartermaster
+    - Research
+    - ResearchDirector
+    - Salvage
+    - Security
+    - Service
+    - StationAi
+    - Theatre
+    - CentralCommand
+    - NuclearOperative
+    - SyndicateAgent
+    - Wizard
+    - Xenoborg
+    - GenpopEnter
+    - GenpopLeave
+    privilegedIdSlot:
+      name: id-card-console-privileged-id
+      startingItem: UniversalIDCard
+      ejectSound: /Audio/Machines/id_swipe.ogg
+      insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+      swap: false
+      whitelist:
+        components:
+        - IdCard
+    denialSound:
+      path: /Audio/Machines/custom_deny.ogg
+    doAfter: 0.5
+
+- type: entity
+  parent: AccessConfigurator
+  id: AccessConfiguratorXenoborg
+  name: xenoborg access configurator
+  description: A modified access configurator used by the xenoborgs.
+  components:
+  - type: Sprite
+    sprite: Objects/Tools/access_configurator.rsi
+  - type: Clothing
+    sprite: Objects/Tools/access_configurator.rsi
+  - type: AccessOverrider
+    showPrivilegedId: false
+    accessLevels:
+    - Xenoborg
+    privilegedIdSlot:
+      name: id-card-console-privileged-id
+      startingItem: XenoborgIDCard
+      ejectSound: /Audio/Machines/id_swipe.ogg
+      insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+      disableEject: true
+      swap: false
+      whitelist:
+        components:
+        - IdCard
+    denialSound:
+      path: /Audio/Machines/custom_deny.ogg
+    doAfter: 0.5

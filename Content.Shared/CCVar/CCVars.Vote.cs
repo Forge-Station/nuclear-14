@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Configuration;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
 
@@ -14,7 +14,7 @@ public sealed partial class CCVars
     ///     See vote.enabled, but specific to restart votes
     /// </summary>
     public static readonly CVarDef<bool> VoteRestartEnabled =
-        CVarDef.Create("vote.restart_enabled", false, CVar.SERVERONLY); // Corvax-Change
+        CVarDef.Create("vote.restart_enabled", false, CVar.SERVERONLY);
 
     /// <summary>
     ///     Config for when the restart vote should be allowed to be called regardless with less than this amount of players.
@@ -26,31 +26,31 @@ public sealed partial class CCVars
     ///     Config for when the restart vote should be allowed to be called based on percentage of ghosts.
     /// </summary>
     public static readonly CVarDef<int> VoteRestartGhostPercentage =
-        CVarDef.Create("vote.restart_ghost_percentage", 35, CVar.SERVERONLY);
+        CVarDef.Create("vote.restart_ghost_percentage", 55, CVar.SERVERONLY);
 
     /// <summary>
     ///     See vote.enabled, but specific to preset votes
     /// </summary>
     public static readonly CVarDef<bool> VotePresetEnabled =
-        CVarDef.Create("vote.preset_enabled", false, CVar.SERVERONLY);
+        CVarDef.Create("vote.preset_enabled", true, CVar.SERVERONLY);
 
     /// <summary>
     ///     See vote.enabled, but specific to map votes
     /// </summary>
     public static readonly CVarDef<bool> VoteMapEnabled =
-        CVarDef.Create("vote.map_enabled", false, CVar.SERVERONLY); // Corvax-Change
+        CVarDef.Create("vote.map_enabled", false, CVar.SERVERONLY);
 
     /// <summary>
     ///     The required ratio of the server that must agree for a restart round vote to go through.
     /// </summary>
     public static readonly CVarDef<float> VoteRestartRequiredRatio =
-        CVarDef.Create("vote.restart_required_ratio", 0.75f, CVar.SERVERONLY);
+        CVarDef.Create("vote.restart_required_ratio", 0.85f, CVar.SERVERONLY);
 
     /// <summary>
     /// Whether or not to prevent the restart vote from having any effect when there is an online admin
     /// </summary>
     public static readonly CVarDef<bool> VoteRestartNotAllowedWhenAdminOnline =
-        CVarDef.Create("vote.restart_not_allowed_when_admin_online", false, CVar.SERVERONLY);
+        CVarDef.Create("vote.restart_not_allowed_when_admin_online", true, CVar.SERVERONLY);
 
     /// <summary>
     ///     The delay which two votes of the same type are allowed to be made by separate people, in seconds.
@@ -86,7 +86,7 @@ public sealed partial class CCVars
     ///     Allows enabling/disabling player-started votekick for ultimate authority
     /// </summary>
     public static readonly CVarDef<bool> VotekickEnabled =
-        CVarDef.Create("votekick.enabled", false, CVar.SERVERONLY);
+        CVarDef.Create("votekick.enabled", true, CVar.SERVERONLY);
 
     /// <summary>
     ///     Config for when the votekick should be allowed to be called based on number of eligible voters.
@@ -146,13 +146,13 @@ public sealed partial class CCVars
     ///     The delay for which two votekicks are allowed to be made by separate people, in seconds.
     /// </summary>
     public static readonly CVarDef<float> VotekickTimeout =
-        CVarDef.Create("votekick.timeout", 120f, CVar.SERVERONLY);
+        CVarDef.Create("votekick.timeout", 60f, CVar.SERVERONLY);
 
     /// <summary>
     ///     Sets the duration of the votekick vote timer.
     /// </summary>
     public static readonly CVarDef<int>
-        VotekickTimer = CVarDef.Create("votekick.timer", 60, CVar.SERVERONLY);
+        VotekickTimer = CVarDef.Create("votekick.timer", 45, CVar.SERVERONLY);
 
     /// <summary>
     ///     Config for how many hours playtime a player must have to get protection from the Raider votekick type when playing as an antag.

@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Serialization;
+using Robust.Shared.Serialization;
 
 namespace Content.Shared.Administration.Events;
 
@@ -10,8 +10,8 @@ public sealed class PanicBunkerStatus
     public bool EnableWithoutAdmins;
     public bool CountDeadminnedAdmins;
     public bool ShowReason;
-    public int MinAccountAgeHours;
-    public int MinOverallHours;
+    public int MinAccountAgeMinutes;
+    public int MinOverallMinutes;
 }
 
 [Serializable, NetSerializable]

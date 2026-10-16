@@ -1,19 +1,31 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Content.Server._NC.Sponsor; // Forge-Change
+using Content.Server.Afk;
 using Content.Server.Database;
-using Content.Shared._NC.Sponsor; // Forge-Change
+using Content.Shared.Body;
+using Content.Shared.Chat.Prototypes;
 using Content.Shared.CCVar;
+using Content.Shared.Construction.Prototypes;
+using Content.Shared.Humanoid;
+using Content.Shared.Humanoid.Markings;
+using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Preferences;
+using Content.Shared.Preferences.Loadouts;
+using Content.Shared.Roles;
+using Content.Shared.Traits;
 using Robust.Server.Player;
+using Content.Server._NC.Sponsor; // Forge-Change
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Robust.Shared.Configuration;
+using Robust.Shared.Enums;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Utility;
-
 
 namespace Content.Server.Preferences.Managers
 {
@@ -21,17 +33,20 @@ namespace Content.Server.Preferences.Managers
     /// Sends <see cref="MsgPreferencesAndSettings"/> before the client joins the lobby.
     /// Receives <see cref="MsgSelectCharacter"/> and <see cref="MsgUpdateCharacter"/> at any time.
     /// </summary>
-    public sealed class ServerPreferencesManager : IServerPreferencesManager, IPostInjectInit
+    public sealed partial class ServerPreferencesManager : IServerPreferencesManager, IPostInjectInit
     {
-        [Dependency] private readonly IServerNetManager _netManager = default!;
-        [Dependency] private readonly IConfigurationManager _cfg = default!;
-        [Dependency] private readonly IServerDbManager _db = default!;
-        [Dependency] private readonly IPlayerManager _playerManager = default!;
-        [Dependency] private readonly IDependencyCollection _dependencies = default!;
-        [Dependency] private readonly ILogManager _log = default!;
-        [Dependency] private readonly UserDbDataManager _userDb = default!;
-        [Dependency] private readonly IPrototypeManager _protos = default!;
-        [Dependency] private readonly SponsorManager _sponsors = default!; // Forge-Change
+        [Dependency] private IServerNetManager _netManager = default!;
+        [Dependency] private IConfigurationManager _cfg = default!;
+        [Dependency] private IServerDbManager _db = default!;
+        [Dependency] private IPlayerManager _playerManager = default!;
+        [Dependency] private IAfkManager _afkManager = default!;
+        [Dependency] private SponsorManager _sponsors = default!; // Forge-Change
+        [Dependency] private IDependencyCollection _dependencies = default!;
+        [Dependency] private ILogManager _log = default!;
+        [Dependency] private UserDbDataManager _userDb = default!;
+        [Dependency] private IPrototypeManager _prototypeManager = default!;
+        [Dependency] private MarkingManager _marking = default!;
+        [Dependency] private ISerializationManager _serialization = default!;
 
         // Cache player prefs on the server so we don't need as much async hell related to them.
         private readonly Dictionary<NetUserId, PlayerPrefData> _cachedPlayerPrefs =
@@ -47,8 +62,162 @@ namespace Content.Server.Preferences.Managers
             _netManager.RegisterNetMessage<MsgSelectCharacter>(HandleSelectCharacterMessage);
             _netManager.RegisterNetMessage<MsgUpdateCharacter>(HandleUpdateCharacterMessage);
             _netManager.RegisterNetMessage<MsgDeleteCharacter>(HandleDeleteCharacterMessage);
+            _netManager.RegisterNetMessage<MsgUpdateConstructionFavorites>(HandleUpdateConstructionFavoritesMessage);
             _netManager.RegisterNetMessage<MsgUpdateSponsorPreferences>(HandleUpdateSponsorPreferencesMessage); // Forge-Change
             _sawmill = _log.GetSawmill("prefs");
+        }
+
+        private static TValue? TryDeserialize<TValue>(JsonDocument document) where TValue : class
+        {
+            try
+            {
+                return document.Deserialize<TValue>();
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+        }
+
+        internal PlayerPreferences ConvertPreferences(Preference prefs)
+        {
+            var maxSlot = prefs.Profiles.Max(p => p.Slot) + 1;
+            var profiles = new Dictionary<int, HumanoidCharacterProfile>(maxSlot);
+            foreach (var profile in prefs.Profiles)
+            {
+                profiles[profile.Slot] = ConvertProfiles(profile);
+            }
+
+            var constructionFavorites = new List<ProtoId<ConstructionPrototype>>(prefs.ConstructionFavorites.Count);
+            foreach (var favorite in prefs.ConstructionFavorites)
+                constructionFavorites.Add(new ProtoId<ConstructionPrototype>(favorite));
+
+            // Forge-Change: carry sponsor cosmetics through.
+            return new PlayerPreferences(
+                profiles,
+                prefs.SelectedCharacterSlot,
+                Color.FromHex(prefs.AdminOOCColor),
+                constructionFavorites,
+                ParseColorOrTransparent(prefs.SponsorOOCColor),
+                ParseColorOrTransparent(prefs.SponsorLOOCColor),
+                prefs.SponsorGhostSkin ?? "");
+        }
+
+        // Forge-Change: sponsor colors may be empty ("not set"), so parse defensively.
+        private static Color ParseColorOrTransparent(string? hex)
+        {
+            return string.IsNullOrEmpty(hex) ? Color.Transparent : Color.FromHex(hex, Color.Transparent);
+        }
+
+        internal HumanoidCharacterProfile ConvertProfiles(Profile profile)
+        {
+
+            var jobs = profile.Jobs.ToDictionary(j => new ProtoId<JobPrototype>(j.JobName), j => (JobPriority) j.Priority);
+            var antags = profile.Antags.Select(a => new ProtoId<AntagPrototype>(a.AntagName));
+            var traits = profile.Traits.Select(t => new ProtoId<TraitPrototype>(t.TraitName));
+
+            var sex = Sex.Male;
+            if (Enum.TryParse<Sex>(profile.Sex, true, out var sexVal))
+                sex = sexVal;
+
+            var spawnPriority = (SpawnPriorityPreference) profile.SpawnPriority;
+
+            var gender = sex == Sex.Male ? Gender.Male : Gender.Female;
+            if (Enum.TryParse<Gender>(profile.Gender, true, out var genderVal))
+                gender = genderVal;
+
+
+            var markings =
+                new Dictionary<ProtoId<OrganCategoryPrototype>, Dictionary<HumanoidVisualLayers, List<Marking>>>();
+
+            var species = profile.Species;
+            if (!_prototypeManager.TryIndex<SpeciesPrototype>(species, out var speciesPrototype))
+            {
+                species = HumanoidCharacterProfile.DefaultSpecies;
+                speciesPrototype = _prototypeManager.Index<SpeciesPrototype>(species);
+            }
+
+            var voice = profile.Voice ?? speciesPrototype.DefaultSoundsBySex[(int)sex];
+            if (!_prototypeManager.HasIndex<EmoteSoundsPrototype>(voice))
+                voice = speciesPrototype.DefaultSoundsBySex[(int)sex];
+
+            if (profile.OrganMarkings?.RootElement is { } element)
+            {
+                var data = element.ToDataNode();
+                markings = _serialization
+                    .Read<Dictionary<ProtoId<OrganCategoryPrototype>, Dictionary<HumanoidVisualLayers, List<Marking>>>>(
+                        data,
+                        notNullableOverride: true);
+            }
+            else if (profile.Markings is { } profileMarkings && TryDeserialize<List<string>>(profileMarkings) is { } markingsRaw)
+            {
+                List<Marking> markingsList = new();
+
+                foreach (var marking in markingsRaw)
+                {
+                    var parsed = Marking.ParseFromDbString(marking);
+
+                    if (parsed is null) continue;
+
+                    markingsList.Add(parsed.Value);
+                }
+
+                if (Marking.ParseFromDbString($"{profile.HairName}@{profile.HairColor}") is { } facialMarking)
+                    markingsList.Add(facialMarking);
+
+                if (Marking.ParseFromDbString($"{profile.HairName}@{profile.HairColor}") is { } hairMarking)
+                    markingsList.Add(hairMarking);
+
+                markings = _marking.ConvertMarkings(markingsList, species);
+            }
+
+            var loadouts = new Dictionary<string, RoleLoadout>();
+
+            foreach (var role in profile.Loadouts)
+            {
+                var loadout = new RoleLoadout(role.RoleName)
+                {
+                    EntityName = role.EntityName,
+                };
+
+                foreach (var group in role.Groups)
+                {
+                    var groupLoadouts = loadout.SelectedLoadouts.GetOrNew(group.GroupName);
+                    foreach (var profLoadout in group.Loadouts)
+                    {
+                        groupLoadouts.Add(new Loadout()
+                        {
+                            Prototype = profLoadout.LoadoutName,
+                        });
+                    }
+                }
+
+                loadouts[role.RoleName] = loadout;
+            }
+
+            return new HumanoidCharacterProfile(
+                profile.CharacterName,
+                profile.FlavorText,
+                species,
+                profile.Age,
+                sex,
+                voice,
+                gender,
+                new HumanoidCharacterAppearance
+                (
+                    Color.FromHex(profile.EyeColor),
+                    Color.FromHex(profile.SkinColor),
+                    markings
+                ),
+                spawnPriority,
+                jobs,
+                (PreferenceUnavailableMode) profile.PreferenceUnavailable,
+                antags.ToHashSet(),
+                traits.ToHashSet(),
+                loadouts,
+                profile.TtsVoice, // Corvax-TTS
+                profile.BarkVoice // Corvax-Fallout-Barks
+            );
         }
 
         private async void HandleSelectCharacterMessage(MsgSelectCharacter message)
@@ -58,7 +227,7 @@ namespace Content.Server.Preferences.Managers
 
             if (!_cachedPlayerPrefs.TryGetValue(userId, out var prefsData) || !prefsData.PrefsLoaded)
             {
-                _sawmill.Error($"User {userId} tried to modify preferences before they loaded.");
+                _sawmill.Warning($"User {userId} tried to modify preferences before they loaded.");
                 return;
             }
 
@@ -75,8 +244,8 @@ namespace Content.Server.Preferences.Managers
                 return;
             }
 
-            prefsData.Prefs = new PlayerPreferences(curPrefs.Characters, index, curPrefs.AdminOOCColor,
-                curPrefs.SponsorOOCColor, curPrefs.SponsorLOOCColor, curPrefs.SponsorGhostSkin); // Forge-Change
+            prefsData.Prefs = new PlayerPreferences(curPrefs.Characters, index, curPrefs.AdminOOCColor, curPrefs.ConstructionFavorites);
+            _afkManager.PlayerDidAction(message.MsgChannel);
 
             if (ShouldStorePrefs(message.MsgChannel.AuthType))
             {
@@ -84,7 +253,7 @@ namespace Content.Server.Preferences.Managers
             }
         }
 
-        // Forge-Change-Start: handle sponsor cosmetic preference updates from the lobby.
+        // Forge-Change-Start: sponsor cosmetic preferences
         private async void HandleUpdateSponsorPreferencesMessage(MsgUpdateSponsorPreferences message)
         {
             var userId = message.MsgChannel.UserId;
@@ -110,6 +279,7 @@ namespace Content.Server.Preferences.Managers
                 curPrefs.Characters,
                 curPrefs.SelectedCharacterIndex,
                 curPrefs.AdminOOCColor,
+                curPrefs.ConstructionFavorites,
                 message.OOCColor,
                 message.LOOCColor,
                 ghostSkin);
@@ -138,10 +308,13 @@ namespace Content.Server.Preferences.Managers
             if (message.Profile == null)
                 _sawmill.Error($"User {userId} sent a {nameof(MsgUpdateCharacter)} with a null profile in slot {message.Slot}.");
             else
+            {
                 await SetProfile(userId, message.Slot, message.Profile);
+                _afkManager.PlayerDidAction(message.MsgChannel);
+            }
         }
 
-        public async Task SetProfile(NetUserId userId, int slot, ICharacterProfile profile)
+        public async Task SetProfile(NetUserId userId, int slot, HumanoidCharacterProfile profile)
         {
             if (!_cachedPlayerPrefs.TryGetValue(userId, out var prefsData) || !prefsData.PrefsLoaded)
             {
@@ -157,16 +330,31 @@ namespace Content.Server.Preferences.Managers
 
             profile.EnsureValid(session, _dependencies);
 
-            var profiles = new Dictionary<int, ICharacterProfile>(curPrefs.Characters)
+            var profiles = new Dictionary<int, HumanoidCharacterProfile>(curPrefs.Characters)
             {
                 [slot] = profile
             };
 
-            prefsData.Prefs = new PlayerPreferences(profiles, slot, curPrefs.AdminOOCColor,
-                curPrefs.SponsorOOCColor, curPrefs.SponsorLOOCColor, curPrefs.SponsorGhostSkin); // Forge-Change
+            prefsData.Prefs = new PlayerPreferences(profiles, slot, curPrefs.AdminOOCColor, curPrefs.ConstructionFavorites);
 
             if (ShouldStorePrefs(session.Channel.AuthType))
                 await _db.SaveCharacterSlotAsync(userId, profile, slot);
+        }
+
+        public async Task SetConstructionFavorites(NetUserId userId, List<ProtoId<ConstructionPrototype>> favorites)
+        {
+            if (!_cachedPlayerPrefs.TryGetValue(userId, out var prefsData) || !prefsData.PrefsLoaded)
+            {
+                _sawmill.Error($"Tried to modify user {userId} preferences before they loaded.");
+                return;
+            }
+
+            var curPrefs = prefsData.Prefs!;
+            prefsData.Prefs = new PlayerPreferences(curPrefs.Characters, curPrefs.SelectedCharacterIndex, curPrefs.AdminOOCColor, favorites);
+
+            var session = _playerManager.GetSessionById(userId);
+            if (ShouldStorePrefs(session.Channel.AuthType))
+                await _db.SaveConstructionFavoritesAsync(userId, favorites);
         }
 
         private async void HandleDeleteCharacterMessage(MsgDeleteCharacter message)
@@ -176,16 +364,22 @@ namespace Content.Server.Preferences.Managers
 
             if (!_cachedPlayerPrefs.TryGetValue(userId, out var prefsData) || !prefsData.PrefsLoaded)
             {
-                Logger.WarningS("prefs", $"User {userId} tried to modify preferences before they loaded.");
+                _sawmill.Warning($"User {userId} tried to modify preferences before they loaded.");
                 return;
             }
 
-            if (slot < 0 || slot >= MaxCharacterSlots)
+
+            if (slot < 0)
             {
                 return;
             }
 
             var curPrefs = prefsData.Prefs!;
+
+            if (!curPrefs.Characters.ContainsKey(slot))
+            {
+                return;
+            }
 
             // If they try to delete the slot they have selected then we switch to another one.
             // Of course, that's only if they HAVE another slot.
@@ -193,7 +387,7 @@ namespace Content.Server.Preferences.Managers
             if (curPrefs.SelectedCharacterIndex == slot)
             {
                 // That ! on the end is because Rider doesn't like .NET 5.
-                var (ns, profile) = curPrefs.Characters.FirstOrDefault(p => p.Key != message.Slot);
+                var (ns, profile) = curPrefs.Characters.FirstOrDefault(p => p.Key != message.Slot)!;
                 if (profile == null)
                 {
                     // Only slot left, can't delete.
@@ -203,24 +397,57 @@ namespace Content.Server.Preferences.Managers
                 nextSlot = ns;
             }
 
-            var arr = new Dictionary<int, ICharacterProfile>(curPrefs.Characters);
+            var arr = new Dictionary<int, HumanoidCharacterProfile>(curPrefs.Characters);
             arr.Remove(slot);
 
-            prefsData.Prefs = new PlayerPreferences(arr, nextSlot ?? curPrefs.SelectedCharacterIndex, curPrefs.AdminOOCColor,
-                curPrefs.SponsorOOCColor, curPrefs.SponsorLOOCColor, curPrefs.SponsorGhostSkin); // Forge-Change
+            prefsData.Prefs = new PlayerPreferences(arr, nextSlot ?? curPrefs.SelectedCharacterIndex, curPrefs.AdminOOCColor, curPrefs.ConstructionFavorites);
+            _afkManager.PlayerDidAction(message.MsgChannel);
 
-            if (!ShouldStorePrefs(message.MsgChannel.AuthType))
+            if (ShouldStorePrefs(message.MsgChannel.AuthType))
             {
+                if (nextSlot != null)
+                {
+                    await _db.DeleteSlotAndSetSelectedIndex(userId, slot, nextSlot.Value);
+                }
+                else
+                {
+                    await _db.SaveCharacterSlotAsync(userId, null, slot);
+                }
+            }
+        }
+
+        private async void HandleUpdateConstructionFavoritesMessage(MsgUpdateConstructionFavorites message)
+        {
+            var userId = message.MsgChannel.UserId;
+            if (!_cachedPlayerPrefs.TryGetValue(userId, out var prefsData) || !prefsData.PrefsLoaded)
+            {
+                _sawmill.Warning($"User {userId} tried to modify preferences before they loaded.");
                 return;
             }
 
-            if (nextSlot != null)
+            // Validate items in the message so that a modified client cannot freely store a gigabyte of arbitrary data.
+            var validatedSet = new HashSet<ProtoId<ConstructionPrototype>>();
+            foreach (var favorite in message.Favorites)
             {
-                await _db.DeleteSlotAndSetSelectedIndex(userId, slot, nextSlot.Value);
+                if (_prototypeManager.HasIndex(favorite))
+                    validatedSet.Add(favorite);
             }
-            else
+
+            var validatedList = message.Favorites;
+            if (validatedSet.Count != message.Favorites.Count)
             {
-                await _db.SaveCharacterSlotAsync(userId, null, slot);
+                // A difference in counts indicates that unrecognized or duplicate IDs are present.
+                _sawmill.Warning($"User {userId} sent invalid construction favorites.");
+                validatedList = validatedSet.ToList();
+            }
+
+            var curPrefs = prefsData.Prefs!;
+            prefsData.Prefs = new PlayerPreferences(curPrefs.Characters, curPrefs.SelectedCharacterIndex, curPrefs.AdminOOCColor, validatedList);
+            _afkManager.PlayerDidAction(message.MsgChannel);
+
+            if (ShouldStorePrefs(message.MsgChannel.AuthType))
+            {
+                await _db.SaveConstructionFavoritesAsync(userId, validatedList);
             }
         }
 
@@ -234,8 +461,8 @@ namespace Content.Server.Preferences.Managers
                 {
                     PrefsLoaded = true,
                     Prefs = new PlayerPreferences(
-                        new[] { new KeyValuePair<int, ICharacterProfile>(0, HumanoidCharacterProfile.Random()) },
-                        0, Color.Transparent)
+                        new[] { new KeyValuePair<int, HumanoidCharacterProfile>(0, HumanoidCharacterProfile.Random()) },
+                        0, Color.Transparent, [])
                 };
 
                 _cachedPlayerPrefs[session.UserId] = prefsData;
@@ -251,7 +478,7 @@ namespace Content.Server.Preferences.Managers
                 async Task LoadPrefs()
                 {
                     var prefs = await GetOrCreatePreferencesAsync(session.UserId, cancel);
-                    prefsData.Prefs = prefs;
+                    prefsData.Prefs = ConvertPreferences(prefs);
                 }
             }
         }
@@ -276,17 +503,6 @@ namespace Content.Server.Preferences.Managers
             _netManager.ServerSendMessage(msg, session.Channel);
         }
 
-        public void SanitizeData(ICommonSession session)
-        {
-            // This is a separate step from the actual database load.
-            // Sanitizing preferences requires play time info due to loadouts.
-            // And play time info is loaded concurrently from the DB with preferences.
-            var data = _cachedPlayerPrefs[session.UserId];
-            DebugTools.Assert(data.Prefs != null);
-            data.Prefs = SanitizePreferences(session, data.Prefs, _dependencies);
-            _sawmill.Debug("here");
-        }
-
         public void OnClientDisconnected(ICommonSession session)
         {
             _cachedPlayerPrefs.Remove(session.UserId);
@@ -296,6 +512,7 @@ namespace Content.Server.Preferences.Managers
         {
             return _cachedPlayerPrefs.ContainsKey(session.UserId);
         }
+
 
         /// <summary>
         /// Tries to get the preferences from the cache
@@ -318,7 +535,6 @@ namespace Content.Server.Preferences.Managers
 
         /// <summary>
         /// Retrieves preferences for the given username from storage.
-        /// Creates and saves default preferences if they are not found, then returns them.
         /// </summary>
         public PlayerPreferences GetPreferences(NetUserId userId)
         {
@@ -333,7 +549,6 @@ namespace Content.Server.Preferences.Managers
 
         /// <summary>
         /// Retrieves preferences for the given username from storage or returns null.
-        /// Creates and saves default preferences if they are not found, then returns them.
         /// </summary>
         public PlayerPreferences? GetPreferencesOrNull(NetUserId? userId)
         {
@@ -345,38 +560,44 @@ namespace Content.Server.Preferences.Managers
             return null;
         }
 
-        private async Task<PlayerPreferences> GetOrCreatePreferencesAsync(NetUserId userId, CancellationToken cancel)
+        private async Task<Preference> GetOrCreatePreferencesAsync(NetUserId userId, CancellationToken cancel)
         {
             var prefs = await _db.GetPlayerPreferencesAsync(userId, cancel);
             if (prefs is null)
             {
-                return await _db.InitPrefsAsync(userId, HumanoidCharacterProfile.Random(), cancel);
+                // The player has no characters, so the Company assigns them one
+
+                var speciesToBlacklist =
+                    new HashSet<string>(_cfg.GetCVar(CCVars.ICNewAccountSpeciesBlacklist).Split(","));
+
+                //Randomize species and set job priorities from cvar
+                var profile = HumanoidCharacterProfile.Random(speciesToBlacklist);
+                profile = profile.WithJobFromCvar(_cfg);
+
+                return await _db.InitPrefsAsync(userId, profile, cancel);
             }
 
             return prefs;
         }
 
-        private PlayerPreferences SanitizePreferences(ICommonSession session, PlayerPreferences prefs,
-            IDependencyCollection collection)
+        private PlayerPreferences SanitizePreferences(ICommonSession session, PlayerPreferences prefs, IDependencyCollection collection)
         {
             // Clean up preferences in case of changes to the game,
             // such as removed jobs still being selected.
-            return new PlayerPreferences(prefs.Characters.Select(p => new KeyValuePair<int, ICharacterProfile>(p.Key,
-                    p.Value.Validated(session, collection))), prefs.SelectedCharacterIndex, prefs.AdminOOCColor,
-                prefs.SponsorOOCColor, prefs.SponsorLOOCColor, prefs.SponsorGhostSkin); // Forge-Change
+
+            return new PlayerPreferences(prefs.Characters.Select(p =>
+            {
+                return new KeyValuePair<int, HumanoidCharacterProfile>(p.Key, p.Value.Validated(session, collection));
+            }), prefs.SelectedCharacterIndex, prefs.AdminOOCColor, prefs.ConstructionFavorites);
         }
 
-        public IEnumerable<KeyValuePair<NetUserId, ICharacterProfile>> GetSelectedProfilesForPlayers(
+        public IEnumerable<KeyValuePair<NetUserId, HumanoidCharacterProfile>> GetSelectedProfilesForPlayers(
             List<NetUserId> usernames)
         {
             return usernames
                 .Select(p => (_cachedPlayerPrefs[p].Prefs, p))
                 .Where(p => p.Prefs != null)
-                .Select(p =>
-                {
-                    var idx = p.Prefs!.SelectedCharacterIndex;
-                    return new KeyValuePair<NetUserId, ICharacterProfile>(p.p, p.Prefs!.GetProfile(idx));
-                });
+                .Select(p => new KeyValuePair<NetUserId, HumanoidCharacterProfile>(p.p, p.Prefs!.SelectedCharacter));
         }
 
         internal static bool ShouldStorePrefs(LoginType loginType)

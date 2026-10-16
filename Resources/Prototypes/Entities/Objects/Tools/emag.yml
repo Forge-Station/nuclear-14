@@ -1,9 +1,9 @@
 - type: entity
-  parent: BaseItem
+  parent: [BaseItem, BaseSyndicateContraband]
   id: EmagUnlimited
   suffix: Unlimited
   name: cryptographic sequencer
-  description: The all-in-one hacking solution. The thinking man's lockpick. The iconic EMAG.
+  description: The all-in-one hacking solution. Friend of any syndicate. The iconic EMAG.
   components:
   - type: Emag
   - type: Sprite
@@ -12,13 +12,6 @@
   - type: Item
     sprite: Objects/Tools/emag.rsi
     storedRotation: -90
-  - type: DamageOtherOnHit # An emag has sharp edges
-    damage:
-      types:
-        Slash: 5
-  - type: EmbeddableProjectile
-    sound: /Audio/Weapons/star_hit.ogg
-  - type: EmbedPassiveDamage
 
 - type: entity
   parent: EmagUnlimited
@@ -27,3 +20,5 @@
   components:
   - type: LimitedCharges
   - type: AutoRecharge
+  - type: StaticPrice
+    price: 2500

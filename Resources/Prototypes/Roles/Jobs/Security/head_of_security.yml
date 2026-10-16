@@ -3,68 +3,60 @@
   name: job-name-hos
   description: job-description-hos
   playTimeTracker: JobHeadOfSecurity
-  # requirements:
-    # - !type:CharacterTraitRequirement
-      # inverted: true
-      # traits:
-        # - Foreigner
-        # - ForeignerLight
-        # - Muted
-        # - Blindness
-        # - Pacifist
-        # - BrittleBoneDisease
-  weight: 10
+  requirements:
+    - !type:RoleTimeRequirement
+      role: JobWarden
+      time: 3h
+    - !type:RoleTimeRequirement
+      role: JobDetective
+      time: 1h # knowing how to use the tools is important
+    - !type:RoleTimeRequirement
+      role: JobSecurityOfficer
+      time: 5h
+    - !type:DepartmentTimeRequirement
+      department: Security
+      time: 10h
   startingGear: HoSGear
   icon: "JobIconHeadOfSecurity"
-  requireAdminNotify: true
   supervisors: job-supervisors-captain
-  canBeAntag: false
+  guides: [ Command ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - HeadOfSecurity
   - Command
-  #- Brig  # Delta V: Removed
+  - Brig
   - Security
   - Armory
   - Maintenance
-  - Service
   - External
   - Detective
-  - Corpsman # DeltaV - added Corpsman access
   - Cryogenics
+  - GenpopEnter
+  - GenpopLeave
   special:
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
   - !type:AddComponentSpecial
     components:
       - type: CommandStaff
-  afterLoadoutSpecial:
-  - !type:ModifyEnvirosuitSpecial
-    charges: 8
-  - !type:ModifyEnvirohelmSpecial
-    powerCell: PowerCellHigh
-  setPreference: false
 
 - type: startingGear
   id: HoSGear
-  subGear:
-  - HoSPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitHoS
-    back: ClothingBackpackHOSFilled
-    shoes: ClothingShoesBootsCombatFilled
-    eyes: ClothingEyesGlassesSunglasses
+    eyes: ClothingEyesGlassesSecurity
     id: HoSPDA
     gloves: ClothingHandsGlovesCombat
     ears: ClothingHeadsetAltSecurity
-    belt: ClothingBeltSecurityFilled
-  innerClothingSkirt: ClothingUniformJumpskirtHoS
-  satchel: ClothingBackpackSatchelHOSFilled
-  duffelbag: ClothingBackpackDuffelHOSFilled
+    pocket1: WeaponPistolMk58
+  storage:
+    back:
+    - Flash
+    - MagazinePistol
 
-- type: startingGear
-  id: HoSPlasmamanGear
-  parent: BasePlasmamanSecurityGear
+- type: chameleonOutfit
+  id: HeadOfSecurityChameleonOutfit
+  job: HeadOfSecurity
+  hasMindShield: true
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitHoS
-    head: ClothingHeadEnvirohelmHoS
-    gloves: ClothingHandsGlovesEnviroglovesBlack
+    head: ClothingHeadHatBeretHoS
+    mask: ClothingMaskGasSecurity
+    neck: ClothingNeckCloakHos

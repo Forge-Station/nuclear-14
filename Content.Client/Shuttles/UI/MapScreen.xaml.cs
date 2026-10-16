@@ -26,10 +26,9 @@ namespace Content.Client.Shuttles.UI;
 [GenerateTypedNameReferences]
 public sealed partial class MapScreen : BoxContainer
 {
-    [Dependency] private readonly IEntityManager _entManager = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private IEntityManager _entManager = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
     private readonly SharedAudioSystem _audio;
     private readonly SharedMapSystem _maps;
     private readonly ShuttleSystem _shuttles;
@@ -153,7 +152,7 @@ public sealed partial class MapScreen : BoxContainer
                 break;
         }
 
-        if (IsFTLBlocked())
+        if (IsPingBlocked())
         {
             MapRebuildButton.Disabled = true;
             ClearMapObjects();
@@ -237,7 +236,7 @@ public sealed partial class MapScreen : BoxContainer
     private void ClearMapObjects()
     {
         _mapObjectControls.Clear();
-        HyperspaceDestinations.DisposeAllChildren();
+        HyperspaceDestinations.RemoveAllChildren();
         _pendingMapObjects.Clear();
         _mapObjects.Clear();
         _mapHeadings.Clear();
@@ -261,7 +260,7 @@ public sealed partial class MapScreen : BoxContainer
             ourMap = shuttleXform.MapID;
         }
 
-        while (mapComps.MoveNext(out var mapComp, out var mapXform, out var mapMetadata))
+        while (mapComps.MoveNext(out var mapUid, out var mapComp, out var mapXform, out var mapMetadata))
         {
             if (_console != null && !_shuttles.CanFTLTo(_shuttleEntity.Value, mapComp.MapId, _console.Value))
             {
@@ -311,7 +310,7 @@ public sealed partial class MapScreen : BoxContainer
             };
 
             _mapHeadings.Add(mapComp.MapId, gridContents);
-            foreach (var grid in _mapManager.GetAllMapGrids(mapComp.MapId))
+            foreach (var grid in _maps.GetAllGrids(mapComp.MapId))
             {
                 _entManager.TryGetComponent(grid.Owner, out IFFComponent? iffComp);
 
@@ -327,8 +326,10 @@ public sealed partial class MapScreen : BoxContainer
                 {
                     AddMapObject(mapComp.MapId, gridObj);
                 }
-                else if (!_shuttles.IsBeaconMap(_mapManager.GetMapEntityId(mapComp.MapId)) && (iffComp == null ||
-                         (iffComp.Flags & IFFFlags.Hide) == 0x0))
+                // If we can show it then add it to pending.
+                else if (!_shuttles.IsBeaconMap(mapUid) && (iffComp == null ||
+                         (iffComp.Flags & IFFFlags.Hide) == 0x0) &&
+                         !gridObj.HideButton)
                 {
                     _pendingMapObjects.Add((mapComp.MapId, gridObj));
                 }
@@ -336,11 +337,17 @@ public sealed partial class MapScreen : BoxContainer
 
             foreach (var (beacon, _) in _shuttles.GetExclusions(mapComp.MapId, _exclusions))
             {
+                if (beacon.HideButton)
+                    continue;
+
                 _pendingMapObjects.Add((mapComp.MapId, beacon));
             }
 
             foreach (var (beacon, _) in _shuttles.GetBeacons(mapComp.MapId, _beacons))
             {
+                if (beacon.HideButton)
+                    continue;
+
                 _pendingMapObjects.Add((mapComp.MapId, beacon));
             }
 
@@ -400,9 +407,21 @@ public sealed partial class MapScreen : BoxContainer
         }
     }
 
+    /// <summary>
+    /// Returns true if we shouldn't be able to select the Scan for Objects button.
+    /// </summary>
+    private bool IsPingBlocked()
+    {
+        return _state switch
+        {
+            FTLState.Available or FTLState.Cooldown => false,
+            _ => true,
+        };
+    }
+
     private void OnMapObjectPress(IMapObject mapObject)
     {
-        if (IsFTLBlocked())
+        if (IsPingBlocked())
             return;
 
         var coordinates = _shuttles.GetMapCoordinates(mapObject);
@@ -424,9 +443,6 @@ public sealed partial class MapScreen : BoxContainer
     {
         var existing = _mapObjects.GetOrNew(mapId);
         existing.Add(mapObj);
-
-        if (mapObj.HideButton)
-            return;
 
         var gridContents = _mapHeadings[mapId];
 
@@ -501,7 +517,7 @@ public sealed partial class MapScreen : BoxContainer
             BumpMapDequeue();
         }
 
-        if (!IsFTLBlocked() && _nextPing < curTime)
+        if (!IsPingBlocked() && _nextPing < curTime)
         {
             MapRebuildButton.Disabled = false;
         }

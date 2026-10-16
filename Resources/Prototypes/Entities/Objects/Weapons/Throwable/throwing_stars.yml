@@ -1,5 +1,5 @@
 - type: entity
-  parent: BaseItem
+  parent: [BaseItem, BaseMinorContraband]
   id: ThrowingStar
   name: throwing star
   description: An ancient weapon still used to this day, due to its ease of lodging itself into its victim's body parts.
@@ -37,7 +37,6 @@
       types:
         Slash: 8
         Piercing: 10
-  - type: EmbedPassiveDamage
   - type: StaminaDamageOnCollide
     damage: 45
   - type: StaminaDamageOnEmbed

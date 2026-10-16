@@ -1,3 +1,4 @@
+using Robust.Shared.Audio;
 using Content.Shared.Storage; // Corvax-Change
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
@@ -37,13 +38,24 @@ public sealed partial record PolymorphConfiguration
     /// What entity the polymorph will turn the target into
     /// must be in here because it makes no sense if it isn't
     /// </summary>
-    [DataField(serverOnly: true)] // Corvax-Change
-    public EntProtoId? Entity; // Corvax-Change
+    [DataField(serverOnly: true)] // Corvax-Change: not required, see RandomEnt below
+    public EntProtoId Entity;
 
     // Corvax-Change-Start
+    /// <summary>
+    /// Pick the polymorph target randomly from this table instead of <see cref="Entity"/>.
+    /// </summary>
     [DataField("random", serverOnly: true)]
-    public List<EntitySpawnEntry> RandomEnt;
+    public List<EntitySpawnEntry>? RandomEnt;
     // Corvax-Change-End
+
+    /// <summary>
+    /// Additional entity to spawn when polymorphing/reverting.
+    /// Gets parented to the entity polymorphed into.
+    /// Useful for visual effects.
+    /// </summary>
+    [DataField(serverOnly: true)]
+    public EntProtoId? EffectProto;
 
     /// <summary>
     /// The delay between the polymorph's uses in seconds
@@ -103,16 +115,32 @@ public sealed partial record PolymorphConfiguration
     public bool RevertOnDeath = true;
 
     /// <summary>
+    /// Whether or not the polymorph reverts when the entity is deleted.
+    /// </summary>
+    [DataField(serverOnly: true)]
+    public bool RevertOnDelete = true;
+
+    /// <summary>
     /// Whether or not the polymorph reverts when the entity is eaten or fully sliced.
     /// </summary>
     [DataField(serverOnly: true)]
     public bool RevertOnEat;
 
     /// <summary>
-    /// Whether or not an already polymorphed entity is able to be polymorphed again
+    /// If true, attempts to polymorph this polymorph will fail, unless
+    /// <see cref="IgnoreAllowRepeatedMorphs"/> is true on the /new/ morph.
     /// </summary>
     [DataField(serverOnly: true)]
     public bool AllowRepeatedMorphs;
+
+    /// <summary>
+    /// If true, this morph will succeed even when used on an entity
+    /// that is already polymorphed with a configuration that has
+    /// <see cref="AllowRepeatedMorphs"/> set to false. Helpful for
+    /// smite polymorphs which should always succeed.
+    /// </summary>
+    [DataField(serverOnly: true)]
+    public bool IgnoreAllowRepeatedMorphs;
 
     /// <summary>
     /// The amount of time that should pass after this polymorph has ended, before a new one
@@ -123,20 +151,54 @@ public sealed partial record PolymorphConfiguration
     public TimeSpan Cooldown = TimeSpan.Zero;
 
     /// <summary>
-    /// The exact names of components to copy over when this polymorph is applied.
+    ///     If not null, this sound will be played when being polymorphed into something.
     /// </summary>
-    [DataField(serverOnly: true)]
-    public HashSet<string> CopiedComponents = new()
-    {
-        "LanguageKnowledge",
-        "LanguageSpeaker",
-        "Grammar"
-    };
+    [DataField]
+    public SoundSpecifier? PolymorphSound;
+
+    /// <summary>
+    ///     If not null, this sound will be played when being reverted from a polymorph.
+    /// </summary>
+    [DataField]
+    public SoundSpecifier? ExitPolymorphSound;
+
+    /// <summary>
+    /// Whether or not the user should see a confirmation popup when attempting
+    /// to morph via an innate polymorph's action.
+    /// </summary>
+    [DataField]
+    public bool RevertConfirmationPopup = true;
+
+    /// <summary>
+    ///     If not null, this popup will be displayed when being polymorphed into something.
+    /// </summary>
+    [DataField]
+    public LocId? PolymorphPopup = "polymorph-popup-generic";
+
+    /// <summary>
+    ///     If not null, this popup will be displayed when being reverted from a polymorph.
+    /// </summary>
+    [DataField]
+    public LocId? ExitPolymorphPopup = "polymorph-revert-popup-generic";
 }
 
 public enum PolymorphInventoryChange : byte
 {
+    /// <summary>
+    /// On polymorph, no items are transferred. The original form's inventory is
+    /// stored in a paused map. On revert, the polymorph drops its inventory.
+    /// </summary>
     None,
+
+    /// <summary>
+    /// On polymorph and revert, all items are dropped.
+    /// </summary>
     Drop,
+
+    /// <summary>
+    /// On polymorph and revert, an attempt to transfer inventories will be
+    /// made. Currently, this doesn't handle dependent inventory slots like
+    /// jumpsuit pockets.
+    /// </summary>
     Transfer,
 }

@@ -1,5 +1,6 @@
 #nullable enable
 using System.Collections.Generic;
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.Item;
 using Robust.Client.GameObjects;
 using Robust.Shared.GameObjects;
@@ -22,25 +23,25 @@ namespace Content.IntegrationTests.Tests.Sprite;
 /// <see cref="Ignored"/>
 /// </remarks>
 [TestFixture]
-public sealed class PrototypeSaveTest
+public sealed class PrototypeSaveTest : GameTest
 {
     private static readonly HashSet<string> Ignored = new()
     {
         // The only prototypes that should get ignored are those that REQUIRE setup to get a sprite. At that point it is
         // the responsibility of the spawner to ensure that a valid sprite is set.
-        "VirtualItem"
+        "VirtualItem",
+        "DetachedBody"
     };
 
     [Test]
     public async Task AllItemsHaveSpritesTest()
     {
-        var settings = new PoolSettings() { Connected = true }; // client needs to be in-game
-        await using var pair = await PoolManager.GetServerClient(settings);
+        var pair = Pair;
         List<EntityPrototype> badPrototypes = [];
 
         await pair.Client.WaitPost(() =>
         {
-            foreach (var proto in pair.GetPrototypesWithComponent<ItemComponent>(Ignored))
+            foreach (var (proto, _) in pair.GetPrototypesWithComponent<ItemComponent>(Ignored))
             {
                 var dummy = pair.Client.EntMan.Spawn(proto.ID);
                 pair.Client.EntMan.RunMapInit(dummy, pair.Client.MetaData(dummy));
@@ -58,7 +59,5 @@ public sealed class PrototypeSaveTest
                 Assert.Fail($"Item prototype has no sprite: {proto.ID}. It should probably either be marked as abstract, not be an item, or have a valid sprite");
             }
         });
-
-        await pair.CleanReturnAsync();
     }
 }

@@ -1,10 +1,10 @@
-using System.Linq;
 using Content.Server.Humanoid.Components;
 using Content.Server.RandomMetadata;
+using Content.Shared.Body;
 using Content.Shared.Humanoid.Prototypes;
+using Content.Shared.Humanoid;
 using Content.Shared.Preferences;
 using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager;
 
 namespace Content.Server.Humanoid.Systems;
@@ -12,15 +12,12 @@ namespace Content.Server.Humanoid.Systems;
 /// <summary>
 ///     This deals with spawning and setting up random humanoids.
 /// </summary>
-public sealed class RandomHumanoidSystem : EntitySystem
+public sealed partial class RandomHumanoidSystem : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly ISerializationManager _serialization = default!;
-    [Dependency] private readonly MetaDataSystem _metaData = default!;
-
-    [Dependency] private readonly HumanoidAppearanceSystem _humanoid = default!;
-
-    private HashSet<string> _notRoundStartSpecies = new();
+    [Dependency] private HumanoidProfileSystem _humanoidProfile = default!;
+    [Dependency] private ISerializationManager _serialization = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
+    [Dependency] private SharedVisualBodySystem _visualBody = default!;
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -34,45 +31,33 @@ public sealed class RandomHumanoidSystem : EntitySystem
         QueueDel(uid);
         if (component.SettingsPrototypeId != null)
             SpawnRandomHumanoid(component.SettingsPrototypeId, Transform(uid).Coordinates, MetaData(uid).EntityName);
-
-        var speciesList = _prototypeManager.EnumeratePrototypes<SpeciesPrototype>()
-            .Where(x => !x.RoundStart)
-            .Select(x => x.Prototype.Id)
-            .ToHashSet();
-
-        _notRoundStartSpecies = speciesList;
     }
 
     public EntityUid SpawnRandomHumanoid(string prototypeId, EntityCoordinates coordinates, string name)
     {
-        if (!_prototypeManager.TryIndex<RandomHumanoidSettingsPrototype>(prototypeId, out var prototype))
+        if (!ProtoMan.TryIndex<RandomHumanoidSettingsPrototype>(prototypeId, out var prototype))
             throw new ArgumentException("Could not get random humanoid settings");
 
-        var blacklist = prototype.SpeciesBlacklist;
-
-        if (!prototype.SpeciesBlacklist.Any())
-            blacklist = _notRoundStartSpecies;
-
-        var profile = HumanoidCharacterProfile.Random(blacklist);
-        var speciesProto = _prototypeManager.Index<SpeciesPrototype>(profile.Species);
+        var profile = HumanoidCharacterProfile.Random(prototype.SpeciesBlacklist);
+        var speciesProto = ProtoMan.Index<SpeciesPrototype>(profile.Species);
         var humanoid = EntityManager.CreateEntityUninitialized(speciesProto.Prototype, coordinates);
 
         _metaData.SetEntityName(humanoid, prototype.RandomizeName ? profile.Name : name);
-
-        _humanoid.LoadProfile(humanoid, profile);
 
         if (prototype.Components != null)
         {
             foreach (var entry in prototype.Components.Values)
             {
-                var comp = (Component) _serialization.CreateCopy(entry.Component, notNullableOverride: true);
-                comp.Owner = humanoid; // This .owner must survive for now.
-                EntityManager.RemoveComponent(humanoid, comp.GetType());
-                EntityManager.AddComponent(humanoid, comp);
+                var comp = (Component)_serialization.CreateCopy(entry.Component, notNullableOverride: true);
+                RemComp(humanoid, comp.GetType());
+                AddComp(humanoid, comp);
             }
         }
 
         EntityManager.InitializeAndStartEntity(humanoid);
+
+        _visualBody.ApplyProfileTo(humanoid, profile);
+        _humanoidProfile.ApplyProfileTo(humanoid, profile);
 
         return humanoid;
     }

@@ -1,5 +1,6 @@
 using Content.Server.Wires;
 using Content.Shared.VendingMachines;
+using Content.Shared.VendingMachines.Components;
 using Content.Shared.Wires;
 
 namespace Content.Server.VendingMachines;
@@ -7,10 +8,19 @@ namespace Content.Server.VendingMachines;
 [DataDefinition]
 public sealed partial class VendingMachineContrabandWireAction : BaseToggleWireAction
 {
+    private VendingMachineSystem _vendingMachineSystem = default!;
+
     public override Color Color { get; set; } = Color.Green;
     public override string Name { get; set; } = "wire-name-vending-contraband";
-    public override object? StatusKey { get; } = ContrabandWireKey.StatusKey;
-    public override object? TimeoutKey { get; } = ContrabandWireKey.TimeoutKey;
+    public override object StatusKey => ContrabandWireKey.StatusKey;
+    public override object TimeoutKey => ContrabandWireKey.TimeoutKey;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        _vendingMachineSystem = EntityManager.System<VendingMachineSystem>();
+    }
 
     public override StatusLightState? GetLightState(Wire wire)
     {
@@ -28,7 +38,7 @@ public sealed partial class VendingMachineContrabandWireAction : BaseToggleWireA
     {
         if (EntityManager.TryGetComponent(owner, out VendingMachineComponent? vending))
         {
-            vending.Contraband = !setting;
+            _vendingMachineSystem.SetContraband((owner, vending), !vending.Contraband);
         }
     }
 

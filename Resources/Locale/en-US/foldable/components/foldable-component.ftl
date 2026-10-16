@@ -1,14 +1,16 @@
 # Foldable
 
+foldable-fold-fail = You can't fold the {$object} here.
+foldable-unfold-fail = You can't unfold the {$object} here.
+
 foldable-deploy-fail = You can't deploy the {$object} here.
 fold-verb = Fold
 unfold-verb = Unfold
 
-# Hat
 fold-flip-verb = Flip
-# Coat
+
 fold-zip-verb = Zip up
 fold-unzip-verb = Unzip
-# Jumpsuits
-fold-rollsleeves-verb = roll sleeves up
-fold-unrollsleeves-verb = roll sleeves down
+
+fold-lower-visor-verb = Lower visor
+fold-raise-visor-verb = Raise visor

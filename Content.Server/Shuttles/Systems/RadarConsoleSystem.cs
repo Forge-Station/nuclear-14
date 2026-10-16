@@ -10,10 +10,10 @@ using Robust.Shared.Map;
 
 namespace Content.Server.Shuttles.Systems;
 
-public sealed class RadarConsoleSystem : SharedRadarConsoleSystem
+public sealed partial class RadarConsoleSystem : SharedRadarConsoleSystem
 {
-    [Dependency] private readonly ShuttleConsoleSystem _console = default!;
-    [Dependency] private readonly UserInterfaceSystem _uiSystem = default!;
+    [Dependency] private ShuttleConsoleSystem _console = default!;
+    [Dependency] private UserInterfaceSystem _uiSystem = default!;
 
     public override void Initialize()
     {
@@ -52,6 +52,8 @@ public sealed class RadarConsoleSystem : SharedRadarConsoleSystem
             {
                 state = _console.GetNavState(uid, docks);
             }
+
+            state.RotateWithEntity = !component.FollowEntity;
 
             _uiSystem.SetUiState(uid, RadarConsoleUiKey.Key, new NavBoundUserInterfaceState(state));
         }

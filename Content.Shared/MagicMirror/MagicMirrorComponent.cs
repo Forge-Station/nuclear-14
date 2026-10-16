@@ -1,6 +1,9 @@
+using Content.Shared.Body;
 using Content.Shared.DoAfter;
+using Content.Shared.Humanoid;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared.MagicMirror;
 
@@ -8,10 +11,14 @@ namespace Content.Shared.MagicMirror;
 /// Allows humanoids to change their appearance mid-round.
 /// </summary>
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[Access(typeof(MagicMirrorSystem))]
 public sealed partial class MagicMirrorComponent : Component
 {
-    [DataField]
-    public DoAfterId? DoAfter;
+    /// <summary>
+    /// The id for a doAfter our <see cref="Target"/> is doing. Stored as an ushort so it can be networked and one day predicted.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public ushort? DoAfter;
 
     /// <summary>
     /// Magic mirror target, used for validating UI messages.
@@ -19,29 +26,17 @@ public sealed partial class MagicMirrorComponent : Component
     [DataField, AutoNetworkedField]
     public EntityUid? Target;
 
-    /// <summary>
-    /// doafter time required to add a new slot
-    /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public TimeSpan AddSlotTime = TimeSpan.FromSeconds(5);
+    [DataField(required: true)]
+    public HashSet<ProtoId<OrganCategoryPrototype>> Organs;
+
+    [DataField(required: true)]
+    public HashSet<HumanoidVisualLayers> Layers;
 
     /// <summary>
-    /// doafter time required to remove a existing slot
+    /// Do after time to modify an entity's markings
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public TimeSpan RemoveSlotTime = TimeSpan.FromSeconds(2);
-
-    /// <summary>
-    /// doafter time required to change slot
-    /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public TimeSpan SelectSlotTime = TimeSpan.FromSeconds(3);
-
-    /// <summary>
-    /// doafter time required to recolor slot
-    /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public TimeSpan ChangeSlotTime = TimeSpan.FromSeconds(1);
+    public TimeSpan ModifyTime = TimeSpan.FromSeconds(7);
 
     /// <summary>
     /// Sound emitted when slots are changed

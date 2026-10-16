@@ -1,6 +1,6 @@
-using Content.Shared.Customization.Systems;
 using Content.Shared.Eui;
 using Content.Shared.Roles;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.Ghost.Roles
@@ -12,7 +12,11 @@ namespace Content.Shared.Ghost.Roles
         public string Name { get; set; }
         public string Description { get; set; }
         public string Rules { get; set; }
-        public List<CharacterRequirement>? Requirements { get; set; }
+
+        /// <summary>
+        /// A list of all antag and job prototype IDs of the ghost role and its mind role(s).
+        /// </summary>
+        public (List<ProtoId<JobPrototype>>?,List<ProtoId<AntagPrototype>>?)  RolePrototypes;
 
         /// <inheritdoc cref="GhostRoleKind"/>
         public GhostRoleKind Kind { get; set; }
@@ -27,6 +31,7 @@ namespace Content.Shared.Ghost.Roles
         /// if <see cref="Kind"/> is <see cref="GhostRoleKind.RaffleInProgress"/>, specifies when raffle finishes.
         /// </summary>
         public TimeSpan RaffleEndTime { get; set; }
+
     }
 
     [NetSerializable, Serializable]

@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Configuration;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
 
@@ -24,56 +24,25 @@ public sealed partial class CCVars
     ///     If it is is false, only the admin's ckey will be displayed in the ahelp.
     /// </summary>
     /// <seealso cref="AdminUseCustomNamesAdminRank"/>
-    /// <seealso cref="AhelpAdminPrefixWebhook"/>
     public static readonly CVarDef<bool> AhelpAdminPrefix =
-        CVarDef.Create("ahelp.admin_prefix", true, CVar.SERVERONLY);
+        CVarDef.Create("ahelp.admin_prefix", false, CVar.SERVERONLY);
 
     /// <summary>
-    ///     Should the administrator's position be displayed in the webhook.
-    ///     If it is is false, only the admin's ckey will be displayed in webhook.
+    /// Maximum possible amount of candidates to show for admin help "quick info" links.
     /// </summary>
-    /// <seealso cref="AdminUseCustomNamesAdminRank"/>
-    /// <seealso cref="AhelpAdminPrefix"/>
-    public static readonly CVarDef<bool> AhelpAdminPrefixWebhook =
-        CVarDef.Create("ahelp.admin_prefix_webhook", true, CVar.SERVERONLY);
+    public static readonly CVarDef<int> AhelpMaxQuickInfoCandidates =
+        CVarDef.Create("ahelp.max_quick_info_candidates", 30, CVar.SERVERONLY);
 
     /// <summary>
-    ///     If an admin replies to users from discord, should it use their discord role color? (if applicable)
-    ///     Overrides DiscordReplyColor and AdminBwoinkColor.
+    /// Minimum size of a word to start testing for name matches.
     /// </summary>
-    public static readonly CVarDef<bool> UseDiscordRoleColor =
-        CVarDef.Create("admin.use_discord_role_color", false, CVar.SERVERONLY);
+    public static readonly CVarDef<int> AhelpQuickInfoStartWordSize =
+        CVarDef.Create("ahelp.quick_info_start_word_size", 4, CVar.SERVERONLY);
 
     /// <summary>
-    ///     If an admin replies to users from discord, should it use their discord role color? (if applicable)
-    ///     Overrides DiscordReplyColor and AdminBwoinkColor.
+    /// The path to the sound played on some admin interactions to the client.
     /// </summary>
-    public static readonly CVarDef<bool> UseDiscordRoleName =
-        CVarDef.Create("admin.use_discord_role_name", false, CVar.SERVERONLY);
-
-    /// <summary>
-    ///     The text before an admin's name when replying from discord to indicate they're speaking from discord.
-    /// </summary>
-    public static readonly CVarDef<string> DiscordReplyPrefix =
-        CVarDef.Create("admin.discord_reply_prefix", "(DC) ", CVar.SERVERONLY);
-
-    /// <summary>
-    ///     The color of the names of admins. This is the fallback color for admins.
-    /// </summary>
-    public static readonly CVarDef<string> AdminBwoinkColor =
-        CVarDef.Create("admin.admin_bwoink_color", "red", CVar.SERVERONLY);
-
-    /// <summary>
-    ///     The color of the names of admins who reply from discord. Leave empty to disable.
-    ///     Overrides AdminBwoinkColor.
-    /// </summary>
-    public static readonly CVarDef<string> DiscordReplyColor =
-        CVarDef.Create("admin.discord_reply_color", string.Empty, CVar.SERVERONLY);
-
-    /// <summary>
-    ///     Use the admin's Admin OOC color in bwoinks.
-    ///     If either the ooc color or this is not set, uses the admin.admin_bwoink_color value.
-    /// </summary>
-    public static readonly CVarDef<bool> UseAdminOOCColorInBwoinks =
-        CVarDef.Create("admin.bwoink_use_admin_ooc_color", true, CVar.SERVERONLY); // Corvax-Change
+    /// <seealso cref="CCVars.BwoinkSoundEnabled"/>
+    public static readonly CVarDef<string> AHelpSound =
+        CVarDef.Create("audio.ahelp_sound", "/Audio/Effects/adminhelp.ogg", CVar.SERVER | CVar.REPLICATED | CVar.ARCHIVE);
 }

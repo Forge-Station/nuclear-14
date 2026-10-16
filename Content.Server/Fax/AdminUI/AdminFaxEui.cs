@@ -1,17 +1,18 @@
-using Content.Server.DeviceNetwork.Components;
 using Content.Server.EUI;
+using Content.Shared.DeviceNetwork;
 using Content.Shared.Eui;
 using Content.Shared.Fax.Components;
 using Content.Shared.Fax;
 using Content.Shared.Follower;
-using Content.Shared.Ghost;
 using Content.Shared.Paper;
+using Content.Shared.DeviceNetwork.Components;
+using Content.Shared.Ghost.Components;
 
 namespace Content.Server.Fax.AdminUI;
 
-public sealed class AdminFaxEui : BaseEui
+public sealed partial class AdminFaxEui : BaseEui
 {
-    [Dependency] private readonly IEntityManager _entityManager = default!;
+    [Dependency] private IEntityManager _entityManager = default!;
     private readonly FaxSystem _faxSystem;
     private readonly FollowerSystem _followerSystem;
 
@@ -33,7 +34,7 @@ public sealed class AdminFaxEui : BaseEui
         var entries = new List<AdminFaxEntry>();
         while (faxes.MoveNext(out var uid, out var fax, out var device))
         {
-            entries.Add(new AdminFaxEntry(_entityManager.GetNetEntity(uid), fax.FaxName, device.Address));
+            entries.Add(new AdminFaxEntry(_entityManager.GetNetEntity(uid), fax.FaxName, DeviceLocalizationHelpers.GetAddressFromId(device)));
         }
         return new AdminFaxEuiState(entries);
     }
@@ -56,7 +57,8 @@ public sealed class AdminFaxEui : BaseEui
             case AdminFaxEuiMsg.Send sendData:
             {
                 var printout = new FaxPrintout(sendData.Content, sendData.Title, null, null, sendData.StampState,
-                        new() { new StampDisplayInfo { StampedName = sendData.From, StampedColor = sendData.StampColor } });
+                        new() { new StampDisplayInfo { StampedName = sendData.From, StampedColor = sendData.StampColor } },
+                        locked: sendData.Locked);
                 _faxSystem.Receive(_entityManager.GetEntity(sendData.Target), printout);
                 break;
             }

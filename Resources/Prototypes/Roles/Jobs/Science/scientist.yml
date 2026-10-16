@@ -4,37 +4,32 @@
   description: job-description-scientist
   playTimeTracker: JobScientist
   requirements:
-    - !type:CharacterDepartmentTimeRequirement
-      department: Epistemics # DeltaV - Epistemics Department replacing Science
-      min: 14400 #4 hrs
+    - !type:DepartmentTimeRequirement
+      department: Science
+      time: 2.5h
   startingGear: ScientistGear
   icon: "JobIconScientist"
   supervisors: job-supervisors-rd
+  guides: [ Science ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Research
   - Maintenance
-  setPreference: false
 
 - type: startingGear
   id: ScientistGear
-  subGear:
-  - ScientistPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitScientist
-    back: ClothingBackpackScienceFilled
-    shoes: ClothingShoesColorWhite
-    outerClothing: ClothingOuterCoatRnd
-    id: SciencePDA
     ears: ClothingHeadsetScience
-    pocket1: BookPsionicsGuidebook
-  innerClothingSkirt: ClothingUniformJumpskirtScientist
-  satchel: ClothingBackpackSatchelScienceFilled
-  duffelbag: ClothingBackpackDuffelScienceFilled
+  #storage:
+    #back:
+    #- Stuff
 
-- type: startingGear
-  id: ScientistPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: ScientistChameleonOutfit
+  job: Scientist
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitScientist
-    head: ClothingHeadEnvirohelmScientist
-    gloves: ClothingHandsGlovesEnviroglovesWhite
+    head: ClothingHeadBandSkull
+    eyes: ClothingEyesGlassesCheapSunglasses
+    mask: ClothingMaskGas
+    neck: ClothingNeckTieSci
+    outerClothing: ClothingOuterCoatRnd
+    gloves: ClothingHandsGlovesLatex

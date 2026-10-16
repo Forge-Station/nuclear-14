@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Configuration;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
 
@@ -8,7 +8,7 @@ public sealed partial class CCVars
     ///     The time you must spend reading the rules, before the "Request" button is enabled
     /// </summary>
     public static readonly CVarDef<float> GhostRoleTime =
-        CVarDef.Create("ghost.role_time", 8f, CVar.REPLICATED | CVar.SERVER);
+        CVarDef.Create("ghost.role_time", 3f, CVar.REPLICATED | CVar.SERVER);
 
     /// <summary>
     ///     If ghost role lotteries should be made near-instanteous.

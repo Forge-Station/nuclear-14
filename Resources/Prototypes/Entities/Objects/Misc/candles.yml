@@ -1,9 +1,12 @@
 - type: entity
   name: candle
-  parent: BaseItem
+  parent: [ BaseItem, BaseItemDestructible ]
   id: Candle
   description: A thin wick threaded through fat.
   components:
+    - type: Tag
+      tags:
+      - Candle
     - type: Sprite
       noRot: true
       sprite: Objects/Misc/candles.rsi
@@ -24,6 +27,7 @@
           variation: 0.05
           volume: 10
     - type: UseDelay
+    - type: ExtinguishableSetCollisionWake
     - type: Flammable
       fireSpread: false
       canResistFire: false
@@ -37,7 +41,8 @@
     - type: FireVisuals
       sprite: Objects/Misc/candles.rsi
       normalState: fire-big
-    - type: ToggleableLightVisuals
+    - type: SpookyExtinguishable
+    - type: ToggleableVisuals
       spriteLayer: null
       inhandVisuals:
         left:
@@ -48,17 +53,6 @@
           shader: unshaded
     - type: Damageable
       damageModifierSet: Wood
-    - type: Destructible
-      thresholds:
-      - trigger:
-          !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: [ "Destruction" ]
-    - type: Tag               # Forge-add
-      tags:
-      - Candles               
 
 - type: entity
   name: red candle
@@ -74,7 +68,6 @@
       left:
       - state: inhand-left
         color: "#a12349"
-      - state: inhand-left-flame
       right:
       - state: inhand-right
         color: "#a12349"
@@ -167,18 +160,6 @@
       normalState: fire-small
     - type: Flammable
       firestacksOnIgnite: 2.0
-    - type: Destructible
-      thresholds:
-      - trigger:
-          !type:DamageTrigger
-          damage: 60
-        behaviors:
-        - !type:SpawnEntitiesBehavior
-        - !type:DoActsBehavior
-          acts: [ "Destruction" ]
-    - type: Tag               # Forge-add
-      tags:
-      - Candles      
 
 - type: entity
   name: small red candle
@@ -291,9 +272,6 @@
     color: "#e39c40"
     radius: 2.5
     power: 10
-  - type: Tag               # Forge-add
-    tags:
-    - Candles  
 
 - type: entity
   name: magic red candle

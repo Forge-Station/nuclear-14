@@ -19,7 +19,7 @@
     slots:
     - neck
   - type: StaticPrice
-    price: 100
+    price: 12
   - type: Tag
     tags:
     - Bedsheet
@@ -65,7 +65,8 @@
   - type: Clothing
     sprite: Clothing/Neck/Bedsheets/captain.rsi
   - type: StealTarget
-    stealGroup: HeadBedsheet
+    stealGroup:
+    - HeadBedsheet
 
 - type: entity
   id: BedsheetCE
@@ -78,12 +79,13 @@
   - type: Clothing
     sprite: Clothing/Neck/Bedsheets/ce.rsi
   - type: StealTarget
-    stealGroup: HeadBedsheet
+    stealGroup:
+    - HeadBedsheet
 
 - type: entity
   id: BedsheetCentcom
   parent: BedsheetBase
-  name: CentCom bedsheet
+  name: CentComm bedsheet
   description: Woven with advanced nanothread for warmth as well as being very decorated, essential for all officials.
   components:
   - type: Sprite
@@ -91,7 +93,8 @@
   - type: Clothing
     sprite: Clothing/Neck/Bedsheets/centcom.rsi
   - type: StealTarget
-    stealGroup: HeadBedsheet
+    stealGroup:
+    - HeadBedsheet
 
 - type: entity
   id: BedsheetClown
@@ -115,7 +118,8 @@
   - type: Clothing
     sprite: Clothing/Neck/Bedsheets/cmo.rsi
   - type: StealTarget
-    stealGroup: HeadBedsheet
+    stealGroup:
+    - HeadBedsheet
 
 - type: entity
   id: BedsheetCosmos
@@ -170,7 +174,8 @@
   - type: Clothing
     sprite: Clothing/Neck/Bedsheets/hop.rsi
   - type: StealTarget
-    stealGroup: HeadBedsheet
+    stealGroup:
+    - HeadBedsheet
 
 - type: entity
   id: BedsheetHOS
@@ -183,7 +188,8 @@
   - type: Clothing
     sprite: Clothing/Neck/Bedsheets/hos.rsi
   - type: StealTarget
-    stealGroup: HeadBedsheet
+    stealGroup:
+    - HeadBedsheet
 
 - type: entity
   id: BedsheetIan
@@ -251,14 +257,15 @@
 - type: entity
   id: BedsheetQM
   parent: BedsheetBase
-  name: LO's bedsheet # DeltaV - Logistics Department replacing Cargo
+  name: QM's bedsheet
   components:
   - type: Sprite
     state: sheetqm
   - type: Clothing
     sprite: Clothing/Neck/Bedsheets/qm.rsi
   - type: StealTarget
-    stealGroup: HeadBedsheet
+    stealGroup:
+    - HeadBedsheet
 
 - type: entity
   id: BedsheetRainbow
@@ -273,7 +280,7 @@
 - type: entity
   id: BedsheetRD
   parent: BedsheetBase
-  name: Mystagogue's bedsheet # DeltaV - Epistemics Department - Replace Research Director with Mystagogue
+  name: RD's bedsheet
   description: It appears to have a beaker emblem, and is made out of fire-resistant material, although it probably won't protect you in the event of fires you're familiar with every day.
   components:
   - type: Sprite
@@ -281,12 +288,13 @@
   - type: Clothing
     sprite: Clothing/Neck/Bedsheets/rd.rsi
   - type: StealTarget
-    stealGroup: HeadBedsheet
+    stealGroup:
+    - HeadBedsheet
 
 - type: entity
   id: BedsheetBrigmedic
   parent: BedsheetBase
-  name: corpsman's bedsheet # DeltaV - rename brigmedic to corpsman
+  name: brigmedic's bedsheet
   description: Not worse than cotton.
   components:
   - type: Sprite
@@ -306,7 +314,7 @@
 
 - type: entity
   id: BedsheetSyndie
-  parent: BedsheetBase
+  parent: [ BedsheetBase, BaseSyndicateContraband ]
   name: syndicate bedsheet
   description: It has a syndicate emblem and it has an aura of evil.
   components:
@@ -327,13 +335,12 @@
 
 - type: entity
   id: BedsheetWhite
-  parent: BedsheetBase
+  parent: [BedsheetBase, BaseSlicingRefinable]
   name: white bedsheet
   components:
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: ClothingOuterGhostSheet #ghostly!
-      amount: 1
   - type: Sprite
     state: sheetwhite
   - type: Clothing

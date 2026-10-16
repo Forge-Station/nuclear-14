@@ -12,7 +12,7 @@ namespace Content.Client.Shuttles.Systems;
 
 public sealed partial class ShuttleSystem
 {
-    [Dependency] private readonly IResourceCache _resource = default!;
+    [Dependency] private IResourceCache _resource = default!;
 
     /// <summary>
     /// Gets the parallax to use for the specified map or uses the fallback if not available.
@@ -35,9 +35,9 @@ public sealed partial class ShuttleSystem
         switch (mapObj)
         {
             case ShuttleBeaconObject beacon:
-                return GetCoordinates(beacon.Coordinates).ToMap(EntityManager, XformSystem);
+                return XformSystem.ToMapCoordinates(GetCoordinates(beacon.Coordinates));
             case ShuttleExclusionObject exclusion:
-                return GetCoordinates(exclusion.Coordinates).ToMap(EntityManager, XformSystem);
+                return XformSystem.ToMapCoordinates(GetCoordinates(exclusion.Coordinates));
             case GridMapObject grid:
                 var gridXform = Transform(grid.Entity);
 

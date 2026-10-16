@@ -1,4 +1,4 @@
-﻿using Content.Shared.Arcade;
+using Content.Shared.Arcade;
 using Robust.Client.GameObjects;
 using Robust.Client.UserInterface;
 
@@ -17,6 +17,7 @@ public sealed class BlockGameBoundUserInterface : BoundUserInterface
         base.Open();
 
         _menu = this.CreateWindow<BlockGameMenu>();
+        _menu.OnAction += SendAction;
     }
 
     protected override void ReceiveMessage(BoundUserInterfaceMessage message)

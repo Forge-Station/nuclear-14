@@ -1,21 +1,22 @@
-﻿using Content.Client.Gameplay;
+using Content.Client.Gameplay;
 using Content.Client.Ghost;
 using Content.Client.UserInterface.Systems.Gameplay;
 using Content.Client.UserInterface.Systems.Ghost.Widgets;
-using Content.Shared.Ghost;
+using Content.Shared.Ghost.Components;
+using Content.Shared.Ghost.Systems;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
 
 namespace Content.Client.UserInterface.Systems.Ghost;
 
 // TODO hud refactor BEFORE MERGE fix ghost gui being too far up
-public sealed class GhostUIController : UIController, IOnSystemChanged<GhostSystem>
+public sealed partial class GhostUIController : UIController, IOnSystemChanged<GhostSystem>
 {
-    [Dependency] private readonly IEntityNetworkManager _net = default!;
+    [Dependency] private IEntityNetworkManager _net = default!;
+
     [UISystemDependency] private readonly GhostSystem? _system = default;
 
     private GhostGui? Gui => UIManager.GetActiveUIWidgetOrNull<GhostGui>();
-
 
     public override void Initialize()
     {
@@ -117,6 +118,18 @@ public sealed class GhostUIController : UIController, IOnSystemChanged<GhostSyst
         _net.SendSystemNetworkMessage(msg);
     }
 
+    private void OnWarpToRandomFollowedClicked()
+    {
+        var msg = new WarpToRandomFollowedRequestEvent();
+        _net.SendSystemNetworkMessage(msg);
+    }
+
+    private void OnWarpToRandomClicked()
+    {
+        var msg = new WarpToRandomRequestEvent();
+        _net.SendSystemNetworkMessage(msg);
+    }
+
     public void LoadGui()
     {
         if (Gui == null)
@@ -125,11 +138,10 @@ public sealed class GhostUIController : UIController, IOnSystemChanged<GhostSyst
         Gui.RequestWarpsPressed += RequestWarps;
         Gui.ReturnToBodyPressed += ReturnToBody;
         Gui.GhostRolesPressed += GhostRolesPressed;
-        Gui.GhostBarPressed += GhostBarPressed; // Goobstation - Ghost Bar
-        Gui.GhostBarWindow.SpawnButtonPressed += GhostBarSpawnPressed; // Goobstation - Ghost Bar
         Gui.TargetWindow.WarpClicked += OnWarpClicked;
         Gui.TargetWindow.OnGhostnadoClicked += OnGhostnadoClicked;
-        Gui.ReturnToRoundPressed += ReturnToRound;
+        Gui.TargetWindow.OnWarpToRandomFollowedClicked += OnWarpToRandomFollowedClicked;
+        Gui.TargetWindow.OnWarpToRandomClicked += OnWarpToRandomClicked;
 
         UpdateGui();
     }
@@ -142,10 +154,7 @@ public sealed class GhostUIController : UIController, IOnSystemChanged<GhostSyst
         Gui.RequestWarpsPressed -= RequestWarps;
         Gui.ReturnToBodyPressed -= ReturnToBody;
         Gui.GhostRolesPressed -= GhostRolesPressed;
-        Gui.GhostBarPressed -= GhostBarPressed; // Goobstation - Ghost Bar
-        Gui.GhostBarWindow.SpawnButtonPressed -= GhostBarSpawnPressed; // Goobstation - Ghost Bar
         Gui.TargetWindow.WarpClicked -= OnWarpClicked;
-        Gui.ReturnToRoundPressed -= ReturnToRound;
 
         Gui.Hide();
     }
@@ -153,11 +162,6 @@ public sealed class GhostUIController : UIController, IOnSystemChanged<GhostSyst
     private void ReturnToBody()
     {
         _system?.ReturnToBody();
-    }
-
-    private void ReturnToRound()
-    {
-        _system?.ReturnToRound();
     }
 
     private void RequestWarps()
@@ -170,15 +174,5 @@ public sealed class GhostUIController : UIController, IOnSystemChanged<GhostSyst
     private void GhostRolesPressed()
     {
         _system?.OpenGhostRoles();
-    }
-
-    private void GhostBarPressed() // Goobstation - Ghost Bar
-    {
-        Gui?.GhostBarWindow.OpenCentered();
-    }
-
-    private void GhostBarSpawnPressed() // Goobstation - Ghost Bar
-    {
-        _system?.GhostBarSpawn();
     }
 }

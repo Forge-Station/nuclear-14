@@ -1,18 +1,13 @@
-# TODO: Pending a rewrite of Mob Replacement System, this entire list should just be moved into a ComponentRegistry on the event.
 - type: entity
-  name: Mimic
+  name: mimic
   id: MobMimic
+  parent: [ SimpleMobBase, MobCombat, BaseSlicingRefinableButchering, BaseMobDestructible ]
   description: Surprise. # When this gets a proper write this should use the object's actual description >:)
   components:
   - type: Tag
     tags:
     - FootstepSound
-  - type: Clickable
-  - type: CombatMode
-  - type: InteractionOutline
   - type: InputMover
-  - type: Input
-    context: "human"
   - type: MobMover
   - type: NpcFactionMember
     factions:
@@ -24,7 +19,6 @@
   - type: Icon
     sprite: Structures/Machines/VendingMachines/cola.rsi
     state: normal
-  - type: Physics
   - type: Fixtures
     fixtures:
       fix1:
@@ -43,3 +37,10 @@
     damage:
       types:
         Blunt: 20
+  - type: MovementSpeedModifier
+    baseWalkSpeed : 1
+    baseSprintSpeed : 1
+  - type: ToolRefinable
+    refineResult:
+    - id: DrinkChangelingStingCan
+      amount: 1

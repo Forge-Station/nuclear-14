@@ -1,15 +1,14 @@
 using Content.Server.Administration;
-using Content.Server.Disposal.Tube;
-using Content.Server.Disposal.Tube.Components;
 using Content.Shared.Administration;
+using Content.Shared.Disposal.Tube;
 using Robust.Shared.Console;
 
 namespace Content.Server.Disposal
 {
     [AdminCommand(AdminFlags.Debug)]
-    public sealed class TubeConnectionsCommand : IConsoleCommand
+    public sealed partial class TubeConnectionsCommand : IConsoleCommand
     {
-        [Dependency] private readonly IEntityManager _entities = default!;
+        [Dependency] private IEntityManager _entities = default!;
 
         public string Command => "tubeconnections";
         public string Description => Loc.GetString("tube-connections-command-description");
@@ -17,8 +16,13 @@ namespace Content.Server.Disposal
 
         public void Execute(IConsoleShell shell, string argStr, string[] args)
         {
-            var player = shell.Player;
-            if (player?.AttachedEntity == null)
+            if (shell.Player is not { } player)
+            {
+                shell.WriteError(Loc.GetString("shell-cannot-run-command-from-server"));
+                return;
+            }
+
+            if (player.AttachedEntity is not { } attached)
             {
                 shell.WriteLine(Loc.GetString("shell-only-players-can-run-this-command"));
                 return;
@@ -50,7 +54,7 @@ namespace Content.Server.Disposal
                 return;
             }
 
-            _entities.System<DisposalTubeSystem>().PopupDirections(id.Value, tube, player.AttachedEntity.Value);
+            _entities.System<DisposalTubeSystem>().PopupDirections((id.Value, tube), player.AttachedEntity.Value);
         }
     }
 }

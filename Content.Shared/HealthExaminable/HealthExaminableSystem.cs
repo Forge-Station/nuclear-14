@@ -1,20 +1,17 @@
-using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
 using Content.Shared.IdentityManagement;
-using Content.Shared.Mobs.Components;
-using Content.Shared.Mobs.Systems;
 using Content.Shared.Verbs;
 using Robust.Shared.Utility;
-using System.Linq;
-using Content.Shared.Traits.Assorted.Components;
 
 namespace Content.Shared.HealthExaminable;
 
-public sealed class HealthExaminableSystem : EntitySystem
+public sealed partial class HealthExaminableSystem : EntitySystem
 {
-    [Dependency] private readonly ExamineSystemShared _examineSystem = default!;
-    [Dependency] private readonly MobThresholdSystem _threshold = default!;
+    [Dependency] private ExamineSystemShared _examineSystem = default!;
+    [Dependency] private DamageableSystem _damageable = default!;
 
     public override void Initialize()
     {
@@ -30,43 +27,32 @@ public sealed class HealthExaminableSystem : EntitySystem
 
         var detailsRange = _examineSystem.IsInDetailsRange(args.User, uid);
 
-        var verb = new ExamineVerb
+        var verb = new ExamineVerb()
         {
             Act = () =>
             {
-                var markup = GetMarkup(args.User, (uid, component), damage);
+                var markup = CreateMarkup(uid, component, damage);
                 _examineSystem.SendExamineTooltip(args.User, uid, markup, false, false);
             },
             Text = Loc.GetString("health-examinable-verb-text"),
             Category = VerbCategory.Examine,
             Disabled = !detailsRange,
             Message = detailsRange ? null : Loc.GetString("health-examinable-verb-disabled"),
-            Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/rejuvenate.svg.192dpi.png"))
+            Icon = new SpriteSpecifier.Texture(new ("/Textures/Interface/VerbIcons/rejuvenate.svg.192dpi.png"))
         };
 
         args.Verbs.Add(verb);
     }
 
-    public FormattedMessage GetMarkup(EntityUid examiner,
-        Entity<HealthExaminableComponent> examinable,
-        DamageableComponent damageable)
-    {
-        return examiner == examinable.Owner && TryComp<SelfAwareComponent>(examinable, out var selfAware)
-            ? CreateMarkupSelfAware(examinable, selfAware, examinable.Comp, damageable)
-            : CreateMarkup(examinable, examinable.Comp, damageable);
-    }
-
-    private FormattedMessage CreateMarkup(EntityUid uid, HealthExaminableComponent component, DamageableComponent damage)
+    public FormattedMessage CreateMarkup(EntityUid uid, HealthExaminableComponent component, DamageableComponent damage)
     {
         var msg = new FormattedMessage();
 
         var first = true;
-
-        var adjustedThresholds = GetAdjustedThresholds(uid, component.Thresholds);
-
+        var damageSpecifier = _damageable.GetAllDamage((uid, damage));
         foreach (var type in component.ExaminableTypes)
         {
-            if (!damage.Damage.DamageDict.TryGetValue(type, out var dmg))
+            if (!damageSpecifier.DamageDict.TryGetValue(type, out var dmg))
                 continue;
 
             if (dmg == FixedPoint2.Zero)
@@ -75,7 +61,7 @@ public sealed class HealthExaminableSystem : EntitySystem
             FixedPoint2 closest = FixedPoint2.Zero;
 
             string chosenLocStr = string.Empty;
-            foreach (var threshold in adjustedThresholds)
+            foreach (var threshold in component.Thresholds)
             {
                 var str = $"health-examinable-{component.LocPrefix}-{type}-{threshold}";
                 var tempLocStr = Loc.GetString($"health-examinable-{component.LocPrefix}-{type}-{threshold}", ("target", Identity.Entity(uid, EntityManager)));
@@ -95,109 +81,25 @@ public sealed class HealthExaminableSystem : EntitySystem
                 continue;
 
             if (!first)
+            {
                 msg.PushNewline();
+            }
             else
+            {
                 first = false;
-            msg.AddMarkup(chosenLocStr);
+            }
+            msg.AddMarkupOrThrow(chosenLocStr);
         }
 
         if (msg.IsEmpty)
-            msg.AddMarkup(Loc.GetString($"health-examinable-{component.LocPrefix}-none"));
+        {
+            msg.AddMarkupOrThrow(Loc.GetString($"health-examinable-{component.LocPrefix}-none"));
+        }
 
         // Anything else want to add on to this?
-        RaiseLocalEvent(uid, new HealthBeingExaminedEvent(msg, false), true);
+        RaiseLocalEvent(uid, new HealthBeingExaminedEvent(msg), true);
 
         return msg;
-    }
-
-    private FormattedMessage CreateMarkupSelfAware(EntityUid target, SelfAwareComponent selfAware, HealthExaminableComponent component, DamageableComponent damage)
-    {
-        var msg = new FormattedMessage();
-
-        var first = true;
-
-        foreach (var type in selfAware.AnalyzableTypes)
-        {
-            if (!damage.Damage.DamageDict.TryGetValue(type, out var typeDmgUnrounded))
-                continue;
-
-            var typeDmg = (int) Math.Round(typeDmgUnrounded.Float(), 0);
-            if (typeDmg <= 0)
-                continue;
-
-            var damageString = Loc.GetString(
-                "health-examinable-selfaware-type-text",
-                ("damageType", Loc.GetString($"health-examinable-selfaware-type-{type}")),
-                ("amount", typeDmg)
-            );
-
-            if (!first)
-                msg.PushNewline();
-            else
-                first = false;
-            msg.AddMarkup(damageString);
-        }
-
-        var adjustedThresholds = GetAdjustedThresholds(target, selfAware.Thresholds);
-
-        foreach (var group in selfAware.DetectableGroups)
-        {
-            if (!damage.DamagePerGroup.TryGetValue(group, out var groupDmg)
-                || groupDmg == FixedPoint2.Zero)
-                continue;
-
-            FixedPoint2 closest = FixedPoint2.Zero;
-
-            string chosenLocStr = string.Empty;
-            foreach (var threshold in adjustedThresholds)
-            {
-                var locName = $"health-examinable-selfaware-group-{group}-{threshold}";
-                var locStr = Loc.GetString(locName);
-
-                var locDoesNotExist = locStr == locName;
-                if (locDoesNotExist)
-                    continue;
-
-                if (groupDmg > threshold && threshold > closest)
-                {
-                    chosenLocStr = locStr;
-                    closest = threshold;
-                }
-            }
-
-            if (closest == FixedPoint2.Zero)
-                continue;
-
-            if (!first)
-                msg.PushNewline();
-            else
-                first = false;
-            msg.AddMarkup(chosenLocStr);
-        }
-
-        if (msg.IsEmpty)
-            msg.AddMarkup(Loc.GetString($"health-examinable-selfaware-none"));
-
-        // Event listeners can know if the examination is Self-Aware.
-        RaiseLocalEvent(target, new HealthBeingExaminedEvent(msg, true), true);
-
-        return msg;
-    }
-
-    /// <summary>
-    ///     Return thresholds as percentages of an entity's critical threshold.
-    /// </summary>
-    private List<FixedPoint2> GetAdjustedThresholds(EntityUid uid, List<FixedPoint2> thresholdPercentages)
-    {
-        FixedPoint2 critThreshold = 0;
-        if (TryComp<MobThresholdsComponent>(uid, out var threshold))
-            critThreshold = _threshold.GetThresholdForState(uid, Shared.Mobs.MobState.Critical, threshold);
-
-        // Fallback to 100 crit threshold if none found
-        if (critThreshold == 0)
-            critThreshold = 100;
-
-        return thresholdPercentages.Select(percentage => critThreshold * percentage).ToList();
     }
 }
 
@@ -209,11 +111,9 @@ public sealed class HealthExaminableSystem : EntitySystem
 public sealed class HealthBeingExaminedEvent
 {
     public FormattedMessage Message;
-    public bool IsSelfAware;
 
-    public HealthBeingExaminedEvent(FormattedMessage message, bool isSelfAware)
+    public HealthBeingExaminedEvent(FormattedMessage message)
     {
         Message = message;
-        IsSelfAware = isSelfAware;
     }
 }

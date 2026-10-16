@@ -1,4 +1,4 @@
-﻿- type: inventoryTemplate
+- type: inventoryTemplate
   id: human
   slots:
     - name: shoes
@@ -52,7 +52,7 @@
       slotFlags: EARS
       stripTime: 3
       uiWindowPos: 2,2
-      strippingWindowPos: 2,1 # Corvax-Change
+      strippingWindowPos: 2,0
       displayName: Ears
     - name: head
       slotTexture: head
@@ -60,12 +60,6 @@
       uiWindowPos: 1,3
       strippingWindowPos: 1,0
       displayName: Head
-    - name: bandage # Corvax-Change-Start
-      slotTexture: bandage
-      slotFlags: BANDAGE
-      uiWindowPos: 2,3
-      strippingWindowPos: 2,0
-      displayName: Bandage # Corvax-Change-End
     - name: pocket1
       slotTexture: pocket
       fullTextureName: template_small
@@ -127,3 +121,6 @@
       uiWindowPos: 3,0
       strippingWindowPos: 0,5
       displayName: Back
+      blacklist:
+        tags:
+        - PetOnly

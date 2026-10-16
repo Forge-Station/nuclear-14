@@ -1,3 +1,4 @@
+using Content.Shared.DeviceNetwork.Systems;
 using Robust.Shared.GameStates;
 
 namespace Content.Shared.DeviceNetwork.Components;
@@ -5,7 +6,8 @@ namespace Content.Shared.DeviceNetwork.Components;
 /// <summary>
 /// Allow entities to jam DeviceNetwork packets.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(fieldDeltas: true)]
+[Access(typeof(DeviceNetworkJammerSystem))]
 public sealed partial class DeviceNetworkJammerComponent : Component
 {
     /// <summary>
@@ -19,6 +21,11 @@ public sealed partial class DeviceNetworkJammerComponent : Component
     /// Network ids are not guaranteed to be limited to DeviceNetIdDefaults.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public HashSet<string> JammableNetworks = [];
+    public HashSet<int> JammableNetworks = [];
 
+    /// <summary>
+    /// Device networks frequencies that wont be jammed.
+    /// </summary>
+    [DataField]
+    public HashSet<DeviceFrequency> FrequenciesExcluded = [];
 }

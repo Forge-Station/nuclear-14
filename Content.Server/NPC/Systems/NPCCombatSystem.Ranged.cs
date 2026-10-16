@@ -1,9 +1,9 @@
 using Content.Server.NPC.Components;
 using Content.Shared.CombatMode;
 using Content.Shared.Interaction;
+using Content.Shared.Physics;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
-using Robust.Server.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Components;
 
@@ -11,15 +11,14 @@ namespace Content.Server.NPC.Systems;
 
 public sealed partial class NPCCombatSystem
 {
-    [Dependency] private readonly SharedCombatModeSystem _combat = default!;
-    [Dependency] private readonly RotateToFaceSystem _rotate = default!;
-    [Dependency] private readonly MapSystem _map = default!;
+    [Dependency] private SharedCombatModeSystem _combat = default!;
+    [Dependency] private RotateToFaceSystem _rotate = default!;
 
-    private EntityQuery<CombatModeComponent> _combatQuery;
-    private EntityQuery<NPCSteeringComponent> _steeringQuery;
-    private EntityQuery<RechargeBasicEntityAmmoComponent> _rechargeQuery;
-    private EntityQuery<PhysicsComponent> _physicsQuery;
-    private EntityQuery<TransformComponent> _xformQuery;
+    [Dependency] private EntityQuery<CombatModeComponent> _combatQuery = default!;
+    [Dependency] private EntityQuery<NPCSteeringComponent> _steeringQuery = default!;
+    [Dependency] private EntityQuery<RechargeBasicEntityAmmoComponent> _rechargeQuery = default!;
+    [Dependency] private EntityQuery<PhysicsComponent> _physicsQuery = default!;
+    [Dependency] private EntityQuery<TransformComponent> _xformQuery = default!;
 
     // TODO: Don't predict for hitscan
     private const float ShootSpeed = 20f;
@@ -31,12 +30,6 @@ public sealed partial class NPCCombatSystem
 
     private void InitializeRanged()
     {
-        _combatQuery = GetEntityQuery<CombatModeComponent>();
-        _physicsQuery = GetEntityQuery<PhysicsComponent>();
-        _rechargeQuery = GetEntityQuery<RechargeBasicEntityAmmoComponent>();
-        _steeringQuery = GetEntityQuery<NPCSteeringComponent>();
-        _xformQuery = GetEntityQuery<TransformComponent>();
-
         SubscribeLocalEvent<NPCRangedCombatComponent, ComponentStartup>(OnRangedStartup);
         SubscribeLocalEvent<NPCRangedCombatComponent, ComponentShutdown>(OnRangedShutdown);
     }
@@ -97,7 +90,7 @@ public sealed partial class NPCCombatSystem
                 _combat.SetInCombatMode(uid, true, combatMode);
             }
 
-            if (!_gun.TryGetGun(uid, out var gunUid, out var gun))
+            if (!_gun.TryGetGun(uid, out var gun))
             {
                 comp.Status = CombatStatus.NoWeapon;
                 comp.ShootAccumulator = 0f;
@@ -105,12 +98,12 @@ public sealed partial class NPCCombatSystem
             }
 
             var ammoEv = new GetAmmoCountEvent();
-            RaiseLocalEvent(gunUid, ref ammoEv);
+            RaiseLocalEvent(gun, ref ammoEv);
 
             if (ammoEv.Count == 0)
             {
                 // Recharging then?
-                if (_rechargeQuery.HasComponent(gunUid))
+                if (_rechargeQuery.HasComponent(gun))
                 {
                     continue;
                 }
@@ -134,8 +127,10 @@ public sealed partial class NPCCombatSystem
             if (comp.LOSAccumulator < 0f)
             {
                 comp.LOSAccumulator += UnoccludedCooldown;
+
                 // For consistency with NPC steering.
-                comp.TargetInLOS = _interaction.InRangeUnobstructed(uid, comp.Target, distance + 0.1f);
+                var collisionGroup = comp.UseOpaqueForLOSChecks ? CollisionGroup.Opaque : (CollisionGroup.Impassable | CollisionGroup.InteractImpassable);
+                comp.TargetInLOS = _interaction.InRangeUnobstructed(uid, comp.Target, distance + 0.1f, collisionGroup);
             }
 
             if (!comp.TargetInLOS)
@@ -188,20 +183,23 @@ public sealed partial class NPCCombatSystem
 
             EntityCoordinates targetCordinates;
 
-            if (_mapManager.TryFindGridAt(xform.MapID, targetPos, out var gridUid, out var mapGrid))
-                targetCordinates = new EntityCoordinates(gridUid, mapGrid.WorldToLocal(targetSpot));
+            if (_map.TryFindGridAt(xform.MapID, targetPos, out var gridUid, out var mapGrid))
+            {
+                targetCordinates = new EntityCoordinates(gridUid, _map.WorldToLocal(gridUid, mapGrid, targetSpot));
+            }
             else
+            {
                 targetCordinates = new EntityCoordinates(xform.MapUid!.Value, targetSpot);
+            }
 
             comp.Status = CombatStatus.Normal;
 
-            if (gun.NextFire > _timing.CurTime)
+            if (gun.Comp.NextFire > _timing.CurTime)
             {
                 return;
             }
 
-            _gun.ChangeTarget(comp.Target, gun); // Corvax-Add
-            _gun.AttemptShoot(uid, gunUid, gun, targetCordinates);
+            _gun.AttemptShoot(uid, gun, targetCordinates, comp.Target);
         }
     }
 }

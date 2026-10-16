@@ -1,6 +1,6 @@
 - type: entity
   name: bow
-  parent: BaseItem
+  parent: [BaseItem, BaseMinorContraband]
   id: BaseBow
   description: The original rooty tooty point and shooty.
   abstract: true
@@ -49,6 +49,7 @@
 - type: entity
   id: BowImprovised
   parent: BaseBow
+  name: improvised shortbow
   components:
   - type: Sprite
     layers:
@@ -90,3 +91,6 @@
         base:
           True: { state: wielded }
           False: { state: unwielded }
+  - type: Construction
+    graph: ImprovisedBow
+    node: ImprovisedBow

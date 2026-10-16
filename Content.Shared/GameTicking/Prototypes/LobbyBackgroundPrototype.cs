@@ -1,5 +1,4 @@
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.GameTicking.Prototypes;
@@ -7,8 +6,7 @@ namespace Content.Shared.GameTicking.Prototypes;
 /// <summary>
 /// Prototype for a lobby background the game can choose.
 /// </summary>
-[Prototype("lobbyBackground")]
-[NetSerializable, Serializable]
+[Prototype]
 public sealed partial class LobbyBackgroundPrototype : IPrototype
 {
     /// <inheritdoc/>
@@ -18,12 +16,18 @@ public sealed partial class LobbyBackgroundPrototype : IPrototype
     /// <summary>
     /// The sprite to use as the background. This should ideally be 1920x1080.
     /// </summary>
-    [DataField("background", required: true)]
+    [DataField(required: true)]
     public ResPath Background = default!;
 
+    /// <summary>
+    /// The title of the background to be displayed in the lobby.
+    /// </summary>
     [DataField]
-    public string? Name;
+    public LocId Title = "lobby-state-background-unknown-title";
 
+    /// <summary>
+    /// The artist who made the art for the background.
+    /// </summary>
     [DataField]
-    public string? Artist;
+    public LocId Artist = "lobby-state-background-unknown-artist";
 }

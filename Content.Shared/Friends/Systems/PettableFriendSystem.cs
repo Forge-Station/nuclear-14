@@ -4,25 +4,23 @@ using Content.Shared.Interaction.Events;
 using Content.Shared.NPC.Components;
 using Content.Shared.NPC.Systems;
 using Content.Shared.Popups;
-using Content.Shared.Timing;
+using Content.Shared.Timing.Components;
+using Content.Shared.Timing.Systems;
 
 namespace Content.Shared.Friends.Systems;
 
-public sealed class PettableFriendSystem : EntitySystem
+public sealed partial class PettableFriendSystem : EntitySystem
 {
-    [Dependency] private readonly NpcFactionSystem _factionException = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly UseDelaySystem _useDelay = default!;
+    [Dependency] private NpcFactionSystem _factionException = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private UseDelaySystem _useDelay = default!;
 
-    private EntityQuery<FactionExceptionComponent> _exceptionQuery;
-    private EntityQuery<UseDelayComponent> _useDelayQuery;
+    [Dependency] private EntityQuery<FactionExceptionComponent> _exceptionQuery = default!;
+    [Dependency] private EntityQuery<UseDelayComponent> _useDelayQuery = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-
-        _exceptionQuery = GetEntityQuery<FactionExceptionComponent>();
-        _useDelayQuery = GetEntityQuery<UseDelayComponent>();
 
         SubscribeLocalEvent<PettableFriendComponent, UseInHandEvent>(OnUseInHand);
         SubscribeLocalEvent<PettableFriendComponent, GotRehydratedEvent>(OnRehydrated);
@@ -32,23 +30,23 @@ public sealed class PettableFriendSystem : EntitySystem
     {
         var (uid, comp) = ent;
         var user = args.User;
-        if (args.Handled || !_exceptionQuery.TryGetComponent(uid, out var exceptionComp))
-            return;
-
-        if (_useDelayQuery.TryGetComponent(uid, out var useDelay) && !_useDelay.TryResetDelay((uid, useDelay), true))
+        if (args.Handled || !_exceptionQuery.TryComp(uid, out var exceptionComp))
             return;
 
         var exception = (uid, exceptionComp);
-        if (_factionException.IsIgnored(exception, user))
+        if (!_factionException.IsIgnored(exception, user))
         {
-            _popup.PopupClient(Loc.GetString(comp.FailureString, ("target", uid)), user, user);
+            // you have made a new friend :)
+            _popup.PopupEntity(Loc.GetString(comp.SuccessString, ("target", uid)), user, user);
+            _factionException.IgnoreEntity(exception, user);
+            args.Handled = true;
             return;
         }
 
-        // you have made a new friend :)
-        _popup.PopupClient(Loc.GetString(comp.SuccessString, ("target", uid)), user, user);
-        _factionException.IgnoreEntity(exception, user);
-        args.Handled = true;
+        if (_useDelayQuery.TryComp(uid, out var useDelay) && !_useDelay.TryResetDelay((uid, useDelay), true))
+            return;
+
+        _popup.PopupEntity(Loc.GetString(comp.FailureString, ("target", uid)), user, user);
     }
 
     private void OnRehydrated(Entity<PettableFriendComponent> ent, ref GotRehydratedEvent args)

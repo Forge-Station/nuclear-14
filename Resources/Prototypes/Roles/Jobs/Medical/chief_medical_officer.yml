@@ -5,28 +5,27 @@
   name: job-name-cmo
   description: job-description-cmo
   playTimeTracker: JobChiefMedicalOfficer
-  antagAdvantage: 6 # DeltaV - Reduced TC: Head of Staff
-  # requirements:
-    # - !type:CharacterTraitRequirement
-      # inverted: true
-      # traits:
-        # - Foreigner
-        # - ForeignerLight
-  weight: 10
+  requirements:
+    - !type:RoleTimeRequirement
+      role: JobChemist
+      time: 2.5h
+    - !type:RoleTimeRequirement
+      role: JobMedicalDoctor
+      time: 5h
+    - !type:DepartmentTimeRequirement
+      department: Medical
+      time: 10h
   startingGear: CMOGear
   icon: "JobIconChiefMedicalOfficer"
-  requireAdminNotify: true
   supervisors: job-supervisors-captain
-  canBeAntag: false
+  guides: [ Command ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Medical
   - Command
   - Maintenance
   - Chemistry
   - ChiefMedicalOfficer
-  - Paramedic # DeltaV - Add Paramedic access
-  - External # DeltaV - Paramedics need this access
-  - Psychologist # DeltaV - Add Psychologist access
+  - Brig
   - Cryogenics
   special:
   - !type:AddImplantSpecial
@@ -34,36 +33,24 @@
   - !type:AddComponentSpecial
     components:
       - type: CommandStaff
-  - !type:AddComponentSpecial
-    components:
-    - type: CPRTraining
-    - type: SurgerySpeedModifier
-      speedModifier: 2.5
-  afterLoadoutSpecial:
-  - !type:ModifyEnvirosuitSpecial
-    charges: 8
-  - !type:ModifyEnvirohelmSpecial
-    powerCell: PowerCellHigh
-  setPreference: false
 
 - type: startingGear
   id: CMOGear
-  subGear:
-  - CMOPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitCMO
-    back: ClothingBackpackCMOFilled
-    shoes: ClothingShoesColorBrown
     id: CMOPDA
     ears: ClothingHeadsetCMO
-  innerClothingSkirt: ClothingUniformJumpskirtCMO
-  satchel: ClothingBackpackSatchelCMOFilled
-  duffelbag: ClothingBackpackDuffelCMOFilled
+  storage:
+    back:
+    - Flash
 
-- type: startingGear
-  id: CMOPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: ChiefMedicalOfficerChameleonOutfit
+  job: ChiefMedicalOfficer
+  hasMindShield: true
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitCMO
-    head: ClothingHeadEnvirohelmCMO
-    gloves: ClothingHandsGlovesEnviroglovesWhite
+    head: ClothingHeadHatBeretCmo
+    eyes: ClothingEyesHudMedical
+    mask: ClothingMaskSterile
+    neck: ClothingCloakCmo
+    outerClothing: ClothingOuterCoatLabCmo
+    gloves: ClothingHandsGlovesNitrile

@@ -4,6 +4,9 @@ reagent-desc-e-z-nutrient = Give your plants some of those EZ nutrients! Dionas 
 reagent-name-left4-zed = left-4-zed
 reagent-desc-left4-zed = A cocktail of mutagenic compounds that gives nutrients, harms and affects plant life's genome.
 
+reagent-name-mutagenic-fertilizer = mutagenic fertilizer
+reagent-desc-mutagenic-fertilizer = A pungent fertilizer that mutates plants while keeping them edible.
+
 reagent-name-pest-killer = pest killer
 reagent-desc-pest-killer = A mixture that targets pests. While useful it slowly poisons plants with toxins, be careful when using it.
 
@@ -21,3 +24,6 @@ reagent-desc-ammonia = An effective fertilizer, it gives your plants some nutrie
 
 reagent-name-diethylamine = diethylamine
 reagent-desc-diethylamine = A very potent fertilizer, treats plants with nutrients, eliminates pests, and sometimes it can even speed up growth.
+
+reagent-name-sedin = sedin
+reagent-desc-sedin = A modified version of diethylamine that can restore seeds on plants at the cost of potency.

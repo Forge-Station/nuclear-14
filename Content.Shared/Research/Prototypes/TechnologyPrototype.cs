@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Prototypes;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Research.Prototypes;
@@ -6,7 +6,7 @@ namespace Content.Shared.Research.Prototypes;
 /// <summary>
 /// This is a prototype for a technology that can be unlocked.
 /// </summary>
-[Prototype("technology")]
+[Prototype]
 public sealed partial class TechnologyPrototype : IPrototype
 {
     /// <inheritdoc/>
@@ -69,9 +69,6 @@ public sealed partial class TechnologyPrototype : IPrototype
     /// </summary>
     [DataField]
     public IReadOnlyList<GenericUnlock> GenericUnlocks = new List<GenericUnlock>();
-
-    [DataField]
-    public float SoftCapContribution = 1;
 }
 
 [DataDefinition]

@@ -1,5 +1,4 @@
 using Content.Shared.Hands.Components;
-using Content.Shared.Nyanotrasen.Item.PseudoItem;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;

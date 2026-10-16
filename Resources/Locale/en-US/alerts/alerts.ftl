@@ -4,12 +4,6 @@ alerts-low-oxygen-desc = There is [color=red]not enough oxygen[/color] in the ai
 alerts-low-nitrogen-name = [color=red]Low Nitrogen[/color]
 alerts-low-nitrogen-desc = There is [color=red]not enough nitrogen[/color] in the air you are breathing. Put on [color=green]internals[/color].
 
-alerts-low-plasma-name = [color=red]Low Plasma[/color]
-alerts-low-plasma-desc = There is [color=red]not enough plasma[/color] in the air you are breathing. Put on [color=green]internals[/color].
-
-alerts-high-oxygen-name = [color=red]High Oxygen[/color]
-alerts-high-oxygen-desc = There is [color=red]too much oxygen[/color] in the air you are breathing. Put on [color=green]internals[/color].
-
 alerts-high-toxin-name = [color=red]High Toxin Level[/color]
 alerts-high-toxin-desc = There are [color=red]too many toxins[/color] in the air you are breathing. Put on [color=green]internals[/color] or get away.
 
@@ -17,7 +11,7 @@ alerts-low-pressure-name = [color=red]Low Pressure[/color]
 alerts-low-pressure-desc = The air around you is [color=red]hazardously thin[/color]. A [color=green]space suit[/color] would protect you.
 
 alerts-high-pressure-name = [color=red]High Pressure[/color]
-alerts-high-pressure-desc = The air around you is [color=red]hazardously thick[/color]. A [color=green]pressurized suit[/color] would be enough protect you.
+alerts-high-pressure-desc = The air around you is [color=red]hazardously thick[/color]. A [color=green]pressurized suit[/color] would be enough to protect you.
 
 alerts-on-fire-name = [color=red]On Fire[/color]
 alerts-on-fire-desc = You're [color=red]on fire[/color]. Click the alert to stop, drop and roll to put the fire out or move to a vacuum area.
@@ -33,14 +27,17 @@ alerts-weightless-desc =
     Gravity has ceased affecting you, and you're floating around aimlessly. Find something sturdy to hold onto, or throw or shoot something in a direction opposite of you.
     Mag-boots or jetpacks would help you move with more control.
 
-alerts-stunned-name = [color=yellow]Stunned[/color]
-alerts-stunned-desc = You're [color=yellow]stunned[/color]! Something is impairing your ability to move or interact with objects.
+alerts-walking-name = Walking
+alerts-walking-desc = You are walking, moving at a slow pace.
+
+alerts-knockdown-name = [color=yellow]Knocked Down[/color]
+alerts-knockdown-desc = You're [color=yellow]Knocked Down[/color]! Something has slipped or pushed you over, encumbering your movement.
 
 alerts-handcuffed-name = [color=yellow]Handcuffed[/color]
 alerts-handcuffed-desc = You're [color=yellow]handcuffed[/color] and can't use your hands. If anyone drags you, you won't be able to resist.
 
 alerts-ensnared-name = [color=yellow]Ensnared[/color]
-alerts-ensnared-desc = You're [color=yellow]ensnared[/color] and is impairing your ability to move.
+alerts-ensnared-desc = You're [color=yellow]ensnared[/color] and is impairing your ability to move. Click with a free hand to remove.
 
 alerts-buckled-name = [color=yellow]Buckled[/color]
 alerts-buckled-desc = You've been [color=yellow]buckled[/color] to something. Click the alert to unbuckle unless you're [color=yellow]handcuffed.[/color]
@@ -81,14 +78,8 @@ alerts-thirsty-desc = Something to drink would be good right about now.
 alerts-parched-name = [color=red]Parched[/color]
 alerts-parched-desc = You're severely thirsty. The thirst makes moving around a chore.
 
-alerts-muted-name = Muted
-alerts-muted-desc = You have lost the ability to speak.
-
-alerts-vow-silence-name = Vow of Silence
-alerts-vow-silence-desc = You have taken a vow of silence as part of initiation into the Mystiko Tagma Mimon. Click to break your vow.
-
 alerts-vow-broken-name = Vow Broken
-alerts-vow-broken-desc = You've broken your vows to Mimes everywhere. You can speak, but you've lost your powers for at least 5 entire minutes!!! Click to try and retake your vow.
+alerts-vow-broken-desc = You've broken your vows to Mimes everywhere. You can speak and write, but you've lost your powers for at least 5 entire minutes!!! Click to try and retake your vow.
 
 alerts-pulled-name = Pulled
 alerts-pulled-desc = You're being pulled. Move to break free.
@@ -114,11 +105,14 @@ alerts-revenant-essence-desc = The power of souls. It sustains you and is used f
 alerts-revenant-corporeal-name = Corporeal
 alerts-revenant-corporeal-desc = You have manifested physically. People around you can see and hurt you.
 
-alerts-walking-name = Walking
-alerts-walking-desc = Indicates how fast you're moving.
+alerts-rooted-name = Rooted
+alerts-rooted-desc = You are attached to the ground. You can't slip, but you absorb fluids under you.
 
-alerts-offer-name = Offer
-alerts-offer-desc = Someone offers you an item.
+alerts-stealthy-name = Pickpocketing
+alerts-stealthy-desc = Whether you are currently pickpocketing. Click to toggle.
 
-alerts-deflecting-name = Deflecting
-alerts-deflecting-desc = You have a chance to deflect incoming projectiles. Standing still or moving slowly will increase this chance.
+alerts-prying-name = Prying
+alerts-prying-desc = You can innately pry doors open using alternative interaction.
+
+alerts-changeling-chemicals-name = Chemicals
+alerts-changeling-chemicals-desc = The chemicals stored within our glands. We use them for many of our abilities to function. They regenerate over time.

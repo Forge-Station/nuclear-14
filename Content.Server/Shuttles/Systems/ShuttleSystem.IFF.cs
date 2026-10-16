@@ -1,4 +1,5 @@
 using Content.Server.Shuttles.Components;
+using Content.Shared.CCVar;
 using Content.Shared.Shuttles.BUIStates;
 using Content.Shared.Shuttles.Components;
 using Content.Shared.Shuttles.Events;
@@ -11,42 +12,57 @@ public sealed partial class ShuttleSystem
     {
         SubscribeLocalEvent<IFFConsoleComponent, AnchorStateChangedEvent>(OnIFFConsoleAnchor);
         SubscribeLocalEvent<IFFConsoleComponent, IFFShowIFFMessage>(OnIFFShow);
-        SubscribeLocalEvent<IFFConsoleComponent, IFFShowVesselMessage>(OnIFFShowVessel);
+        SubscribeLocalEvent<IFFConsoleComponent, MapInitEvent>(OnInitIFFConsole);
+        SubscribeLocalEvent<GridSplitEvent>(OnGridSplit);
+    }
+
+    private void OnGridSplit(ref GridSplitEvent ev)
+    {
+        var splitMass = _cfg.GetCVar(CCVars.HideSplitGridsUnder);
+
+        if (splitMass < 0)
+            return;
+
+        foreach (var grid in ev.NewGrids)
+        {
+            if (!_physicsQuery.TryGetComponent(grid, out var physics) ||
+                physics.Mass > splitMass)
+            {
+                continue;
+            }
+
+            AddIFFFlag(grid, IFFFlags.HideLabel);
+        }
     }
 
     private void OnIFFShow(EntityUid uid, IFFConsoleComponent component, IFFShowIFFMessage args)
     {
-        if (!TryComp<TransformComponent>(uid, out var xform) || xform.GridUid == null ||
-            (component.AllowedFlags & IFFFlags.HideLabel) == 0x0)
+        if (!TryComp(uid, out TransformComponent? xform) || xform.GridUid == null)
         {
             return;
         }
 
         if (!args.Show)
         {
-            AddIFFFlag(xform.GridUid.Value, IFFFlags.HideLabel);
+            AddAllSupportedIFFFlags(xform, component);
         }
         else
         {
             RemoveIFFFlag(xform.GridUid.Value, IFFFlags.HideLabel);
+            RemoveIFFFlag(xform.GridUid.Value, IFFFlags.Hide);
         }
     }
 
-    private void OnIFFShowVessel(EntityUid uid, IFFConsoleComponent component, IFFShowVesselMessage args)
+    private void OnInitIFFConsole(EntityUid uid, IFFConsoleComponent component, MapInitEvent args)
     {
-        if (!TryComp<TransformComponent>(uid, out var xform) || xform.GridUid == null ||
-            (component.AllowedFlags & IFFFlags.Hide) == 0x0)
+        if (!TryComp(uid, out TransformComponent? xform) || xform.GridUid == null)
         {
             return;
         }
 
-        if (!args.Show)
+        if (component.HideOnInit)
         {
-            AddIFFFlag(xform.GridUid.Value, IFFFlags.Hide);
-        }
-        else
-        {
-            RemoveIFFFlag(xform.GridUid.Value, IFFFlags.Hide);
+            AddAllSupportedIFFFlags(xform, component);
         }
     }
 
@@ -54,7 +70,7 @@ public sealed partial class ShuttleSystem
     {
         // If we anchor / re-anchor then make sure flags up to date.
         if (!args.Anchored ||
-            !TryComp<TransformComponent>(uid, out var xform) ||
+            !TryComp(uid, out TransformComponent? xform) ||
             !TryComp<IFFComponent>(xform.GridUid, out var iff))
         {
             _uiSystem.SetUiState(uid, IFFConsoleUiKey.Key, new IFFConsoleBoundUserInterfaceState()
@@ -88,6 +104,27 @@ public sealed partial class ShuttleSystem
                 AllowedFlags = comp.AllowedFlags,
                 Flags = component.Flags,
             });
+        }
+    }
+
+    // Made this method to avoid copy and pasting.
+    /// <summary>
+    /// Adds all IFF flags that are allowed by AllowedFlags to the grid.
+    /// </summary>
+    private void AddAllSupportedIFFFlags(TransformComponent xform, IFFConsoleComponent component)
+    {
+        if (xform.GridUid == null)
+        {
+            return;
+        }
+
+        if ((component.AllowedFlags & IFFFlags.HideLabel) != 0x0)
+        {
+            AddIFFFlag(xform.GridUid.Value, IFFFlags.HideLabel);
+        }
+        if ((component.AllowedFlags & IFFFlags.Hide) != 0x0)
+        {
+            AddIFFFlag(xform.GridUid.Value, IFFFlags.Hide);
         }
     }
 }

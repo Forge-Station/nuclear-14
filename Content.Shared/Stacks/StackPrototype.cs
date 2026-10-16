@@ -1,47 +1,51 @@
-﻿using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Stacks;
 
-[Prototype("stack")]
-public sealed partial class StackPrototype : IPrototype
+/// <summary>
+/// Prototype used to combine and spawn like-entities for <see cref="SharedStackSystem"/>.
+/// </summary>
+[Prototype]
+public sealed partial class StackPrototype : IPrototype, IInheritingPrototype
 {
-    [ViewVariables]
+    ///  <inheritdoc />
     [IdDataField]
     public string ID { get; private set; } = default!;
 
-    /// <summary>
-    ///     Human-readable name for this stack type e.g. "Steel"
-    /// </summary>
-    /// <remarks>This is a localization string ID.</remarks>
-    [DataField("name")]
-    public string Name { get; private set; } = string.Empty;
+    ///  <inheritdoc />
+    [ParentDataField(typeof(AbstractPrototypeIdArraySerializer<StackPrototype>))]
+    public string[]? Parents { get; private set; }
+
+    ///  <inheritdoc />
+    [NeverPushInheritance]
+    [AbstractDataField]
+    public bool Abstract { get; private set; }
 
     /// <summary>
-    ///     An icon that will be used to represent this stack type.
+    /// Human-readable name for this stack type e.g. "Steel"
     /// </summary>
-    [DataField("icon")]
+    /// <remarks>This is a localization string ID.</remarks>
+    [DataField]
+    public LocId Name { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// An icon that will be used to represent this stack type.
+    /// </summary>
+    [DataField]
     public SpriteSpecifier? Icon { get; private set; }
 
     /// <summary>
-    ///     The entity id that will be spawned by default from this stack.
+    /// The entity id that will be spawned by default from this stack.
     /// </summary>
-    [DataField("spawn", required: true, customTypeSerializer:typeof(PrototypeIdSerializer<EntityPrototype>))]
-    public string Spawn { get; private set; } = string.Empty;
+    [DataField(required: true)]
+    public EntProtoId<StackComponent> Spawn { get; private set; } = string.Empty;
 
     /// <summary>
-    ///     The maximum amount of things that can be in a stack.
-    ///     Can be overriden on <see cref="StackComponent"/>
-    ///     if null, simply has unlimited max count.
+    /// The maximum amount of things that can be in a stack, can be overriden on <see cref="StackComponent"/>.
+    /// If null, simply has unlimited max count.
     /// </summary>
-    [DataField("maxCount")]
+    [DataField]
     public int? MaxCount { get; private set; }
-
-    /// <summary>
-    /// The size of an individual unit of this stack.
-    /// </summary>
-    [DataField("itemSize")]
-    public int? ItemSize;
 }
-

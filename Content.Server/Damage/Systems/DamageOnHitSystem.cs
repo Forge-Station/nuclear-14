@@ -1,30 +1,24 @@
 using Content.Server.Damage.Components;
-using Content.Shared.Damage;
-using Robust.Shared.Player;
 using Content.Shared.Weapons.Melee.Events;
 using System.Linq;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Damage.Systems;
 
-public sealed class DamageOnHitSystem : EntitySystem
+public sealed partial class DamageOnHitSystem : EntitySystem
 {
-    [Dependency] private readonly DamageableSystem _damageableSystem = default!;
-    private readonly Random _random = new Random();
+    [Dependency] private DamageableSystem _damageableSystem = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<DamageOnHitComponent, MeleeHitEvent>(DamageSelf);
+        SubscribeLocalEvent<DamageOnHitComponent, MeleeHitEvent>(DamageItem);
     }
-
-    // Looks for a hit, then damages the entity an appropriate amount.
-    private void DamageSelf(EntityUid uid, DamageOnHitComponent component, MeleeHitEvent args)
+    // Looks for a hit, then damages the held item an appropriate amount.
+    private void DamageItem(EntityUid uid, DamageOnHitComponent component, MeleeHitEvent args)
     {
         if (args.HitEntities.Any()) {
-            _damageableSystem.TryChangeDamage(uid, component.Damage, component.IgnoreResistances,
-                targetPart: component.TargetParts is not null
-                            ? component.TargetParts[_random.Next(component.TargetParts.Count)]
-                            : null);
+            _damageableSystem.TryChangeDamage(uid, component.Damage, component.IgnoreResistances);
         }
     }
 }

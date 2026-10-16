@@ -1,22 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\RobustToolbox\Imports\Shared.props" />
-  <Import Project="..\RobustToolbox\Imports\Server.props" />
-  <Import Project="..\RobustToolbox\Imports\Client.props" />
-  <Import Project="..\RobustToolbox\Imports\Testing.props" />
-  <Import Project="..\RobustToolbox\Imports\Benchmarks.props" />
+  <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <PropertyGroup>
-    <!-- Work around https://github.com/dotnet/project-system/issues/4314 -->
-    <TargetFramework>$(TargetFramework)</TargetFramework>
     <OutputPath>..\bin\Content.Benchmarks\</OutputPath>
-    <IsPackable>false</IsPackable>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>12</LangVersion>
+    <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
+    <Nullable>disable</Nullable>
+    <DefineConstants>$(DefineConstants);ALLOW_BAD_PRACTICES</DefineConstants>
   </PropertyGroup>
+  <Import Project="../MSBuild/Content.props" />
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
-    <PackageReference Include="Moq" />
+
+    <!-- pin transitive deps -->
+    <PackageReference Include="System.Management" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Content.Client\Content.Client.csproj" />
@@ -25,5 +24,11 @@
     <ProjectReference Include="..\Content.Tests\Content.Tests.csproj" />
     <ProjectReference Include="..\Content.IntegrationTests\Content.IntegrationTests.csproj" />
   </ItemGroup>
-  <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
+
+  <Import Project="..\RobustToolbox\Imports\Lidgren.props" />
+  <Import Project="..\RobustToolbox\Imports\Client.props" />
+  <Import Project="..\RobustToolbox\Imports\Server.props" />
+  <Import Project="..\RobustToolbox\Imports\Shared.props" />
+  <Import Project="..\RobustToolbox\Imports\Benchmarks.props" />
+  <Import Project="..\RobustToolbox\Imports\Testing.props" />
 </Project>

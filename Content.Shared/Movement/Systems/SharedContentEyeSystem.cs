@@ -1,11 +1,10 @@
 using System.Numerics;
 using Content.Shared.Administration;
 using Content.Shared.Administration.Managers;
-using Content.Shared.CCVar;
-using Content.Shared.Ghost;
+using Content.Shared.Camera;
+using Content.Shared.Ghost.Components;
 using Content.Shared.Input;
 using Content.Shared.Movement.Components;
-using Robust.Shared.Configuration;
 using Robust.Shared.Input.Binding;
 using Robust.Shared.Player;
 using Robust.Shared.Serialization;
@@ -15,24 +14,25 @@ namespace Content.Shared.Movement.Systems;
 /// <summary>
 /// Lets specific sessions scroll and set their zoom directly.
 /// </summary>
-public abstract class SharedContentEyeSystem : EntitySystem
+public abstract partial class SharedContentEyeSystem : EntitySystem
 {
-    [Dependency] private readonly ISharedAdminManager _admin = default!;
-    [Dependency] private readonly IConfigurationManager _config = default!;
+    [Dependency] private ISharedAdminManager _admin = default!;
 
-    // Will be overridden according to config.
-    public readonly Vector2 DefaultZoom = Vector2.One;
-    public float ZoomMod { get; private set; } = 1f;
-    public int ZoomLevels { get; private set; } = 1;
-    public Vector2 MinZoom { get; private set; } = Vector2.One;
+    // Admin flags required to ignore normal eye restrictions.
+    public const AdminFlags EyeFlag = AdminFlags.Debug;
 
-    [Dependency] private readonly SharedEyeSystem _eye = default!;
+    public const float ZoomMod = 1.5f;
+    public static readonly Vector2 DefaultZoom = Vector2.One;
+    public static readonly Vector2 MinZoom = DefaultZoom * (float)Math.Pow(ZoomMod, -3);
+
+    [Dependency] private SharedEyeSystem _eye = default!;
 
     public override void Initialize()
     {
         base.Initialize();
         SubscribeLocalEvent<ContentEyeComponent, ComponentStartup>(OnContentEyeStartup);
         SubscribeAllEvent<RequestTargetZoomEvent>(OnContentZoomRequest);
+        SubscribeAllEvent<RequestPvsScaleEvent>(OnPvsScale);
         SubscribeAllEvent<RequestEyeEvent>(OnRequestEye);
 
         CommandBinds.Builder
@@ -43,28 +43,12 @@ public abstract class SharedContentEyeSystem : EntitySystem
 
         Log.Level = LogLevel.Info;
         UpdatesOutsidePrediction = true;
-
-        Subs.CVar(_config, CCVars.ZoomLevelStep, value =>
-        {
-            ZoomMod = value;
-            RecalculateZoomLevels();
-        }, true);
-        Subs.CVar(_config, CCVars.ZoomLevels, value =>
-        {
-            ZoomLevels = value;
-            RecalculateZoomLevels();
-        }, true);
     }
 
     public override void Shutdown()
     {
         base.Shutdown();
         CommandBinds.Unregister<SharedContentEyeSystem>();
-    }
-
-    private void RecalculateZoomLevels()
-    {
-        MinZoom = DefaultZoom * (float) Math.Pow(ZoomMod, -ZoomLevels);
     }
 
     private void ResetZoom(ICommonSession? session)
@@ -104,10 +88,16 @@ public abstract class SharedContentEyeSystem : EntitySystem
 
     private void OnContentZoomRequest(RequestTargetZoomEvent msg, EntitySessionEventArgs args)
     {
-        var ignoreLimit = msg.IgnoreLimit && _admin.HasAdminFlag(args.SenderSession, AdminFlags.Debug);
+        var ignoreLimit = msg.IgnoreLimit && _admin.HasAdminFlag(args.SenderSession, EyeFlag);
 
         if (TryComp<ContentEyeComponent>(args.SenderSession.AttachedEntity, out var content))
             SetZoom(args.SenderSession.AttachedEntity.Value, msg.TargetZoom, ignoreLimit, eye: content);
+    }
+
+    private void OnPvsScale(RequestPvsScaleEvent ev, EntitySessionEventArgs args)
+    {
+        if (args.SenderSession.AttachedEntity is {} uid && _admin.HasAdminFlag(args.SenderSession, EyeFlag))
+            _eye.SetPvsScale(uid, ev.Scale);
     }
 
     private void OnRequestEye(RequestEyeEvent msg, EntitySessionEventArgs args)
@@ -136,6 +126,7 @@ public abstract class SharedContentEyeSystem : EntitySystem
 
     public void ResetZoom(EntityUid uid, ContentEyeComponent? component = null)
     {
+        _eye.SetPvsScale(uid, 1);
         SetZoom(uid, DefaultZoom, eye: component);
     }
 
@@ -149,6 +140,49 @@ public abstract class SharedContentEyeSystem : EntitySystem
         Dirty(uid, component);
     }
 
+    public void UpdateEyeOffset(Entity<EyeComponent> eye)
+    {
+        var evAttempt = new GetEyeOffsetAttemptEvent();
+        RaiseLocalEvent(eye, ref evAttempt);
+
+        if (evAttempt.Cancelled)
+        {
+            _eye.SetOffset(eye, Vector2.Zero, eye);
+            return;
+        }
+
+        var ev = new GetEyeOffsetEvent();
+        RaiseLocalEvent(eye, ref ev);
+
+        var evRelayed = new GetEyeOffsetRelayedEvent();
+        RaiseLocalEvent(eye, ref evRelayed);
+
+        _eye.SetOffset(eye, ev.Offset + evRelayed.Offset, eye);
+    }
+
+    public void UpdatePvsScale(EntityUid uid, ContentEyeComponent? contentEye = null, EyeComponent? eye = null)
+    {
+        if (!Resolve(uid, ref contentEye) || !Resolve(uid, ref eye))
+            return;
+
+        var evAttempt = new GetEyePvsScaleAttemptEvent();
+        RaiseLocalEvent(uid, ref evAttempt);
+
+        if (evAttempt.Cancelled)
+        {
+            _eye.SetPvsScale((uid, eye), 1);
+            return;
+        }
+
+        var ev = new GetEyePvsScaleEvent();
+        RaiseLocalEvent(uid, ref ev);
+
+        var evRelayed = new GetEyePvsScaleRelayedEvent();
+        RaiseLocalEvent(uid, ref evRelayed);
+
+        _eye.SetPvsScale((uid, eye), 1 + ev.Scale + evRelayed.Scale);
+    }
+
     /// <summary>
     /// Sendable from client to server to request a target zoom.
     /// </summary>
@@ -157,6 +191,15 @@ public abstract class SharedContentEyeSystem : EntitySystem
     {
         public Vector2 TargetZoom;
         public bool IgnoreLimit;
+    }
+
+    /// <summary>
+    /// Client->Server request for new PVS scale.
+    /// </summary>
+    [Serializable, NetSerializable]
+    public sealed class RequestPvsScaleEvent(float scale) : EntityEventArgs
+    {
+        public float Scale = scale;
     }
 
     /// <summary>

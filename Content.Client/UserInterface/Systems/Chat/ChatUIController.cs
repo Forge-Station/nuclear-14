@@ -10,20 +10,17 @@ using Content.Client.Examine;
 using Content.Client.Gameplay;
 using Content.Client.Ghost;
 using Content.Client.Mind;
-using Content.Client.Roles;
-using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Screens;
 using Content.Client.UserInterface.Systems.Chat.Widgets;
 using Content.Client.UserInterface.Systems.Gameplay;
 using Content.Shared.Administration;
 using Content.Shared.CCVar;
 using Content.Shared.Chat;
-using Content.Shared.Decals;
+using Content.Shared.Codewords;
 using Content.Shared.Damage.ForceSay;
-using Content.Shared.Examine;
+using Content.Shared.Decals;
 using Content.Shared.Input;
 using Content.Shared.Radio;
-using Content.Shared.Roles.RoleCodeword;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
@@ -42,36 +39,36 @@ using Robust.Shared.Replays;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
+
 namespace Content.Client.UserInterface.Systems.Chat;
 
-public sealed class ChatUIController : UIController
+public sealed partial class ChatUIController : UIController
 {
-    [Dependency] private readonly IClientAdminManager _admin = default!;
-    [Dependency] private readonly IChatManager _manager = default!;
-    [Dependency] private readonly IConfigurationManager _config = default!;
-    [Dependency] private readonly IEyeManager _eye = default!;
-    [Dependency] private readonly IEntityManager _ent = default!;
-    [Dependency] private readonly IInputManager _input = default!;
-    [Dependency] private readonly IClientNetManager _net = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly IStateManager _state = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IReplayRecordingManager _replayRecording = default!;
+    [Dependency] private IClientAdminManager _admin = default!;
+    [Dependency] private IChatManager _manager = default!;
+    [Dependency] private IConfigurationManager _config = default!;
+    [Dependency] private IEyeManager _eye = default!;
+    [Dependency] private IEntityManager _ent = default!;
+    [Dependency] private IInputManager _input = default!;
+    [Dependency] private IClientNetManager _net = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
+    [Dependency] private IStateManager _state = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IReplayRecordingManager _replayRecording = default!;
 
-    [UISystemDependency] private readonly ExamineSystem? _examine = default;
-    [UISystemDependency] private readonly GhostSystem? _ghost = default;
-    [UISystemDependency] private readonly TypingIndicatorSystem? _typingIndicator = default;
-    [UISystemDependency] private readonly ChatSystem? _chatSys = default;
-    [UISystemDependency] private readonly PsionicChatUpdateSystem? _psionic = default!; //Nyano - Summary: makes the psionic chat available.
-    [UISystemDependency] private readonly TransformSystem? _transform = default;
-    [UISystemDependency] private readonly MindSystem? _mindSystem = default!;
-    [UISystemDependency] private readonly RoleCodewordSystem? _roleCodewordSystem = default!;
+    [UISystemDependency] private readonly ChatSystem? _chatSys = default!;
+    [UISystemDependency] private readonly CodewordSystem? _codeword = default!;
+    [UISystemDependency] private readonly ExamineSystem _examine = default!;
+    [UISystemDependency] private readonly GhostSystem _ghost = default!;
+    [UISystemDependency] private readonly TransformSystem _transform = default!;
+    [UISystemDependency] private readonly TypingIndicatorSystem _typingIndicator = default!;
 
-    [ValidatePrototypeId<ColorPalettePrototype>]
-    private const string ChatNamePalette = "ChatNames";
+    private SharedChatSystem? _sharedChatSys;
+    private static readonly ProtoId<ColorPalettePrototype> ChatNamePalette = "ChatNames";
     private string[] _chatNameColors = default!;
     private bool _chatNameColorsEnabled;
+    public bool ChatNameColorsEnabled { get; private set; }
 
     private ISawmill _sawmill = default!;
 
@@ -86,8 +83,7 @@ public sealed class ChatUIController : UIController
         {SharedChatSystem.EmotesAltPrefix, ChatSelectChannel.Emotes},
         {SharedChatSystem.AdminPrefix, ChatSelectChannel.Admin},
         {SharedChatSystem.RadioCommonPrefix, ChatSelectChannel.Radio},
-        {SharedChatSystem.DeadPrefix, ChatSelectChannel.Dead},
-        {SharedChatSystem.TelepathicPrefix, ChatSelectChannel.Telepathic} //Nyano - Summary: adds the telepathic prefix =.
+        {SharedChatSystem.DeadPrefix, ChatSelectChannel.Dead}
     };
 
     public static readonly Dictionary<ChatSelectChannel, char> ChannelPrefixes = new()
@@ -100,8 +96,7 @@ public sealed class ChatUIController : UIController
         {ChatSelectChannel.Emotes, SharedChatSystem.EmotesPrefix},
         {ChatSelectChannel.Admin, SharedChatSystem.AdminPrefix},
         {ChatSelectChannel.Radio, SharedChatSystem.RadioCommonPrefix},
-        {ChatSelectChannel.Dead, SharedChatSystem.DeadPrefix},
-        {ChatSelectChannel.Telepathic, SharedChatSystem.TelepathicPrefix } //Nyano - Summary: associates telepathic with =.
+        {ChatSelectChannel.Dead, SharedChatSystem.DeadPrefix}
     };
 
     /// <summary>
@@ -138,6 +133,11 @@ public sealed class ChatUIController : UIController
     /// </summary>
     private readonly Dictionary<EntityUid, SpeechBubbleQueueData> _queuedSpeechBubbles
         = new();
+
+    /// <summary>
+    ///     The typing preview bubble currently displayed on screen, if any.
+    /// </summary>
+    private PreviewBubble? _previewBubble;
 
     private readonly HashSet<ChatBox> _chats = new();
     public IReadOnlySet<ChatBox> Chats => _chats;
@@ -182,7 +182,6 @@ public sealed class ChatUIController : UIController
         _sawmill = Logger.GetSawmill("chat");
         _sawmill.Level = LogLevel.Info;
         _admin.AdminStatusUpdated += UpdateChannelPermissions;
-        _manager.PermissionsUpdated += UpdateChannelPermissions; //Nyano - Summary: the event for when permissions are updated for psionics.
         _player.LocalPlayerAttached += OnAttachedChanged;
         _player.LocalPlayerDetached += OnAttachedChanged;
         _state.OnStateChanged += StateChanged;
@@ -191,7 +190,7 @@ public sealed class ChatUIController : UIController
         SubscribeNetworkEvent<DamageForceSayEvent>(OnDamageForceSay);
         _config.OnValueChanged(CCVars.ChatEnableColorName, (value) => { _chatNameColorsEnabled = value; });
         _chatNameColorsEnabled = _config.GetCVar(CCVars.ChatEnableColorName);
-
+        ChatNameColorsEnabled = _chatNameColorsEnabled;
         _speechBubbleRoot = new LayoutContainer();
 
         UpdateChannelPermissions();
@@ -236,7 +235,7 @@ public sealed class ChatUIController : UIController
         gameplayStateLoad.OnScreenLoad += OnScreenLoad;
         gameplayStateLoad.OnScreenUnload += OnScreenUnload;
 
-        var nameColors = _prototypeManager.Index<ColorPalettePrototype>(ChatNamePalette).Colors.Values.ToArray();
+        var nameColors = _prototypeManager.Index(ChatNamePalette).Colors.Values.ToArray();
         _chatNameColors = new string[nameColors.Length];
         for (var i = 0; i < nameColors.Length; i++)
         {
@@ -245,6 +244,7 @@ public sealed class ChatUIController : UIController
 
         _config.OnValueChanged(CCVars.ChatWindowOpacity, OnChatWindowOpacityChanged);
 
+        InitializeHighlights();
     }
 
     public void OnScreenLoad()
@@ -282,7 +282,7 @@ public sealed class ChatUIController : UIController
                  && style is StyleBoxFlat propStyleBoxFlat)
             color = propStyleBoxFlat.BackgroundColor;
         else
-            color = StyleNano.ChatBackgroundColor;
+            color = Color.FromHex("#25252ADD");
 
         panel.PanelOverride = new StyleBoxFlat
         {
@@ -302,15 +302,15 @@ public sealed class ChatUIController : UIController
 
         switch (UIManager.ActiveScreen)
         {
+            case DefaultGameScreen defaultScreen:
+                chatBox = defaultScreen.ChatBox;
+                chatSizeRaw = _config.GetCVar(CCVars.DefaultScreenChatSize);
+                SetChatSizing(chatSizeRaw, defaultScreen, setting);
+                break;
             case SeparatedChatGameScreen separatedScreen:
                 chatBox = separatedScreen.ChatBox;
                 chatSizeRaw = _config.GetCVar(CCVars.SeparatedScreenChatSize);
                 SetChatSizing(chatSizeRaw, separatedScreen, setting);
-                break;
-            case OverlayChatGameScreen overlayScreen:
-                chatBox = overlayScreen.ChatBox;
-                chatSizeRaw = _config.GetCVar(CCVars.OverlayScreenChatSize);
-                SetChatSizing(chatSizeRaw, overlayScreen, setting);
                 break;
             default:
                 // this could be better?
@@ -360,11 +360,11 @@ public sealed class ChatUIController : UIController
             $"{size.X.ToString(CultureInfo.InvariantCulture)},{size.Y.ToString(CultureInfo.InvariantCulture)}";
         switch (UIManager.ActiveScreen)
         {
+            case DefaultGameScreen _:
+                _config.SetCVar(CCVars.DefaultScreenChatSize, stringSize);
+                break;
             case SeparatedChatGameScreen _:
                 _config.SetCVar(CCVars.SeparatedScreenChatSize, stringSize);
-                break;
-            case OverlayChatGameScreen _:
-                _config.SetCVar(CCVars.OverlayScreenChatSize, stringSize);
                 break;
             default:
                 // do nothing
@@ -431,6 +431,8 @@ public sealed class ChatUIController : UIController
     private void OnAttachedChanged(EntityUid uid)
     {
         UpdateChannelPermissions();
+        UpdateAutoFillHighlights();
+        UpdateLinkLabels();
     }
 
     private void AddSpeechBubble(ChatMessage msg, SpeechBubble.SpeechType speechType)
@@ -472,11 +474,10 @@ public sealed class ChatUIController : UIController
 
         if (existing.Count > SpeechBubbleCap)
         {
-            // #Forge-Change-Start: upstream #32223; older bubbles are already fading,
-            // so fade the next one instead of repeatedly targeting the oldest.
+            // Get the next speech bubble to fade
+            // Any speech bubbles before it are already fading
             var last = existing[^(SpeechBubbleCap + 1)];
             last.FadeNow();
-            // #Forge-Change-End
         }
     }
 
@@ -487,10 +488,9 @@ public sealed class ChatUIController : UIController
 
     private void EnqueueSpeechBubble(EntityUid entity, ChatMessage message, SpeechBubble.SpeechType speechType)
     {
-        // #Forge-Change-Start: speech received while the sender is out of view must not be replayed later.
-        if (!CanShowSpeechBubble(entity))
+        // Don't enqueue speech bubbles for other maps. TODO: Support multiple viewports/maps?
+        if (EntityManager.GetComponent<TransformComponent>(entity).MapID != _eye.CurrentEye.Position.MapId)
             return;
-        // #Forge-Change-End
 
         if (!_queuedSpeechBubbles.TryGetValue(entity, out var queueData))
         {
@@ -498,7 +498,7 @@ public sealed class ChatUIController : UIController
             _queuedSpeechBubbles.Add(entity, queueData);
         }
 
-        queueData.MessageQueue.Enqueue(new SpeechBubbleData(message, speechType, _timing.RealTime)); // #Forge-Change
+        queueData.MessageQueue.Enqueue(new SpeechBubbleData(message, speechType));
     }
 
     public void RemoveSpeechBubble(EntityUid entityUid, SpeechBubble bubble)
@@ -565,16 +565,7 @@ public sealed class ChatUIController : UIController
             FilterableChannels |= ChatChannel.AdminAlert;
             FilterableChannels |= ChatChannel.AdminChat;
             CanSendChannels |= ChatSelectChannel.Admin;
-            FilterableChannels |= ChatChannel.Telepathic; //Nyano - Summary: makes admins able to see psionic chat.
         }
-
-        // Nyano - Summary: - Begin modified code block to add telepathic as a channel for a psionic user.
-        if (_psionic != null && _psionic.IsPsionic)
-        {
-            FilterableChannels |= ChatChannel.Telepathic;
-            CanSendChannels |= ChatSelectChannel.Telepathic;
-        }
-        // /Nyano - End modified code block
 
         SelectableChannels = CanSendChannels;
 
@@ -601,42 +592,28 @@ public sealed class ChatUIController : UIController
         }
     }
 
-    // #Forge-Change-Start: age hidden bubbles, refresh visibility and discard stale/out-of-view speech.
     public override void FrameUpdate(FrameEventArgs delta)
     {
-        // Remove expired bubbles even if they are hidden or no messages are queued.
-        foreach (var (entity, bubbles) in _activeSpeechBubbles.ShallowClone())
-        {
-            for (var i = bubbles.Count - 1; i >= 0; i--)
-            {
-                if (bubbles[i].AdvanceLifetime(delta.DeltaSeconds))
-                    RemoveSpeechBubble(entity, bubbles[i]);
-            }
-        }
         UpdateQueuedSpeechBubbles(delta);
     }
 
     private void UpdateQueuedSpeechBubbles(FrameEventArgs delta)
     {
         // Update queued speech bubbles.
-        if (_examine == null) // Active bubble visibility must update even with an empty queue.
+        if (_queuedSpeechBubbles.Count == 0 || _examine == null)
         {
             return;
         }
 
         foreach (var (entity, queueData) in _queuedSpeechBubbles.ShallowClone())
         {
-            if (!CanShowSpeechBubble(entity)) // Discard the backlog when its sender leaves view.
+            if (!EntityManager.EntityExists(entity))
             {
                 _queuedSpeechBubbles.Remove(entity);
                 continue;
             }
 
             queueData.TimeLeft -= delta.DeltaSeconds;
-            // Discard stale queued speech instead of replaying an old backlog.
-            while (queueData.MessageQueue.TryPeek(out var pending)
-                   && _timing.RealTime - pending.QueuedAt >= TimeSpan.FromSeconds(4))
-                queueData.MessageQueue.Dequeue();
             if (queueData.TimeLeft > 0)
             {
                 continue;
@@ -657,33 +634,43 @@ public sealed class ChatUIController : UIController
             CreateSpeechBubble(entity, msg);
         }
 
-        // Apply the same view check to existing bubbles even without new speech.
+        var player = _player.LocalEntity;
+        var predicate = static (EntityUid uid, (EntityUid compOwner, EntityUid? attachedEntity) data)
+            => uid == data.compOwner || uid == data.attachedEntity;
+        var playerPos = player != null
+            ? _eye.CurrentEye.Position
+            : MapCoordinates.Nullspace;
+
+        var occluded = player != null && _examine.IsOccluded(player.Value);
+
         foreach (var (ent, bubs) in _activeSpeechBubbles)
         {
-            SetBubbles(bubs, CanShowSpeechBubble(ent));
+            if (EntityManager.Deleted(ent))
+            {
+                SetBubbles(bubs, false);
+                continue;
+            }
+
+            if (ent == player)
+            {
+                SetBubbles(bubs, true);
+                continue;
+            }
+
+            var otherPos = _transform?.GetMapCoordinates(ent) ?? MapCoordinates.Nullspace;
+
+            if (occluded && !_examine.InRangeUnOccluded(
+                    playerPos,
+                    otherPos, 0f,
+                    (ent, player), predicate))
+            {
+                SetBubbles(bubs, false);
+                continue;
+            }
+
+            SetBubbles(bubs, true);
         }
     }
-
-    // Hearing speech is not sufficient to show a bubble; its sender must be in view.
-    private bool CanShowSpeechBubble(EntityUid entity)
-    {
-        if (_transform == null || _examine == null || EntityManager.Deleted(entity)
-            || !EntityManager.TryGetComponent<TransformComponent>(entity, out var xform)
-            || xform.MapID == MapId.Nullspace || xform.MapID != _eye.CurrentMap)
-            return false;
-
-        var position = _transform.GetMapCoordinates(entity);
-        if (!_eye.GetWorldViewbounds().Contains(position.Position))
-            return false;
-
-        var player = _player.LocalEntity;
-        if (player == null || player == entity || !_examine.IsOccluded(player.Value))
-            return true;
-
-        return _examine.InRangeUnOccluded(_transform.GetMapCoordinates(player.Value), position, 0f,
-            (entity, player), static (uid, data) => uid == data.entity || uid == data.player);
-    }
-    // #Forge-Change-End
 
     private void SetBubbles(List<SpeechBubble> bubbles, bool visible)
     {
@@ -706,7 +693,7 @@ public sealed class ChatUIController : UIController
         radioChannel = null;
         return _player.LocalEntity is EntityUid { Valid: true } uid
            && _chatSys != null
-           && _chatSys.TryProccessRadioMessage(uid, text, out _, out radioChannel, quiet: true);
+           && _chatSys.TryProcessRadioMessage(uid, text, out _, out radioChannel, quiet: true);
     }
 
     public void UpdateSelectedChannel(ChatBox box)
@@ -845,15 +832,21 @@ public sealed class ChatUIController : UIController
                 msg.WrappedMessage = SharedChatSystem.InjectTagInsideTag(msg, "Name", "color", GetNameColor(SharedChatSystem.GetStringInsideTag(msg, "Name")));
         }
 
-        // Color any codewords for minds that have roles that use them
-        if (_player.LocalUser != null && _mindSystem != null && _roleCodewordSystem != null)
+        // Color any words chosen by the client.
+        foreach (var highlight in _highlights)
         {
-            if (_mindSystem.TryGetMind(_player.LocalUser.Value, out var mindId) && _ent.TryGetComponent(mindId, out RoleCodewordComponent? codewordComp))
+            msg.WrappedMessage = SharedChatSystem.InjectTagAroundString(msg, highlight, "color", _highlightsColor);
+        }
+
+        // In case we get messages outside of systems being init.
+        if (_codeword != null)
+        {
+            // Color any codewords for minds that have roles that use them
+            foreach (var data in _codeword.GetPlayerCodewords(_player.LocalUser))
             {
-                foreach (var (_, codewordData) in codewordComp.RoleCodewords)
+                foreach (var codeword in data.Codewords)
                 {
-                    foreach (string codeword in codewordData.Codewords)
-                        msg.WrappedMessage = SharedChatSystem.InjectTagAroundString(msg, codeword, "color", codewordData.Color.ToHex());
+                    msg.WrappedMessage = SharedChatSystem.InjectTagAroundString(msg, codeword, "color", data.Color.ToHex());
                 }
             }
         }
@@ -891,10 +884,11 @@ public sealed class ChatUIController : UIController
                 break;
 
             case ChatChannel.Dead:
-                if (_ghost is not {IsGhost: true})
+                if (_ghost is not { IsGhost: true})
                     break;
 
-                AddSpeechBubble(msg, SpeechBubble.SpeechType.Say);
+                if (_ghost.GhostVisibility)
+                    AddSpeechBubble(msg, SpeechBubble.SpeechType.Say);
                 break;
 
             case ChatChannel.Emotes:
@@ -938,11 +932,86 @@ public sealed class ChatUIController : UIController
         _typingIndicator?.ClientChangedChatText();
     }
 
+    public void NotifyChatFocus(bool isFocused)
+    {
+        _typingIndicator?.ClientChangedChatFocus(isFocused);
+    }
+
+    /// <summary>
+    ///     Called by <see cref="ChatBox"/> every time the player's chat input text changes.
+    ///     Creates or updates a "typing preview" speech bubble above the player's character.
+    /// </summary>
+    /// <param name="box">
+    ///     The current chat input box.
+    /// </param>
+    public void UpdateTypingPreview(ChatBox box)
+    {
+        var text = box.ChatInput.Input.Text;
+
+        if (!_config.GetCVar(CCVars.ChatTypingPreviewEnabled)
+            || _player.LocalEntity is not { } player
+            || string.IsNullOrEmpty(text))
+        {
+            ClearTypingPreview();
+            return;
+        }
+
+        // If no preview bubble exists, create one.
+        if (_previewBubble == null)
+        {
+            _previewBubble = new PreviewBubble(player);
+            _speechBubbleRoot.AddChild(_previewBubble);
+        }
+
+        // For an existing bubble, update its text.
+        var heightDelta = _previewBubble.UpdateText(text);
+        if (heightDelta != 0 && _activeSpeechBubbles.TryGetValue(player, out var activeBubbles))
+        {
+            foreach (var bubble in activeBubbles)
+            {
+                bubble.VerticalOffset += heightDelta;
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Removes and disposes the typing preview bubble if one is currently shown.
+    ///     Also shifts real speech bubbles back down to close the gap left by the removed preview.
+    /// </summary>
+    public void ClearTypingPreview()
+    {
+        if (_previewBubble == null)
+            return;
+
+        if (_previewBubble.ContentSize.Y > 0
+            && _player.LocalEntity is { } player
+            && _activeSpeechBubbles.TryGetValue(player, out var activeBubbles))
+        {
+            foreach (var bubble in activeBubbles)
+            {
+                bubble.VerticalOffset -= _previewBubble.ContentSize.Y;
+            }
+        }
+
+        _previewBubble.Dispose();
+        _previewBubble = null;
+    }
+
     public void Repopulate()
     {
         foreach (var chat in _chats)
         {
             chat.Repopulate();
+        }
+    }
+
+    private void UpdateLinkLabels()
+    {
+        _sharedChatSys ??= _ent.System<SharedChatSystem>();
+
+        foreach (var chat in _chats)
+        {
+            chat.UpdateTextLinkLabelProperties(_sharedChatSys);
         }
     }
 
@@ -957,8 +1026,7 @@ public sealed class ChatUIController : UIController
         return _chatNameColors[colorIdx];
     }
 
-    // #Forge-Change: queue timestamps bound the age of messages waiting for a bubble.
-    private readonly record struct SpeechBubbleData(ChatMessage Message, SpeechBubble.SpeechType Type, TimeSpan QueuedAt);
+    private readonly record struct SpeechBubbleData(ChatMessage Message, SpeechBubble.SpeechType Type);
 
     private sealed class SpeechBubbleQueueData
     {

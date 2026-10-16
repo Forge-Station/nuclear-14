@@ -5,9 +5,12 @@ using Content.Shared.Throwing;
 
 namespace Content.Server.Damage.Systems
 {
-    public sealed class DamageOnLandSystem : EntitySystem
+    /// <summary>
+    /// Damages the thrown item when it lands.
+    /// </summary>
+    public sealed partial class DamageOnLandSystem : EntitySystem
     {
-        [Dependency] private readonly DamageableSystem _damageableSystem = default!;
+        [Dependency] private Shared.Damage.Systems.DamageableSystem _damageableSystem = default!;
 
         public override void Initialize()
         {

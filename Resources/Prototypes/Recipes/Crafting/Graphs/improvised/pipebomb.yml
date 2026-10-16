@@ -10,7 +10,7 @@
         icon:
           sprite: Structures/Piping/Atmospherics/pipe.rsi
           state: pipeStraight
-        name: pipe
+        name: construction-graph-tag-pipe
       - material: Steel
         amount: 1
         doAfter: 3
@@ -18,10 +18,10 @@
     entity: PipeBombGunpowder
     edges:
     - to: cable
-      # steps:
-      # - material: Gunpowder // Forge-Change
-      #   amount: 5
-      #   doAfter: 3
+      steps:
+      - material: Gunpowder
+        amount: 5
+        doAfter: 3
   - node: cable
     entity: PipeBombCable
     edges:

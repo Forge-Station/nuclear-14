@@ -3,56 +3,33 @@
   name: job-name-paramedic
   description: job-description-paramedic
   playTimeTracker: JobParamedic
-  antagAdvantage: 2 # DeltaV - Reduced TC: External Access
   requirements:
-    # - !type:RoleTimeRequirement # DeltaV - No Medical Doctor time requirement
-    #   role: JobMedicalDoctor
-    #   time: 14400 #4 hrs
-   # - !type:CharacterDepartmentTimeRequirement # DeltaV - Medical dept time requirement
-   #   department: Medical
-   #   min: 28800 # DeltaV - 8 hours
-    # - !type:OverallPlaytimeRequirement # DeltaV - No playtime requirement
-    #   time: 54000 # 15 hrs
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 2.5h
   startingGear: ParamedicGear
   icon: "JobIconParamedic"
   supervisors: job-supervisors-cmo
+  guides: [ Medical ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Medical
   - Maintenance
-  - External
-  - Paramedic # DeltaV - Add Paramedic access
   extendedAccess:
   - Chemistry
-  special:
-  - !type:AddComponentSpecial
-    components:
-    - type: CPRTraining
-    - type: SurgerySpeedModifier
-      speedModifier: 1.75
-  setPreference: false
 
 - type: startingGear
   id: ParamedicGear
-  subGear:
-  - ParamedicPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitParamedic
-    back: ClothingBackpackParamedicFilledDV
-    shoes: ClothingShoesColorBlue
     id: ParamedicPDA
     ears: ClothingHeadsetMedical
-    belt: ClothingBeltMedicalEMTFilled
-    pocket1: HandheldGPSBasic
-    pocket2: HandheldCrewMonitor
-  innerClothingSkirt: ClothingUniformJumpskirtParamedic
-  satchel: ClothingBackpackSatchelParamedicFilledDV
-  duffelbag: ClothingBackpackDuffelParamedicFilledDV
 
-- type: startingGear
-  id: ParamedicPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: ParamedicChameleonOutfit
+  job: Paramedic
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitParamedic
-    head: ClothingHeadEnvirohelmParamedic
-    gloves: ClothingHandsGlovesEnviroglovesNitrile
-    shoes: ClothingShoesColorBlue
+    head: ClothingHeadHatParamedicsoft
+    eyes: ClothingEyesHudMedical
+    mask: ClothingMaskSterile
+    neck: ClothingNeckStethoscope
+    outerClothing: ClothingOuterCoatParamedicWB
+    gloves: ClothingHandsGlovesLatex

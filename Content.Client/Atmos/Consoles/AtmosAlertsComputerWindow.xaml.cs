@@ -1,6 +1,6 @@
 using Content.Client.Message;
 using Content.Client.Pinpointer.UI;
-using Content.Client.Stylesheets;
+using Content.Client.Stylesheets.Palette;
 using Content.Client.UserInterface.Controls;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.Monitor;
@@ -13,8 +13,6 @@ using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Map;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
-using Robust.Shared.ContentPack;
-using Robust.Shared.Prototypes;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -25,7 +23,7 @@ public sealed partial class AtmosAlertsComputerWindow : FancyWindow
 {
     private readonly IEntityManager _entManager;
     private readonly SpriteSystem _spriteSystem;
-    private readonly SharedNavMapSystem _navMapSystem;
+    private readonly NavMapSystem _navMapSystem;
 
     private EntityUid? _owner;
     private NetEntity? _trackedEntity;
@@ -45,20 +43,32 @@ public sealed partial class AtmosAlertsComputerWindow : FancyWindow
 
     private const float SilencingDuration = 2.5f;
 
+    // Colors
+    private Color _wallColor = new Color(64, 64, 64);
+    private Color _tileColor = new Color(28, 28, 28);
+    private Color _monitorBlipColor = Color.Cyan;
+    private Color _untrackedEntColor = Color.DimGray;
+    private Color _regionBaseColor = new Color(154, 154, 154);
+    private Color _inactiveColor = Palettes.Neutral.Base;
+    private Color _statusTextColor = Palettes.Status.Good;
+    private Color _goodColor = Color.LimeGreen;
+    private Color _warningColor = new Color(255, 182, 72);
+    private Color _dangerColor = new Color(255, 67, 67);
+
     public AtmosAlertsComputerWindow(AtmosAlertsComputerBoundUserInterface userInterface, EntityUid? owner)
     {
         RobustXamlLoader.Load(this);
         _entManager = IoCManager.Resolve<IEntityManager>();
         _spriteSystem = _entManager.System<SpriteSystem>();
-        _navMapSystem = _entManager.System<SharedNavMapSystem>();
+        _navMapSystem = _entManager.System<NavMapSystem>();
 
         // Pass the owner to nav map
         _owner = owner;
         NavMap.Owner = _owner;
 
         // Set nav map colors
-        NavMap.WallColor = new Color(64, 64, 64);
-        NavMap.TileColor = Color.DimGray * NavMap.WallColor;
+        NavMap.WallColor = _wallColor;
+        NavMap.TileColor = _tileColor;
 
         // Set nav map grid uid
         var stationName = Loc.GetString("atmos-alerts-window-unknown-location");
@@ -67,12 +77,12 @@ public sealed partial class AtmosAlertsComputerWindow : FancyWindow
         {
             NavMap.MapUid = xform.GridUid;
 
-            // Assign station name      
+            // Assign station name
             if (_entManager.TryGetComponent<MetaDataComponent>(xform.GridUid, out var stationMetaData))
                 stationName = stationMetaData.EntityName;
 
             var msg = new FormattedMessage();
-            msg.AddMarkup(Loc.GetString("atmos-alerts-window-station-name", ("stationName", stationName)));
+            msg.TryAddMarkup(Loc.GetString("atmos-alerts-window-station-name", ("stationName", stationName)), out _);
 
             StationName.SetMessage(msg);
         }
@@ -216,7 +226,7 @@ public sealed partial class AtmosAlertsComputerWindow : FancyWindow
         if (consoleCoords != null && consoleUid != null)
         {
             var texture = _spriteSystem.Frame0(new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/NavMap/beveled_circle.png")));
-            var blip = new NavMapBlip(consoleCoords.Value, texture, Color.Cyan, true, false);
+            var blip = new NavMapBlip(consoleCoords.Value, texture, _monitorBlipColor, true, false);
             NavMap.TrackedEntities[consoleUid.Value] = blip;
         }
 
@@ -265,7 +275,7 @@ public sealed partial class AtmosAlertsComputerWindow : FancyWindow
                 VerticalAlignment = VAlignment.Center,
             };
 
-            label.SetMarkup(Loc.GetString("atmos-alerts-window-no-active-alerts", ("color", StyleNano.GoodGreenFore.ToHexNoAlpha())));
+            label.SetMarkup(Loc.GetString("atmos-alerts-window-no-active-alerts", ("color", _statusTextColor.ToHexNoAlpha())));
 
             AlertsTable.AddChild(label);
         }
@@ -325,7 +335,7 @@ public sealed partial class AtmosAlertsComputerWindow : FancyWindow
         var coords = _entManager.GetCoordinates(metaData.NetCoordinates);
 
         if (_trackedEntity != null && _trackedEntity != metaData.NetEntity)
-            color *= Color.DimGray;
+            color *= _untrackedEntColor;
 
         var selectable = true;
         var blip = new NavMapBlip(coords, _spriteSystem.Frame0(texture), color, _trackedEntity == metaData.NetEntity, selectable);
@@ -343,10 +353,10 @@ public sealed partial class AtmosAlertsComputerWindow : FancyWindow
             return false;
 
         // Color the region based on alarm state and entity tracking
-        color = blip.Value.Item2 * new Color(154, 154, 154);
+        color = blip.Value.Item2 * _regionBaseColor;
 
         if (_trackedEntity != null && _trackedEntity != regionOwner)
-            color *= Color.DimGray;
+            color *= _untrackedEntColor;
 
         return true;
     }
@@ -502,37 +512,13 @@ public sealed partial class AtmosAlertsComputerWindow : FancyWindow
         if (scroll == null)
             return;
 
-        if (!TryGetVerticalScrollbar(scroll, out var vScrollbar))
-            return;
-
         if (!TryGetNextScrollPosition(out float? nextScrollPosition))
             return;
 
-        vScrollbar.ValueTarget = nextScrollPosition.Value;
+        scroll.VScrollTarget = nextScrollPosition.Value;
 
-        if (MathHelper.CloseToPercent(vScrollbar.Value, vScrollbar.ValueTarget))
+        if (MathHelper.CloseToPercent(scroll.VScroll, scroll.VScrollTarget))
             _autoScrollActive = false;
-    }
-
-    private bool TryGetVerticalScrollbar(ScrollContainer scroll, [NotNullWhen(true)] out VScrollBar? vScrollBar)
-    {
-        vScrollBar = null;
-
-        foreach (var child in scroll.Children)
-        {
-            if (child is not VScrollBar)
-                continue;
-
-            var castChild = child as VScrollBar;
-
-            if (castChild != null)
-            {
-                vScrollBar = castChild;
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private bool TryGetNextScrollPosition([NotNullWhen(true)] out float? nextScrollPosition)
@@ -587,13 +573,13 @@ public sealed partial class AtmosAlertsComputerWindow : FancyWindow
         switch (alarmState)
         {
             case AtmosAlarmType.Invalid:
-                output = (new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/NavMap/beveled_circle.png")), StyleNano.DisabledFore); break;
+                output = (new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/NavMap/beveled_circle.png")), _inactiveColor); break;
             case AtmosAlarmType.Normal:
-                output = (new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/NavMap/beveled_circle.png")), Color.LimeGreen); break;
+                output = (new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/NavMap/beveled_circle.png")), _goodColor); break;
             case AtmosAlarmType.Warning:
-                output = (new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/NavMap/beveled_triangle.png")), new Color(255, 182, 72)); break;
+                output = (new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/NavMap/beveled_triangle.png")), _warningColor); break;
             case AtmosAlarmType.Danger:
-                output = (new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/NavMap/beveled_square.png")), new Color(255, 67, 67)); break;
+                output = (new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/NavMap/beveled_square.png")), _dangerColor); break;
         }
 
         return output;

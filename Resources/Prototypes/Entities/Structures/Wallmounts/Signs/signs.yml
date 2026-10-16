@@ -8,6 +8,7 @@
     state: monkey_painting
 
 # Directional Station Guide Signs
+
 - type: entity
   parent: BaseSign
   id: BaseSignDirectional
@@ -15,6 +16,19 @@
   components:
     - type: Sprite
       snapCardinals: false
+      # The way that Directonal Guide Signs are mapped are unaligned on the wall, making them anchored makes them all be placed in the middle of the wall
+      # TODO: Combine all the directional guide signs in to some modular prototype so it's easier to map and remove the overlap when rotating the camera
+    - type: Transform
+      anchored: false
+
+- type: entity
+  parent: BaseSignDirectional
+  id: SignDirectionalAtmos
+  name: atmos sign
+  description: A direction sign, pointing out which way the Atmospherics department is.
+  components:
+  - type: Sprite
+    state: direction_atmos
 
 - type: entity
   parent: BaseSignDirectional
@@ -95,7 +109,15 @@
   description: A direction sign, pointing out which way evac is.
   components:
   - type: Sprite
-    state: direction_evac
+    layers:
+    - state: direction_evac
+    - state: direction_evac_glow
+      shader: unshaded
+    - state: direction_evac_glow
+      shader: shaded
+      #This is a neat trick I found to sort of "hack" an emissive map into ss14. Basically, the direction_evac_glow texture has an alpha channel.
+      #Alpha doesn't work for unshaded, but for *shaded* it does, and by putting a shaded texture infront of the unshaded, we can dim the unshaded texture, effectively allowing brightness control.
+      #I am re-using this from my high-vis vest PR, where I go further into detail, https://github.com/space-wizards/space-station-14/pull/37869
 
 - type: entity
   parent: BaseSignDirectional
@@ -190,12 +212,11 @@
 - type: entity
   parent: BaseSignDirectional
   id: SignDirectionalSci
-  name: epistemics sign # DeltaV - Epistemics Department replacing Science
-  description: A direction sign, pointing out which way the Epistemics department is. # DeltaV - Epistemics Department replacing Science
+  name: science sign
+  description: A direction sign, pointing out which way the Science department is.
   components:
   - type: Sprite
-    sprite: Nyanotrasen/Structures/Wallmounts/signs.rsi # DeltaV - Epistemics Department replacing Science
-    state: direction_epi # DeltaV - Epistemics Department replacing Science
+    state: direction_sci
 
 - type: entity
   parent: BaseSignDirectional
@@ -232,6 +253,15 @@
   components:
   - type: Sprite
     state: direction_wash
+
+- type: entity
+  parent: BaseSignDirectional
+  id: SignDirectionalEscapePod
+  name: escape pods sign
+  description: A direction sign, pointing out the way to an escape pod dock.
+  components:
+  - type: Sprite
+    state: direction_pods
 
 # Regular Signs
 
@@ -270,6 +300,15 @@
   components:
   - type: Sprite
     state: armory
+
+- type: entity
+  parent: BaseSign
+  id: SignArrivals
+  name: arrivals sign
+  description: A sign indicating where the Arrivals shuttle will dock.
+  components:
+  - type: Sprite
+    state: arrivals
 
 - type: entity
   parent: BaseSign
@@ -399,8 +438,8 @@
 - type: entity
   parent: BaseSign
   id: SignCargo
-  name: logistics sign # DeltaV - Logistics Department replacing Cargo
-  description: A sign indicating the logistics area. # DeltaV - Logistics Department replacing Cargo
+  name: cargo sign
+  description: A sign indicating the cargo area.
   components:
   - type: Sprite
     state: cargo
@@ -521,9 +560,7 @@
   description: A sign indicating the escape pods.
   components:
   - type: Sprite
-    sprite: Nyanotrasen/Structures/Wallmounts/signs.rsi # Nyanotrasen - Give pods sign directional sprites
     state: pods
-    snapCardinals: false
 
 - type: entity
   parent: BaseSign
@@ -672,11 +709,20 @@
 - type: entity
   parent: BaseSign
   id: SignNosmoking
-  name: nosmoking sign
+  name: no smoking sign
   description: A sign indicating that smoking is not allowed in the vicinity.
   components:
   - type: Sprite
     state: nosmoking
+
+- type: entity
+  parent: BaseSign
+  id: SignGenpop
+  name: genpop sign
+  description: A sign indicating the genpop prison.
+  components:
+  - type: Sprite
+    state: genpop
 
 - type: entity
   parent: BaseSign
@@ -760,6 +806,14 @@
     state: cans
 
 - type: entity
+  parent: SignCans
+  id: SignCansScience
+  suffix: science
+  components:
+  - type: Sprite
+    state: cans_sci
+
+- type: entity
   parent: BaseSign
   id: SignShipDock
   name: evac sign
@@ -775,9 +829,7 @@
   description: A sign warning that the area ahead is nothing but cold, empty space.
   components:
   - type: Sprite
-    sprite: Nyanotrasen/Structures/Wallmounts/signs.rsi # Nyanotrasen - Give space sign directional sprites
     state: space
-    snapCardinals: false
 
 - type: entity
   parent: BaseSign
@@ -1095,7 +1147,15 @@
   - type: Sprite
     state: medium_secure
 
-
+# TODO: make a fancier version of this sign
+- type: entity
+  parent: BaseSign
+  id: SignVox
+  name: vox area sign
+  description: A sign indicating that the area ahead is intended for Vox crew members and does not have an oxygen atmosphere.
+  components:
+  - type: Sprite
+    state: vox
 
 # Atmos Warnings
 
@@ -1175,7 +1235,7 @@
   parent: BaseSign
   id: SignSmoking
   name: no smoking sign
-  description: A warning sign which reads 'NO SMOKING'
+  description: A warning sign which reads 'NO SMOKING'.
   components:
   - type: Sprite
     state: nosmoking2
@@ -1184,7 +1244,7 @@
   parent: BaseSign
   id: SignSomethingOld
   name: old sign
-  description: Technical information of some sort, shame its too worn-out to read.
+  description: Technical information of some sort, shame it's too worn-out to read.
   components:
   - type: Sprite
     state: something-old1
@@ -1193,7 +1253,7 @@
   parent: BaseSign
   id: SignSomethingOld2
   name: old sign
-  description: Looks like a planet crashing by some station above it. Its kinda scary.
+  description: Looks like a planet crashing by some station above it. It's kinda scary.
   components:
   - type: Sprite
     state: something-old2
@@ -1206,6 +1266,15 @@
   components:
   - type: Sprite
     state: security
+
+- type: entity
+  parent: BaseSign
+  id: SignDetective
+  name: detective sign
+  description: A sign depicting the detective's office.
+  components:
+  - type: Sprite
+    state: detective
 
 - type: entity
   parent: BaseSign
@@ -1233,6 +1302,7 @@
   components:
   - type: Sprite
     state: nanotrasen_sign1
+    snapCardinals: false
 
 - type: entity
   parent: BaseSign
@@ -1242,6 +1312,7 @@
   components:
   - type: Sprite
     state: nanotrasen_sign2
+    snapCardinals: false
 
 - type: entity
   parent: BaseSign
@@ -1251,6 +1322,7 @@
   components:
   - type: Sprite
     state: nanotrasen_sign3
+    snapCardinals: false
 
 - type: entity
   parent: BaseSign
@@ -1260,6 +1332,7 @@
   components:
   - type: Sprite
     state: nanotrasen_sign4
+    snapCardinals: false
 
 - type: entity
   parent: BaseSign
@@ -1269,6 +1342,7 @@
   components:
   - type: Sprite
     state: nanotrasen_sign5
+    snapCardinals: false
 
 - type: entity
   parent: BaseSign

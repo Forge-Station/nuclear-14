@@ -10,10 +10,10 @@
     tags:
       - WhitelistChameleon
   - type: StaticPrice
-    price: 2 # Forge-Change
-  - type: Clothing
-    equipDelay: 0.5
-    unequipDelay: 0.5
+    price: 10
+  - type: FlavorProfile #yes not every peice of clothing is edible, but this way every edible piece of clothing should have the flavor without me having to track down what specific clothing can and cannot be eaten.
+    flavors:
+    - fiber
 
 - type: entity
   abstract: true
@@ -28,6 +28,15 @@
   components:
   - type: AllowSuitStorage
 
+- type: entity
+  abstract: true
+  id: AllowSuitStorageClothingGasTanks
+  components:
+  - type: AllowSuitStorage
+    whitelist:
+      components:
+      - GasTank
+
 # for clothing that has a single item slot to insert and alt click out.
 # inheritors add a whitelisted slot named item
 - type: entity
@@ -35,6 +44,7 @@
   id: ClothingSlotBase
   components:
   - type: ItemSlots
+    allowSmartEquip: true
   - type: ContainerContainer
     containers:
       item: !type:ContainerSlot
@@ -60,3 +70,31 @@
   - type: ItemToggle
     onUse: false # can't really wear it like that
   - type: ToggleClothing
+
+- type: entity
+  abstract: true
+  id: TemperatureProtectionMinimal # Really light jackets and hoods.
+  components:
+  - type: TemperatureProtection
+    coefficient: 0.8
+
+- type: entity
+  abstract: true
+  id: TemperatureProtection # Winter coats and environmentally sealed helmets
+  components:
+  - type: TemperatureProtection
+    coefficient: 0.6
+
+- type: entity
+  abstract: true
+  id: TemperatureProtectionGood # EVA suits and basic hardsuits
+  components:
+  - type: TemperatureProtection
+    coefficient: 0.05
+
+- type: entity
+  abstract: true
+  id: TemperatureProtectionGreat # Fire-retardant suits
+  components:
+  - type: TemperatureProtection
+    coefficient: 0.01

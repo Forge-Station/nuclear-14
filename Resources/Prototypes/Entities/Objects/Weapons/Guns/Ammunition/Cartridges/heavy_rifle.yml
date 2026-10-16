@@ -1,8 +1,8 @@
 - type: entity
-  id: BaseCartridgeHeavyRifle
-  name: cartridge (.20 rifle)
-  parent: BaseCartridge
   abstract: true
+  parent: [ BaseCartridge, BaseSecurityContraband ]
+  id: BaseCartridgeHeavyRifle
+  name: cartridge (.10 rifle)
   components:
   - type: Material #Forge-add-start
   - type: PhysicalComposition
@@ -12,8 +12,7 @@
       N14Gunpowder: 3 #Forge-add-end  
   - type: Tag
     tags:
-      - Cartridge
-      - CartridgeHeavyRifle
+    - CartridgeHeavyRifle
   - type: CartridgeAmmo
     proto: BulletHeavyRifle
   - type: Sprite
@@ -27,9 +26,9 @@
     price: 10
 
 - type: entity
+  parent: BaseCartridgeHeavyRifle
   id: CartridgeMinigun
   name: cartridge (.10 rifle)
-  parent: BaseCartridgeHeavyRifle
   components:
   - type: CartridgeAmmo
     proto: BulletMinigun

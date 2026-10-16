@@ -10,47 +10,30 @@ using Content.Shared.Administration;
 using Content.Shared.Mobs;
 using Content.Shared.NPC;
 using JetBrains.Annotations;
-using Robust.Server.GameObjects; // Corvax
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Timing;
 using Robust.Shared.Utility;
-using Content.Server.Worldgen; // Corvax
-using Content.Server.Worldgen.Components; // Corvax
-using Content.Server.Worldgen.Systems; // Corvax
-using Robust.Server.GameObjects; // Corvax
 
 namespace Content.Server.NPC.HTN;
 
-public sealed class HTNSystem : EntitySystem
+public sealed partial class HTNSystem : EntitySystem
 {
-    [Dependency] private readonly IAdminManager _admin = default!;
-    [Dependency] private readonly IGameTiming _gameTiming = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly NPCSystem _npc = default!;
-    [Dependency] private readonly NPCUtilitySystem _utility = default!;
-    // Corvax
-    [Dependency] private readonly WorldControllerSystem _world = default!;
-    [Dependency] private readonly TransformSystem _transform = default!;
-    private EntityQuery<WorldControllerComponent> _mapQuery;
-    private EntityQuery<LoadedChunkComponent> _loadedQuery;
-    // Corvax
+    [Dependency] private IAdminManager _admin = default!;
+    [Dependency] private NPCSystem _npc = default!;
+    [Dependency] private NPCUtilitySystem _utility = default!;
+    [Dependency] private IDependencyCollection _collection = default!;
 
     private readonly JobQueue _planQueue = new(0.004);
 
     private readonly HashSet<ICommonSession> _subscribers = new();
 
-    private const float ReplanRate = 4f; // per second, TODO: CVar?
-    private float Accumulator; // limit replanning rate
-
     // Hierarchical Task Network
     public override void Initialize()
     {
         base.Initialize();
-        _mapQuery = GetEntityQuery<WorldControllerComponent>(); // Corvax
-        _loadedQuery = GetEntityQuery<LoadedChunkComponent>(); // Corvax
         SubscribeLocalEvent<HTNComponent, MobStateChangedEvent>(_npc.OnMobStateChange);
         SubscribeLocalEvent<HTNComponent, MapInitEvent>(_npc.OnNPCMapInit);
+        SubscribeLocalEvent<HTNComponent, ComponentStartup>(_npc.OnNPCStartup);
         SubscribeLocalEvent<HTNComponent, PlayerAttachedEvent>(_npc.OnPlayerNPCAttach);
         SubscribeLocalEvent<HTNComponent, PlayerDetachedEvent>(_npc.OnPlayerNPCDetach);
         SubscribeLocalEvent<HTNComponent, ComponentShutdown>(OnHTNShutdown);
@@ -95,7 +78,7 @@ public sealed class HTNSystem : EntitySystem
 
         // Add dependencies for all operators.
         // We put code on operators as I couldn't think of a clean way to put it on systems.
-        foreach (var compound in _prototypeManager.EnumeratePrototypes<HTNCompoundPrototype>())
+        foreach (var compound in ProtoMan.EnumeratePrototypes<HTNCompoundPrototype>())
         {
             UpdateCompound(compound);
         }
@@ -114,7 +97,7 @@ public sealed class HTNSystem : EntitySystem
 
             foreach (var precon in branch.Preconditions)
             {
-                precon.Initialize(EntityManager.EntitySysManager);
+                precon.Initialize(_collection);
             }
 
             foreach (var task in branch.Tasks)
@@ -134,10 +117,9 @@ public sealed class HTNSystem : EntitySystem
             case HTNPrimitiveTask primitive:
                 foreach (var precon in primitive.Preconditions)
                 {
-                    precon.Initialize(EntityManager.EntitySysManager);
+                    precon.Initialize(_collection);
                 }
-
-                primitive.Operator.Initialize(EntityManager.EntitySysManager);
+                primitive.Operator.Initialize(_collection);
                 break;
             default:
                 throw new NotImplementedException();
@@ -152,34 +134,72 @@ public sealed class HTNSystem : EntitySystem
     }
 
     /// <summary>
+    /// Enable / disable the hierarchical task network of an entity
+    /// </summary>
+    /// <param name="ent">The entity and its <see cref="HTNComponent"/></param>
+    /// <param name="state">Set 'true' to enable, or 'false' to disable, the HTN</param>
+    /// <param name="planCooldown">Specifies a time in seconds before the entity can start planning a new action (only takes effect when the HTN is enabled)</param>
+    // ReSharper disable once InconsistentNaming
+    [PublicAPI]
+    public void SetHTNEnabled(Entity<HTNComponent> ent, bool state, float planCooldown = 0f)
+    {
+        if (ent.Comp.Enabled == state)
+            return;
+
+        ent.Comp.Enabled = state;
+        ent.Comp.PlanAccumulator = planCooldown;
+
+        ent.Comp.PlanningToken?.Cancel();
+        ent.Comp.PlanningToken = null;
+
+        if (ent.Comp.Plan != null)
+        {
+            var currentOperator = ent.Comp.Plan.CurrentOperator;
+
+            ShutdownTask(currentOperator, ent.Comp.Blackboard, HTNOperatorStatus.Failed);
+            ShutdownPlan(ent.Comp);
+
+            ent.Comp.Plan = null;
+        }
+
+        if (ent.Comp.Enabled && ent.Comp.PlanAccumulator <= 0)
+            RequestPlan(ent.Comp);
+    }
+
+    /// <summary>
     /// Forces the NPC to replan.
     /// </summary>
     [PublicAPI]
     public void Replan(HTNComponent component)
     {
-        component.NextPlanTime = _gameTiming.CurTime;
+        component.PlanAccumulator = 0f;
     }
 
     public void UpdateNPC(ref int count, int maxUpdates, float frameTime)
     {
         _planQueue.Process();
-
-        // Limit update rate
-        const float updatePeriod = 1/ReplanRate;
-        Accumulator += frameTime;
-        if (Accumulator < updatePeriod)
-            return;
-        Accumulator -= updatePeriod;
-
         var query = EntityQueryEnumerator<ActiveNPCComponent, HTNComponent>();
 
-        while(query.MoveNext(out var uid, out _, out var comp))
+        // Move ahead "count" entries in the query.
+        // This is to ensure that if we didn't process all the npcs the first time,
+        // we get to the remaining ones instead of iterating over the beginning again.
+        for (var i = 0; i < count; i++)
+        {
+            query.MoveNext(out _, out _);
+        }
+
+        // the amount of updates we've processed during this iteration.
+        var updates = 0;
+        while (query.MoveNext(out var uid, out _, out var comp))
         {
             // If we're over our max count or it's not MapInit then ignore the NPC.
-            if (count >= maxUpdates)
-                break;
+            if (updates >= maxUpdates)
+            {
+                // Intentional return. We don't want to go to the end logic and reset count.
+                return;
+            }
 
-            if (!IsNPCActive(uid))  // Corvax
+            if (!comp.Enabled)
                 continue;
 
             if (comp.PlanningJob != null)
@@ -232,6 +252,28 @@ public sealed class HTNSystem : EntitySystem
                     {
                         StartupTask(comp.Plan.Tasks[comp.Plan.Index], comp.Blackboard, comp.Plan.Effects[comp.Plan.Index]);
                     }
+
+                    // Send debug info
+                    foreach (var session in _subscribers)
+                    {
+                        var text = new StringBuilder();
+
+                        if (comp.Plan != null)
+                        {
+                            text.AppendLine($"BTR: {string.Join(", ", comp.Plan.BranchTraversalRecord)}");
+                            text.AppendLine($"tasks:");
+                            var root = comp.RootTask;
+                            var btr = new List<int>();
+                            var level = -1;
+                            AppendDebugText(root, text, comp.Plan.BranchTraversalRecord, btr, ref level);
+                        }
+
+                        RaiseNetworkEvent(new HTNMessage()
+                        {
+                            Uid = GetNetEntity(uid),
+                            Text = text.ToString(),
+                        }, session.Channel);
+                    }
                 }
                 // Keeping old plan
                 else
@@ -245,48 +287,15 @@ public sealed class HTNSystem : EntitySystem
 
             Update(comp, frameTime);
             count++;
+            updates++;
         }
-    }
-// Corvax-start
-    private bool IsNPCActive(EntityUid entity)
-    {
-        var transform = Transform(entity);
 
-        if (!_mapQuery.TryGetComponent(transform.MapUid, out var worldComponent))
-            return true;
-
-        var chunk = _world.GetOrCreateChunk(WorldGen.WorldToChunkCoords(_transform.GetWorldPosition(transform)).Floored(), transform.MapUid.Value, worldComponent);
-
-        return _loadedQuery.TryGetComponent(chunk, out var loaded) && loaded.Loaders is not null;
-    }
-// Corvax-end
-
-    private void HTNDebug(HTNComponent comp)
-    {
-        // Send debug info
-        foreach (var session in _subscribers)
-        {
-            var text = new StringBuilder();
-
-            if (comp.Plan != null)
-            {
-                text.AppendLine($"BTR: {string.Join(", ", comp.Plan.BranchTraversalRecord)}");
-                text.AppendLine($"tasks:");
-                var root = comp.RootTask;
-                var btr = new List<int>();
-                var level = -1;
-                AppendDebugText(root, text, comp.Plan.BranchTraversalRecord, btr, ref level, comp.Plan);
-            }
-
-            RaiseNetworkEvent(new HTNMessage()
-            {
-                Uid = GetNetEntity(comp.Owner),
-                Text = text.ToString(),
-            }, session.Channel);
-        }
+        // only reset our counter back to 0 if we finish iterating.
+        // otherwise it lets us know where we left off.
+        count = 0;
     }
 
-    private void AppendDebugText(HTNTask task, StringBuilder text, List<int> planBtr, List<int> btr, ref int level, HTNPlan plan)
+    private void AppendDebugText(HTNTask task, StringBuilder text, List<int> planBtr, List<int> btr, ref int level)
     {
         // If it's the selected BTR then highlight.
         for (var i = 0; i < btr.Count; i++)
@@ -298,19 +307,13 @@ public sealed class HTNSystem : EntitySystem
 
         if (task is HTNPrimitiveTask primitive)
         {
-            // Highlight current task
-            if (plan.CurrentTask == primitive && btr.SequenceEqual(plan.BranchTraversalRecord))
-            {
-                // Still results in false positive if current branch contains multiple of the same task...
-                text.Append("> ");
-            }
             text.AppendLine(primitive.ToString());
             return;
         }
 
         if (task is HTNCompoundTask compTask)
         {
-            var compound = _prototypeManager.Index<HTNCompoundPrototype>(compTask.Task);
+            var compound = ProtoMan.Index<HTNCompoundPrototype>(compTask.Task);
             level++;
             text.AppendLine(compound.ID);
             var branches = compound.Branches;
@@ -319,10 +322,11 @@ public sealed class HTNSystem : EntitySystem
             {
                 var branch = branches[i];
                 btr.Add(i);
+                text.AppendLine($" branch {string.Join(", ", btr)}:");
 
                 foreach (var sub in branch.Tasks)
                 {
-                    AppendDebugText(sub, text, planBtr, btr, ref level, plan);
+                    AppendDebugText(sub, text, planBtr, btr, ref level);
                 }
 
                 btr.RemoveAt(btr.Count - 1);
@@ -337,8 +341,12 @@ public sealed class HTNSystem : EntitySystem
 
     private void Update(HTNComponent component, float frameTime)
     {
+        // If we're not planning then countdown to next one.
+        if (component.PlanningJob == null)
+            component.PlanAccumulator -= frameTime;
+
         // We'll still try re-planning occasionally even when we're updating in case new data comes in.
-        if (component.NextPlanTime <= _gameTiming.CurTime)
+        if ((component.ConstantlyReplan || component.Plan is null) && component.PlanAccumulator <= 0f)
         {
             RequestPlan(component);
         }
@@ -399,8 +407,6 @@ public sealed class HTNSystem : EntitySystem
                     throw new InvalidOperationException();
             }
         }
-
-        HTNDebug(component);
     }
 
     public void ShutdownTask(HTNOperator currentOperator, NPCBlackboard blackboard, HTNOperatorStatus status)
@@ -474,13 +480,13 @@ public sealed class HTNSystem : EntitySystem
         if (component.PlanningJob != null)
             return;
 
-        component.NextPlanTime = _gameTiming.CurTime + TimeSpan.FromSeconds(component.PlanCooldown);
+        component.PlanAccumulator = component.PlanCooldown;
         var cancelToken = new CancellationTokenSource();
         var branchTraversal = component.Plan?.BranchTraversalRecord;
 
         var job = new HTNPlanJob(
             0.02,
-            _prototypeManager,
+            ProtoMan,
             component.RootTask,
             component.Blackboard.ShallowClone(), branchTraversal, cancelToken.Token);
 
@@ -510,7 +516,7 @@ public sealed class HTNSystem : EntitySystem
         }
         else if (task is HTNCompoundTask compTask)
         {
-            var compound = _prototypeManager.Index<HTNCompoundPrototype>(compTask.Task);
+            var compound = ProtoMan.Index<HTNCompoundPrototype>(compTask.Task);
             builder.AppendLine(buffer + $"Compound: {task}");
 
             for (var i = 0; i < compound.Branches.Count; i++)

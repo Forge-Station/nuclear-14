@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Client.GameTicking;
 using Content.Client.GameTicking.Managers;
 using Content.Client.Lobby;
 using Content.Shared.Audio.Events;
@@ -18,10 +19,9 @@ namespace Content.Client.Audio;
 // Part of ContentAudioSystem that is responsible for lobby music playing/stopping and round-end sound-effect.
 public sealed partial class ContentAudioSystem
 {
-    [Dependency] private readonly IBaseClient _client = default!;
-    [Dependency] private readonly ClientGameTicker _gameTicker = default!;
-    [Dependency] private readonly IStateManager _stateManager = default!;
-    [Dependency] private readonly IResourceCache _resourceCache = default!;
+    [Dependency] private IBaseClient _client = default!;
+    [Dependency] private ClientGameTicker _gameTicker = default!;
+    [Dependency] private IResourceCache _resourceCache = default!;
 
     private readonly AudioParams _lobbySoundtrackParams = new(-5f, 1, 0, 0, 0, false, 0f);
     private readonly AudioParams _roundEndSoundEffectParams = new(-5f, 1, 0, 0, 0, false, 0f);
@@ -71,7 +71,7 @@ public sealed partial class ContentAudioSystem
         Subs.CVar(_configManager, CCVars.LobbyMusicEnabled, LobbyMusicCVarChanged);
         Subs.CVar(_configManager, CCVars.LobbyMusicVolume, LobbyMusicVolumeCVarChanged);
 
-        _stateManager.OnStateChanged += StateManagerOnStateChanged;
+        _state.OnStateChanged += StateManagerOnStateChanged;
 
         _client.PlayerLeaveServer += OnLeave;
 
@@ -115,7 +115,7 @@ public sealed partial class ContentAudioSystem
 
     private void LobbyMusicCVarChanged(bool musicEnabled)
     {
-        if (musicEnabled && _stateManager.CurrentState is LobbyState)
+        if (musicEnabled && _state.CurrentState is LobbyState)
         {
             StartLobbyMusic();
         }
@@ -183,13 +183,9 @@ public sealed partial class ContentAudioSystem
             soundtrackFilename,
             Filter.Local(),
             false,
-            _lobbySoundtrackParams.WithVolume(_lobbySoundtrackParams.Volume + SharedAudioSystem.GainToVolume(_configManager.GetCVar(CCVars.LobbyMusicVolume)))
+            _lobbySoundtrackParams.AddVolume(_lobbySoundtrackParams.Volume + SharedAudioSystem.GainToVolume(_configManager.GetCVar(CCVars.LobbyMusicVolume)))
         );
-
         if (playResult == null)
-            return;
-
-        if (playResult!.Value.Entity == default)
         {
             _sawmill.Warning(
                 $"Tried to play lobby soundtrack '{{Filename}}' using {nameof(SharedAudioSystem)}.{nameof(SharedAudioSystem.PlayGlobal)} but it returned default value of EntityUid!",
@@ -223,7 +219,7 @@ public sealed partial class ContentAudioSystem
             return;
 
         var file = _gameTicker.RestartSound;
-        if (string.IsNullOrEmpty(file))
+        if (ResolvedSoundSpecifier.IsNullOrEmpty(file))
         {
             return;
         }
@@ -232,13 +228,13 @@ public sealed partial class ContentAudioSystem
             file,
             Filter.Local(),
             false,
-            _roundEndSoundEffectParams.WithVolume(_roundEndSoundEffectParams.Volume + SharedAudioSystem.GainToVolume(_configManager.GetCVar(CCVars.LobbyMusicVolume)))
+            _roundEndSoundEffectParams.AddVolume(_roundEndSoundEffectParams.Volume + SharedAudioSystem.GainToVolume(_configManager.GetCVar(CCVars.LobbyMusicVolume)))
         )?.Entity;
     }
 
     private void ShutdownLobbyMusic()
     {
-        _stateManager.OnStateChanged -= StateManagerOnStateChanged;
+        _state.OnStateChanged -= StateManagerOnStateChanged;
 
         _client.PlayerLeaveServer -= OnLeave;
 

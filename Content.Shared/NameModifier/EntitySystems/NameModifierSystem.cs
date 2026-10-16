@@ -7,19 +7,13 @@ namespace Content.Shared.NameModifier.EntitySystems;
 /// <inheritdoc cref="NameModifierComponent"/>
 public sealed partial class NameModifierSystem : EntitySystem
 {
-    [Dependency] private readonly MetaDataSystem _metaData = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
 
-    public override void Initialize()
+    [SubscribeLocalEvent]
+    private void OnEntityRenamed(Entity<NameModifierComponent> ent, ref EntityRenamedEvent args)
     {
-        base.Initialize();
-
-        SubscribeLocalEvent<NameModifierComponent, EntityRenamedEvent>(OnEntityRenamed);
-    }
-
-    private void OnEntityRenamed(Entity<NameModifierComponent> entity, ref EntityRenamedEvent args)
-    {
-        SetBaseName((entity, entity.Comp), args.NewName);
-        RefreshNameModifiers((entity, entity.Comp));
+        SetBaseName(ent, args.NewName);
+        RefreshNameModifiers((ent.Owner, ent.Comp));
     }
 
     private void SetBaseName(Entity<NameModifierComponent> entity, string name)
@@ -30,6 +24,18 @@ public sealed partial class NameModifierSystem : EntitySystem
         // Set the base name to the new name
         entity.Comp.BaseName = name;
         Dirty(entity);
+    }
+
+    /// <summary>
+    /// Returns the base name of the entity, without any modifiers applied.
+    /// If the entity doesn't have a <see cref="NameModifierComponent"/>,
+    /// this returns the entity's metadata name.
+    /// </summary>
+    public string GetBaseName(Entity<NameModifierComponent?> entity)
+    {
+        if (Resolve(entity, ref entity.Comp, logMissing: false))
+            return entity.Comp.BaseName;
+        return Name(entity);
     }
 
     /// <summary>
@@ -123,7 +129,7 @@ public sealed class RefreshNameModifiersEvent : IInventoryRelayEvent
     /// </summary>
     public string GetModifiedName()
     {
-        // Start out with the entity's name name
+        // Start out with the entity's base name
         var name = BaseName;
 
         // Iterate through all the modifiers in priority order

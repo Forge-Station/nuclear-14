@@ -1,17 +1,12 @@
-﻿using Content.Client.Administration.Managers;
+using System.Numerics;
+using Content.Client.Administration.Managers;
 using Content.Client.Gameplay;
-using Content.Client.Markers;
 using Content.Client.Sandbox;
-using Content.Client.SubFloor;
 using Content.Client.UserInterface.Controls;
 using Content.Client.UserInterface.Systems.DecalPlacer;
 using Content.Client.UserInterface.Systems.Sandbox.Windows;
 using Content.Shared.Input;
-using Content.Shared.Silicons.StationAi;
 using JetBrains.Annotations;
-using Robust.Client.Console;
-using Robust.Client.Debugging;
-using Robust.Client.Graphics;
 using Robust.Client.Input;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
@@ -28,19 +23,14 @@ namespace Content.Client.UserInterface.Systems.Sandbox;
 
 // TODO hud refactor should part of this be in engine?
 [UsedImplicitly]
-public sealed class SandboxUIController : UIController, IOnStateChanged<GameplayState>, IOnSystemChanged<SandboxSystem>
+public sealed partial class SandboxUIController : UIController, IOnStateChanged<GameplayState>, IOnSystemChanged<SandboxSystem>
 {
-    [Dependency] private readonly IConsoleHost _console = default!;
-    [Dependency] private readonly IEyeManager _eye = default!;
-    [Dependency] private readonly IInputManager _input = default!;
-    [Dependency] private readonly ILightManager _light = default!;
-    [Dependency] private readonly IClientAdminManager _admin = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private IConsoleHost _console = default!;
+    [Dependency] private IInputManager _input = default!;
+    [Dependency] private IClientAdminManager _admin = default!;
+    [Dependency] private IPlayerManager _player = default!;
 
-    [UISystemDependency] private readonly DebugPhysicsSystem _debugPhysics = default!;
-    [UISystemDependency] private readonly MarkerSystem _marker = default!;
     [UISystemDependency] private readonly SandboxSystem _sandbox = default!;
-    [UISystemDependency] private readonly SubFloorHideSystem _subfloorHide = default!;
 
     private SandboxWindow? _window;
 
@@ -109,17 +99,15 @@ public sealed class SandboxUIController : UIController, IOnStateChanged<Gameplay
 
     private void EnsureWindow()
     {
-        if(_window is { Disposed: false })
+        if (_window is { Disposed: false })
             return;
         _window = UIManager.CreateWindow<SandboxWindow>();
+        // Pre-center the window without forcing it to the center every time.
+        _window.OpenCentered();
+        _window.Close();
+
         _window.OnOpen += () => { SandboxButton!.Pressed = true; };
         _window.OnClose += () => { SandboxButton!.Pressed = false; };
-        _window.ToggleLightButton.Pressed = !_light.Enabled;
-        _window.ToggleFovButton.Pressed = !_eye.CurrentEye.DrawFov;
-        _window.ToggleShadowsButton.Pressed = !_light.DrawShadows;
-        _window.ToggleSubfloorButton.Pressed = _subfloorHide.ShowAll;
-        _window.ShowMarkersButton.Pressed = _marker.MarkersVisible;
-        _window.ShowBbButton.Pressed = (_debugPhysics.Flags & PhysicsDebugFlags.Shapes) != 0x0;
 
         _window.AiOverlayButton.OnPressed += args =>
         {
@@ -149,7 +137,7 @@ public sealed class SandboxUIController : UIController, IOnStateChanged<Gameplay
         _window.ToggleSubfloorButton.OnPressed += _ => _sandbox.ToggleSubFloor();
         _window.ShowMarkersButton.OnPressed += _ => _sandbox.ShowMarkers();
         _window.ShowBbButton.OnPressed += _ => _sandbox.ShowBb();
-        _window.MachineLinkingButton.OnPressed += _ => _sandbox.MachineLinking();
+        _window.ToggleThermalVisionButton.OnToggled += _ => _sandbox.ToggleThermalVision();
     }
 
     private void CheckSandboxVisibility()
@@ -164,7 +152,7 @@ public sealed class SandboxUIController : UIController, IOnStateChanged<Gameplay
     {
         if (_window != null)
         {
-            _window.Dispose();
+            _window.Close();
             _window = null;
         }
 
@@ -209,7 +197,7 @@ public sealed class SandboxUIController : UIController, IOnStateChanged<Gameplay
         if (_sandbox.SandboxAllowed && _window.IsOpen != true)
         {
             UIManager.ClickSound();
-            _window.OpenCentered();
+            _window.Open();
         }
         else
         {
@@ -217,4 +205,16 @@ public sealed class SandboxUIController : UIController, IOnStateChanged<Gameplay
             _window.Close();
         }
     }
+
+    #region Buttons
+
+    public void SetToggleSubfloors(bool value)
+    {
+        if (_window == null)
+            return;
+
+        _window.ToggleSubfloorButton.Pressed = value;
+    }
+
+    #endregion
 }

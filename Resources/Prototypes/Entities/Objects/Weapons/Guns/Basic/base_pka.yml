@@ -7,7 +7,9 @@
     sprite: Objects/Weapons/Guns/Basic/kinetic_accelerator.rsi
   - type: Item
     sprite: Objects/Weapons/Guns/Basic/kinetic_accelerator.rsi
-    size: Normal
+    size: Large
+    shape:
+    - 0,0,2,1
   - type: GunWieldBonus
     minAngle: -43
     maxAngle: -43
@@ -22,8 +24,11 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/kinetic_accel.ogg
-    fireOnDropChance: 1
+    projectileSpeed: 25
   - type: AmmoCounter
+  - type: CustomSpriteAmmoCounter
+    loadedAmmoSprite: Interface/ItemStatus/PKA/not_spent.png
+    spentAmmoSprite: Interface/ItemStatus/PKA/spent.png
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -48,20 +53,3 @@
     - Belt
   - type: UseDelay
     delay: 1
-  - type: MeleeWeapon
-    attackRate: 1.3333
-    damage:
-      types:
-        Blunt: 9.0
-    swapKeys: true
-    disableHeavy: true
-    animation: WeaponArcThrust
-    wideAnimationRotation: 180
-    soundHit:
-      collection: MetalThud
-  - type: IncreaseDamageOnWield
-    damage:
-      types:
-        Blunt: 2.5
-  - type: DamageOtherOnHit
-    staminaCost: 8

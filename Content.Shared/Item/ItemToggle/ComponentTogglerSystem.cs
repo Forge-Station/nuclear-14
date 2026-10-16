@@ -5,7 +5,7 @@ namespace Content.Shared.Item.ItemToggle;
 /// <summary>
 /// Handles <see cref="ComponentTogglerComponent"/> component manipulation.
 /// </summary>
-public sealed class ComponentTogglerSystem : EntitySystem
+public sealed partial class ComponentTogglerSystem : EntitySystem
 {
     public override void Initialize()
     {
@@ -22,14 +22,31 @@ public sealed class ComponentTogglerSystem : EntitySystem
     // Goobstation - Make this system more flexible
     public void ToggleComponent(EntityUid uid, bool activate)
     {
-        if (!TryComp<ComponentTogglerComponent>(uid, out var component))
+        if (!TryComp<ComponentTogglerComponent>(uid, out var comp))
             return;
 
-        var target = component.Parent ? Transform(uid).ParentUid : uid;
+        var ent = (uid, Comp: comp);
 
         if (activate)
-            EntityManager.AddComponents(target, component.Components);
+        {
+            var target = ent.Comp.Parent ? Transform(ent).ParentUid : ent.Owner;
+
+            if (TerminatingOrDeleted(target))
+                return;
+
+            ent.Comp.Target = target;
+
+            EntityManager.AddComponents(target, ent.Comp.Components);
+        }
         else
-            EntityManager.RemoveComponents(target, component.RemoveComponents ?? component.Components);
+        {
+            if (ent.Comp.Target == null)
+                return;
+
+            if (TerminatingOrDeleted(ent.Comp.Target.Value))
+                return;
+
+            EntityManager.RemoveComponents(ent.Comp.Target.Value, ent.Comp.RemoveComponents ?? ent.Comp.Components);
+        }
     }
 }

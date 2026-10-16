@@ -1,4 +1,4 @@
-﻿using Content.Shared.Whitelist;
+using Content.Shared.Whitelist;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.TypeSerializers.Implementations;
 
@@ -8,7 +8,7 @@ namespace Content.Shared.UserInterface
     public sealed partial class ActivatableUIComponent : Component
     {
         [DataField(required: true, customTypeSerializer: typeof(EnumSerializer))]
-        public Enum? Key;
+        public Enum Key;
 
         /// <summary>
         /// Whether the item must be held in one of the user's hands to work.
@@ -44,12 +44,6 @@ namespace Content.Shared.UserInterface
         /// </summary>
         [DataField, ViewVariables(VVAccess.ReadWrite)]
         public EntityWhitelist? RequiredItems;
-
-        /// <summary>
-        ///     Whitelist for the user who is trying to open this UI.
-        /// </summary>
-        [DataField]
-        public EntityWhitelist? UserWhitelist;
 
         /// <summary>
         ///     If true, then this UI can only be opened via verbs. I.e., normal interactions/activations will not open

@@ -1,6 +1,4 @@
 using Content.Server.Atmos.Monitor.Components;
-using Content.Server.DeviceNetwork.Components;
-using Content.Server.DeviceNetwork.Systems;
 using Content.Server.Pinpointer;
 using Content.Server.Power.Components;
 using Content.Shared.Atmos;
@@ -10,36 +8,26 @@ using Content.Shared.Atmos.Monitor;
 using Content.Shared.Atmos.Monitor.Components;
 using Content.Shared.DeviceNetwork.Components;
 using Content.Shared.Pinpointer;
-using Content.Shared.Tag;
 using Robust.Server.GameObjects;
 using Robust.Shared.Map.Components;
-using Robust.Shared.Player;
-using Robust.Shared.ContentPack;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Timing;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Content.Shared.Access.Components;
-using Content.Shared.Database;
-using Content.Shared.NameIdentifier;
-using Content.Shared.Stacks;
-using JetBrains.Annotations;
-using Robust.Shared.Utility;
+using Content.Shared.DeviceConfigurator.Components;
+using Content.Shared.DeviceConfigurator.Systems;
+using Content.Shared.DeviceNetwork;
 
 namespace Content.Server.Atmos.Monitor.Systems;
 
-public sealed class AtmosAlertsComputerSystem : SharedAtmosAlertsComputerSystem
+public sealed partial class AtmosAlertsComputerSystem : SharedAtmosAlertsComputerSystem
 {
-    [Dependency] private readonly UserInterfaceSystem _uiSystem = default!;
-    [Dependency] private readonly AirAlarmSystem _airAlarmSystem = default!;
-    [Dependency] private readonly AtmosDeviceNetworkSystem _atmosDevNet = default!;
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
-    [Dependency] private readonly TagSystem _tagSystem = default!;
-    [Dependency] private readonly MapSystem _mapSystem = default!;
-    [Dependency] private readonly TransformSystem _transformSystem = default!;
-    [Dependency] private readonly NavMapSystem _navMapSystem = default!;
-    [Dependency] private readonly IGameTiming _gameTiming = default!;
-    [Dependency] private readonly DeviceListSystem _deviceListSystem = default!;
+    [Dependency] private UserInterfaceSystem _userInterfaceSystem = default!;
+    [Dependency] private AirAlarmSystem _airAlarmSystem = default!;
+    [Dependency] private AtmosDeviceNetworkSystem _atmosDevNet = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private MapSystem _mapSystem = default!;
+    [Dependency] private TransformSystem _transformSystem = default!;
+    [Dependency] private NavMapSystem _navMapSystem = default!;
+    [Dependency] private DeviceListSystem _deviceListSystem = default!;
 
     private const float UpdateTime = 1.0f;
 
@@ -216,7 +204,7 @@ public sealed class AtmosAlertsComputerSystem : SharedAtmosAlertsComputerSystem
         AtmosAlertsComputerComponent component,
         TransformComponent xform)
     {
-        if (!_uiSystem.IsUiOpen(uid, AtmosAlertsComputerUiKey.Key))
+        if (!_userInterfaceSystem.IsUiOpen(uid, AtmosAlertsComputerUiKey.Key))
             return;
 
         var gridUid = xform.GridUid!.Value;
@@ -231,7 +219,7 @@ public sealed class AtmosAlertsComputerSystem : SharedAtmosAlertsComputerSystem
         var focusAlarmData = GetFocusAlarmData(uid, GetEntity(component.FocusDevice), gridUid);
 
         // Set the UI state
-        _uiSystem.SetUiState(uid, AtmosAlertsComputerUiKey.Key,
+        _userInterfaceSystem.SetUiState(uid, AtmosAlertsComputerUiKey.Key,
             new AtmosAlertsComputerBoundInterfaceState(airAlarmStateData, fireAlarmStateData, focusAlarmData));
     }
 
@@ -267,16 +255,18 @@ public sealed class AtmosAlertsComputerSystem : SharedAtmosAlertsComputerSystem
             // Create entry
             var netEnt = GetNetEntity(ent);
 
-            var entry = new AtmosAlertsComputerEntry
-                (netEnt,
+            var entry = new AtmosAlertsComputerEntry(
+                netEnt,
                 GetNetCoordinates(entXform.Coordinates),
                 entDevice.Group,
                 alarmState,
                 MetaData(ent).EntityName,
-                entDeviceNetwork.Address);
+                DeviceLocalizationHelpers.GetAddressFromId(entDeviceNetwork));
 
             // Get the list of sensors attached to the alarm
-            var sensorList = TryComp<DeviceListComponent>(ent, out var entDeviceList) ? _deviceListSystem.GetDeviceList(ent, entDeviceList) : null;
+            var sensorList = TryComp<DeviceListComponent>(ent, out var entDeviceList)
+                ? _deviceListSystem.GetDeviceList((ent, entDeviceList))
+                : null;
 
             if (sensorList?.Any() == true)
             {
@@ -285,16 +275,16 @@ public sealed class AtmosAlertsComputerSystem : SharedAtmosAlertsComputerSystem
                 // If valid and anchored, use the position of sensors as seeds for the region
                 foreach (var (address, sensorEnt) in sensorList)
                 {
-                    if (!sensorEnt.IsValid() || !HasComp<AtmosMonitorComponent>(sensorEnt))
+                    if (!sensorEnt.Item1.IsValid() || !HasComp<AtmosMonitorComponent>(sensorEnt.Item1))
                         continue;
 
-                    var sensorXform = Transform(sensorEnt);
+                    var sensorXform = Transform(sensorEnt.Item1);
 
                     if (sensorXform.Anchored && sensorXform.GridUid == entXform.GridUid)
-                        alarmRegionSeeds.Add(_mapSystem.CoordinatesToTile(entXform.GridUid.Value, mapGrid, _transformSystem.GetMapCoordinates(sensorEnt, sensorXform)));
+                        alarmRegionSeeds.Add(_mapSystem.CoordinatesToTile(entXform.GridUid.Value, mapGrid, _transformSystem.GetMapCoordinates(sensorEnt.Item1, sensorXform)));
                 }
 
-                var regionProperties = new SharedNavMapSystem.NavMapRegionProperties(netEnt, AtmosAlertsComputerUiKey.Key, alarmRegionSeeds);
+                var regionProperties = new NavMapSystem.NavMapRegionProperties(netEnt, AtmosAlertsComputerUiKey.Key, alarmRegionSeeds);
                 _navMapSystem.AddOrUpdateNavMapRegion(gridUid, navMap, netEnt, regionProperties);
             }
 
@@ -324,7 +314,7 @@ public sealed class AtmosAlertsComputerSystem : SharedAtmosAlertsComputerSystem
         }
 
         // Force update the sensors attached to the alarm
-        if (!_uiSystem.IsUiOpen(focusDevice.Value, SharedAirAlarmInterfaceKey.Key))
+        if (!_userInterfaceSystem.IsUiOpen(focusDevice.Value, SharedAirAlarmInterfaceKey.Key))
         {
             _atmosDevNet.Register(focusDevice.Value, null);
             _atmosDevNet.Sync(focusDevice.Value, null);

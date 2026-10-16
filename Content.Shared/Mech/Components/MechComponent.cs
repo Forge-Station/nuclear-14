@@ -14,13 +14,6 @@ namespace Content.Shared.Mech.Components;
 public sealed partial class MechComponent : Component
 {
     /// <summary>
-    /// Goobstation: Whether or not an emag disables it.
-    /// </summary>
-    [DataField("breakOnEmag")]
-    [AutoNetworkedField]
-    public bool BreakOnEmag = true;
-
-    /// <summary>
     /// How much "health" the mech has left.
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite), AutoNetworkedField]
@@ -29,7 +22,7 @@ public sealed partial class MechComponent : Component
     /// <summary>
     /// The maximum amount of damage the mech can take.
     /// </summary>
-    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
+    [DataField, AutoNetworkedField]
     public FixedPoint2 MaxIntegrity = 250;
 
     /// <summary>
@@ -43,7 +36,7 @@ public sealed partial class MechComponent : Component
     /// The maximum amount of energy the mech can have.
     /// Derived from the currently inserted battery.
     /// </summary>
-    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
+    [DataField, AutoNetworkedField]
     public FixedPoint2 MaxEnergy = 0;
 
     /// <summary>
@@ -56,26 +49,10 @@ public sealed partial class MechComponent : Component
     public readonly string BatterySlotId = "mech-battery-slot";
 
     /// <summary>
-    /// A multiplier used to calculate how much of the damage done to a mech
-    /// is transfered to the pilot
-    /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float MechToPilotDamageMultiplier;
-
-    /// <summary>
     /// Whether the mech has been destroyed and is no longer pilotable.
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite), AutoNetworkedField]
     public bool Broken = false;
-
-    /// <summary>
-    /// The slot the pilot is stored in.
-    /// </summary>
-    [ViewVariables(VVAccess.ReadWrite)]
-    public ContainerSlot PilotSlot = default!;
-
-    [ViewVariables]
-    public readonly string PilotSlotId = "mech-pilot-slot";
 
     /// <summary>
     /// The current selected equipment of the mech.
@@ -87,7 +64,7 @@ public sealed partial class MechComponent : Component
     /// <summary>
     /// The maximum amount of equipment items that can be installed in the mech
     /// </summary>
-    [DataField("maxEquipmentAmount"), ViewVariables(VVAccess.ReadWrite)]
+    [DataField]
     public int MaxEquipmentAmount = 3;
 
     /// <summary>
@@ -95,9 +72,6 @@ public sealed partial class MechComponent : Component
     /// </summary>
     [DataField]
     public EntityWhitelist? EquipmentWhitelist;
-
-    [DataField]
-    public EntityWhitelist? PilotWhitelist;
 
     /// <summary>
     /// A container for storing the equipment entities.
@@ -109,22 +83,9 @@ public sealed partial class MechComponent : Component
     public readonly string EquipmentContainerId = "mech-equipment-container";
 
     /// <summary>
-    /// How long it takes to enter the mech.
-    /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float EntryDelay = 3;
-
-    /// <summary>
-    /// How long it takes to pull *another person*
-    /// outside of the mech. You can exit instantly yourself.
-    /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float ExitDelay = 3;
-
-    /// <summary>
     /// How long it takes to pull out the battery.
     /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    [DataField]
     public float BatteryRemovalDelay = 2;
 
     /// <summary>
@@ -134,7 +95,7 @@ public sealed partial class MechComponent : Component
     /// This needs to be redone
     /// when mech internals are added
     /// </remarks>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    [DataField]
     public bool Airtight;
 
     /// <summary>
@@ -147,8 +108,6 @@ public sealed partial class MechComponent : Component
     #region Action Prototypes
     [DataField]
     public EntProtoId MechCycleAction = "ActionMechCycleEquipment";
-    [DataField]
-    public EntProtoId ToggleAction = "ActionToggleLight"; //Goobstation Mech Lights toggle action 
     [DataField]
     public EntProtoId MechUiAction = "ActionMechOpenUI";
     [DataField]
@@ -167,5 +126,4 @@ public sealed partial class MechComponent : Component
     [DataField] public EntityUid? MechCycleActionEntity;
     [DataField] public EntityUid? MechUiActionEntity;
     [DataField] public EntityUid? MechEjectActionEntity;
-    [DataField, AutoNetworkedField] public EntityUid? ToggleActionEntity; //Goobstation Mech Lights toggle action 
 }

@@ -1,11 +1,11 @@
-﻿using Robust.Shared.Configuration;
+using Robust.Shared.Configuration;
 
 namespace Content.Shared.CCVar;
 
 public sealed partial class CCVars
 {
     public static readonly CVarDef<int> NPCMaxUpdates =
-        CVarDef.Create("npc.max_updates", 1024);
+        CVarDef.Create("npc.max_updates", 128);
 
     public static readonly CVarDef<bool> NPCEnabled = CVarDef.Create("npc.enabled", true);
 

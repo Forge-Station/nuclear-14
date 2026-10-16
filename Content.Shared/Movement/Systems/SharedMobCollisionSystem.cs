@@ -1,8 +1,8 @@
-using System.Numerics;
+using Content.Shared.Standing; // Corvax-Change
 using Content.Shared._NC.Mountable.Components; // Corvax-Change
+using System.Numerics;
 using Content.Shared.CCVar;
 using Content.Shared.Movement.Components;
-using Content.Shared.Standing; // Corvax-Change
 using Robust.Shared;
 using Robust.Shared.Configuration;
 using Robust.Shared.Physics;
@@ -14,18 +14,18 @@ using Robust.Shared.Utility;
 
 namespace Content.Shared.Movement.Systems;
 
-public abstract class SharedMobCollisionSystem : EntitySystem
+public abstract partial class SharedMobCollisionSystem : EntitySystem
 {
-    [Dependency] protected readonly IConfigurationManager CfgManager = default!;
-    [Dependency] private   readonly IRobustRandom _random = default!;
-    [Dependency] private   readonly MovementSpeedModifierSystem _moveMod = default!;
-    [Dependency] protected readonly SharedPhysicsSystem Physics = default!;
-    [Dependency] private   readonly SharedTransformSystem _xformSystem = default!;
+    [Dependency] protected IConfigurationManager CfgManager = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private MovementSpeedModifierSystem _moveMod = default!;
+    [Dependency] protected SharedPhysicsSystem Physics = default!;
+    [Dependency] private SharedTransformSystem _xformSystem = default!;
 
-    protected EntityQuery<MobCollisionComponent> MobQuery;
-    protected EntityQuery<MountableComponent> MountQuery; // Corvax-Change
-    protected EntityQuery<StandingStateComponent> StandingQuery; // Corvax-Change
-    protected EntityQuery<PhysicsComponent> PhysicsQuery;
+    [Dependency] protected EntityQuery<MobCollisionComponent> MobQuery = default!;
+    [Dependency] protected EntityQuery<PhysicsComponent> PhysicsQuery = default!;
+    [Dependency] protected EntityQuery<MountableComponent> MountQuery = default!; // Corvax-Change
+    [Dependency] protected EntityQuery<StandingStateComponent> StandingQuery = default!; // Corvax-Change
 
     /// <summary>
     /// <see cref="CCVars.MovementPushingCap"/>
@@ -68,10 +68,6 @@ public abstract class SharedMobCollisionSystem : EntitySystem
             }, true);
         Subs.CVar(CfgManager, CCVars.MovementPushMassCap, val => _massDiffCap = val, true);
 
-        MobQuery = GetEntityQuery<MobCollisionComponent>();
-        PhysicsQuery = GetEntityQuery<PhysicsComponent>();
-        MountQuery = GetEntityQuery<MountableComponent>(); // Corvax-Change
-        StandingQuery = GetEntityQuery<StandingStateComponent>(); // Corvax-Change
         SubscribeAllEvent<MobCollisionMessage>(OnCollision);
         SubscribeLocalEvent<MobCollisionComponent, RefreshMovementSpeedModifiersEvent>(OnMoveModifier);
 
@@ -256,7 +252,7 @@ public abstract class SharedMobCollisionSystem : EntitySystem
                 continue;
 
             // Corvax-Change-Start
-            if (StandingQuery.TryComp(other, out var component) && component.CurrentState == StandingState.Lying)
+            if (StandingQuery.TryComp(other, out var otherStanding) && otherStanding.CurrentState == StandingState.Lying)
                 continue;
 
             if (MountQuery.HasComp(other))
@@ -306,6 +302,7 @@ public abstract class SharedMobCollisionSystem : EntitySystem
                 mobMovement *= modifier;
 
                 var speedReduction = 1f - entity.Comp1.MinimumSpeedModifier;
+                speedReduction /= _penCap / penDepth;
                 var speedModifier = Math.Clamp(
                     1f - speedReduction * modifier,
                     entity.Comp1.MinimumSpeedModifier, 1f);

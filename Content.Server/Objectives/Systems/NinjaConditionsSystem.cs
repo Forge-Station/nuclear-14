@@ -1,9 +1,10 @@
 using Content.Server.Objectives.Components;
-using Content.Server.Warps;
 using Content.Shared.Objectives.Components;
-using Content.Shared.Ninja.Components;
+using Content.Shared.Roles;
+using Content.Shared.Roles.Components;
+using Content.Shared.Warps;
+using Content.Shared.Whitelist;
 using Robust.Shared.Random;
-using Content.Server.Roles;
 
 namespace Content.Server.Objectives.Systems;
 
@@ -11,55 +12,44 @@ namespace Content.Server.Objectives.Systems;
 /// Handles the objective conditions that hard depend on ninja.
 /// Survive is handled by <see cref="SurviveConditionSystem"/> since it works without being a ninja.
 /// </summary>
-public sealed class NinjaConditionsSystem : EntitySystem
+public sealed partial class NinjaConditionsSystem : EntitySystem
 {
-    [Dependency] private readonly MetaDataSystem _metaData = default!;
-    [Dependency] private readonly NumberObjectiveSystem _number = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private EntityWhitelistSystem _whitelist = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
+    [Dependency] private NumberObjectiveSystem _number = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private SharedRoleSystem _roles = default!;
 
     public override void Initialize()
     {
-        SubscribeLocalEvent<DoorjackConditionComponent, ObjectiveGetProgressEvent>(OnDoorjackGetProgress);
-
         SubscribeLocalEvent<SpiderChargeConditionComponent, RequirementCheckEvent>(OnSpiderChargeRequirementCheck);
         SubscribeLocalEvent<SpiderChargeConditionComponent, ObjectiveAfterAssignEvent>(OnSpiderChargeAfterAssign);
 
         SubscribeLocalEvent<StealResearchConditionComponent, ObjectiveGetProgressEvent>(OnStealResearchGetProgress);
     }
 
-    // doorjack
-
-    private void OnDoorjackGetProgress(EntityUid uid, DoorjackConditionComponent comp, ref ObjectiveGetProgressEvent args)
-    {
-        args.Progress = DoorjackProgress(comp, _number.GetTarget(uid));
-    }
-
-    private float DoorjackProgress(DoorjackConditionComponent comp, int target)
-    {
-        // prevent divide-by-zero
-        if (target == 0)
-            return 1f;
-
-        return MathF.Min(comp.DoorsJacked / (float) target, 1f);
-    }
-
     // spider charge
     private void OnSpiderChargeRequirementCheck(EntityUid uid, SpiderChargeConditionComponent comp, ref RequirementCheckEvent args)
     {
-        if (args.Cancelled || !HasComp<NinjaRoleComponent>(args.MindId))
-        {
+        if (args.Cancelled || !_roles.MindHasRole<NinjaRoleComponent>(args.MindId))
             return;
-        }
 
         // choose spider charge detonation point
         var warps = new List<EntityUid>();
-        var query = EntityQueryEnumerator<BombingTargetComponent, WarpPointComponent>();
-        while (query.MoveNext(out var warpUid, out _, out var warp))
+        var allEnts = EntityQueryEnumerator<WarpPointComponent>();
+        var bombingWhitelist = comp.Whitelist;
+        var bombingBlacklist = comp.Blacklist;
+
+        while (allEnts.MoveNext(out var warpUid, out var warp))
         {
-            if (warp.Location != null)
-            {
-                warps.Add(warpUid);
-            }
+
+            if (string.IsNullOrWhiteSpace(warp.Location))
+                continue;
+
+            if (!_whitelist.CheckBoth(warpUid, bombingBlacklist, bombingWhitelist))
+                continue;
+
+            warps.Add(warpUid);
         }
 
         if (warps.Count <= 0)
@@ -80,7 +70,7 @@ public sealed class NinjaConditionsSystem : EntitySystem
         }
         else
         {
-            title = Loc.GetString("objective-condition-spider-charge-title", ("location", warp.Location));
+            title = Loc.GetString("objective-condition-spider-charge-title", ("location", Loc.GetString(warp.Location)));
         }
         _metaData.SetEntityName(uid, title, args.Meta);
     }

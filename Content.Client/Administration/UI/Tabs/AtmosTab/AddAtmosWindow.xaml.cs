@@ -13,8 +13,8 @@ namespace Content.Client.Administration.UI.Tabs.AtmosTab
     [UsedImplicitly]
     public sealed partial class AddAtmosWindow : DefaultWindow
     {
-        [Dependency] private readonly IPlayerManager _players = default!;
-        [Dependency] private readonly IEntityManager _entities = default!;
+        [Dependency] private IPlayerManager _players = default!;
+        [Dependency] private IEntityManager _entities = default!;
 
         private readonly List<Entity<MapGridComponent>> _data = new();
 
@@ -35,7 +35,7 @@ namespace Content.Client.Administration.UI.Tabs.AtmosTab
             while (query.MoveNext(out var uid, out var grid))
             {
                 _data.Add((uid, grid));
-                GridOptions.AddItem($"{uid} {(playerGrid == uid ? " (Current)" : "")}");
+                GridOptions.AddItem($"{uid} {(playerGrid == uid ? Loc.GetString($"admin-ui-atmos-grid-current") : "")}");
             }
 
             GridOptions.OnItemSelected += eventArgs => GridOptions.SelectId(eventArgs.Id);

@@ -3,21 +3,27 @@
   name: job-name-captain
   description: job-description-captain
   playTimeTracker: JobCaptain
-  setPreference: false
-  # requirements:
-    # - !type:CharacterTraitRequirement
-      # inverted: true
-      # traits:
-        # - Foreigner
-        # - ForeignerLight
-        # - Pacifist
-  weight: 20
+  requirements:
+    - !type:DepartmentTimeRequirement
+      department: Engineering
+      time: 4h
+    - !type:DepartmentTimeRequirement
+      department: Medical
+      time: 4h
+    - !type:DepartmentTimeRequirement
+      department: Science
+      time: 4h
+    - !type:DepartmentTimeRequirement
+      department: Security
+      time: 4h
+    - !type:DepartmentTimeRequirement
+      department: Command
+      time: 4h
   startingGear: CaptainGear
   icon: "JobIconCaptain"
-  requireAdminNotify: true
   joinNotifyCrew: true
   supervisors: job-supervisors-centcom
-  canBeAntag: false
+  guides: [ Command ] # TODO: should have a more specific guidebook page instead of using the department itself
   accessGroups:
   - AllAccess
   special:
@@ -26,30 +32,26 @@
   - !type:AddComponentSpecial
     components:
       - type: CommandStaff
-  afterLoadoutSpecial:
-  - !type:ModifyEnvirosuitSpecial
-    charges: 8
-  - !type:ModifyEnvirohelmSpecial
-    powerCell: PowerCellHigh
 
 - type: startingGear
   id: CaptainGear
-  subGear:
-  - CaptainPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitCaptain
-    back: ClothingBackpackCaptainFilled
     shoes: ClothingShoesBootsLaceup
+    eyes: ClothingEyesGlassesCommand
+    gloves: ClothingHandsGlovesCaptain
     id: CaptainPDA
     ears: ClothingHeadsetAltCommand
-  innerClothingSkirt: ClothingUniformJumpskirtCaptain
-  satchel: ClothingBackpackSatchelCaptainFilled
-  duffelbag: ClothingBackpackDuffelCaptainFilled
+  storage:
+    back:
+    - Flash
+    # - StationCharter
 
-- type: startingGear
-  id: CaptainPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: CaptainChameleonOutfit
+  job: Captain
+  hasMindShield: true
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitCaptain
-    head: ClothingHeadEnvirohelmCaptain
-    gloves: ClothingHandsGlovesCaptain
+    head: ClothingHeadHatCapcap
+    eyes: ClothingEyesGlassesCommand
+    mask: ClothingMaskGasCaptain
+    neck: ClothingNeckCloakCap

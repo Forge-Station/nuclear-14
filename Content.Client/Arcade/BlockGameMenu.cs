@@ -338,7 +338,7 @@ namespace Content.Client.Arcade
             menuInnerPanel.AddChild(menuContainer);
             #endregion
 
-            Contents.AddChild(_mainPanel);
+            ContentsContainer.AddChild(_mainPanel);
 
             CanKeyboardFocus = true;
         }
@@ -380,7 +380,7 @@ namespace Content.Client.Arcade
             {
                 PanelOverride = back,
                 HorizontalExpand = true,
-                SizeFlagsStretchRatio = 60
+                SizeFlagsStretchRatio = 34.25f
             };
             var backgroundPanel = new PanelContainer
             {

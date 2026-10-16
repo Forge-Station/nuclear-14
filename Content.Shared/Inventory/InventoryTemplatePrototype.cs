@@ -5,10 +5,10 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Inventory;
 
-[Prototype("inventoryTemplate")]
+[Prototype]
 public sealed partial class InventoryTemplatePrototype : IPrototype
 {
-    [IdDataField] public string ID { get; set; } = string.Empty;
+    [IdDataField] public string ID { get; private set; } = string.Empty;
 
     [DataField("slots")] public SlotDefinition[] Slots { get; private set; } = Array.Empty<SlotDefinition>();
 }
@@ -60,19 +60,4 @@ public sealed partial class SlotDefinition
     ///     Entity blacklist for CanEquip checks.
     /// </summary>
     [DataField("blacklist")] public EntityWhitelist? Blacklist = null;
-
-    /// <summary>
-    ///     Entity whitelist for CanEquip checks, on spawn only.
-    /// </summary>
-    [DataField("spawnWhitelist")] public EntityWhitelist? SpawnWhitelist = null;
-
-    /// <summary>
-    ///     Entity blacklist for CanEquip checks, on spawn only.
-    /// </summary>
-    [DataField("spawnBlacklist")] public EntityWhitelist? SpawnBlacklist = null;
-
-    /// <summary>
-    ///     Is this slot disabled? Could be due to severing or other reasons.
-    /// </summary>
-    [DataField] public bool Disabled;
 }

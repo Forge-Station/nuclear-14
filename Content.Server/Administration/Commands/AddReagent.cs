@@ -1,4 +1,4 @@
-using Content.Server.Chemistry.Containers.EntitySystems;
+using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Administration;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.Reagent;
@@ -13,10 +13,10 @@ namespace Content.Server.Administration.Commands
     ///     Command that allows you to edit an existing solution by adding (or removing) reagents.
     /// </summary>
     [AdminCommand(AdminFlags.Admin)]
-    public sealed class AddReagent : IConsoleCommand
+    public sealed partial class AddReagent : IConsoleCommand
     {
-        [Dependency] private readonly IEntityManager _entManager = default!;
-        [Dependency] private readonly IPrototypeManager _protomanager = default!;
+        [Dependency] private IEntityManager _entManager = default!;
+        [Dependency] private IPrototypeManager _protomanager = default!;
 
         public string Command => "addreagent";
         public string Description => "Add (or remove) some amount of reagent from some solution.";
@@ -36,16 +36,17 @@ namespace Content.Server.Administration.Commands
                 return;
             }
 
-            if (!_entManager.TryGetComponent(uid, out SolutionContainerManagerComponent? man))
+            var solutionContainerSystem = _entManager.System<SharedSolutionContainerSystem>();
+            if (!solutionContainerSystem.TryGetSolution(uid.Value, args[1], out var solution))
             {
-                shell.WriteLine($"Entity does not have any solutions.");
-                return;
-            }
+                var solutions = solutionContainerSystem.EnumerateSolutions(uid.Value).ToArray();
+                if (!solutions.Any())
+                {
+                    shell.WriteLine("Entity does not have any solutions!");
+                    return;
+                }
 
-            var solutionContainerSystem = _entManager.System<SolutionContainerSystem>();
-            if (!solutionContainerSystem.TryGetSolution((uid.Value, man), args[1], out var solution))
-            {
-                var validSolutions = string.Join(", ", solutionContainerSystem.EnumerateSolutions((uid.Value, man)).Select(s => s.Name));
+                var validSolutions = string.Join(", ", solutions.Select(s => s.Name));
                 shell.WriteLine($"Entity does not have a \"{args[1]}\" solution. Valid solutions are:\n{validSolutions}");
                 return;
             }

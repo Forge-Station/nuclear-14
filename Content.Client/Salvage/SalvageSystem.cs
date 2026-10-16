@@ -6,10 +6,10 @@ using Robust.Shared.GameStates;
 
 namespace Content.Client.Salvage;
 
-public sealed class SalvageSystem : SharedSalvageSystem
+public sealed partial class SalvageSystem : SharedSalvageSystem
 {
-    [Dependency] private readonly IPlayerManager _playerManager = default!;
-    [Dependency] private readonly ContentAudioSystem _audio = default!;
+    [Dependency] private IPlayerManager _playerManager = default!;
+    [Dependency] private ContentAudioSystem _audio = default!;
 
     public override void Initialize()
     {
@@ -38,7 +38,7 @@ public sealed class SalvageSystem : SharedSalvageSystem
 
         var player = _playerManager.LocalEntity;
 
-        if (!TryComp<TransformComponent>(player, out var xform) ||
+        if (!TryComp(player, out TransformComponent? xform) ||
             !TryComp<SalvageExpeditionComponent>(xform.MapUid, out var expedition) ||
             expedition.Stage < ExpeditionStage.MusicCountdown)
         {

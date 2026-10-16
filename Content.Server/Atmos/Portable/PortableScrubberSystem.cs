@@ -3,34 +3,31 @@ using Content.Shared.Atmos.Piping.Unary.Components;
 using Content.Shared.Atmos.Visuals;
 using Content.Shared.Examine;
 using Content.Shared.Destructible;
-using Content.Server.Atmos.Piping.Components;
 using Content.Server.Atmos.EntitySystems;
-using Content.Server.Power.Components;
-using Content.Server.NodeContainer;
 using Robust.Server.GameObjects;
 using Content.Server.NodeContainer.Nodes;
 using Content.Server.NodeContainer.NodeGroups;
 using Content.Server.Audio;
 using Content.Server.Administration.Logs;
-using Content.Server.Construction;
 using Content.Server.NodeContainer.EntitySystems;
 using Content.Shared.Atmos;
+using Content.Shared.Atmos.Components;
 using Content.Shared.Database;
 using Content.Shared.Power;
 
 namespace Content.Server.Atmos.Portable
 {
-    public sealed class PortableScrubberSystem : EntitySystem
+    public sealed partial class PortableScrubberSystem : EntitySystem
     {
-        [Dependency] private readonly GasVentScrubberSystem _scrubberSystem = default!;
-        [Dependency] private readonly GasCanisterSystem _canisterSystem = default!;
-        [Dependency] private readonly GasPortableSystem _gasPortableSystem = default!;
-        [Dependency] private readonly AtmosphereSystem _atmosphereSystem = default!;
-        [Dependency] private readonly TransformSystem _transformSystem = default!;
-        [Dependency] private readonly IAdminLogManager _adminLogger = default!;
-        [Dependency] private readonly AmbientSoundSystem _ambientSound = default!;
-        [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
-        [Dependency] private readonly NodeContainerSystem _nodeContainer = default!;
+        [Dependency] private GasVentScrubberSystem _scrubberSystem = default!;
+        [Dependency] private GasCanisterSystem _canisterSystem = default!;
+        [Dependency] private GasPortableSystem _gasPortableSystem = default!;
+        [Dependency] private AtmosphereSystem _atmosphereSystem = default!;
+        [Dependency] private TransformSystem _transformSystem = default!;
+        [Dependency] private IAdminLogManager _adminLogger = default!;
+        [Dependency] private AmbientSoundSystem _ambientSound = default!;
+        [Dependency] private SharedAppearanceSystem _appearance = default!;
+        [Dependency] private NodeContainerSystem _nodeContainer = default!;
 
         public override void Initialize()
         {
@@ -41,8 +38,6 @@ namespace Content.Server.Atmos.Portable
             SubscribeLocalEvent<PortableScrubberComponent, ExaminedEvent>(OnExamined);
             SubscribeLocalEvent<PortableScrubberComponent, DestructionEventArgs>(OnDestroyed);
             SubscribeLocalEvent<PortableScrubberComponent, GasAnalyzerScanEvent>(OnScrubberAnalyzed);
-            SubscribeLocalEvent<PortableScrubberComponent, RefreshPartsEvent>(OnRefreshParts);
-            SubscribeLocalEvent<PortableScrubberComponent, UpgradeExamineEvent>(OnUpgradeExamine);
         }
 
         private bool IsFull(PortableScrubberComponent component)
@@ -158,21 +153,6 @@ namespace Content.Server.Atmos.Portable
         {
             args.GasMixtures ??= new List<(string, GasMixture?)>();
             args.GasMixtures.Add((Name(uid), component.Air));
-        }
-
-        private void OnRefreshParts(EntityUid uid, PortableScrubberComponent component, RefreshPartsEvent args)
-        {
-            var pressureRating = args.PartRatings[component.MachinePartMaxPressure];
-            var transferRating = args.PartRatings[component.MachinePartTransferRate];
-
-            component.MaxPressure = component.BaseMaxPressure * MathF.Pow(component.PartRatingMaxPressureModifier, pressureRating - 1);
-            component.TransferRate = component.BaseTransferRate * MathF.Pow(component.PartRatingTransferRateModifier, transferRating - 1);
-        }
-
-        private void OnUpgradeExamine(EntityUid uid, PortableScrubberComponent component, UpgradeExamineEvent args)
-        {
-            args.AddPercentageUpgrade("portable-scrubber-component-upgrade-max-pressure", component.MaxPressure / component.BaseMaxPressure);
-            args.AddPercentageUpgrade("portable-scrubber-component-upgrade-transfer-rate", component.TransferRate / component.BaseTransferRate);
         }
     }
 }

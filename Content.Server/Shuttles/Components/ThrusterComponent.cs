@@ -1,22 +1,32 @@
 using System.Numerics;
 using Content.Server.Shuttles.Systems;
-using Content.Shared.Construction.Prototypes;
 using Content.Shared.Damage;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Server.Shuttles.Components
 {
-    [RegisterComponent, NetworkedComponent]
+    [RegisterComponent, NetworkedComponent, AutoGenerateComponentPause]
     [Access(typeof(ThrusterSystem))]
     public sealed partial class ThrusterComponent : Component
     {
         /// <summary>
-        /// Whether the thruster has been force to be enabled / disabled (e.g. VV, interaction, etc.)
+        /// If the thruster can be toggled on or off via interaction
         /// </summary>
         [DataField]
+        public bool CanToggle = true;
+
+        /// <summary>
+        /// Whether the thruster has been force to be enabled / disabled (e.g. VV, interaction, etc.)
+        /// </summary>
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
         public bool Enabled { get; set; } = true;
+
+        /// <summary>
+        /// Base power for the <see cref="ApcPowerReceiverComponent"/>, scaled by thruster setting.
+        /// </summary>
+        [DataField]
+        public float BasePowerLoad = 1500;
 
         /// <summary>
         /// This determines whether the thruster is actually enabled for the purposes of thrust
@@ -24,11 +34,14 @@ namespace Content.Server.Shuttles.Components
         public bool IsOn;
 
         // Need to serialize this because RefreshParts isn't called on Init and this will break post-mapinit maps!
-        [DataField]
-        public float Thrust = 100f;
+        [ViewVariables(VVAccess.ReadWrite), DataField("thrust")]
+        public float Thrust = 160000f;
 
+        /// <summary>
+        /// Throttles the influence of gyroscopes on small shuttles. The default value is roughly half the inertia of the standard 4-door cargo shuttle.
+        /// </summary>
         [DataField]
-        public float BaseThrust = 100f;
+        public float InertiaThreshold = 850000f;
 
         [DataField("thrusterType")]
         public ThrusterType Type = ThrusterType.Linear;
@@ -42,31 +55,30 @@ namespace Content.Server.Shuttles.Components
         };
 
         /// <summary>
-        ///     How much damage is done per second to anything colliding with our thrust.
+        /// How much damage is done per second to anything colliding with our thrust.
         /// </summary>
-        [DataField]
-        public DamageSpecifier? Damage = new();
+        [DataField("damage")] public DamageSpecifier? Damage = new();
 
-        [DataField]
+        [DataField("requireSpace")]
         public bool RequireSpace = true;
 
         // Used for burns
 
         public List<EntityUid> Colliding = new();
 
-        public bool Firing;
+        public bool Firing = false;
 
         /// <summary>
-        ///     Next time we tick damage for anyone colliding.
+        /// How often thruster deals damage.
         /// </summary>
-        [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
-        public TimeSpan NextFire;
-
-        [DataField(customTypeSerializer: typeof(PrototypeIdSerializer<MachinePartPrototype>))]
-        public string MachinePartThrust = "Capacitor";
-
         [DataField]
-        public float PartRatingThrustMultiplier = 1.5f;
+        public TimeSpan FireCooldown = TimeSpan.FromSeconds(2);
+
+        /// <summary>
+        /// Next time we tick damage for anyone colliding.
+        /// </summary>
+        [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoPausedField]
+        public TimeSpan NextFire = TimeSpan.Zero;
     }
 
     public enum ThrusterType

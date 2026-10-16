@@ -5,11 +5,12 @@ using Content.Shared.Follower.Components;
 using Content.Shared.Input;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Events;
-using Robust.Shared.Configuration;
 using Robust.Shared.GameStates;
 using Robust.Shared.Input;
 using Robust.Shared.Input.Binding;
+using Robust.Shared.Physics;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
@@ -22,6 +23,8 @@ namespace Content.Shared.Movement.Systems
     public abstract partial class SharedMoverController
     {
         public bool CameraRotationLocked { get; set; }
+
+        public static ProtoId<AlertPrototype> WalkingAlert = "Walking";
 
         private void InitializeInput()
         {
@@ -54,8 +57,7 @@ namespace Content.Shared.Movement.Systems
             SubscribeLocalEvent<InputMoverComponent, ComponentGetState>(OnMoverGetState);
             SubscribeLocalEvent<InputMoverComponent, ComponentHandleState>(OnMoverHandleState);
             SubscribeLocalEvent<InputMoverComponent, EntParentChangedMessage>(OnInputParentChange);
-
-            SubscribeLocalEvent<AutoOrientComponent, EntParentChangedMessage>(OnAutoParentChange);
+            SubscribeLocalEvent<InputMoverComponent, AnchorStateChangedEvent>(OnAnchorState);
 
             SubscribeLocalEvent<FollowedComponent, EntParentChangedMessage>(OnFollowedParentChange);
 
@@ -97,7 +99,7 @@ namespace Content.Shared.Movement.Systems
             RaiseLocalEvent(entity, ref moveEvent);
             Dirty(entity, entity.Comp);
 
-            var ev = new SpriteMoveEvent(entity.Comp.HeldMoveButtons != MoveButtons.None);
+            var ev = new SpriteMoveEvent(entity.Comp.HasDirectionalMovement);
             RaiseLocalEvent(entity, ref ev);
         }
 
@@ -112,7 +114,6 @@ namespace Content.Shared.Movement.Systems
             entity.Comp.TargetRelativeRotation = state.TargetRelativeRotation;
             entity.Comp.CanMove = state.CanMove;
             entity.Comp.RelativeEntity = EnsureEntity<InputMoverComponent>(state.RelativeEntity, entity.Owner);
-            entity.Comp.DefaultSprinting = state.DefaultSprinting;
 
             // Reset
             entity.Comp.LastInputTick = GameTick.Zero;
@@ -124,7 +125,7 @@ namespace Content.Shared.Movement.Systems
                 entity.Comp.HeldMoveButtons = state.HeldMoveButtons;
                 RaiseLocalEvent(entity.Owner, ref moveEvent);
 
-                var ev = new SpriteMoveEvent(entity.Comp.HeldMoveButtons != MoveButtons.None);
+                var ev = new SpriteMoveEvent(entity.Comp.HasDirectionalMovement);
                 RaiseLocalEvent(entity, ref ev);
             }
         }
@@ -139,7 +140,6 @@ namespace Content.Shared.Movement.Systems
                 HeldMoveButtons = entity.Comp.HeldMoveButtons,
                 RelativeRotation = entity.Comp.RelativeRotation,
                 TargetRelativeRotation = entity.Comp.TargetRelativeRotation,
-                DefaultSprinting = entity.Comp.DefaultSprinting
             };
         }
 
@@ -151,11 +151,6 @@ namespace Content.Shared.Movement.Systems
         public bool DiagonalMovementEnabled { get; private set; }
 
         protected virtual void HandleShuttleInput(EntityUid uid, ShuttleButtons button, ushort subTick, bool state) {}
-
-        private void OnAutoParentChange(Entity<AutoOrientComponent> entity, ref EntParentChangedMessage args)
-        {
-            ResetCamera(entity.Owner);
-        }
 
         public void RotateCamera(EntityUid uid, Angle angle)
         {
@@ -175,7 +170,7 @@ namespace Content.Shared.Movement.Systems
             }
 
             // If we updated parent then cancel the accumulator and force it now.
-            if (!TryUpdateRelative(mover, XformQuery.GetComponent(uid)) && mover.TargetRelativeRotation.Equals(Angle.Zero))
+            if (!TryUpdateRelative(uid, mover, XformQuery.GetComponent(uid)) && mover.TargetRelativeRotation.Equals(Angle.Zero))
                 return;
 
             mover.LerpTarget = TimeSpan.Zero;
@@ -183,7 +178,7 @@ namespace Content.Shared.Movement.Systems
             Dirty(uid, mover);
         }
 
-        private bool TryUpdateRelative(InputMoverComponent mover, TransformComponent xform)
+        private bool TryUpdateRelative(EntityUid uid, InputMoverComponent mover, TransformComponent xform)
         {
             var relative = xform.GridUid;
             relative ??= xform.MapUid;
@@ -198,38 +193,42 @@ namespace Content.Shared.Movement.Systems
 
             // Okay need to get our old relative rotation with respect to our new relative rotation
             // e.g. if we were right side up on our current grid need to get what that is on our new grid.
-            var currentRotation = Angle.Zero;
-            var targetRotation = Angle.Zero;
+            var oldRelativeRot = Angle.Zero;
+            var relativeRot = Angle.Zero;
 
             // Get our current relative rotation
             if (XformQuery.TryGetComponent(mover.RelativeEntity, out var oldRelativeXform))
             {
-                currentRotation = _transform.GetWorldRotation(oldRelativeXform, XformQuery) + mover.RelativeRotation;
+                oldRelativeRot = _transform.GetWorldRotation(oldRelativeXform);
             }
 
             if (XformQuery.TryGetComponent(relative, out var relativeXform))
             {
                 // This is our current rotation relative to our new parent.
-                mover.RelativeRotation = (currentRotation - _transform.GetWorldRotation(relativeXform)).FlipPositive();
+                relativeRot = _transform.GetWorldRotation(relativeXform);
             }
 
-            // If we went from grid -> map we'll preserve our worldrotation
-            if (relative != null && _mapManager.IsMap(relative.Value))
+            var diff = relativeRot - oldRelativeRot;
+
+            // If we're going from a grid -> map then preserve the relative rotation so it's seamless if they go into space and back.
+            if (MapQuery.HasComp(relative) && MapGridQuery.HasComp(mover.RelativeEntity))
             {
-                targetRotation = currentRotation.FlipPositive().Reduced();
+                mover.TargetRelativeRotation -= diff;
             }
-            // If we went from grid -> grid OR grid -> map then snap the target to cardinal and lerp there.
-            // OR just rotate to zero (depending on cvar)
-            else if (relative != null && _mapManager.IsGrid(relative.Value))
+            // Snap to nearest cardinal if map -> grid or grid -> grid
+            else if (MapGridQuery.HasComp(relative) && (MapQuery.HasComp(mover.RelativeEntity) || MapGridQuery.HasComp(mover.RelativeEntity)))
             {
-                if (CameraRotationLocked)
-                    targetRotation = Angle.Zero;
-                else
-                    targetRotation = mover.RelativeRotation.GetCardinalDir().ToAngle().Reduced();
+                var targetDir = mover.TargetRelativeRotation - diff;
+                targetDir = targetDir.GetCardinalDir().ToAngle().Reduced();
+                mover.TargetRelativeRotation = targetDir;
             }
+
+            // Preserve target rotation in relation to the new parent.
+            // Regardless of what the target is don't want the eye to move at all (from the player's perspective).
+            mover.RelativeRotation -= diff;
 
             mover.RelativeEntity = relative;
-            mover.TargetRelativeRotation = targetRotation;
+            Dirty(uid, mover);
             return true;
         }
 
@@ -298,35 +297,37 @@ namespace Content.Shared.Movement.Systems
             Dirty(entity.Owner, entity.Comp);
         }
 
-        private void HandleDirChange(EntityUid entity, Direction dir, ushort subTick, bool state)
+        private void OnAnchorState(Entity<InputMoverComponent> entity, ref AnchorStateChangedEvent args)
+        {
+            if (!args.Anchored)
+                PhysicsSystem.SetBodyType(entity, BodyType.KinematicController);
+        }
+
+        private void HandleDirChange(Entity<InputMoverComponent?> entity, Direction dir, ushort subTick, bool state)
         {
             // Relayed movement just uses the same keybinds given we're moving the relayed entity
-            // the same as us.
+            // the same as us. InputMoverComponent may not exist for entities which can't move
+            // (e.g. a brain in an mmi), so early-out and don't generate a missing log.
+            if (!MoverQuery.Resolve(entity, ref entity.Comp, logMissing: false))
+                return;
 
-            if (TryComp<RelayInputMoverComponent>(entity, out var relayMover))
+            // TODO: Should move this into HandleMobMovement itself.
+            if (entity.Comp.CanMove && RelayQuery.TryComp(entity, out var relayMover) && relayMover.Running)
             {
-                DebugTools.Assert(relayMover.RelayEntity != entity);
+                DebugTools.Assert(relayMover.RelayEntity != entity.Owner);
                 DebugTools.AssertNotNull(relayMover.RelayEntity);
 
                 if (MoverQuery.TryGetComponent(entity, out var mover))
                     SetMoveInput((entity, mover), MoveButtons.None);
 
-                if (_mobState.IsDead(entity)
-                    || _mobState.IsCritical(entity) && !_configManager.GetCVar(CCVars.AllowMovementWhileCrit))
-                    return;
-
                 HandleDirChange(relayMover.RelayEntity, dir, subTick, state);
-
                 return;
             }
-
-            if (!MoverQuery.TryGetComponent(entity, out var moverComp))
-                return;
 
             // For stuff like "Moving out of locker" or the likes
             // We'll relay a movement input to the parent.
             if (_container.IsEntityInContainer(entity) &&
-                TryComp<TransformComponent>(entity, out var xform) &&
+                TryComp(entity, out TransformComponent? xform) &&
                 xform.ParentUid.IsValid() &&
                 _mobState.IsAlive(entity))
             {
@@ -334,7 +335,7 @@ namespace Content.Shared.Movement.Systems
                 RaiseLocalEvent(xform.ParentUid, ref relayMoveEvent);
             }
 
-            SetVelocityDirection((entity, moverComp), dir, subTick, state);
+            SetVelocityDirection((entity, entity.Comp), dir, subTick, state);
         }
 
         private void OnInputInit(Entity<InputMoverComponent> entity, ref ComponentInit args)
@@ -346,7 +347,6 @@ namespace Content.Shared.Movement.Systems
 
             entity.Comp.RelativeEntity = xform.GridUid ?? xform.MapUid;
             entity.Comp.TargetRelativeRotation = Angle.Zero;
-            WalkingAlert(entity);
         }
 
         private void HandleRunChange(EntityUid uid, ushort subTick, bool walking)
@@ -359,7 +359,6 @@ namespace Content.Shared.Movement.Systems
                 if (moverComp != null)
                 {
                     SetMoveInput((uid, moverComp), MoveButtons.None);
-                    WalkingAlert((uid, moverComp));
                 }
 
                 HandleRunChange(relayMover.RelayEntity, subTick, walking);
@@ -475,12 +474,11 @@ namespace Content.Shared.Movement.Systems
             component.LastInputSubTick = 0;
         }
 
-        public void SetSprinting(Entity<InputMoverComponent> entity, ushort subTick, bool walking)
+        public virtual void SetSprinting(Entity<InputMoverComponent> entity, ushort subTick, bool walking)
         {
             // Logger.Info($"[{_gameTiming.CurTick}/{subTick}] Sprint: {enabled}");
 
             SetMoveInput(entity, subTick, walking, MoveButtons.Walk);
-            WalkingAlert(entity);
         }
 
         /// <summary>
@@ -632,7 +630,7 @@ namespace Content.Shared.Movement.Systems
         Down = 2,
         Left = 4,
         Right = 8,
-        Walk = 16, // This may be either a sprint button or a walk button, depending on mover config
+        Walk = 16,
         AnyDirection = Up | Down | Left | Right,
     }
 

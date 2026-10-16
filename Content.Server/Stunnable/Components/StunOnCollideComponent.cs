@@ -4,37 +4,70 @@ using Content.Shared.Whitelist;
 namespace Content.Server.Stunnable.Components;
 
 /// <summary>
-///     Adds stun when it collides with an entity
+/// Adds stun when it collides with an entity
 /// </summary>
 [RegisterComponent, Access(typeof(StunOnCollideSystem))]
 public sealed partial class StunOnCollideComponent : Component
 {
     // TODO: Can probably predict this.
 
-    [DataField]
-    public TimeSpan StunAmount = TimeSpan.FromSeconds(5);
-
-    [DataField]
-    public TimeSpan KnockdownAmount = TimeSpan.FromSeconds(5);
-
-    [DataField]
-    public TimeSpan SlowdownAmount = TimeSpan.FromSeconds(10);
-
-    [DataField]
-    public float WalkSpeedMultiplier = 1f;
-
-    [DataField]
-    public float RunSpeedMultiplier = 1f;
-
     /// <summary>
-    ///     Fixture we track for the collision.
+    /// How long we are stunned for
     /// </summary>
     [DataField]
-    public string FixtureId = "projectile";
+    public TimeSpan StunAmount;
 
     /// <summary>
-    ///     Entities excluded from collision check.
+    /// How long we are knocked down for
     /// </summary>
     [DataField]
-    public EntityWhitelist? Blacklist;
+    public TimeSpan KnockdownAmount;
+
+    /// <summary>
+    /// How long we are slowed down for
+    /// </summary>
+    [DataField]
+    public TimeSpan SlowdownAmount;
+
+    /// <summary>
+    /// Multiplier for a mob's walking speed
+    /// </summary>
+    [DataField]
+    public float WalkSpeedModifier = 1f;
+
+    /// <summary>
+    /// Multiplier for a mob's sprinting speed
+    /// </summary>
+    [DataField]
+    public float SprintSpeedModifier = 1f;
+
+    /// <summary>
+    /// Refresh Stun or Slowdown on hit
+    /// </summary>
+    [DataField]
+    public bool Refresh = true;
+
+    /// <summary>
+    /// Should the entity try and stand automatically after being knocked down?
+    /// </summary>
+    [DataField]
+    public bool AutoStand = true;
+
+    /// <summary>
+    /// Should the entity drop their items upon first being knocked down?
+    /// </summary>
+    [DataField]
+    public bool Drop = true;
+
+    /// <summary>
+    /// Fixture we track for the collision.
+    /// </summary>
+    [DataField("fixture")] public string FixtureID = "projectile";
+
+    ///<summary>
+    /// Allows blacklisting of entities
+    /// </summary>
+    [DataField]
+    public EntityWhitelist Blacklist = new();
 }
+

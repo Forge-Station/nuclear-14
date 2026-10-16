@@ -1,6 +1,6 @@
 - type: entity
   abstract: true
-  parent: BaseItem
+  parent: BaseSheet
   id: SheetGlassBase
   name: glass
   description: A sheet of glass, used often on the station in various applications.
@@ -9,52 +9,8 @@
     sprite: Objects/Materials/Sheets/glass.rsi
   - type: Item
     sprite: Objects/Materials/Sheets/glass.rsi
-    size: Normal
-  - type: StaticPrice
-    price: 0
-  - type: Tag
-    tags:
-    - Sheet
-    - NoPaint
-  - type: Material
   - type: Damageable
-    damageContainer: Inorganic
     damageModifierSet: Glass
-  - type: Appearance
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-    - trigger:
-        !type:DamageTrigger
-        damage: 50
-      behaviors:
-      - !type:PlaySoundBehavior
-        sound:
-          collection: GlassBreak
-          params:
-            volume: -4
-      - !type:SpawnEntitiesBehavior
-        spawn:
-          ShardGlass:
-            min: 1
-            max: 1
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-  - type: SolutionContainerManager
-    solutions:
-      glass:
-        canReact: false
-  # Estacao Pirata - IPC Healing
-  - type: BlindHealing
-    damageContainers:
-      - Silicon
-  - type: StackPrice
-    price: 2
 
 - type: entity
   parent: SheetGlassBase
@@ -84,30 +40,27 @@
   - type: Construction
     graph: Glass
     node: SheetGlass
-  - type: Extractable
-    grindableSolutionName: glass
-  - type: SolutionContainerManager
-    solutions:
-      glass:
-        reagents:
-        - ReagentId: Silicon
-          Quantity: 10
-  - type: UserInterface
-    interfaces:
-      enum.RadialSelectorUiKey.Key:
-        type: RadialSelectorMenuBUI
-  - type: ActivatableUI
-    key: enum.RadialSelectorUiKey.Key
-    inHandsOnly: true
-    requireActiveHand: false
-  - type: ShortConstruction
-    entries:
-    - prototype: Window
-    - prototype: WindowDirectional
-    - prototype: WindowDiagonal
-    #- prototype: SheetRGlass # block it for n14
-    #- prototype: SheetPGlass
-    #- prototype: SheetUGlass
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Silicon
+        Quantity: 10
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 50
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: GlassBreak
+          params:
+            volume: -4
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          ShardGlass:
+            min: 1
+            max: 1
 
 - type: entity
   parent: SheetGlass
@@ -130,15 +83,6 @@
   - type: Stack
     stackType: Glass
     count: 1
-
-- type: entity
-  parent: SheetGlass
-  id: SheetGlassLingering0
-  suffix: Lingering, 0
-  components:
-  - type: Stack
-    lingering: true
-    count: 0
 
 - type: entity
   parent: SheetGlassBase
@@ -174,12 +118,6 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-    - trigger:
-        !type:DamageTrigger
         damage: 50
       behaviors:
       - !type:PlaySoundBehavior
@@ -192,23 +130,16 @@
           ShardGlassReinforced:
             min: 1
             max: 1
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-  - type: UserInterface
-    interfaces:
-      enum.RadialSelectorUiKey.Key:
-        type: RadialSelectorMenuBUI
-  - type: ActivatableUI
-    key: enum.RadialSelectorUiKey.Key
-    inHandsOnly: true
-    requireActiveHand: false
-  - type: ShortConstruction
-    entries:
-   # - prototype: SheetRPGlass1
-   # - prototype: SheetRUGlass1
-    - prototype: ReinforcedWindow
-    - prototype: ReinforcedWindowDiagonal
-    - prototype: WindowReinforcedDirectional
+  - type: Solution
+    solution:
+      maxVol: 15
+      reagents:
+      - ReagentId: Silicon
+        Quantity: 10
+      - ReagentId: Iron
+        Quantity: 4.5
+      - ReagentId: Carbon
+        Quantity: 0.5
 
 - type: entity
   parent: SheetRGlass
@@ -221,31 +152,6 @@
   - type: Stack
     stackType: ReinforcedGlass
     count: 1
-  - type: Extractable
-    grindableSolutionName: rglass
-  - type: SolutionContainerManager
-    solutions:
-      rglass:
-        reagents:
-        - ReagentId: Silicon
-          Quantity: 10
-        - ReagentId: Iron
-          Quantity: 4.5
-        - ReagentId: Carbon
-          Quantity: 0.5
-        canReact: false
-
-- type: entity
-  parent: SheetRGlass
-  id: SheetRGlass10
-  name: reinforced glass
-  suffix: Single
-  components:
-  - type: Sprite
-    state: rglass
-  - type: Stack
-    stackType: ReinforcedGlass
-    count: 10
 
 - type: entity
   parent: SheetGlassBase
@@ -278,12 +184,6 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-    - trigger:
-        !type:DamageTrigger
         damage: 50
       behaviors:
       - !type:PlaySoundBehavior
@@ -296,22 +196,14 @@
           ShardGlassPlasma:
             min: 1
             max: 1
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-  - type: UserInterface
-    interfaces:
-      enum.RadialSelectorUiKey.Key:
-        type: RadialSelectorMenuBUI
-  - type: ActivatableUI
-    key: enum.RadialSelectorUiKey.Key
-    inHandsOnly: true
-    requireActiveHand: false
-  - type: ShortConstruction
-    entries:
-    - prototype: SheetRPGlass0
-    - prototype: PlasmaWindow
-    - prototype: PlasmaWindowDiagonal
-    - prototype: PlasmaWindowDirectional
+  - type: Solution
+    solution:
+      maxVol: 20
+      reagents:
+      - ReagentId: Silicon
+        Quantity: 10
+      - ReagentId: Plasma
+        Quantity: 10
 
 - type: entity
   parent: SheetPGlass
@@ -324,29 +216,6 @@
   - type: Stack
     stackType: PlasmaGlass
     count: 1
-  - type: Extractable
-    grindableSolutionName: pglass
-  - type: SolutionContainerManager
-    solutions:
-      pglass:
-        reagents:
-        - ReagentId: Silicon
-          Quantity: 10
-        - ReagentId: Plasma
-          Quantity: 10
-        canReact: false
-
-- type: entity
-  parent: SheetPGlass
-  id: SheetPGlass10
-  name: plasma glass
-  suffix: 10
-  components:
-  - type: Sprite
-    state: pglass
-  - type: Stack
-    stackType: PlasmaGlass
-    count: 10
 
 - type: entity
   parent: SheetPGlass
@@ -375,34 +244,18 @@
   - type: Construction
     graph: Glass
     node: SheetRPGlass
-  - type: Extractable
-    grindableSolutionName: rpglass
-  - type: SolutionContainerManager
-    solutions:
-      rpglass:
-        reagents:
-        - ReagentId: Silicon
-          Quantity: 10
-        - ReagentId: Plasma
-          Quantity: 10
-        - ReagentId: Iron
-          Quantity: 4.5
-        - ReagentId: Carbon
-          Quantity: 0.5
-        canReact: false
-  - type: UserInterface
-    interfaces:
-      enum.RadialSelectorUiKey.Key:
-        type: RadialSelectorMenuBUI
-  - type: ActivatableUI
-    key: enum.RadialSelectorUiKey.Key
-    inHandsOnly: true
-    requireActiveHand: false
-  - type: ShortConstruction
-    entries:
-    - prototype: ReinforcedPlasmaWindow
-    - prototype: ReinforcedPlasmaWindowDiagonal
-    - prototype: PlasmaReinforcedWindowDirectional
+  - type: Solution
+    solution:
+      maxVol: 25
+      reagents:
+      - ReagentId: Silicon
+        Quantity: 10
+      - ReagentId: Plasma
+        Quantity: 10
+      - ReagentId: Iron
+        Quantity: 4.5
+      - ReagentId: Carbon
+        Quantity: 0.5
 
 - type: entity
   parent: SheetRPGlass
@@ -415,18 +268,6 @@
   - type: Stack
     stackType: ReinforcedPlasmaGlass
     count: 1
-
-- type: entity
-  parent: SheetRPGlass
-  id: SheetRPGlass10
-  name: reinforced plasma glass
-  suffix: Single
-  components:
-  - type: Sprite
-    state: rpglass
-  - type: Stack
-    stackType: ReinforcedPlasmaGlass
-    count: 10
 
 - type: entity
   parent: SheetGlassBase
@@ -459,12 +300,6 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-    - trigger:
-        !type:DamageTrigger
         damage: 50
       behaviors:
       - !type:PlaySoundBehavior
@@ -477,33 +312,14 @@
           ShardGlassUranium:
             min: 1
             max: 1
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-  - type: Extractable
-    grindableSolutionName: uglass
-  - type: SolutionContainerManager
-    solutions:
-      uglass:
-        reagents:
-        - ReagentId: Silicon
-          Quantity: 10
-        - ReagentId: Uranium
-          Quantity: 10
-        canReact: false
-  - type: UserInterface
-    interfaces:
-      enum.RadialSelectorUiKey.Key:
-        type: RadialSelectorMenuBUI
-  - type: ActivatableUI
-    key: enum.RadialSelectorUiKey.Key
-    inHandsOnly: true
-    requireActiveHand: false
-  - type: ShortConstruction
-    entries:
-    - prototype: SheetRUGlass0
-    - prototype: UraniumWindow
-    - prototype: UraniumWindowDiagonal
-    - prototype: UraniumWindowDirectional
+  - type: Solution
+    solution:
+      maxVol: 20
+      reagents:
+      - ReagentId: Silicon
+        Quantity: 10
+      - ReagentId: Uranium
+        Quantity: 10
 
 - type: entity
   parent: SheetUGlass
@@ -516,18 +332,6 @@
   - type: Stack
     stackType: UraniumGlass
     count: 1
-
-- type: entity
-  parent: SheetUGlass
-  id: SheetUGlass10
-  name: uranium glass
-  suffix: 10
-  components:
-  - type: Sprite
-    state: uglass
-  - type: Stack
-    stackType: UraniumGlass
-    count: 10
 
 - type: entity
   parent: SheetUGlass
@@ -555,34 +359,18 @@
   - type: Construction
     graph: Glass
     node: SheetRUGlass
-  - type: Extractable
-    grindableSolutionName: ruglass
-  - type: SolutionContainerManager
-    solutions:
-      ruglass:
-        reagents:
-        - ReagentId: Silicon
-          Quantity: 10
-        - ReagentId: Uranium
-          Quantity: 10
-        - ReagentId: Iron
-          Quantity: 4.5
-        - ReagentId: Carbon
-          Quantity: 0.5
-        canReact: false
-  - type: UserInterface
-    interfaces:
-      enum.RadialSelectorUiKey.Key:
-        type: RadialSelectorMenuBUI
-  - type: ActivatableUI
-    key: enum.RadialSelectorUiKey.Key
-    inHandsOnly: true
-    requireActiveHand: false
-  - type: ShortConstruction
-    entries:
-    - prototype: ReinforcedUraniumWindow
-    - prototype: ReinforcedUraniumWindowDiagonal
-    - prototype: UraniumReinforcedWindowDirectional
+  - type: Solution
+    solution:
+      maxVol: 25
+      reagents:
+      - ReagentId: Silicon
+        Quantity: 10
+      - ReagentId: Uranium
+        Quantity: 10
+      - ReagentId: Iron
+        Quantity: 4.5
+      - ReagentId: Carbon
+        Quantity: 0.5
 
 - type: entity
   parent: SheetRUGlass
@@ -595,18 +383,6 @@
   - type: Stack
     stackType: ReinforcedUraniumGlass
     count: 1
-
-- type: entity
-  parent: SheetRUGlass
-  id: SheetRUGlass10
-  name: reinforced uranium glass
-  suffix: 10
-  components:
-  - type: Sprite
-    state: ruglass
-  - type: Stack
-    stackType: ReinforcedUraniumGlass
-    count: 10
 
 - type: entity
   parent: SheetGlassBase
@@ -639,12 +415,6 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-    - trigger:
-        !type:DamageTrigger
         damage: 50
       behaviors:
       - !type:PlaySoundBehavior
@@ -657,21 +427,14 @@
           ShardGlassClockwork:
             min: 1
             max: 1
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-  - type: Extractable
-    grindableSolutionName: brassglass
-  - type: SolutionContainerManager
-    solutions:
-      cglass:
-        reagents:
-        - ReagentId: Silicon
-          Quantity: 10
-        - ReagentId: Zinc
-          Quantity: 3.3
-        - ReagentId: Copper
-          Quantity: 6.7
-        canReact: false
+  - type: Solution
+    solution:
+      maxVol: 20
+      reagents:
+      - ReagentId: Silicon
+        Quantity: 10
+      - ReagentId: Brass
+        Quantity: 10
 
 - type: entity
   parent: SheetClockworkGlass
@@ -684,15 +447,3 @@
   - type: Stack
     stackType: ClockworkGlass
     count: 1
-
-- type: entity
-  parent: SheetClockworkGlass
-  id: SheetClockworkGlass10
-  name: clockwork glass
-  suffix: 10
-  components:
-  - type: Sprite
-    state: cglass
-  - type: Stack
-    stackType: ClockworkGlass
-    count: 10

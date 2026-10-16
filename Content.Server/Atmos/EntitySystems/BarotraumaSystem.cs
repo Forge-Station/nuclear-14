@@ -3,79 +3,40 @@ using Content.Server.Administration.Logs;
 using Content.Server.Atmos.Components;
 using Content.Shared.Alert;
 using Content.Shared.Atmos;
-using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Database;
 using Content.Shared.FixedPoint;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
-using Content.Shared.Mood;
 using Robust.Shared.Containers;
 
 namespace Content.Server.Atmos.EntitySystems
 {
-    public sealed class BarotraumaSystem : EntitySystem
+    public sealed partial class BarotraumaSystem : EntitySystem
     {
-        [Dependency] private readonly AtmosphereSystem _atmosphereSystem = default!;
-        [Dependency] private readonly DamageableSystem _damageableSystem = default!;
-        [Dependency] private readonly AlertsSystem _alertsSystem = default!;
-        [Dependency] private readonly IAdminLogManager _adminLogger = default!;
-        [Dependency] private readonly InventorySystem _inventorySystem = default!;
-
-        [Dependency] private readonly ILogManager _logManager = default!;
+        [Dependency] private AtmosphereSystem _atmosphereSystem = default!;
+        [Dependency] private DamageableSystem _damageableSystem = default!;
+        [Dependency] private AlertsSystem _alertsSystem = default!;
+        [Dependency] private IAdminLogManager _adminLogger = default!;
+        [Dependency] private InventorySystem _inventorySystem = default!;
 
         private const float UpdateTimer = 1f;
-
-        private ISawmill _sawmill = default!;
         private float _timer;
 
         public override void Initialize()
         {
             SubscribeLocalEvent<PressureProtectionComponent, GotEquippedEvent>(OnPressureProtectionEquipped);
             SubscribeLocalEvent<PressureProtectionComponent, GotUnequippedEvent>(OnPressureProtectionUnequipped);
-            SubscribeLocalEvent<PressureProtectionComponent, ComponentInit>(OnPressureProtectionChanged); // Goobstation - Update component state on toggle
-            SubscribeLocalEvent<PressureProtectionComponent, ComponentRemove>(OnPressureProtectionChanged); // Goobstation - Update component state on toggle
-
-            SubscribeLocalEvent<PressureImmunityComponent, ComponentInit>(OnPressureImmuneInit);
-            SubscribeLocalEvent<PressureImmunityComponent, ComponentRemove>(OnPressureImmuneRemove);
-
-            // _sawmill = _logManager.GetSawmill("barotrauma");
+            SubscribeLocalEvent<PressureProtectionComponent, ComponentInit>(OnUpdateResistance); // Goobstation - Update component state on toggle
+            SubscribeLocalEvent<PressureProtectionComponent, ComponentStartup>(OnUpdateResistance);
+            SubscribeLocalEvent<PressureProtectionComponent, ComponentRemove>(OnUpdateResistance);
         }
 
-        private void OnPressureImmuneInit(EntityUid uid, PressureImmunityComponent pressureImmunity, ComponentInit args)
+        [SubscribeLocalEvent]
+        private void OnBarotraumaInit(Entity<BarotraumaComponent> ent, ref MapInitEvent args)
         {
-            if (TryComp<BarotraumaComponent>(uid, out var barotrauma))
-            {
-                barotrauma.HasImmunity = true;
-            }
-        }
-
-        private void OnPressureImmuneRemove(EntityUid uid, PressureImmunityComponent pressureImmunity, ComponentRemove args)
-        {
-            if (TryComp<BarotraumaComponent>(uid, out var barotrauma))
-            {
-                barotrauma.HasImmunity = false;
-            }
-        }
-
-        // Goobstation - Modsuits - Update component state on toggle
-        private void OnPressureProtectionChanged(EntityUid uid, PressureProtectionComponent pressureProtection, EntityEventArgs args)
-        {
-            var protectionTarget = uid;
-            string? slotTarget = null;
-
-            if (_inventorySystem.TryGetContainingEntity(uid, out var entity) && _inventorySystem.TryGetContainingSlot(uid, out var slot))
-            {
-                protectionTarget = entity.Value;
-                slotTarget = slot.Name;
-            }
-
-            if (!TryComp<BarotraumaComponent>(protectionTarget, out var barotrauma))
-                return;
-
-            if (slotTarget != null && !barotrauma.ProtectionSlots.Contains(slotTarget))
-                return;
-
-            UpdateCachedResistances(protectionTarget, barotrauma);
+            RefreshPressureImmunity(ent, ent.Comp);
         }
 
         /// <summary>
@@ -91,17 +52,17 @@ namespace Content.Server.Atmos.EntitySystems
 
         private void OnPressureProtectionEquipped(EntityUid uid, PressureProtectionComponent pressureProtection, GotEquippedEvent args)
         {
-            if (TryComp<BarotraumaComponent>(args.Equipee, out var barotrauma) && barotrauma.ProtectionSlots.Contains(args.Slot))
+            if (TryComp<BarotraumaComponent>(args.EquipTarget, out var barotrauma) && barotrauma.ProtectionSlots.Contains(args.Slot))
             {
-                UpdateCachedResistances(args.Equipee, barotrauma);
+                UpdateCachedResistances(args.EquipTarget, barotrauma);
             }
         }
 
         private void OnPressureProtectionUnequipped(EntityUid uid, PressureProtectionComponent pressureProtection, GotUnequippedEvent args)
         {
-            if (TryComp<BarotraumaComponent>(args.Equipee, out var barotrauma) && barotrauma.ProtectionSlots.Contains(args.Slot))
+            if (TryComp<BarotraumaComponent>(args.EquipTarget, out var barotrauma) && barotrauma.ProtectionSlots.Contains(args.Slot))
             {
-                UpdateCachedResistances(args.Equipee, barotrauma);
+                UpdateCachedResistances(args.EquipTarget, barotrauma);
             }
         }
 
@@ -181,6 +142,9 @@ namespace Content.Server.Atmos.EntitySystems
             return Math.Min(modified, Atmospherics.OneAtmosphere);
         }
 
+        /// <summary>
+        /// Returns adjusted pressure after having applied resistances from equipment and innate (if any), to check against a high pressure hazard threshold
+        /// </summary>
         public float GetFeltHighPressure(EntityUid uid, BarotraumaComponent barotrauma, float environmentPressure)
         {
             if (barotrauma.HasImmunity)
@@ -190,6 +154,19 @@ namespace Content.Server.Atmos.EntitySystems
 
             var modified = (environmentPressure + barotrauma.HighPressureModifier) * (barotrauma.HighPressureMultiplier);
             return Math.Max(modified, Atmospherics.OneAtmosphere);
+        }
+
+        /// <summary>
+        /// Refreshes whether the entity is immune to pressure damage.
+        /// </summary>
+        public void RefreshPressureImmunity(EntityUid uid, BarotraumaComponent? barotrauma = null)
+        {
+            if (!Resolve(uid, ref barotrauma, false))
+                return;
+
+            var ev = new RefreshPressureImmunityEvent();
+            RaiseLocalEvent(uid, ref ev);
+            barotrauma.HasImmunity = ev.IsImmune;
         }
 
         public bool TryGetPressureProtectionValues(
@@ -235,9 +212,10 @@ namespace Content.Server.Atmos.EntitySystems
             while (enumerator.MoveNext(out var uid, out var barotrauma, out var damageable))
             {
                 var totalDamage = FixedPoint2.Zero;
+                var damageSpecifier = _damageableSystem.GetAllDamage((uid, damageable));
                 foreach (var (barotraumaDamageType, _) in barotrauma.Damage.DamageDict)
                 {
-                    if (!damageable.Damage.DamageDict.TryGetValue(barotraumaDamageType, out var damage))
+                    if (!damageSpecifier.DamageDict.TryGetValue(barotraumaDamageType, out var damage))
                         continue;
                     totalDamage += damage;
                 }
@@ -258,24 +236,26 @@ namespace Content.Server.Atmos.EntitySystems
                     >= Atmospherics.WarningHighPressure => GetFeltHighPressure(uid, barotrauma, pressure),
                     _ => pressure
                 };
+
                 if (pressure <= Atmospherics.HazardLowPressure)
                 {
                     // Deal damage and ignore resistances. Resistance to pressure damage should be done via pressure protection gear.
-                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * Atmospherics.LowPressureDamage, true, false, canSever: false, doPartDamage: false); // Shitmed Change
+                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * Atmospherics.LowPressureDamage, true, false);
+
                     if (!barotrauma.TakingDamage)
                     {
                         barotrauma.TakingDamage = true;
                         _adminLogger.Add(LogType.Barotrauma, $"{ToPrettyString(uid):entity} started taking low pressure damage");
                     }
-                    RaiseLocalEvent(uid, new MoodEffectEvent("MobLowPressure"));
+
                     _alertsSystem.ShowAlert(uid, barotrauma.LowPressureAlert, 2);
                 }
                 else if (pressure >= Atmospherics.HazardHighPressure)
                 {
                     var damageScale = MathF.Min(((pressure / Atmospherics.HazardHighPressure) - 1) * Atmospherics.PressureDamageCoefficient, Atmospherics.MaxHighPressureDamage);
 
-                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * damageScale, true, false, canSever: false, doPartDamage: false); // Shitmed Change
-                    RaiseLocalEvent(uid, new MoodEffectEvent("MobHighPressure"));
+                    // Deal damage and ignore resistances. Resistance to pressure damage should be done via pressure protection gear.
+                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * damageScale, true, false);
 
                     if (!barotrauma.TakingDamage)
                     {
@@ -293,6 +273,7 @@ namespace Content.Server.Atmos.EntitySystems
                         barotrauma.TakingDamage = false;
                         _adminLogger.Add(LogType.Barotrauma, $"{ToPrettyString(uid):entity} stopped taking pressure damage");
                     }
+
                     // Set correct alert.
                     switch (pressure)
                     {

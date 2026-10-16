@@ -1,56 +1,26 @@
-":musical_note: Изменения Audio :musical_note:": # Corvax-Change
-  - changed-files:
-    - any-glob-to-any-file: "**/*.ogg"
+"Changes: Sprites":
+- changed-files:
+  - any-glob-to-any-file: '**/*.rsi/*.png'
 
-":shark: C# :shark:":
-  - changed-files:
-    - any-glob-to-any-file: "**/*.cs"
-
-":gear: Изменение Конфига :gear:": # Corvax-Change
+"Changes: Map":
 - changed-files:
   - any-glob-to-any-file:
-    - "**/*.toml"
-    - "**/*.config"
-    - "*.json"
-    - ".github/*.yml"
-    - ".github/*.json"
-    - ".vscode/*.json"
-    - ".editorconfig"
+    - 'Resources/Maps/**/*.yml'
+    - 'Resources/Prototypes/Maps/**/*.yml'
 
-":book: Документация :book:": # Corvax-Change
-  - changed-files:
-    - any-glob-to-any-file:
-      - "**/*.xml"
-      - "**/*.md"
+"Changes: UI":
+- changed-files:
+  - any-glob-to-any-file: '**/*.xaml*'
 
-":page_facing_up: Локализация :page_facing_up:": # Corvax-Change
-  - changed-files:
-    - any-glob-to-any-file: 'Resources/Locale/**/*.ftl'
+"Changes: Shaders":
+- changed-files:
+  - any-glob-to-any-file: '**/*.swsl'
 
-":world_map: Изменения Карт :world_map:": # Corvax-Change
-  - changed-files:
-    - any-glob-to-any-file:
-      - "Resources/Maps/**/*.yml"
-      - "Resources/Prototypes/Maps/**/*.yml"
+"Changes: Audio":
+- changed-files:
+  - any-glob-to-any-file: '**/*.ogg'
 
-":art: Спрайты :art:": # Corvax-Change
-  - changed-files:
-    - any-glob-to-any-file:
-      - "**/*.rsi/*.png"
-      - "**/*.rsi/*.json"
-
-":computer: Изменения UI :computer:": # Corvax-Change
-  - changed-files:
-    - any-glob-to-any-file: "**/*.xaml*"
-
-":baby_chick: YML :baby_chick:": # Corvax-Change
-  - changed-files:
-    - any-glob-to-any-file:
-      - "**/*.yml"
-    - all-globs-to-all-files:
-      - "!Resources/Maps/**/*.yml"
-      - "!Resources/Prototypes/Maps/**/*.yml"
-
-":wrench: GitHub Workflow :wrench:": # Corvax-Change
-  - changed-files:
-    - any-glob-to-any-file: ".github/workflows/*.yml"
+"Changes: No C#":
+- changed-files:
+  # Equiv to any-glob-to-all as long as this has one matcher. If ALL changed files are not C# files, then apply label.
+  - all-globs-to-all-files: "!**/*.cs"

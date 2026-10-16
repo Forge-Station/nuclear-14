@@ -1,16 +1,15 @@
 using System.Linq;
 using Content.Server.Administration;
 using Content.Server.GameTicking;
-using Content.Server.GameTicking.Rules;
 using Content.Server.StationEvents.Components;
 using Content.Shared.Administration;
-using Content.Shared.CCVar;
+using Content.Shared.EntityTable;
 using Content.Shared.GameTicking.Components;
+using Content.Shared.GameTicking.Rules;
 using JetBrains.Annotations;
-using Robust.Shared.Configuration;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Toolshed;
-using Robust.Shared.Utility;
 
 namespace Content.Server.StationEvents
 {
@@ -19,21 +18,21 @@ namespace Content.Server.StationEvents
     ///     game presets use.
     /// </summary>
     [UsedImplicitly]
-    public sealed class BasicStationEventSchedulerSystem : GameRuleSystem<BasicStationEventSchedulerComponent>
+    public sealed partial class BasicStationEventSchedulerSystem : GameRuleSystem<BasicStationEventSchedulerComponent>
     {
-        [Dependency] private readonly IRobustRandom _random = default!;
-        [Dependency] private readonly EventManagerSystem _event = default!;
-        [Dependency] private readonly IConfigurationManager _config = default!;
+        [Dependency] private IRobustRandom _random = default!;
+        [Dependency] private EventManagerSystem _event = default!;
 
-        public const float MinEventTime = 60 * 3;
-        public const float MaxEventTime = 60 * 10;
-
-        protected override void Ended(EntityUid uid, BasicStationEventSchedulerComponent component, GameRuleComponent gameRule,
-            GameRuleEndedEvent args)
+        protected override void Started(Entity<BasicStationEventSchedulerComponent, GameRuleComponent> ent, ref GameRuleStartedEvent args)
         {
-            component.TimeUntilNextEvent = BasicStationEventSchedulerComponent.MinimumTimeUntilFirstEvent;
+            // A little starting variance so schedulers dont all proc at once.
+            ent.Comp1.TimeUntilNextEvent = RobustRandom.NextFloat(ent.Comp1.MinimumTimeUntilFirstEvent, ent.Comp1.MinimumTimeUntilFirstEvent + ent.Comp1.MaximumSpanUntilFirstEvent);
         }
 
+        protected override void Ended(Entity<BasicStationEventSchedulerComponent> rule, ref GameRuleEndedEvent args)
+        {
+            rule.Comp.TimeUntilNextEvent = rule.Comp.MinimumTimeUntilFirstEvent;
+        }
 
         public override void Update(float frameTime)
         {
@@ -45,16 +44,16 @@ namespace Content.Server.StationEvents
             var query = EntityQueryEnumerator<BasicStationEventSchedulerComponent, GameRuleComponent>();
             while (query.MoveNext(out var uid, out var eventScheduler, out var gameRule))
             {
-                if (!GameTicker.IsGameRuleActive(uid, gameRule))
+                if (!GameTicker.IsGameRuleActive((uid, gameRule)))
                     continue;
 
                 if (eventScheduler.TimeUntilNextEvent > 0)
                 {
                     eventScheduler.TimeUntilNextEvent -= frameTime;
-                    return;
+                    continue;
                 }
 
-                _event.RunRandomEvent();
+                _event.RunRandomEvent(eventScheduler.ScheduledGameRules);
                 ResetTimer(eventScheduler);
             }
         }
@@ -64,8 +63,7 @@ namespace Content.Server.StationEvents
         /// </summary>
         private void ResetTimer(BasicStationEventSchedulerComponent component)
         {
-            component.TimeUntilNextEvent = _random.Next(_config.GetCVar(CCVars.GameEventsBasicMinimumTime),
-                _config.GetCVar(CCVars.GameEventsBasicMaximumTime));
+            component.TimeUntilNextEvent = component.MinMaxEventTiming.Next(_random);
         }
     }
 
@@ -73,8 +71,10 @@ namespace Content.Server.StationEvents
     public sealed class StationEventCommand : ToolshedCommand
     {
         private EventManagerSystem? _stationEvent;
-        private BasicStationEventSchedulerSystem? _basicScheduler;
+        private EntityTableSystem? _entityTable;
+        private IComponentFactory? _compFac;
         private IRobustRandom? _random;
+        private IPrototypeManager? _protoMan;
 
         /// <summary>
         ///     Estimates the expected number of times an event will run over the course of X rounds, taking into account weights and
@@ -83,7 +83,7 @@ namespace Content.Server.StationEvents
         /// </summary>
         /// <remarks>
         ///     This isn't perfect. Code path eventually goes into <see cref="EventManagerSystem.CanRun"/>, which requires
-        ///     state from <see cref="GameTicker"/>. As a result, you should probably just run this locally and not doing
+        ///     state from <see cref="ServerGameTicker"/>. As a result, you should probably just run this locally and not doing
         ///     a real round (it won't pollute the state, but it will get contaminated by previously ran events in the actual round)
         ///     and things like `MaxOccurrences` and `ReoccurrenceDelay` won't be respected.
         ///
@@ -91,11 +91,13 @@ namespace Content.Server.StationEvents
         ///     to even exist) so I think it's fine.
         /// </remarks>
         [CommandImplementation("simulate")]
-        public IEnumerable<(string, float)> Simulate(int rounds, int playerCount, float roundEndMean, float roundEndStdDev)
+        public IEnumerable<(string, float)> Simulate([CommandArgument] EntProtoId eventSchedulerProto, [CommandArgument] int rounds, [CommandArgument] int playerCount, [CommandArgument] float roundEndMean, [CommandArgument] float roundEndStdDev)
         {
             _stationEvent ??= GetSys<EventManagerSystem>();
-            _basicScheduler ??= GetSys<BasicStationEventSchedulerSystem>();
+            _entityTable ??= GetSys<EntityTableSystem>();
+            _compFac ??= IoCManager.Resolve<IComponentFactory>();
             _random ??= IoCManager.Resolve<IRobustRandom>();
+            _protoMan ??= IoCManager.Resolve<IPrototypeManager>();
 
             var occurrences = new Dictionary<string, int>();
 
@@ -104,71 +106,115 @@ namespace Content.Server.StationEvents
                 occurrences.Add(ev.Key.ID, 0);
             }
 
+            var eventScheduler = _protoMan.Index(eventSchedulerProto);
+
+            if (!eventScheduler.TryComp<BasicStationEventSchedulerComponent>(out var basicScheduler, _compFac))
+            {
+                return occurrences.Select(p => (p.Key, (float)p.Value)).OrderByDescending(p => p.Item2);
+            }
+
+            var compMinMax = basicScheduler.MinMaxEventTiming; // we gotta do this since we cant execute on comp w/o an ent.
+
             for (var i = 0; i < rounds; i++)
             {
                 var curTime = TimeSpan.Zero;
-                var randomEndTime = _random.NextGaussian(roundEndMean, roundEndStdDev) * 60; // *60 = minutes to seconds
+                var randomEndTime = _random.NextGaussian(roundEndMean, roundEndStdDev) * 60; // Its in minutes, should probably be a better time format once we get that in toolshed like [hh:mm:ss]
                 if (randomEndTime <= 0)
                     continue;
 
                 while (curTime.TotalSeconds < randomEndTime)
                 {
                     // sim an event
-                    curTime += TimeSpan.FromSeconds(_random.NextFloat(BasicStationEventSchedulerSystem.MinEventTime, BasicStationEventSchedulerSystem.MaxEventTime));
-                    var available = _stationEvent.AvailableEvents(false, playerCount, curTime);
-                    var ev = _stationEvent.FindEvent(available);
-                    if (ev == null)
+                    curTime += TimeSpan.FromSeconds(compMinMax.Next(_random));
+
+                    if (!_stationEvent.TryBuildLimitedEvents(basicScheduler.ScheduledGameRules,
+                            out var selectedEvents,
+                            currentTime: curTime,
+                            playerCount: playerCount))
+                    {
+                        continue; // doesnt break because maybe the time is preventing events being available.
+                    }
+
+                    if (_stationEvent.FindEvent(selectedEvents.Value) is not { } ev)
                         continue;
 
                     occurrences[ev] += 1;
                 }
             }
 
-            return occurrences.Select(p => (p.Key, (float) p.Value)).OrderByDescending(p => p.Item2);
+            return occurrences.Select(p => (p.Key, (float)p.Value)).OrderByDescending(p => p.Item2);
         }
 
         [CommandImplementation("lsprob")]
-        public IEnumerable<(string, float)> LsProb()
+        public IEnumerable<(string, double)> LsProb([CommandArgument] EntProtoId eventSchedulerProto)
         {
+            _compFac ??= IoCManager.Resolve<IComponentFactory>();
             _stationEvent ??= GetSys<EventManagerSystem>();
-            var events = _stationEvent.AllEvents();
+            _protoMan ??= IoCManager.Resolve<IPrototypeManager>();
 
-            var totalWeight = events.Sum(x => x.Value.Weight);
+            var eventScheduler = _protoMan.Index(eventSchedulerProto);
 
-            foreach (var (proto, comp) in events)
+            if (!eventScheduler.TryComp<BasicStationEventSchedulerComponent>(out var basicScheduler, _compFac))
+                yield break;
+
+            var sortedEvents
+                = _stationEvent.ListLimitedEvents(basicScheduler.ScheduledGameRules)
+                .OrderBy(x => -x.Item2);
+
+            foreach (var eventProb in sortedEvents)
             {
-                yield return (proto.ID, comp.Weight / totalWeight);
+                yield return eventProb;
             }
         }
 
-        [CommandImplementation("lsprobtime")]
-        public IEnumerable<(string, float)> LsProbTime(float time)
+        [CommandImplementation("lsprobtheoretical")]
+        public IEnumerable<(EntProtoId, double)> LsProbTime([CommandArgument] EntProtoId eventSchedulerProto, [CommandArgument] int playerCount, [CommandArgument] float time)
         {
+            _compFac ??= IoCManager.Resolve<IComponentFactory>();
             _stationEvent ??= GetSys<EventManagerSystem>();
-            var events = _stationEvent.AllEvents().Where(pair => pair.Value.EarliestStart <= time).ToList();
+            _protoMan ??= IoCManager.Resolve<IPrototypeManager>();
 
-            var totalWeight = events.Sum(x => x.Value.Weight);
+            var eventScheduler = _protoMan.Index(eventSchedulerProto);
 
-            foreach (var (proto, comp) in events)
+            if (!eventScheduler.TryComp<BasicStationEventSchedulerComponent>(out var basicScheduler, _compFac))
+                yield break;
+
+            var timemins = time * 60;
+            var theoryTime = TimeSpan.Zero + TimeSpan.FromSeconds(timemins);
+
+            var sortedEvents
+                = _stationEvent.ListLimitedEvents(basicScheduler.ScheduledGameRules,
+                        currentTime: theoryTime,
+                        playerCount: playerCount)
+                    .OrderBy(x => -x.Item2);
+
+            foreach (var eventProb in sortedEvents)
             {
-                yield return (proto.ID, comp.Weight / totalWeight);
+                yield return eventProb;
             }
         }
 
         [CommandImplementation("prob")]
-        public float Prob(string eventId)
+        public double Prob([CommandArgument] EntProtoId eventSchedulerProto, [CommandArgument] string eventId)
         {
+            _compFac ??= IoCManager.Resolve<IComponentFactory>();
             _stationEvent ??= GetSys<EventManagerSystem>();
-            var events = _stationEvent.AllEvents();
+            _protoMan ??= IoCManager.Resolve<IPrototypeManager>();
 
-            var totalWeight = events.Sum(x => x.Value.Weight);
-            var weight = 0f;
-            if (events.TryFirstOrNull(p => p.Key.ID == eventId, out var pair))
+            var eventScheduler = _protoMan.Index(eventSchedulerProto);
+
+            if (!eventScheduler.TryComp<BasicStationEventSchedulerComponent>(out var basicScheduler, _compFac))
+                return 0f;
+
+            foreach (var (proto, prob) in _stationEvent.ListLimitedEvents(basicScheduler.ScheduledGameRules))
             {
-                weight = pair.Value.Value.Weight;
+                if (eventSchedulerProto != proto)
+                    continue;
+
+                return prob;
             }
 
-            return weight / totalWeight;
+            return 0f;
         }
     }
 }

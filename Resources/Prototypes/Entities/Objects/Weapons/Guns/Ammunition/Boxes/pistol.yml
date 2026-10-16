@@ -1,6 +1,6 @@
 - type: entity
   abstract: true
-  parent: BaseMagazineBox
+  parent: BaseItem
   id: BaseMagazineBoxPistol
   name: ammunition box (.35 auto)
   components:
@@ -20,7 +20,7 @@
     sprite: Objects/Weapons/Guns/Ammunition/Boxes/pistol.rsi
   - type: MagazineVisuals
     magState: mag
-    steps: 2
+    steps: 3
     zeroVisible: false
   - type: Appearance
 
@@ -29,6 +29,7 @@
   parent: BaseMagazineBoxPistol
   id: MagazineBoxPistol
   name: ammunition box (.35 auto)
+  description: A cardboard box of .35 auto rounds. Intended to hold general-purpose kinetic ammunition.
   components:
   - type: BallisticAmmoProvider
     proto: CartridgePistol
@@ -43,6 +44,7 @@
   parent: BaseMagazineBoxPistol
   id: MagazineBoxPistolPractice
   name: ammunition box (.35 auto practice)
+  description: A cardboard box of .35 auto rounds. Intended to hold harmless practice ammunition.
   components:
   - type: BallisticAmmoProvider
     proto: CartridgePistolPractice
@@ -55,24 +57,10 @@
     - state: practice
 
 - type: entity
-  parent: BaseMagazineBoxPistol
-  id: MagazineBoxPistolRubber
-  name: ammunition box (.35 auto rubber)
-  components:
-  - type: BallisticAmmoProvider
-    proto: CartridgePistolRubber
-  - type: Sprite
-    layers:
-    - state: base
-      map: ["enum.GunVisualLayers.Base"]
-    - state: mag-1
-      map: ["enum.GunVisualLayers.Mag"]
-    - state: rubber
-
-- type: entity
   id: MagazineBoxPistolIncendiary
   parent: BaseMagazineBoxPistol
   name: ammunition box (.35 auto incendiary)
+  description: A cardboard box of .35 auto rounds. Intended to hold self-igniting incendiary ammunition.
   components:
   - type: BallisticAmmoProvider
     proto: CartridgePistolIncendiary
@@ -85,9 +73,10 @@
     - state: incendiary
 
 - type: entity
-  id: MagazineBoxPistolUranium
   parent: BaseMagazineBoxPistol
+  id: MagazineBoxPistolUranium
   name: ammunition box (.35 auto uranium)
+  description: A cardboard box of .35 auto rounds. Intended to hold exotic uranium-core ammunition.
   components:
   - type: BallisticAmmoProvider
     proto: CartridgePistolUranium

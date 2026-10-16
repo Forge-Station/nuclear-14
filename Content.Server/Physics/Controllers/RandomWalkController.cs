@@ -15,12 +15,12 @@ namespace Content.Server.Physics.Controllers;
 /// The entity system responsible for managing <see cref="RandomWalkComponent"/>s.
 /// Handles updating the direction they move in when their cooldown elapses.
 /// </summary>
-internal sealed class RandomWalkController : VirtualController
+internal sealed partial class RandomWalkController : VirtualController
 {
     #region Dependencies
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly PhysicsSystem _physics = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private PhysicsSystem _physics = default!;
     #endregion Dependencies
 
     public override void Initialize()
@@ -43,9 +43,9 @@ internal sealed class RandomWalkController : VirtualController
         var query = EntityQueryEnumerator<RandomWalkComponent, PhysicsComponent>();
         while (query.MoveNext(out var uid, out var randomWalk, out var physics))
         {
-            if (EntityManager.HasComponent<ActorComponent>(uid)
-            ||  EntityManager.HasComponent<ThrownItemComponent>(uid)
-            ||  EntityManager.HasComponent<FollowerComponent>(uid))
+            if (HasComp<ActorComponent>(uid)
+            || HasComp<ThrownItemComponent>(uid)
+            || HasComp<FollowerComponent>(uid))
                 continue;
 
             var curTime = _timing.CurTime;
@@ -77,8 +77,7 @@ internal sealed class RandomWalkController : VirtualController
             randomWalk.BiasVector *= 0f;
         var pushStrength = _random.NextFloat(randomWalk.MinSpeed, randomWalk.MaxSpeed);
 
-        _physics.SetLinearVelocity(uid, physics.LinearVelocity * randomWalk.AccumulatorRatio, body: physics);
-        _physics.ApplyLinearImpulse(uid, pushVec * (pushStrength * physics.Mass), body: physics);
+        _physics.SetLinearVelocity(uid, physics.LinearVelocity * randomWalk.AccumulatorRatio + pushVec * pushStrength, body: physics);
     }
 
     /// <summary>

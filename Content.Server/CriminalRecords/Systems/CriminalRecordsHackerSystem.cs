@@ -1,23 +1,23 @@
 using Content.Server.Chat.Systems;
 using Content.Server.Station.Systems;
-using Content.Server.StationRecords.Systems;
 using Content.Shared.CriminalRecords;
 using Content.Shared.CriminalRecords.Components;
 using Content.Shared.CriminalRecords.Systems;
-using Content.Shared.Dataset;
+using Content.Shared.Random.Helpers;
 using Content.Shared.Security;
-using Robust.Shared.Prototypes;
+using Content.Shared.StationRecords;
+using Content.Shared.StationRecords.Systems;
 using Robust.Shared.Random;
 
 namespace Content.Server.CriminalRecords.Systems;
 
-public sealed class CriminalRecordsHackerSystem : SharedCriminalRecordsHackerSystem
+public sealed partial class CriminalRecordsHackerSystem : SharedCriminalRecordsHackerSystem
 {
-    [Dependency] private readonly ChatSystem _chat = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly StationSystem _station = default!;
-    [Dependency] private readonly StationRecordsSystem _records = default!;
+    [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private CriminalRecordsSystem _criminalRecords = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private ServerStationSystem _station = default!;
+    [Dependency] private StationRecordsSystem _records = default!;
 
     public override void Initialize()
     {
@@ -34,12 +34,11 @@ public sealed class CriminalRecordsHackerSystem : SharedCriminalRecordsHackerSys
         if (_station.GetOwningStation(ent) is not {} station)
             return;
 
-        var reasons = _proto.Index<DatasetPrototype>(ent.Comp.Reasons);
+        var reasons = ProtoMan.Index(ent.Comp.Reasons);
         foreach (var (key, record) in _records.GetRecordsOfType<CriminalRecord>(station))
         {
-            var reason = _random.Pick(reasons.Values);
-            record.Status = SecurityStatus.Wanted;
-            record.Reason = reason;
+            var reason = _random.Pick(reasons);
+            _criminalRecords.OverwriteStatus(new StationRecordKey(key, station), record, SecurityStatus.Wanted, reason);
             // no radio message since spam
             // no history since lazy and its easy to remove anyway
             // main damage with this is existing arrest warrants are lost and to anger beepsky

@@ -1,83 +1,38 @@
 using Content.Server.Chat.Systems;
-using Content.Server.CombatMode.Disarm;
 using Content.Server.Movement.Systems;
-using Content.Server.Weapons.Ranged.Systems;
-using Content.Shared.Actions.Events;
-using Content.Shared.Administration.Components;
-using Content.Shared.CombatMode;
-using Content.Shared.Contests;
-using Content.Shared.Damage.Events;
-using Content.Shared.Damage.Systems;
-using Content.Shared.Database;
+using Content.Shared.Chat;
 using Content.Shared.Effects;
-using Content.Shared.Hands.Components;
-using Content.Shared.IdentityManagement;
-using Content.Shared.Mobs.Systems;
-using Content.Shared.Popups;
 using Content.Shared.Speech.Components;
-using Content.Shared.StatusEffect;
 using Content.Shared.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Events;
-using Robust.Shared.Audio;
-using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
-using Robust.Shared.Random;
-using Robust.Shared.Utility;
 using System.Linq;
 using System.Numerics;
-using Content.Shared.Chat;
 
 namespace Content.Server.Weapons.Melee;
 
-public sealed class MeleeWeaponSystem : SharedMeleeWeaponSystem
+public sealed partial class MeleeWeaponSystem : SharedMeleeWeaponSystem
 {
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly ChatSystem _chat = default!;
-    [Dependency] private readonly DamageExamineSystem _damageExamine = default!;
-    [Dependency] private readonly LagCompensationSystem _lag = default!;
-    [Dependency] private readonly MobStateSystem _mobState = default!;
-    [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
-    [Dependency] private readonly ContestsSystem _contests = default!;
+    [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private LagCompensationSystem _lag = default!;
+    [Dependency] private SharedColorFlashEffectSystem _color = default!;
 
     public override void Initialize()
     {
         base.Initialize();
+
         SubscribeLocalEvent<MeleeSpeechComponent, MeleeHitEvent>(OnSpeechHit);
-        SubscribeLocalEvent<MeleeWeaponComponent, DamageExamineEvent>(OnMeleeExamineDamage, after: [typeof(GunSystem)]);
     }
 
-    private void OnMeleeExamineDamage(EntityUid uid, MeleeWeaponComponent component, ref DamageExamineEvent args)
-    {
-        if (component.Hidden)
-            return;
-
-        var damageSpec = GetDamage(uid, args.User, component);
-        if (damageSpec.Empty)
-            return;
-
-        if (!component.DisableClick)
-            _damageExamine.AddDamageExamine(args.Message, damageSpec, Loc.GetString("damage-melee"));
-
-        if (!component.DisableHeavy)
-        {
-            if (damageSpec * component.HeavyDamageBaseModifier != damageSpec)
-                _damageExamine.AddDamageExamine(args.Message, damageSpec * component.HeavyDamageBaseModifier, Loc.GetString("damage-melee-heavy"));
-
-            if (component.HeavyStaminaCost != 0)
-            {
-                var staminaCostMarkup = FormattedMessage.FromMarkupOrThrow(
-                    Loc.GetString("damage-stamina-cost",
-                    ("type", Loc.GetString("damage-melee-heavy")), ("cost", Math.Round(component.HeavyStaminaCost, 2).ToString("0.##"))));
-                args.Message.PushNewline();
-                args.Message.AddMessage(staminaCostMarkup);
-            }
-        }
-    }
-
-    protected override bool ArcRaySuccessful(EntityUid targetUid, Vector2 position, Angle angle, Angle arcWidth, float range, MapId mapId,
-        EntityUid ignore, ICommonSession? session)
+    protected override bool ArcRaySuccessful(EntityUid targetUid,
+        Vector2 position,
+        Angle angle,
+        Angle arcWidth,
+        float range,
+        MapId mapId,
+        EntityUid ignore,
+        ICommonSession? session)
     {
         // Originally the client didn't predict damage effects so you'd intuit some level of how far
         // in the future you'd need to predict, but then there was a lot of complaining like "why would you add artifical delay" as if ping is a choice.
@@ -92,102 +47,10 @@ public sealed class MeleeWeaponSystem : SharedMeleeWeaponSystem
         // Could also check the arc though future effort + if they're aimbotting it's not really going to make a difference.
 
         // (This runs lagcomp internally and is what clickattacks use)
-        if (!Interaction.InRangeUnobstructed(ignore, targetUid, range + 0.1f))
+        if (!Interaction.InRangeUnobstructed(ignore, targetUid, range + 0.1f, overlapCheck: false))
             return false;
 
         // TODO: Check arc though due to the aforementioned aimbot + damage split comments it's less important.
-        return true;
-    }
-
-    protected override bool DoDisarm(EntityUid user, DisarmAttackEvent ev, EntityUid meleeUid, MeleeWeaponComponent component, ICommonSession? session)
-    {
-        if (!base.DoDisarm(user, ev, meleeUid, component, session))
-            return false;
-
-        if (!TryComp<CombatModeComponent>(user, out var combatMode) ||
-            combatMode.CanDisarm != true)
-        {
-            return false;
-        }
-
-        var target = GetEntity(ev.Target!.Value);
-
-        if (_mobState.IsIncapacitated(target))
-        {
-            return false;
-        }
-
-        if (!TryComp<HandsComponent>(target, out var targetHandsComponent))
-        {
-            if (!TryComp<StatusEffectsComponent>(target, out var status) || !status.AllowedEffects.Contains("KnockedDown"))
-                return false;
-        }
-
-        if (!InRange(user, target, component.Range, session))
-        {
-            return false;
-        }
-
-        EntityUid? inTargetHand = null;
-
-        if (targetHandsComponent?.ActiveHand is { IsEmpty: false })
-        {
-            inTargetHand = targetHandsComponent.ActiveHand.HeldEntity!.Value;
-        }
-
-        Interaction.DoContactInteraction(user, target);
-
-        var attemptEvent = new DisarmAttemptEvent(target, user, inTargetHand);
-
-        if (inTargetHand != null)
-        {
-            RaiseLocalEvent(inTargetHand.Value, attemptEvent);
-        }
-
-        RaiseLocalEvent(target, attemptEvent);
-
-        if (attemptEvent.Cancelled)
-            return false;
-
-        var chance = CalculateDisarmChance(user, target, inTargetHand, combatMode);
-        if (!_random.Prob(chance))
-        {
-            // Don't play a sound as the swing is already predicted.
-            // Also don't play popups because most disarms will miss.
-            return false;
-        }
-
-        var filterOther = Filter.PvsExcept(user, entityManager: EntityManager);
-        var msgPrefix = "disarm-action-";
-
-        if (inTargetHand == null)
-            msgPrefix = "disarm-action-shove-";
-
-        var msgOther = Loc.GetString(
-                msgPrefix + "popup-message-other-clients",
-                ("performerName", Identity.Entity(user, EntityManager)),
-                ("targetName", Identity.Entity(target, EntityManager)));
-
-        var msgUser = Loc.GetString(msgPrefix + "popup-message-cursor", ("targetName", Identity.Entity(target, EntityManager)));
-
-        PopupSystem.PopupEntity(msgOther, user, filterOther, true);
-        PopupSystem.PopupEntity(msgUser, target, user);
-
-        _audio.PlayPvs(combatMode.DisarmSuccessSound, user, AudioParams.Default.WithVariation(0.025f).WithVolume(5f));
-        AdminLogger.Add(LogType.DisarmedAction, $"{ToPrettyString(user):user} used disarm on {ToPrettyString(target):target}");
-
-        var staminaDamage = (TryComp<ShovingComponent>(user, out var shoving) ? shoving.StaminaDamage : ShovingComponent.DefaultStaminaDamage)
-            * Math.Clamp(chance, 0f, 1f);
-
-        var eventArgs = new DisarmedEvent { Target = target, Source = user, PushProbability = chance, StaminaDamage = staminaDamage };
-        RaiseLocalEvent(target, eventArgs);
-
-        if (!eventArgs.Handled)
-            return false;
-
-        _audio.PlayPvs(combatMode.DisarmSuccessSound, user, AudioParams.Default.WithVariation(0.025f).WithVolume(5f));
-        AdminLogger.Add(LogType.DisarmedAction, $"{ToPrettyString(user):user} used disarm on {ToPrettyString(target):target}");
-
         return true;
     }
 
@@ -199,39 +62,16 @@ public sealed class MeleeWeaponSystem : SharedMeleeWeaponSystem
         if (session is { } pSession)
         {
             (targetCoordinates, targetLocalAngle) = _lag.GetCoordinatesAngle(target, pSession);
-            return Interaction.InRangeUnobstructed(user, target, targetCoordinates, targetLocalAngle, range);
+            return Interaction.InRangeUnobstructed(user, target, targetCoordinates, targetLocalAngle, range, overlapCheck: false);
         }
 
         return Interaction.InRangeUnobstructed(user, target, range);
     }
 
-    protected override void DoDamageEffect(List<EntityUid> targets, EntityUid? user, TransformComponent targetXform)
+    protected override void DoDamageEffect(HashSet<EntityUid> targets, EntityUid? user, TransformComponent targetXform)
     {
         var filter = Filter.Pvs(targetXform.Coordinates, entityMan: EntityManager).RemoveWhereAttachedEntity(o => o == user);
-        _color.RaiseEffect(Color.Red, targets, filter);
-    }
-
-    private float CalculateDisarmChance(EntityUid disarmer, EntityUid disarmed, EntityUid? inTargetHand, CombatModeComponent disarmerComp)
-    {
-        if (HasComp<DisarmProneComponent>(disarmer))
-            return 1.0f;
-
-        if (HasComp<DisarmProneComponent>(disarmed))
-            return 0.0f;
-
-        var chance = 1 - disarmerComp.BaseDisarmFailChance;
-
-        if (inTargetHand != null && TryComp<DisarmMalusComponent>(inTargetHand, out var malus))
-            chance -= malus.Malus;
-
-        if (TryComp<ShovingComponent>(disarmer, out var shoving))
-            chance += shoving.DisarmBonus;
-
-        return Math.Clamp(chance
-                        * _contests.MassContest(disarmer, disarmed, false, 2f)
-                        * _contests.StaminaContest(disarmer, disarmed, false, 0.5f)
-                        * _contests.HealthContest(disarmer, disarmed, false, 1f),
-                        0f, 1f);
+        _color.RaiseEffect(Color.Red, targets.ToList(), filter);
     }
 
     public override void DoLunge(EntityUid user, EntityUid weapon, Angle angle, Vector2 localPos, string? animation, bool predicted = true)

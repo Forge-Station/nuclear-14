@@ -1,20 +1,71 @@
-// Corvax-Change-Start
-using System.Threading;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 
+namespace Content.Server.Spawners.Components;
+
+/// <summary>
+/// Spawns entities at a set interval.
+/// Can configure the set of entities, spawn timing, spawn chance,
+/// and min/max number of entities to spawn.
+/// </summary>
 [RegisterComponent, EntityCategory("Spawner")]
-public sealed partial class TimedSpawnerComponent : Component
+[AutoGenerateComponentPause]
+public sealed partial class TimedSpawnerComponent : Component, ISerializationHooks
 {
-    [DataField] public List<EntProtoId> Prototypes = [];
-    [DataField] public float Chance = 1.0f;
-    [DataField] public int IntervalSeconds = 60;
-    [DataField] public int MinimumEntitiesSpawned = 1;
-    [DataField] public int MaximumEntitiesSpawned = 1;
     /// <summary>
-    /// Необходима для спавнеров какашек.
+    /// List of entities that can be spawned by this component. One will be randomly
+    /// chosen for each entity spawned. When multiple entities are spawned at once,
+    /// each will be randomly chosen separately.
     /// </summary>
-    [DataField] public bool IgnoreSpawnBlock = false;
-    public float TimeElapsed;
+    [DataField]
+    public List<EntProtoId> Prototypes = [];
+
+    /// <summary>
+    /// Chance of an entity being spawned at the end of each interval.
+    /// </summary>
+    [DataField]
+    public float Chance = 1.0f;
+
+    /// <summary>
+    /// Length of the interval between spawn attempts.
+    /// </summary>
+    [DataField]
+    public TimeSpan IntervalSeconds = TimeSpan.FromSeconds(60);
+
+    /// <summary>
+    /// The minimum number of entities that can be spawned when an interval elapses.
+    /// </summary>
+    [DataField]
+    public int MinimumEntitiesSpawned = 1;
+
+    /// <summary>
+    /// The maximum number of entities that can be spawned when an interval elapses.
+    /// </summary>
+    [DataField]
+    public int MaximumEntitiesSpawned = 1;
+
+    /// <summary>
+    /// The time at which the current interval will have elapsed and entities may be spawned.
+    /// </summary>
+    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoPausedField]
+    public TimeSpan NextFire = TimeSpan.Zero;
+
+    /// <summary>
+    /// Determines whether to allow spawning entities in the spawner's container, or if they should always be outside.
+    /// </summary>
+    [DataField]
+    public bool AllowContainerPlacement = false;
+
+    /// <summary>
+    /// Corvax-Change: skip the "no players nearby" check. Needed e.g. for dung/egg spawners.
+    /// </summary>
+    [DataField]
+    public bool IgnoreSpawnBlock = false;
+
+    void ISerializationHooks.AfterDeserialization()
+    {
+        if (MinimumEntitiesSpawned > MaximumEntitiesSpawned)
+            throw new ArgumentException("MaximumEntitiesSpawned can't be lower than MinimumEntitiesSpawned!");
+    }
 }
-// Corvax-Change-End

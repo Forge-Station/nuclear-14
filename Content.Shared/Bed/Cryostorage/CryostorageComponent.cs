@@ -20,14 +20,14 @@ public sealed partial class CryostorageComponent : Component
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     [AutoNetworkedField]
-    public TimeSpan NoMindGracePeriod = TimeSpan.FromSeconds(25f);
+    public TimeSpan NoMindGracePeriod = TimeSpan.FromSeconds(30f);
 
     /// <summary>
     /// How long a player can remain inside Cryostorage before automatically being taken care of.
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     [AutoNetworkedField]
-    public TimeSpan GracePeriod = TimeSpan.FromMinutes(0.25f);
+    public TimeSpan GracePeriod = TimeSpan.FromMinutes(5f);
 
     /// <summary>
     /// A list of players who have actively entered cryostorage.
@@ -63,9 +63,9 @@ public record struct CryostorageContainedPlayerData()
     public NetEntity PlayerEnt = NetEntity.Invalid;
 
     /// <summary>
-    /// A dictionary relating a slot definition name to the name of the item inside of it.
+    /// A list containing item data (id of the slot, user friendly display name of the slot, the name of the item inside of it)
     /// </summary>
-    public Dictionary<string, string> ItemSlots = new();
+    public List<(string, string, string)> ItemSlots = new();
 
     /// <summary>
     /// A dictionary relating a hand ID to the hand name and the name of the item being held.

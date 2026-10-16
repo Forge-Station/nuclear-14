@@ -1,12 +1,14 @@
 using Content.Server.StationEvents.Events;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
+using Content.Shared.EntityTable.EntitySelectors;
 
 namespace Content.Server.StationEvents.Components;
 
 [RegisterComponent, Access(typeof(ImmovableRodRule))]
 public sealed partial class ImmovableRodRuleComponent : Component
 {
-    [DataField("rodPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
-    public string RodPrototype = "ImmovableRodKeepTilesStill";
+    /// <summary>
+    /// List of possible rods and spawn probabilities.
+    /// </summary>
+    [DataField(required: true)]
+    public EntityTableSelector RodPrototypes = default!;
 }

@@ -6,26 +6,21 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Content.Server.Administration.Commands;
 using Content.Server.Administration.Managers;
 using Content.Server.Administration.Systems;
 using Content.Server.Database;
 using Content.Server.GameTicking;
-using Content.Server.GameTicking.Presets;
 using Content.Server.Maps;
 using Content.Server.RoundEnd;
-using Content.Shared.Administration;
 using Content.Shared.Administration.Managers;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
+using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
-using Content.Shared.Players.PlayTimeTracking;
-using Content.Shared.Prototypes;
-using Content.Shared.Roles;
+using Content.Shared.GameTicking.Prototypes;
 using Robust.Server.ServerStatus;
 using Robust.Shared.Asynchronous;
 using Robust.Shared.Configuration;
-using Robust.Shared.Console;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
@@ -48,27 +43,26 @@ public sealed partial class ServerApi : IPostInjectInit
         CCVars.PanicBunkerCountDeadminnedAdmins.Name,
         CCVars.PanicBunkerShowReason.Name,
         CCVars.PanicBunkerMinAccountAge.Name,
-        CCVars.PanicBunkerMinOverallHours.Name,
+        CCVars.PanicBunkerMinOverallMinutes.Name,
         CCVars.PanicBunkerCustomReason.Name,
     ];
 
-    [Dependency] private readonly IStatusHost _statusHost = default!;
-    [Dependency] private readonly IConfigurationManager _config = default!;
-    [Dependency] private readonly ISharedPlayerManager _playerManager = default!;
-    [Dependency] private readonly IAdminManager _adminManager = default!; // Frontier: ISharedAdminManager<IAdminManager>
-    [Dependency] private readonly IGameMapManager _gameMapManager = default!;
-    [Dependency] private readonly IServerNetManager _netManager = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly IComponentFactory _componentFactory = default!;
-    [Dependency] private readonly ITaskManager _taskManager = default!;
-    [Dependency] private readonly EntityManager _entityManager = default!;
-    [Dependency] private readonly ILogManager _logManager = default!;
-    [Dependency] private readonly IEntitySystemManager _entitySystemManager = default!;
-    [Dependency] private readonly ILocalizationManager _loc = default!;
-    [Dependency] private readonly IBanManager _bans = default!;
-    [Dependency] private readonly IPlayerLocator _locator = default!;
-    [Dependency] private readonly IConsoleHost _shell = default!;
-    [Dependency] private readonly IServerDbManager _db = default!;
+    [Dependency] private IStatusHost _statusHost = default!;
+    [Dependency] private IConfigurationManager _config = default!;
+    [Dependency] private ISharedPlayerManager _playerManager = default!;
+    [Dependency] private ISharedAdminManager _adminManager = default!;
+    [Dependency] private IGameMapManager _gameMapManager = default!;
+    [Dependency] private IServerNetManager _netManager = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
+    [Dependency] private IComponentFactory _componentFactory = default!;
+    [Dependency] private ITaskManager _taskManager = default!;
+    [Dependency] private EntityManager _entityManager = default!;
+    [Dependency] private ILogManager _logManager = default!;
+    [Dependency] private IEntitySystemManager _entitySystemManager = default!;
+    [Dependency] private ILocalizationManager _loc = default!;
+    [Dependency] private IPlayerLocator _locator = default!;
+    [Dependency] private IBanManager _bans = default!;
+    [Dependency] private IServerDbManager _db = default!;
 
     private string _token = string.Empty;
     private ISawmill _sawmill = default!;
@@ -81,30 +75,26 @@ public sealed partial class ServerApi : IPostInjectInit
         RegisterActorHandler(HttpMethod.Get, "/admin/info", InfoHandler);
         RegisterHandler(HttpMethod.Get, "/admin/game_rules", GetGameRules);
         RegisterHandler(HttpMethod.Get, "/admin/presets", GetPresets);
-        RegisterHandler(HttpMethod.Get, "/admin/getckey", ActionGetCkey);
-        RegisterHandler(HttpMethod.Get, "/admin/playtime_trackers", GetPlayTimeTrackers); // Forge-Change
-        RegisterHandler(HttpMethod.Get, "/admin/jobs", GetJobs); // Forge-Change
 
         // Post
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/round/start", ActionRoundStart);
-        RegisterActorHandler(HttpMethod.Post, "/admin/actions/ahelp/send", ActionAhelpSend);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/round/end", ActionRoundEnd);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/round/restartnow", ActionRoundRestartNow);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/kick", ActionKick);
+        // Forge-Change-Start: admin panel API
+        RegisterHandler(HttpMethod.Get, "/admin/playtime_trackers", GetPlayTimeTrackers);
+        RegisterHandler(HttpMethod.Get, "/admin/jobs", GetJobs);
+        RegisterActorHandler(HttpMethod.Post, "/admin/actions/role_ban", ActionRoleBan);
+        RegisterActorHandler(HttpMethod.Post, "/admin/actions/pardon", ActionPardon);
+        RegisterActorHandler(HttpMethod.Post, "/admin/actions/add_time", ActionAddTime);
+        // Forge-Change-End
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/ban", ActionBan);
-        RegisterActorHandler(HttpMethod.Post, "/admin/actions/role_ban", ActionRoleBan); // Forge-Change
-        RegisterActorHandler(HttpMethod.Post, "/admin/actions/pardon", ActionPardon); // Forge-Change
-        RegisterActorHandler(HttpMethod.Post, "/admin/actions/add_time", ActionAddTime); // Forge-Change
-        RegisterActorHandler(HttpMethod.Post, "/admin/actions/shutdown", ShutdownAction);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/add_game_rule", ActionAddGameRule);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/end_game_rule", ActionEndGameRule);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/force_preset", ActionForcePreset);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/set_motd", ActionForceMotd);
         RegisterActorHandler(HttpMethod.Patch, "/admin/actions/panic_bunker", ActionPanicPunker);
-
-        //RegisterHandler(HttpMethod.Post, "/admin/actions/send_bwoink", ActionSendBwoink); // Frontier - Discord Ahelp Reply
     }
-
 
     public void Initialize()
     {
@@ -234,7 +224,7 @@ public sealed partial class ServerApi : IPostInjectInit
 
         await RunOnMainThread(async () =>
         {
-            var ticker = _entitySystemManager.GetEntitySystem<GameTicker>();
+            var ticker = _entitySystemManager.GetEntitySystem<ServerGameTicker>();
             if (ticker.RunLevel != GameRunLevel.PreRoundLobby)
             {
                 await RespondError(
@@ -274,7 +264,7 @@ public sealed partial class ServerApi : IPostInjectInit
 
         await RunOnMainThread(async () =>
         {
-            var ticker = _entitySystemManager.GetEntitySystem<GameTicker>();
+            var ticker = _entitySystemManager.GetEntitySystem<ServerGameTicker>();
             var gameRule = ticker
                 .GetActiveGameRules()
                 .FirstOrNull(rule =>
@@ -308,7 +298,7 @@ public sealed partial class ServerApi : IPostInjectInit
 
         await RunOnMainThread(async () =>
         {
-            var ticker = _entitySystemManager.GetEntitySystem<GameTicker>();
+            var ticker = _entitySystemManager.GetEntitySystem<ServerGameTicker>();
             if (!_prototypeManager.HasIndex<EntityPrototype>(body.GameRuleId))
             {
                 await RespondError(context,
@@ -318,15 +308,86 @@ public sealed partial class ServerApi : IPostInjectInit
                 return;
             }
 
-            var ruleEntity = ticker.AddGameRule(body.GameRuleId);
+            if (ticker.AddGameRule(body.GameRuleId) is not { } ruleEntity)
+                return;
+
             _sawmill.Info($"Added game rule {body.GameRuleId} by {FormatLogActor(actor)}.");
             if (ticker.RunLevel == GameRunLevel.InRound)
             {
-                ticker.StartGameRule(ruleEntity);
+                ticker.StartGameRule(ruleEntity.AsNullable());
                 _sawmill.Info($"Started game rule {body.GameRuleId} by {FormatLogActor(actor)}.");
             }
 
             await RespondOk(context);
+        });
+    }
+
+    /// <summary>
+    ///     Bans a player.
+    /// </summary>
+    private async Task ActionBan(IStatusHandlerContext context, Actor actor)
+    {
+        var body = await ReadJson<BanActionBody>(context);
+        if (body == null)
+            return;
+
+        await RunOnMainThread(async () =>
+        {
+            var located = await _locator.LookupIdByNameOrIdAsync(body.Guid.ToString());
+
+            if (located == null)
+            {
+                await RespondError(
+                    context,
+                    ErrorCode.PlayerNotFound,
+                    HttpStatusCode.UnprocessableContent,
+                    "Player not found");
+                return;
+            }
+
+            var bans = await _db.GetBansAsync(userId: located.UserId,
+                address: null,
+                hwId: null,
+                modernHWIds: null,
+                includeUnbanned: false);
+            if (bans.Count > 0)
+            {
+                await RespondError(
+                    context,
+                    ErrorCode.PlayerAlreadyBanned,
+                    HttpStatusCode.Conflict,
+                    "Player is already banned.");
+                return;
+            }
+
+            var reason = body.Reason ?? "No reason supplied";
+            var info = new CreateServerBanInfo(reason);
+
+            info.AddHWId(located.LastHWId);
+            info.AddUser(located.UserId, located.Username);
+            info.WithSeverity(body.Severity);
+            if (body.Minutes != null && body.Minutes != 0)
+            {
+                info.WithMinutes(body.Minutes.Value);
+            }
+
+            info.WithBanningAdmin(new NetUserId(actor.Guid));
+
+            // Add the ip if the user is currently connected.
+            if (_playerManager.TryGetSessionById(new NetUserId(body.Guid), out var player))
+            {
+                info.AddAddress(player.Channel.RemoteEndPoint.Address);
+            }
+            else
+            {
+                // We fallback into using the located player ip.
+                info.AddAddress(located.LastAddress);
+            }
+
+            _bans.CreateServerBan(info);
+            await RespondOk(context);
+
+            _sawmill.Info($"Banned player {located.Username} ({located.UserId}) for {reason} lasting {body.Minutes ?? 0} minutes by {FormatLogActor(actor)}");
         });
     }
 
@@ -355,63 +416,394 @@ public sealed partial class ServerApi : IPostInjectInit
             reason += " (kicked by admin)";
 
             _netManager.DisconnectChannel(player.Channel, reason);
-
             await RespondOk(context);
 
             _sawmill.Info($"Kicked player {player.Name} ({player.UserId}) for {reason} by {FormatLogActor(actor)}");
         });
     }
-    
-    // Forge-Change-Start
-    private async Task ActionBan(IStatusHandlerContext context, Actor actor)
-    {
-        var body = await ReadJson<BanActionBody>(context);
-        if (body == null)
-            return;
 
+    private async Task ActionRoundStart(IStatusHandlerContext context, Actor actor)
+    {
         await RunOnMainThread(async () =>
         {
-            var data = await _locator.LookupIdByNameOrIdAsync($"{body.TargetUsername}");
-            if (data == null)
+            var ticker = _entitySystemManager.GetEntitySystem<ServerGameTicker>();
+
+            if (ticker.RunLevel != GameRunLevel.PreRoundLobby)
             {
-                await context.RespondJsonAsync(
-                    new { Error = "Player not found", }, 
-                    HttpStatusCode.NotFound);
+                await RespondError(
+                    context,
+                    ErrorCode.InvalidRoundState,
+                    HttpStatusCode.Conflict,
+                    "Round already started");
                 return;
             }
 
-            var admin = await _locator.LookupIdByNameOrIdAsync($"{actor.Guid}");
-            if (admin == null)
-            {
-                await context.RespondJsonAsync(
-                    new { Error = "Admin not found", }, 
-                    HttpStatusCode.NotFound);
-                return;
-            }
-            
-            var adminData = await _db.GetAdminDataForAsync(admin.UserId);
-            if (adminData == null)
-            {
-                await context.RespondJsonAsync(
-                    new { Error = "Is not admin", }, 
-                    HttpStatusCode.NotFound);
-                return;
-            }
-
-            var targetHWid = data.LastHWId;
-            var targetId = data.UserId;
-            var targetUsername = data.Username;
-            var reason = body.Reason ?? "No reason supplied";
-            reason += " (banned by admin)";
-
-            _bans.CreateServerBan(targetId, targetUsername, admin.UserId, null, targetHWid, (uint)body.Minutes, (NoteSeverity)body.Severity, body.Reason ?? "No reason");
-
+            ticker.StartRound();
+            _sawmill.Info($"Forced round start by {FormatLogActor(actor)}");
             await RespondOk(context);
-
-            _sawmill.Info($"Banned player {data.Username} ({data.UserId}) for {reason} by {FormatLogActor(actor)} to {body.Minutes}");
         });
     }
 
+    private async Task ActionRoundEnd(IStatusHandlerContext context, Actor actor)
+    {
+        await RunOnMainThread(async () =>
+        {
+            var roundEndSystem = _entitySystemManager.GetEntitySystem<RoundEndSystem>();
+            var ticker = _entitySystemManager.GetEntitySystem<ServerGameTicker>();
+
+            if (ticker.RunLevel != GameRunLevel.InRound)
+            {
+                await RespondError(
+                    context,
+                    ErrorCode.InvalidRoundState,
+                    HttpStatusCode.Conflict,
+                    "Round is not active");
+                return;
+            }
+
+            roundEndSystem.EndRound();
+            _sawmill.Info($"Forced round end by {FormatLogActor(actor)}");
+            await RespondOk(context);
+        });
+    }
+
+    private async Task ActionRoundRestartNow(IStatusHandlerContext context, Actor actor)
+    {
+        await RunOnMainThread(async () =>
+        {
+            var ticker = _entitySystemManager.GetEntitySystem<ServerGameTicker>();
+
+            ticker.RestartRound();
+            _sawmill.Info($"Forced instant round restart by {FormatLogActor(actor)}");
+            await RespondOk(context);
+        });
+    }
+
+    #endregion
+
+    #region Fetching
+
+    /// <summary>
+    ///     Returns an array containing all available presets.
+    /// </summary>
+    private async Task GetPresets(IStatusHandlerContext context)
+    {
+        var presets = await RunOnMainThread(() =>
+        {
+            var presets = new List<PresetResponse.Preset>();
+
+            foreach (var preset in _prototypeManager.EnumeratePrototypes<GamePresetPrototype>())
+            {
+                presets.Add(new PresetResponse.Preset
+                {
+                    Id = preset.ID,
+                    ModeTitle = _loc.GetString(preset.ModeTitle),
+                    Description = _loc.GetString(preset.Description)
+                });
+            }
+
+            return presets;
+        });
+
+        await context.RespondJsonAsync(new PresetResponse
+        {
+            Presets = presets
+        });
+    }
+
+    /// <summary>
+    ///    Returns an array containing all game rules.
+    /// </summary>
+    private async Task GetGameRules(IStatusHandlerContext context)
+    {
+        var gameRules = new List<string>();
+        foreach (var gameRule in _prototypeManager.EnumeratePrototypes<EntityPrototype>())
+        {
+            if (gameRule.Abstract)
+                continue;
+
+            if (gameRule.HasComp<GameRuleComponent>(_componentFactory))
+                gameRules.Add(gameRule.ID);
+        }
+
+        await context.RespondJsonAsync(new GameruleResponse
+        {
+            GameRules = gameRules
+        });
+    }
+
+
+    /// <summary>
+    ///     Handles fetching information.
+    /// </summary>
+    private async Task InfoHandler(IStatusHandlerContext context, Actor actor)
+    {
+        /*
+        Information to display
+        Round number
+        Connected players
+        Active admins
+        Active game rules
+        Active game preset
+        Active map
+        MOTD
+        Panic bunker status
+        */
+
+        var info = await RunOnMainThread<InfoResponse>(() =>
+        {
+            var ticker = _entitySystemManager.GetEntitySystem<ServerGameTicker>();
+            var adminSystem = _entitySystemManager.GetEntitySystem<AdminSystem>();
+
+            var players = new List<InfoResponse.Player>();
+
+            foreach (var player in _playerManager.Sessions)
+            {
+                var adminData = _adminManager.GetAdminData(player, true);
+
+                players.Add(new InfoResponse.Player
+                {
+                    UserId = player.UserId.UserId,
+                    Name = player.Name,
+                    IsAdmin = adminData != null,
+                    IsDeadminned = !adminData?.Active ?? false
+                });
+            }
+
+            InfoResponse.MapInfo? mapInfo = null;
+            if (_gameMapManager.GetSelectedMap() is { } mapPrototype)
+            {
+                mapInfo = new InfoResponse.MapInfo
+                {
+                    Id = mapPrototype.ID,
+                    Name = mapPrototype.MapName
+                };
+            }
+
+            var gameRules = new List<string>();
+            foreach (var addedGameRule in ticker.GetActiveGameRules())
+            {
+                var meta = _entityManager.MetaQuery.GetComponent(addedGameRule);
+                gameRules.Add(meta.EntityPrototype?.ID ?? meta.EntityPrototype?.Name ?? "Unknown");
+            }
+
+            var panicBunkerCVars = PanicBunkerCVars.ToDictionary(c => c, c => _config.GetCVar(c));
+            return new InfoResponse
+            {
+                Players = players,
+                RoundId = ticker.RoundId,
+                Map = mapInfo,
+                PanicBunker = panicBunkerCVars,
+                GamePreset = ticker.CurrentPreset?.ID,
+                GameRules = gameRules,
+                MOTD = _config.GetCVar(CCVars.MOTD)
+            };
+        });
+
+        await context.RespondJsonAsync(info);
+    }
+
+    #endregion
+
+    private async Task<bool> CheckAccess(IStatusHandlerContext context)
+    {
+        var auth = context.RequestHeaders.TryGetValue("Authorization", out var authToken);
+        if (!auth)
+        {
+            await RespondError(
+                context,
+                ErrorCode.AuthenticationNeeded,
+                HttpStatusCode.Unauthorized,
+                "Authorization is required");
+            return false;
+        }
+
+        var authHeaderValue = authToken.ToString();
+        var spaceIndex = authHeaderValue.IndexOf(' ');
+        if (spaceIndex == -1)
+        {
+            await RespondBadRequest(context, "Invalid Authorization header value");
+            return false;
+        }
+
+        var authScheme = authHeaderValue[..spaceIndex];
+        var authValue = authHeaderValue[spaceIndex..].Trim();
+
+        if (authScheme != SS14TokenScheme)
+        {
+            await RespondBadRequest(context, "Invalid Authorization scheme");
+            return false;
+        }
+
+        if (_token == "")
+        {
+            _sawmill.Debug("No authorization token set for admin API");
+        }
+        else if (CryptographicOperations.FixedTimeEquals(
+                Encoding.UTF8.GetBytes(authValue),
+                Encoding.UTF8.GetBytes(_token)))
+        {
+            return true;
+        }
+
+        await RespondError(
+            context,
+            ErrorCode.AuthenticationInvalid,
+            HttpStatusCode.Unauthorized,
+            "Authorization is invalid");
+
+        // Invalid auth header, no access
+        _sawmill.Info($"Unauthorized access attempt to admin API from {context.RemoteEndPoint}");
+        return false;
+    }
+
+    private async Task<Actor?> CheckActor(IStatusHandlerContext context)
+    {
+        // The actor is JSON encoded in the header
+        var actor = context.RequestHeaders.TryGetValue("Actor", out var actorHeader) ? actorHeader.ToString() : null;
+        if (actor == null)
+        {
+            await RespondBadRequest(context, "Actor must be supplied");
+            return null;
+        }
+
+        Actor? actorData;
+        try
+        {
+            actorData = JsonSerializer.Deserialize<Actor>(actor);
+            if (actorData == null)
+            {
+                await RespondBadRequest(context, "Actor is null");
+                return null;
+            }
+        }
+        catch (JsonException exception)
+        {
+            await RespondBadRequest(context, "Actor field JSON is invalid", ExceptionData.FromException(exception));
+            return null;
+        }
+
+        return actorData;
+    }
+
+    #region From Client
+
+    private sealed class Actor
+    {
+        public required Guid Guid { get; init; }
+        public required string Name { get; init; }
+    }
+
+    private sealed class KickActionBody
+    {
+        public required Guid Guid { get; init; }
+        public string? Reason { get; init; }
+    }
+
+    private sealed class BanActionBody
+    {
+        public required Guid Guid { get; init; }
+        public string? Reason { get; init; }
+        public NoteSeverity Severity { get; init; }
+        public uint? Minutes { get; init; }
+    }
+
+    private sealed class GameRuleActionBody
+    {
+        public required string GameRuleId { get; init; }
+    }
+
+    private sealed class PresetActionBody
+    {
+        public required string PresetId { get; init; }
+    }
+
+    private sealed class MotdActionBody
+    {
+        public required string Motd { get; init; }
+    }
+
+    #endregion
+
+    #region Responses
+
+    private record BaseResponse(
+        string Message,
+        ErrorCode ErrorCode = ErrorCode.None,
+        ExceptionData? Exception = null);
+
+    private record ExceptionData(string Message, string? StackTrace = null)
+    {
+        public static ExceptionData FromException(Exception e)
+        {
+            return new ExceptionData(e.Message, e.StackTrace);
+        }
+    }
+
+    private enum ErrorCode
+    {
+        None = 0,
+        AuthenticationNeeded = 1,
+        AuthenticationInvalid = 2,
+        InvalidRoundState = 3,
+        PlayerNotFound = 4,
+        GameRuleNotFound = 5,
+        BadRequest = 6,
+        PlayerAlreadyBanned = 7,
+    }
+
+    #endregion
+
+    #region Misc
+
+    /// <summary>
+    /// Record used to send the response for the info endpoint.
+    /// </summary>
+    private sealed class InfoResponse
+    {
+        public required int RoundId { get; init; }
+        public required List<Player> Players { get; init; }
+        public required List<string> GameRules { get; init; }
+        public required string? GamePreset { get; init; }
+        public required MapInfo? Map { get; init; }
+        public required string? MOTD { get; init; }
+        public required Dictionary<string, object> PanicBunker { get; init; }
+
+        public sealed class Player
+        {
+            public required Guid UserId { get; init; }
+            public required string Name { get; init; }
+            public required bool IsAdmin { get; init; }
+            public required bool IsDeadminned { get; init; }
+        }
+
+        public sealed class MapInfo
+        {
+            public required string Id { get; init; }
+            public required string Name { get; init; }
+        }
+    }
+
+    private sealed class PresetResponse
+    {
+        public required List<Preset> Presets { get; init; }
+
+        public sealed class Preset
+        {
+            public required string Id { get; init; }
+            public required string Description { get; init; }
+            public required string ModeTitle { get; init; }
+        }
+    }
+
+    private sealed class GameruleResponse
+    {
+        public required List<string> GameRules { get; init; }
+    }
+
+    #endregion
+
+    // Forge-Change-Start: admin panel API
     private async Task ActionRoleBan(IStatusHandlerContext context, Actor actor)
     {
         var body = await ReadJson<RoleBanActionBody>(context);
@@ -601,275 +993,6 @@ public sealed partial class ServerApi : IPostInjectInit
             }
         });
     }
-    // Forge-Change-End
-
-    private async Task ActionAhelpSend(IStatusHandlerContext context, Actor actor)
-    {
-        var body = await ReadJson<DiscordAhelpBody>(context);
-        if (body == null)
-            return;
-        if (body.Text == null)
-        {
-            await context.RespondErrorAsync(HttpStatusCode.BadRequest);
-            return;
-        }
-        var bwoinkSystem = _entitySystemManager.GetEntitySystem<BwoinkSystem>();
-        var data = await _locator.LookupIdByNameOrIdAsync($"{body.PlayerNickname}");
-        if (data != null)
-        {
-            var playerUserId = new NetUserId(data.UserId);
-
-        var senderUserId = new NetUserId(body.SenderUserId);
-        var message = new SharedBwoinkSystem.BwoinkTextMessage(playerUserId, senderUserId, body.Text);
-        await RunOnMainThread(async () =>
-        {
-            if (_playerManager.TryGetSessionById(playerUserId, out var session))
-            {
-                //bwoinkSystem.DiscordAhelpSendMessage(message, new EntitySessionEventArgs(session)); // закоменчено до переработки дс ахелпов by Sh1ntra
-                await RespondOk(context);
-            }
-        });
-        }
-    }
-
-    private async Task ShutdownAction(IStatusHandlerContext context, Actor actor)
-    {
-        _shell.ExecuteCommand("shutdown");
-        await RespondOk(context);
-    }
-
-    private async Task ActionRoundStart(IStatusHandlerContext context, Actor actor)
-    {
-        await RunOnMainThread(async () =>
-        {
-            var ticker = _entitySystemManager.GetEntitySystem<GameTicker>();
-
-            if (ticker.RunLevel != GameRunLevel.PreRoundLobby)
-            {
-                await RespondError(
-                    context,
-                    ErrorCode.InvalidRoundState,
-                    HttpStatusCode.Conflict,
-                    "Round already started");
-                return;
-            }
-
-            ticker.StartRound();
-            _sawmill.Info($"Forced round start by {FormatLogActor(actor)}");
-            await RespondOk(context);
-        });
-    }
-
-    private async Task ActionRoundEnd(IStatusHandlerContext context, Actor actor)
-    {
-        await RunOnMainThread(async () =>
-        {
-            var roundEndSystem = _entitySystemManager.GetEntitySystem<RoundEndSystem>();
-            var ticker = _entitySystemManager.GetEntitySystem<GameTicker>();
-
-            if (ticker.RunLevel != GameRunLevel.InRound)
-            {
-                await RespondError(
-                    context,
-                    ErrorCode.InvalidRoundState,
-                    HttpStatusCode.Conflict,
-                    "Round is not active");
-                return;
-            }
-
-            roundEndSystem.EndRound();
-            _sawmill.Info($"Forced round end by {FormatLogActor(actor)}");
-            await RespondOk(context);
-        });
-    }
-
-    private async Task ActionRoundRestartNow(IStatusHandlerContext context, Actor actor)
-    {
-        await RunOnMainThread(async () =>
-        {
-            var ticker = _entitySystemManager.GetEntitySystem<GameTicker>();
-
-            ticker.RestartRound();
-            _sawmill.Info($"Forced instant round restart by {FormatLogActor(actor)}");
-            await RespondOk(context);
-        });
-    }
-    #endregion
-
-    #region Frontier
-    // Creating a region here incase more actions are added in the future
-
-    private async Task ActionSendBwoink(IStatusHandlerContext context)
-    {
-        var body = await ReadJson<BwoinkActionBody>(context);
-        if (body == null)
-            return;
-
-        await RunOnMainThread(async () =>
-    {
-        // Player not online or wrong Guid
-        if (!_playerManager.TryGetSessionById(new NetUserId(body.Guid), out var player))
-        {
-            await RespondError(
-                context,
-                ErrorCode.PlayerNotFound,
-                HttpStatusCode.UnprocessableContent,
-                "Player not found");
-            return;
-        }
-
-        var serverBwoinkSystem = _entitySystemManager.GetEntitySystem<BwoinkSystem>();
-        var message = new SharedBwoinkSystem.BwoinkTextMessage(player.UserId, SharedBwoinkSystem.SystemUserId, body.Text);
-        serverBwoinkSystem.OnWebhookBwoinkTextMessage(message, body);
-
-        // Respond with OK
-        await RespondOk(context);
-    });
-
-
-    }
-
-    #endregion
-
-    #region Fetching
-
-    /// <summary>
-    ///     Returns an array containing all available presets.
-    /// </summary>
-    private async Task GetPresets(IStatusHandlerContext context)
-    {
-        var presets = await RunOnMainThread(() =>
-        {
-            var presets = new List<PresetResponse.Preset>();
-
-            foreach (var preset in _prototypeManager.EnumeratePrototypes<GamePresetPrototype>())
-            {
-                presets.Add(new PresetResponse.Preset
-                {
-                    Id = preset.ID,
-                    ModeTitle = _loc.GetString(preset.ModeTitle),
-                    Description = _loc.GetString(preset.Description)
-                });
-            }
-
-            return presets;
-        });
-
-        await context.RespondJsonAsync(new PresetResponse
-        {
-            Presets = presets
-        });
-    }
-
-    /// <summary>
-    ///    Returns an array containing all game rules.
-    /// </summary>
-    private async Task GetGameRules(IStatusHandlerContext context)
-    {
-        var gameRules = new List<string>();
-        foreach (var gameRule in _prototypeManager.EnumeratePrototypes<EntityPrototype>())
-        {
-            if (gameRule.Abstract)
-                continue;
-
-            if (gameRule.HasComponent<GameRuleComponent>(_componentFactory))
-                gameRules.Add(gameRule.ID);
-        }
-
-        await context.RespondJsonAsync(new GameruleResponse
-        {
-            GameRules = gameRules
-        });
-    }
-    /// <summary>
-    ///    Returns a user ckey by NetUserId.
-    /// </summary>
-    private async Task ActionGetCkey(IStatusHandlerContext context)
-    {
-        var body = await ReadJson<GetCkeyActionBody>(context);
-        if (body == null)
-            return;
-
-        var data = await _locator.LookupIdAsync(new NetUserId(body.UserUid));
-
-        if (data != null)
-            await context.RespondJsonAsync(data.Username);
-        else
-            await context.RespondErrorAsync(HttpStatusCode.BadRequest);
-    }
-
-
-    /// <summary>
-    ///     Handles fetching information.
-    /// </summary>
-    private async Task InfoHandler(IStatusHandlerContext context, Actor actor)
-    {
-        /*
-        Information to display
-        Round number
-        Connected players
-        Active admins
-        Active game rules
-        Active game preset
-        Active map
-        MOTD
-        Panic bunker status
-        */
-
-        var info = await RunOnMainThread<InfoResponse>(() =>
-        {
-            var ticker = _entitySystemManager.GetEntitySystem<GameTicker>();
-            var adminSystem = _entitySystemManager.GetEntitySystem<AdminSystem>();
-
-            var players = new List<InfoResponse.Player>();
-
-            foreach (var player in _playerManager.Sessions)
-            {
-                var adminData = _adminManager.GetAdminData(player, true);
-
-                players.Add(new InfoResponse.Player
-                {
-                    UserId = player.UserId.UserId,
-                    Name = player.Name,
-                    IsAdmin = adminData != null,
-                    IsDeadminned = !adminData?.Active ?? false
-                });
-            }
-
-            InfoResponse.MapInfo? mapInfo = null;
-            if (_gameMapManager.GetSelectedMap() is { } mapPrototype)
-            {
-                mapInfo = new InfoResponse.MapInfo
-                {
-                    Id = mapPrototype.ID,
-                    Name = mapPrototype.MapName
-                };
-            }
-
-            var gameRules = new List<string>();
-            foreach (var addedGameRule in ticker.GetActiveGameRules())
-            {
-                var meta = _entityManager.MetaQuery.GetComponent(addedGameRule);
-                gameRules.Add(meta.EntityPrototype?.ID ?? meta.EntityPrototype?.Name ?? "Unknown");
-            }
-
-            var panicBunkerCVars = PanicBunkerCVars.ToDictionary(c => c, c => _config.GetCVar(c));
-            return new InfoResponse
-            {
-                Players = players,
-                RoundId = ticker.RoundId,
-                Map = mapInfo,
-                PanicBunker = panicBunkerCVars,
-                GamePreset = ticker.CurrentPreset?.ID,
-                GameRules = gameRules,
-                MOTD = _config.GetCVar(CCVars.MOTD)
-            };
-        });
-
-        await context.RespondJsonAsync(info);
-    }
-
-    // Forge-Change-Start
     /// <summary>
     ///     Returns all play-time trackers with a human-readable display name composed of the localized
     ///     names of every <see cref="JobPrototype"/> that references the tracker. Used by the Discord
@@ -949,128 +1072,6 @@ public sealed partial class ServerApi : IPostInjectInit
 
         await context.RespondJsonAsync(new JobResponse { Jobs = jobs });
     }
-    // Forge-Change-End
-
-    #endregion
-
-    private async Task<bool> CheckAccess(IStatusHandlerContext context)
-    {
-        var auth = context.RequestHeaders.TryGetValue("Authorization", out var authToken);
-        if (!auth)
-        {
-            await RespondError(
-                context,
-                ErrorCode.AuthenticationNeeded,
-                HttpStatusCode.Unauthorized,
-                "Authorization is required");
-            return false;
-        }
-
-        var authHeaderValue = authToken.ToString();
-        var spaceIndex = authHeaderValue.IndexOf(' ');
-        if (spaceIndex == -1)
-        {
-            await RespondBadRequest(context, "Invalid Authorization header value");
-            return false;
-        }
-
-        var authScheme = authHeaderValue[..spaceIndex];
-
-        var authValue = authHeaderValue[spaceIndex..].Trim();
-        _sawmill.Info(authScheme.Normalize());
-        _sawmill.Info(authValue.Normalize());
-        if (authScheme != SS14TokenScheme)
-        {
-            await RespondBadRequest(context, "Invalid Authorization scheme");
-            return false;
-        }
-
-        if (_token == "")
-        {
-            _sawmill.Debug("No authorization token set for admin API");
-        }
-        else if (CryptographicOperations.FixedTimeEquals(
-                Encoding.UTF8.GetBytes(authValue),
-                Encoding.UTF8.GetBytes(_token)))
-        {
-            return true;
-        }
-
-        await RespondError(
-            context,
-            ErrorCode.AuthenticationInvalid,
-            HttpStatusCode.Unauthorized,
-            "Authorization is invalid");
-
-        // Invalid auth header, no access
-        _sawmill.Info($"Unauthorized access attempt to admin API from {context.RemoteEndPoint}");
-        return false;
-    }
-
-    private async Task<Actor?> CheckActor(IStatusHandlerContext context)
-    {
-        // The actor is JSON encoded in the header
-        var actor = context.RequestHeaders.TryGetValue("Actor", out var actorHeader) ? actorHeader.ToString() : null;
-        if (actor == null)
-        {
-            await RespondBadRequest(context, "Actor must be supplied");
-            return null;
-        }
-
-        Actor? actorData;
-        try
-        {
-            actorData = JsonSerializer.Deserialize<Actor>(actor);
-            if (actorData == null)
-            {
-                await RespondBadRequest(context, "Actor is null");
-                return null;
-            }
-        }
-        catch (JsonException exception)
-        {
-            await RespondBadRequest(context, "Actor field JSON is invalid", ExceptionData.FromException(exception));
-            return null;
-        }
-
-        return actorData;
-    }
-
-    #region From Client
-
-    private sealed class Actor
-    {
-        public required Guid Guid { get; init; }
-        public required string Name { get; init; }
-    }
-
-    private sealed class KickActionBody
-    {
-        public required Guid Guid { get; init; }
-        public string? Reason { get; init; }
-    }
-
-    private sealed class GetCkeyActionBody
-    {
-        public required Guid UserUid { get; init; }
-    }
-
-    private sealed class DiscordAhelpBody
-    {
-        public required string PlayerNickname { get; init; }
-        public required Guid SenderUserId { get; init; }
-        public string? Text { get; init; }
-    }
-
-    private sealed class BanActionBody
-    {
-        public int Minutes { get; init; }
-        public int Severity { get; init; }
-        public string? TargetUsername { get; init; }
-        public string? Reason { get; init; }
-    }
-
-    // Forge-Change-Start
     private sealed class RoleBanActionBody
     {
         public int Minutes { get; init; }
@@ -1097,112 +1098,6 @@ public sealed partial class ServerApi : IPostInjectInit
         public required string PlaytimeTracker { get; init; }
         public required string TimeString { get; init; }
     }
-    // Forge-Change-End
-
-    private sealed class GameRuleActionBody
-    {
-        public required string GameRuleId { get; init; }
-    }
-
-    private sealed class PresetActionBody
-    {
-        public required string PresetId { get; init; }
-    }
-
-    private sealed class MotdActionBody
-    {
-        public required string Motd { get; init; }
-    }
-
-    public sealed class BwoinkActionBody
-    {
-        public required string Text { get; init; }
-        public required string Username { get; init; }
-        public required Guid Guid { get; init; }
-        public bool UserOnly { get; init; }
-        public required bool WebhookUpdate { get; init; }
-        public required string RoleName { get; init; }
-        public required string RoleColor { get; init; }
-    }
-
-    #endregion
-
-    #region Responses
-
-    private record BaseResponse(
-        string Message,
-        ErrorCode ErrorCode = ErrorCode.None,
-        ExceptionData? Exception = null);
-
-    private record ExceptionData(string Message, string? StackTrace = null)
-    {
-        public static ExceptionData FromException(Exception e)
-        {
-            return new ExceptionData(e.Message, e.StackTrace);
-        }
-    }
-
-    private enum ErrorCode
-    {
-        None = 0,
-        AuthenticationNeeded = 1,
-        AuthenticationInvalid = 2,
-        InvalidRoundState = 3,
-        PlayerNotFound = 4,
-        GameRuleNotFound = 5,
-        BadRequest = 6,
-    }
-
-    #endregion
-
-    #region Misc
-
-    /// <summary>
-    /// Record used to send the response for the info endpoint.
-    /// </summary>
-    private sealed class InfoResponse
-    {
-        public required int RoundId { get; init; }
-        public required List<Player> Players { get; init; }
-        public required List<string> GameRules { get; init; }
-        public required string? GamePreset { get; init; }
-        public required MapInfo? Map { get; init; }
-        public required string? MOTD { get; init; }
-        public required Dictionary<string, object> PanicBunker { get; init; }
-
-        public sealed class Player
-        {
-            public required Guid UserId { get; init; }
-            public required string Name { get; init; }
-            public required bool IsAdmin { get; init; }
-            public required bool IsDeadminned { get; init; }
-        }
-
-        public sealed class MapInfo
-        {
-            public required string Id { get; init; }
-            public required string Name { get; init; }
-        }
-    }
-
-    private sealed class PresetResponse
-    {
-        public required List<Preset> Presets { get; init; }
-
-        public sealed class Preset
-        {
-            public required string Id { get; init; }
-            public required string Description { get; init; }
-            public required string ModeTitle { get; init; }
-        }
-    }
-
-    private sealed class GameruleResponse
-    {
-        public required List<string> GameRules { get; init; }
-    }
-
-    // Forge-Change-Start
     private sealed class PlayTimeTrackerResponse
     {
         public required List<Tracker> Trackers { get; init; }
@@ -1226,5 +1121,4 @@ public sealed partial class ServerApi : IPostInjectInit
     }
     // Forge-Change-End
 
-    #endregion
 }

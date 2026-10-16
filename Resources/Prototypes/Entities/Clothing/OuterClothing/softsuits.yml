@@ -2,8 +2,8 @@
 - type: entity
   parent: ClothingOuterEVASuitBase
   id: ClothingOuterHardsuitEVA
-  name: vacsuit
-  description: A lightweight vacsuit with the basic ability to protect the wearer from the vacuum of space during emergencies.
+  name: EVA suit
+  description: A lightweight space suit with the basic ability to protect the wearer from the vacuum of space.
   components:
   - type: Sprite
     sprite: Clothing/OuterClothing/Suits/eva.rsi
@@ -14,14 +14,12 @@
     - SuitEVA
     - MonkeyWearable
     - WhitelistChameleon
-    - AllowLamiaHardsuit
-    - HidesHarpyWings
 
 #Syndicate EVA
 - type: entity
-  parent: ClothingOuterEVASuitBase
-  id: ClothingOuterHardsuitSyndicate # TODO: rename to ClothingOuterEVASuitSyndicate
-  name: syndicate vacsuit
+  parent: [ ClothingOuterEVASuitBase, BaseSyndicateContraband ]
+  id: ClothingOuterEVASuitSyndicate
+  name: syndicate EVA suit
   description: "Has a tag on the back that reads: 'Totally not property of an enemy corporation, honest!'"
   components:
   - type: Sprite
@@ -33,15 +31,15 @@
     - SuitEVA
     - MonkeyWearable
     - WhitelistChameleon
-    - AllowLamiaHardsuit
-    - HidesHarpyWings
+  - type: StaticPrice
+    price: 1000 # Helmet is 500
 
 #Emergency EVA
 - type: entity
-  parent: ClothingOuterEVASuitBase
+  parent: [ TemperatureProtectionMinimal, ClothingOuterEVASuitBaseToggleable ]
   id: ClothingOuterSuitEmergency
-  name: emergency vacsuit
-  description: An emergency vacsuit with a built-in helmet. It's horribly slow and lacking in temperature protection, but enough to bide you time from the harsh vaccuum of space.
+  name: emergency pressure suit
+  description: This bulky, uninsulated pressure suit was clearly not meant for extended use in outer space, despite NanoTrasen's claims that it passes corporate regulations.
   components:
   - type: Sprite
     sprite: Clothing/OuterClothing/Suits/eva_emergency.rsi
@@ -50,41 +48,41 @@
   - type: ClothingSpeedModifier
     walkModifier: 0.7
     sprintModifier: 0.7
-  - type: HeldSpeedModifier
-  - type: TemperatureProtection
-    coefficient: 0.5
   - type: ToggleableClothing
     clothingPrototype: ClothingHeadHelmetEVALarge
-    slot: head
-  - type: ContainerContainer
-    containers:
-      toggleable-clothing: !type:Container {}
+  - type: Tag
+    tags:
+    - CorgiWearable
+    - ScurretWearable
+    - MonkeyWearable
+    - WhitelistChameleon
 
 #Prisoner EVA
 - type: entity
-  parent: ClothingOuterEVASuitBase
+  parent: [ TemperatureProtectionMinimal, ClothingOuterEVASuitBase]
   id:  ClothingOuterHardsuitEVAPrisoner
-  name: prisoner vacsuit
-  description: A lightweight space suit for prisoners to protect them from the vacuum of space during emergencies.
+  name: prisoner pressure suit
+  description: An emergency pressure suit meant for prisoners. It's not fully rated for extended use in outer space, but some wardens consider the lack of thermal insulation a feature.
   components:
   - type: Sprite
     sprite: Clothing/OuterClothing/Suits/eva_prisoner.rsi
   - type: Clothing
     sprite: Clothing/OuterClothing/Suits/eva_prisoner.rsi
+  - type: ClothingSpeedModifier
+    walkModifier: 0.7
+    sprintModifier: 0.7
   - type: Tag
     tags:
     - SuitEVA
     - MonkeyWearable
     - WhitelistChameleon
-    - AllowLamiaHardsuit
-    - HidesHarpyWings
 
 #NTSRA Voidsuit / Ancient Voidsuit
 - type: entity
   parent: ClothingOuterEVASuitBase
   id: ClothingOuterHardsuitAncientEVA
-  name: NTSRA vacsuit #Nanotrasen Space Research Association
-  description: An ancient vacsuit, designed by the NTSRA branch of CentCom. It is very finely crafted, allowing for greater mobility than most modern vacsuits.
+  name: NTSRA voidsuit #Nanotrasen Space Research Association
+  description: An ancient space suit, designed by the NTSRA branch of CentComm. It is very finely crafted, allowing for greater mobility than most modern space suits.
   components:
   - type: Sprite
     sprite: Clothing/OuterClothing/Suits/ancient_voidsuit.rsi
@@ -94,3 +92,62 @@
     walkModifier: 0.85
     sprintModifier: 0.85
   - type: HeldSpeedModifier
+
+#Paramedic Voidsuit
+- type: entity
+  parent: [ClothingOuterEVASuitBaseToggleable, BaseMedicalContraband] #Despite "Voidsuits are light hardsuits", since it parents of EVA Suits, it goes with the other softsuits
+  id: ClothingOuterHardsuitVoidParamed
+  name: paramedic void suit
+  description: A void suit made for paramedics.
+  components:
+  - type: Sprite
+    sprite: Clothing/OuterClothing/Hardsuits/paramed.rsi
+    layers:
+    - state: icon
+  - type: Appearance
+  - type: Clothing
+    sprite: Clothing/OuterClothing/Hardsuits/paramed.rsi
+  - type: ClothingSpeedModifier
+    walkModifier: 0.9
+    sprintModifier: 0.9
+    requireActivated: false
+  - type: Armor
+    modifiers:
+      coefficients:
+        Heat: 0.90
+        Radiation: 0.75
+        Caustic: 0.5
+  - type: GroupExamine
+  - type: StealTarget
+    stealGroup:
+    - ClothingOuterHardsuitVoidParamed
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetVoidParamed
+  - type: ItemToggleExaminableStatus
+  - type: ItemToggle
+    onUse: false
+    soundActivate:
+      path: /Audio/Items/flashlight_on.ogg
+    soundDeactivate:
+      path: /Audio/Items/flashlight_off.ogg
+  - type: ItemToggleActiveSound
+    activeSound:
+      path: /Audio/Effects/Vehicle/ambulancesiren.ogg #not the best sound, but after looking through all of current freesound regarding sirens and ambulance, this was the best compromise
+      params:
+        volume: -4
+  - type: UseDelay
+    delay: 1.0
+  - type: ToggleClothing
+    action: ActionToggleParamedicSiren
+  - type: ItemTogglePointLight
+  - type: PointLight
+    enabled: false
+    radius: 2
+    energy: 2
+    color: blue
+    lightMask: ConeDouble
+  - type: RotatingLight
+    speed: 360
+  - type: Tag
+    tags:
+    - WhitelistChameleon

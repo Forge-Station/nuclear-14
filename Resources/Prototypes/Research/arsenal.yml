@@ -1,29 +1,17 @@
 # Tier 1
 
-# STOP. STOP ADDING NEW WEAPONS AS A SINGLE RESEARCH ENTRY. ADD NEW WEAPONS HERE, NOT ON THEIR OWN.
-# DO NOT ADD ANOTHER TECH
 - type: technology
-  id: BasicWeapons
-  name: research-technology-basic-weapons
+  id: SalvageWeapons
+  name: research-technology-salvage-weapons
   icon:
-    sprite: Objects/Weapons/Guns/Battery/laser_gun.rsi
+    sprite: Objects/Weapons/Guns/Basic/kinetic_accelerator.rsi
     state: icon
   discipline: Arsenal
   tier: 1
-  cost: 10000
+  cost: 5000
   recipeUnlocks:
   - WeaponProtoKineticAccelerator
   - ShuttleGunKineticCircuitboard
-  - WeaponLaserCarbine
-  - WeaponMechCombatFiredartLaser # Goobstation
-  - WeaponEnergyGun
-  - WeaponEnergyGunMini
-  - WeaponLaserSvalinn
-  - WeaponEnergyGunPistol
-  - WeaponDisablerSMG
-  - Truncheon
-  #- WeaponPistolMk58 #todo: Add a bunch of basic ballistic guns to the list and make lathe recipes for them.
-  - MechEquipmentKineticAccelerator # Goobstation
   # These are roundstart but not replenishable for salvage
 
 - type: technology
@@ -40,54 +28,39 @@
   - MagazineRifleIncendiary
   - MagazinePistolIncendiary
   - MagazinePistolSubMachineGunIncendiary
-  - MagazineMagnumIncendiary
   - MagazineLightRifleIncendiary
   - SpeedLoaderMagnumIncendiary
-  - SpeedLoaderRifleHeavyIncendiary
-  - MagazineShotgunIncendiary
   - MagazineBoxPistolIncendiary
   - MagazineBoxMagnumIncendiary
   - MagazineBoxLightRifleIncendiary
   - MagazineBoxRifleIncendiary
-  - CartridgeSpecialIncendiary
-  - MagazineBoxSpecialIncendiary
+
+- type: technology
+  id: WeaponizedLaserManipulation
+  name: research-technology-weaponized-laser-manipulation
+  icon:
+    sprite: Objects/Weapons/Guns/Battery/laser_gun.rsi
+    state: icon
+  discipline: Arsenal
+  tier: 1
+  cost: 7500
+  recipeUnlocks:
+  - WeaponLaserCarbine
 
 - type: technology
   id: NonlethalAmmunition
   name: research-technology-nonlethal-ammunition
   icon:
-    sprite: Objects/Weapons/Guns/Ammunition/Casings/shotgun_shell.rsi
-    state: beanbag
+    sprite: Objects/Weapons/Guns/Battery/disabler_smg.rsi
+    state: icon
   discipline: Arsenal
   tier: 1
   cost: 5000
   recipeUnlocks:
-  - MagazineShotgunBeanbag
-  - ShellTranquilizer
+  - BoxShellTranquilizer
   - BoxBeanbag
-  - CartridgePistolRubber
-  - CartridgeMagnumRubber
-  - CartridgeLightRifleRubber
-  - CartridgeRifleRubber
-  - MagazineRifleRubber
-  - MagazinePistolRubber
-  - MagazinePistolSubMachineGunRubber
-  - MagazineMagnumRubber
-  - MagazineLightRifleRubber
-  - SpeedLoaderMagnumRubber
-  - MagazineBoxPistolRubber
-  - MagazineBoxMagnumRubber
-  - MagazineBoxLightRifleRubber
-  - MagazineBoxRifleRubber
-  - CartridgeSpecialRubber
-  - MagazineBoxSpecialRubber
   - WeaponDisabler
-  - MagazineBoxLightRifleRubber # Frontier
-  - MagazineBoxMagnumRubber # Frontier
-  - MagazineBoxPistolRubber # Frontier
-  - MagazineBoxRifleRubber # Frontier
-  - SpeedLoaderRifleHeavyRubber
-  - WeaponMechCombatDisabler # Goobstation
+  - WeaponDisablerSMG
 
 - type: technology
   id: UraniumMunitions
@@ -102,33 +75,13 @@
   - MagazineRifleUranium
   - MagazinePistolUranium
   - MagazinePistolSubMachineGunUranium
-  - MagazineMagnumUranium
   - MagazineLightRifleUranium
   - SpeedLoaderMagnumUranium
-  - SpeedLoaderRifleHeavyUranium # Frontier
   - MagazineBoxPistolUranium
   - MagazineBoxMagnumUranium
   - MagazineBoxLightRifleUranium
   - MagazineBoxRifleUranium
   - BoxShotgunUranium
-  - CartridgeSpecialUranium
-  - MagazineBoxSpecialUranium
-
-# Tier 2
-
-- type: technology
-  id: AdvancedTacsuits
-  name: research-technology-advanced-tacsuits
-  icon:
-    sprite: DeltaV/Clothing/OuterClothing/Hardsuits/Combat/standard.rsi
-    state: icon
-  discipline: Arsenal
-  tier: 2
-  cost: 15000
-  recipeUnlocks:
-  - ClothingOuterHardsuitCombatStandard
-  - ClothingOuterHardsuitCombatMedical
-  - ClothingOuterHardsuitCombatRiot
 
 - type: technology
   id: ExplosiveTechnology
@@ -137,7 +90,7 @@
     sprite: Objects/Devices/payload.rsi
     state: payload-explosive-armed
   discipline: Arsenal
-  tier: 2
+  tier: 1
   cost: 10000
   recipeUnlocks:
   - SignallerAdvanced
@@ -147,17 +100,84 @@
   - FlashPayload
   - ExplosivePayload
   - ChemicalPayload
-  # TODO: Add "Explosive Ammunition" to this tech to make it waaaay more interesting.
+  - CableDetStack1
+  - EmptyDetonator
 
 - type: technology
-  id: AdvancedWeapons
-  name: research-technology-advanced-weapons
+  id: SpecialMeans
+  name: research-technology-special-means
+  icon:
+    sprite: Clothing/Back/Backpacks/electropack.rsi
+    state: icon
+  discipline: Arsenal
+  tier: 1
+  cost: 5000
+  recipeUnlocks:
+  - ClothingBackpackElectropack
+
+# Tier 2
+
+- type: technology
+  id: AdvancedRiotControl
+  name: research-technology-advanced-riot-control
+  icon:
+    sprite: Objects/Weapons/Melee/truncheon.rsi
+    state: icon
+  discipline: Arsenal
+  tier: 2
+  cost: 8000
+  recipeUnlocks:
+  - Truncheon
+  - TelescopicShield
+  - HoloprojectorSecurity
+
+- type: technology
+  id: ConcentratedLaserWeaponry
+  name: research-technology-concentrated-laser-weaponry
   icon:
     sprite: Objects/Weapons/Guns/Battery/laser_cannon.rsi
     state: icon
   discipline: Arsenal
   tier: 2
-  cost: 15000
+  cost: 10000
+  recipeUnlocks:
+  - WeaponLaserCannon
+
+- type: technology
+  id: WaveParticleHarnessing
+  name: research-technology-wave-particle-harnessing
+  icon:
+    sprite: Objects/Weapons/Guns/Battery/xray.rsi
+    state: icon
+  discipline: Arsenal
+  tier: 2
+  cost: 10000
+  recipeUnlocks:
+  - WeaponXrayCannon
+
+- type: technology
+  id: KineticModifications
+  name: research-technology-kinetic-modifications
+  icon:
+    sprite: Objects/Tools/upgrade.rsi
+    state: display
+  discipline: Arsenal
+  tier: 2
+  cost: 7500
+  recipeUnlocks:
+  - PKAUpgradeDamage
+  - PKAUpgradeRange
+  - PKAUpgradeFireRate
+
+- type: technology
+  id: BasicShuttleArmament
+  name: research-technology-basic-shuttle-armament
+  icon:
+    sprite: Structures/Power/cage_recharger.rsi
+    state: full
+  discipline: Arsenal
+  tier: 2
+  cost: 10500
   recipeUnlocks:
   - PowerCageRechargerCircuitboard
   - PowerCageSmall
@@ -168,51 +188,60 @@
   - ShuttleGunSvalinnMachineGunCircuitboard
   - ShuttleGunPerforatorCircuitboard
   - ShuttleGunFriendshipCircuitboard
-  - WeaponXrayCannon
-  - WeaponLaserCannon
-  - WeaponGunLaserCarbineAutomatic
-  - WeaponLaserCannon
-  - WeaponMechCombatSolarisLaser # Goobstation
   technologyPrerequisites:
-  - BasicWeapons
+  - SalvageWeapons
+
+- type: technology
+  id: DualWieldingTechnology
+  name: research-technology-dual-wielding-technology
+  icon:
+    sprite: Clothing/Back/Specific/harmpack.rsi
+    state: icon
+  discipline: Arsenal
+  tier: 2
+  cost: 10000
+  recipeUnlocks:
+  - ClothingBackpackHarmpack
 
 # Tier 3
 
 - type: technology
-  id: PrototypeTacsuits
-  name: research-technology-prototype-tacsuits
-  icon:
-    sprite: Nyanotrasen/Clothing/OuterClothing/ReverseEngineering/syndicate.rsi
-    state: icon
-  discipline: Arsenal
-  tier: 3
-  cost: 25000
-  recipeUnlocks:
-  - ClothingOuterHardsuitCombatAdvanced
-  - ClothingOuterHardsuitShanlinUnpainted
-  - ClothingOuterHardsuitShiweiUnpainted
-  - ClothingOuterHardsuitJuggernautReverseEngineered
-  #- ClothingOuterHardsuitCybersunEliteUnpainted # IOU
-  technologyPrerequisites:
-  - AdvancedTacsuits
-  softCapContribution: 1.5
-
-- type: technology
-  id: PrototypeWeapons
-  name: research-technology-prototype-weapons
+  id: PortableMicrofusionWeaponry
+  name: research-technology-portable-microfusion-weaponry
   icon:
     sprite: Objects/Weapons/Guns/Battery/advancedlasergun.rsi
     state: icon
   discipline: Arsenal
   tier: 3
-  cost: 20000
+  cost: 15000
   recipeUnlocks:
   - WeaponAdvancedLaser
   - PortableRecharger
+
+- type: technology
+  id: ThermalWeaponry
+  name: research-technology-thermal-weaponry
+  icon:
+    sprite: Objects/Weapons/Guns/Battery/temp_gun.rsi
+    state: icon
+  discipline: Arsenal
+  tier: 3
+  cost: 15000
+  recipeUnlocks:
+  - WeaponTemperatureGun
+
+- type: technology
+  id: AdvancedShuttleWeapon
+  name: research-technology-advanced-shuttle-weapon
+  icon:
+    sprite: Objects/Weapons/Guns/Ammunition/Magazine/Grenade/grenade_cartridge.rsi
+    state: icon
+  discipline: Arsenal
+  tier: 3
+  cost: 15000
+  recipeUnlocks:
   - GrenadeEMP
   - PowerCageHigh
   - ShuttleGunDusterCircuitboard
-  - WeaponMechCombatImmolationGun # Goobstation
-  #- EnergySword # TODO: Add a bunch of stupidly exotic energy weapons to act as a reaaaaaally nice incentive for research to consider this.
-                 # Make the energy sword for instance include bananium and bluespace in its recipe. :)
-  softCapContribution: 1.5
+  technologyPrerequisites:
+  - BasicShuttleArmament

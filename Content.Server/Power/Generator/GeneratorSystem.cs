@@ -1,11 +1,11 @@
-﻿using System.Linq;
+using System.Linq;
 using Content.Server.Audio;
-using Content.Server.Chemistry.Containers.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
 using Content.Server.Materials;
 using Content.Server.Popups;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
+using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.FixedPoint;
 using Content.Shared.Popups;
 using Content.Shared.Power.Generator;
@@ -17,20 +17,17 @@ namespace Content.Server.Power.Generator;
 /// <seealso cref="FuelGeneratorComponent"/>
 /// <seealso cref="ChemicalFuelGeneratorAdapterComponent"/>
 /// <seealso cref="SolidFuelGeneratorAdapterComponent"/>
-public sealed class GeneratorSystem : SharedGeneratorSystem
+public sealed partial class GeneratorSystem : SharedGeneratorSystem
 {
-    [Dependency] private readonly AppearanceSystem _appearance = default!;
-    [Dependency] private readonly AmbientSoundSystem _ambientSound = default!;
-    [Dependency] private readonly MaterialStorageSystem _materialStorage = default!;
-    [Dependency] private readonly SolutionContainerSystem _solutionContainer = default!;
-    [Dependency] private readonly PopupSystem _popup = default!;
-    [Dependency] private readonly PuddleSystem _puddle = default!;
-
-    private EntityQuery<UpgradePowerSupplierComponent> _upgradeQuery;
+    [Dependency] private AppearanceSystem _appearance = default!;
+    [Dependency] private AmbientSoundSystem _ambientSound = default!;
+    [Dependency] private MaterialStorageSystem _materialStorage = default!;
+    [Dependency] private SharedSolutionContainerSystem _solutionContainer = default!;
+    [Dependency] private PopupSystem _popup = default!;
+    [Dependency] private PuddleSystem _puddle = default!;
 
     public override void Initialize()
     {
-        _upgradeQuery = GetEntityQuery<UpgradePowerSupplierComponent>();
 
         UpdatesBefore.Add(typeof(PowerNetSystem));
 
@@ -201,6 +198,7 @@ public sealed class GeneratorSystem : SharedGeneratorSystem
 
         generator.On = on;
         UpdateState(uid, generator);
+        Dirty(uid, generator);
     }
 
     public override void Update(float frameTime)
@@ -228,9 +226,7 @@ public sealed class GeneratorSystem : SharedGeneratorSystem
 
             supplier.Enabled = true;
 
-            var upgradeMultiplier = _upgradeQuery.CompOrNull(uid)?.ActualScalar ?? 1f;
-
-            supplier.MaxSupply = gen.TargetPower * upgradeMultiplier;
+            supplier.MaxSupply = gen.TargetPower;
 
             var eff = 1 / CalcFuelEfficiency(gen.TargetPower, gen.OptimalPower, gen);
             var consumption = gen.OptimalBurnRate * frameTime * eff;

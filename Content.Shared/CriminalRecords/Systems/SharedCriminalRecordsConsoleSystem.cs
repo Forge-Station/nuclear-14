@@ -1,52 +1,43 @@
 using Content.Shared.IdentityManagement;
-using Content.Shared.IdentityManagement.Components;
 using Content.Shared.Security;
 using Content.Shared.Security.Components;
+using Content.Shared.Station;
+using Content.Shared.Station.Systems;
+using Content.Shared.StationRecords;
+using Content.Shared.StationRecords.Systems;
 
 namespace Content.Shared.CriminalRecords.Systems;
 
-public abstract class SharedCriminalRecordsConsoleSystem : EntitySystem
+public abstract partial class SharedCriminalRecordsConsoleSystem : EntitySystem
 {
+    [Dependency] private SharedCriminalRecordsSystem _criminalRecords = default!;
+    [Dependency] private StationRecordsSystem _records = default!;
+    [Dependency] private StationSystem _station = default!;
+
     /// <summary>
-    /// Any entity that has a the name of the record that was just changed as their visible name will get their icon
-    /// updated with the new status, if the record got removed their icon will be removed too.
+    /// Checks if the new identity's name has a criminal record attached to it, and gives the entity the icon that
+    /// belongs to the status if it does.
     /// </summary>
-    public void UpdateCriminalIdentity(string name, SecurityStatus status)
+    public void CheckNewIdentity(EntityUid uid)
     {
-        var query = EntityQueryEnumerator<IdentityComponent>();
+        var name = Identity.Name(uid, EntityManager);
+        var xform = Transform(uid);
 
-        while (query.MoveNext(out var uid, out var identity))
+        // TODO use the entity's station? Not the station of the map that it happens to currently be on?
+        var station = _station.GetStationInMap(xform.MapID);
+
+        if (station != null && _records.GetRecordByName(station.Value, name) is { } id)
         {
-            if (!Identity.Name(uid, EntityManager).Equals(name))
-                continue;
-
-            if (status == SecurityStatus.None)
-                RemComp<CriminalRecordComponent>(uid);
-            else
-                SetCriminalIcon(name, status, uid);
+            if (_records.TryGetRecord<CriminalRecord>(new StationRecordKey(id, station.Value),
+                    out var record))
+            {
+                if (record.Status != SecurityStatus.None)
+                {
+                    _criminalRecords.SetCriminalIcon(name, record.Status, uid);
+                    return;
+                }
+            }
         }
-    }
-
-    /// <summary>
-    /// Decides the icon that should be displayed on the entity based on the security status
-    /// </summary>
-    public void SetCriminalIcon(string name, SecurityStatus status, EntityUid characterUid)
-    {
-        EnsureComp<CriminalRecordComponent>(characterUid, out var record);
-
-        var previousIcon = record.StatusIcon;
-
-        record.StatusIcon = status switch
-        {
-            SecurityStatus.Paroled => "SecurityIconParoled",
-            SecurityStatus.Wanted => "SecurityIconWanted",
-            SecurityStatus.Detained => "SecurityIconIncarcerated",
-            SecurityStatus.Discharged => "SecurityIconDischarged",
-            SecurityStatus.Suspected => "SecurityIconSuspected",
-            _ => record.StatusIcon
-        };
-
-        if(previousIcon != record.StatusIcon)
-            Dirty(characterUid, record);
+        RemComp<CriminalRecordComponent>(uid);
     }
 }

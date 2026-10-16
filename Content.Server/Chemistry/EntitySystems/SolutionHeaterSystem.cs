@@ -1,8 +1,7 @@
 using Content.Server.Chemistry.Components;
-using Content.Server.Chemistry.Containers.EntitySystems;
-using Content.Server.Construction;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
+using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Chemistry;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Placeable;
@@ -10,11 +9,11 @@ using Content.Shared.Power;
 
 namespace Content.Server.Chemistry.EntitySystems;
 
-public sealed class SolutionHeaterSystem : EntitySystem
+public sealed partial class SolutionHeaterSystem : EntitySystem
 {
-    [Dependency] private readonly PowerReceiverSystem _powerReceiver = default!;
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
-    [Dependency] private readonly SolutionContainerSystem _solutionContainer = default!;
+    [Dependency] private PowerReceiverSystem _powerReceiver = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedSolutionContainerSystem _solutionContainer = default!;
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -22,8 +21,6 @@ public sealed class SolutionHeaterSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<SolutionHeaterComponent, PowerChangedEvent>(OnPowerChanged);
-        SubscribeLocalEvent<SolutionHeaterComponent, RefreshPartsEvent>(OnRefreshParts);
-        SubscribeLocalEvent<SolutionHeaterComponent, UpgradeExamineEvent>(OnUpgradeExamine);
         SubscribeLocalEvent<SolutionHeaterComponent, ItemPlacedEvent>(OnItemPlaced);
         SubscribeLocalEvent<SolutionHeaterComponent, ItemRemovedEvent>(OnItemRemoved);
     }
@@ -65,18 +62,6 @@ public sealed class SolutionHeaterSystem : EntitySystem
         }
     }
 
-    private void OnRefreshParts(Entity<SolutionHeaterComponent> entity, ref RefreshPartsEvent args)
-    {
-        var heatRating = args.PartRatings[entity.Comp.MachinePartHeatMultiplier] - 1;
-
-        entity.Comp.HeatPerSecond = entity.Comp.BaseHeatPerSecond * MathF.Pow(entity.Comp.PartRatingHeatMultiplier, heatRating);
-    }
-
-    private void OnUpgradeExamine(Entity<SolutionHeaterComponent> entity, ref UpgradeExamineEvent args)
-    {
-        args.AddPercentageUpgrade("solution-heater-upgrade-heat", entity.Comp.HeatPerSecond / entity.Comp.BaseHeatPerSecond);
-    }
-
     private void OnItemPlaced(Entity<SolutionHeaterComponent> entity, ref ItemPlacedEvent args)
     {
         TryTurnOn(entity);
@@ -96,13 +81,10 @@ public sealed class SolutionHeaterSystem : EntitySystem
         var query = EntityQueryEnumerator<ActiveSolutionHeaterComponent, SolutionHeaterComponent, ItemPlacerComponent>();
         while (query.MoveNext(out _, out _, out var heater, out var placer))
         {
+            var energy = heater.HeatPerSecond * frameTime;
             foreach (var heatingEntity in placer.PlacedEntities)
             {
-                if (!TryComp<SolutionContainerManagerComponent>(heatingEntity, out var container))
-                    continue;
-
-                var energy = heater.HeatPerSecond * frameTime;
-                foreach (var (_, soln) in _solutionContainer.EnumerateSolutions((heatingEntity, container)))
+                foreach (var (_, soln) in _solutionContainer.EnumerateSolutions(heatingEntity))
                 {
                     _solutionContainer.AddThermalEnergy(soln, energy);
                 }

@@ -3,19 +3,20 @@
   name: job-name-ce
   description: job-description-ce
   playTimeTracker: JobChiefEngineer
-  setPreference: false
-  # requirements:
-    # - !type:CharacterTraitRequirement
-      # inverted: true
-      # traits:
-        # - Foreigner
-        # - ForeignerLight
-  weight: 10
+  requirements:
+    - !type:RoleTimeRequirement
+      role: JobAtmosphericTechnician
+      time: 2.5h
+    - !type:RoleTimeRequirement
+      role: JobStationEngineer
+      time: 5h
+    - !type:DepartmentTimeRequirement
+      department: Engineering
+      time: 10h
   startingGear: ChiefEngineerGear
   icon: "JobIconChiefEngineer"
-  requireAdminNotify: true
   supervisors: job-supervisors-captain
-  canBeAntag: false
+  guides: [ Command ] # TODO: should have a more specific guidebook page instead of using the department itself
   access:
   - Maintenance
   - Engineering
@@ -23,6 +24,7 @@
   - External
   - ChiefEngineer
   - Atmospherics
+  - Brig
   - Cryogenics
   special:
   - !type:AddImplantSpecial
@@ -30,30 +32,26 @@
   - !type:AddComponentSpecial
     components:
       - type: CommandStaff
-  afterLoadoutSpecial:
-  - !type:ModifyEnvirosuitSpecial
-    charges: 8
-  - !type:ModifyEnvirohelmSpecial
-    powerCell: PowerCellPotato
 
 - type: startingGear
   id: ChiefEngineerGear
-  subGear:
-  - ChiefEngineerPlasmamanGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitChiefEngineer
-    back: ClothingBackpackChiefEngineerFilled
-    shoes: ClothingShoesColorBrown
     id: CEPDA
+    eyes: ClothingEyesGlassesMeson
     ears: ClothingHeadsetCE
-  innerClothingSkirt: ClothingUniformJumpskirtChiefEngineer
-  satchel: ClothingBackpackSatchelChiefEngineerFilled
-  duffelbag: ClothingBackpackDuffelChiefEngineerFilled
+    belt: ClothingBeltUtilityEngineering
+  storage:
+    back:
+    - Flash
 
-- type: startingGear
-  id: ChiefEngineerPlasmamanGear
-  parent: BasePlasmamanGear
+- type: chameleonOutfit
+  id: ChiefEngineerChameleonOutfit
+  job: ChiefEngineer
+  hasMindShield: true
   equipment:
-    jumpsuit: ClothingUniformEnvirosuitChiefEngineer
-    head: ClothingHeadEnvirohelmChiefEngineer
-    gloves: ClothingHandsGlovesEnviroglovesChiefEngineer
+    head: ClothingHeadHatBeretEngineering
+    mask: ClothingMaskBreath
+    neck: ClothingNeckCloakCe
+    outerClothing: ClothingOuterWinterCE
+    gloves: ClothingHandsGlovesColorYellow
+    shoes: ClothingShoesBootsMagAdv

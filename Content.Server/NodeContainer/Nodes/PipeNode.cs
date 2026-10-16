@@ -1,8 +1,9 @@
-using Content.Server.Atmos;
 using Content.Server.NodeContainer.EntitySystems;
 using Content.Server.NodeContainer.NodeGroups;
 using Content.Shared.Atmos;
-using Robust.Shared.Map;
+using Content.Shared.Atmos.Components;
+using Content.Shared.NodeContainer;
+using Content.Shared.NodeContainer.NodeGroups;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Utility;
 
@@ -10,7 +11,7 @@ namespace Content.Server.NodeContainer.Nodes
 {
     /// <summary>
     ///     Connects with other <see cref="PipeNode"/>s whose <see cref="PipeDirection"/>
-    ///     correctly correspond.
+    ///     and <see cref="CurrentPipeLayer"/> correctly correspond.
     /// </summary>
     [DataDefinition]
     [Virtual]
@@ -20,7 +21,13 @@ namespace Content.Server.NodeContainer.Nodes
         ///     The directions in which this pipe can connect to other pipes around it.
         /// </summary>
         [DataField("pipeDirection")]
-        private PipeDirection _originalPipeDirection;
+        public PipeDirection OriginalPipeDirection;
+
+        /// <summary>
+        ///     The *current* layer to which the pipe node is assigned.
+        /// </summary>
+        [DataField("pipeLayer")]
+        public AtmosPipeLayer CurrentPipeLayer = AtmosPipeLayer.Primary;
 
         /// <summary>
         ///     The *current* pipe directions (accounting for rotation)
@@ -37,7 +44,7 @@ namespace Content.Server.NodeContainer.Nodes
             _alwaysReachable.Add(pipeNode);
 
             if (NodeGroup != null)
-                EntitySystem.Get<NodeGroupSystem>().QueueRemakeGroup((BaseNodeGroup) NodeGroup);
+                IoCManager.Resolve<IEntityManager>().System<NodeGroupSystem>().QueueRemakeGroup((BaseNodeGroup) NodeGroup);
         }
 
         public void RemoveAlwaysReachable(PipeNode pipeNode)
@@ -47,7 +54,7 @@ namespace Content.Server.NodeContainer.Nodes
             _alwaysReachable.Remove(pipeNode);
 
             if (NodeGroup != null)
-                EntitySystem.Get<NodeGroupSystem>().QueueRemakeGroup((BaseNodeGroup) NodeGroup);
+                IoCManager.Resolve<IEntityManager>().System<NodeGroupSystem>().QueueRemakeGroup((BaseNodeGroup) NodeGroup);
         }
 
         /// <summary>
@@ -62,7 +69,7 @@ namespace Content.Server.NodeContainer.Nodes
                 _connectionsEnabled = value;
 
                 if (NodeGroup != null)
-                    EntitySystem.Get<NodeGroupSystem>().QueueRemakeGroup((BaseNodeGroup) NodeGroup);
+                    IoCManager.Resolve<IEntityManager>().System<NodeGroupSystem>().QueueRemakeGroup((BaseNodeGroup) NodeGroup);
             }
         }
 
@@ -110,26 +117,26 @@ namespace Content.Server.NodeContainer.Nodes
                 return;
 
             var xform = entMan.GetComponent<TransformComponent>(owner);
-            CurrentPipeDirection = _originalPipeDirection.RotatePipeDirection(xform.LocalRotation);
+            CurrentPipeDirection = OriginalPipeDirection.RotatePipeDirection(xform.LocalRotation);
         }
 
         bool IRotatableNode.RotateNode(in MoveEvent ev)
         {
-            if (_originalPipeDirection == PipeDirection.Fourway)
+            if (OriginalPipeDirection == PipeDirection.Fourway)
                 return false;
 
             // update valid pipe direction
             if (!RotationsEnabled)
             {
-                if (CurrentPipeDirection == _originalPipeDirection)
+                if (CurrentPipeDirection == OriginalPipeDirection)
                     return false;
 
-                CurrentPipeDirection = _originalPipeDirection;
+                CurrentPipeDirection = OriginalPipeDirection;
                 return true;
             }
 
             var oldDirection = CurrentPipeDirection;
-            CurrentPipeDirection = _originalPipeDirection.RotatePipeDirection(ev.NewRotation);
+            CurrentPipeDirection = OriginalPipeDirection.RotatePipeDirection(ev.NewRotation);
             return oldDirection != CurrentPipeDirection;
         }
 
@@ -142,18 +149,19 @@ namespace Content.Server.NodeContainer.Nodes
 
             if (!RotationsEnabled)
             {
-                CurrentPipeDirection = _originalPipeDirection;
+                CurrentPipeDirection = OriginalPipeDirection;
                 return;
             }
 
             var xform = entityManager.GetComponent<TransformComponent>(Owner);
-            CurrentPipeDirection = _originalPipeDirection.RotatePipeDirection(xform.LocalRotation);
+            CurrentPipeDirection = OriginalPipeDirection.RotatePipeDirection(xform.LocalRotation);
         }
 
-        public override IEnumerable<Node> GetReachableNodes(TransformComponent xform,
+        public override IEnumerable<Node> GetReachableNodes(
+            Entity<TransformComponent> xform,
             EntityQuery<NodeContainerComponent> nodeQuery,
             EntityQuery<TransformComponent> xformQuery,
-            MapGridComponent? grid,
+            Entity<MapGridComponent>? grid,
             IEntityManager entMan)
         {
             if (_alwaysReachable != null)
@@ -174,10 +182,11 @@ namespace Content.Server.NodeContainer.Nodes
                 }
             }
 
-            if (!xform.Anchored || grid == null)
+            if (!xform.Comp.Anchored || grid is not { } gridEnt)
                 yield break;
 
-            var pos = grid.TileIndicesFor(xform.Coordinates);
+            var mapSystem = entMan.System<SharedMapSystem>();
+            var pos = mapSystem.TileIndicesFor(gridEnt, xform.Comp.Coordinates);
 
             for (var i = 0; i < PipeDirectionHelpers.PipeDirections; i++)
             {
@@ -186,7 +195,7 @@ namespace Content.Server.NodeContainer.Nodes
                 if (!CurrentPipeDirection.HasDirection(pipeDir))
                     continue;
 
-                foreach (var pipe in LinkableNodesInDirection(pos, pipeDir, grid, nodeQuery))
+                foreach (var pipe in LinkableNodesInDirection(pos, pipeDir, gridEnt, nodeQuery, mapSystem))
                 {
                     yield return pipe;
                 }
@@ -196,12 +205,17 @@ namespace Content.Server.NodeContainer.Nodes
         /// <summary>
         ///     Gets the pipes that can connect to us from entities on the tile or adjacent in a direction.
         /// </summary>
-        private IEnumerable<PipeNode> LinkableNodesInDirection(Vector2i pos, PipeDirection pipeDir, MapGridComponent grid,
-            EntityQuery<NodeContainerComponent> nodeQuery)
+        private IEnumerable<PipeNode> LinkableNodesInDirection(
+            Vector2i pos,
+            PipeDirection pipeDir,
+            Entity<MapGridComponent> grid,
+            EntityQuery<NodeContainerComponent> nodeQuery,
+            SharedMapSystem mapSystem)
         {
-            foreach (var pipe in PipesInDirection(pos, pipeDir, grid, nodeQuery))
+            foreach (var pipe in PipesInDirection(pos, pipeDir, grid, nodeQuery, mapSystem))
             {
                 if (pipe.NodeGroupID == NodeGroupID
+                    && pipe.CurrentPipeLayer == CurrentPipeLayer
                     && pipe.CurrentPipeDirection.HasDirection(pipeDir.GetOpposite()))
                 {
                     yield return pipe;
@@ -212,12 +226,16 @@ namespace Content.Server.NodeContainer.Nodes
         /// <summary>
         ///     Gets the pipes from entities on the tile adjacent in a direction.
         /// </summary>
-        protected IEnumerable<PipeNode> PipesInDirection(Vector2i pos, PipeDirection pipeDir, MapGridComponent grid,
-            EntityQuery<NodeContainerComponent> nodeQuery)
+        protected IEnumerable<PipeNode> PipesInDirection(
+            Vector2i pos,
+            PipeDirection pipeDir,
+            Entity<MapGridComponent> grid,
+            EntityQuery<NodeContainerComponent> nodeQuery,
+            SharedMapSystem mapSystem)
         {
             var offsetPos = pos.Offset(pipeDir.ToDirection());
 
-            foreach (var entity in grid.GetAnchoredEntities(offsetPos))
+            foreach (var entity in mapSystem.GetAnchoredEntities(grid, offsetPos))
             {
                 if (!nodeQuery.TryGetComponent(entity, out var container))
                     continue;

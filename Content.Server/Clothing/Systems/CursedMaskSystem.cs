@@ -1,5 +1,5 @@
 using Content.Server.Administration.Logs;
-using Content.Server.GameTicking;
+using Content.Server.Ghost;
 using Content.Server.Mind;
 using Content.Server.NPC;
 using Content.Server.NPC.HTN;
@@ -18,15 +18,15 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.Clothing.Systems;
 
 /// <inheritdoc/>
-public sealed class CursedMaskSystem : SharedCursedMaskSystem
+public sealed partial class CursedMaskSystem : SharedCursedMaskSystem
 {
-    [Dependency] private readonly IAdminLogManager _adminLog = default!;
-    [Dependency] private readonly GameTicker _ticker = default!;
-    [Dependency] private readonly HTNSystem _htn = default!;
-    [Dependency] private readonly MindSystem _mind = default!;
-    [Dependency] private readonly NPCSystem _npc = default!;
-    [Dependency] private readonly NpcFactionSystem _npcFaction = default!;
-    [Dependency] private readonly PopupSystem _popup = default!;
+    [Dependency] private IAdminLogManager _adminLog = default!;
+    [Dependency] private GhostSystem _ghostSystem = default!;
+    [Dependency] private HTNSystem _htn = default!;
+    [Dependency] private MindSystem _mind = default!;
+    [Dependency] private NPCSystem _npc = default!;
+    [Dependency] private NpcFactionSystem _npcFaction = default!;
+    [Dependency] private PopupSystem _popup = default!;
 
     // We can't store this info on the component easily
     private static readonly ProtoId<HTNCompoundPrototype> TakeoverRootTask = "SimpleHostileCompound";
@@ -39,7 +39,7 @@ public sealed class CursedMaskSystem : SharedCursedMaskSystem
         if (TryComp<ActorComponent>(wearer, out var actor) && actor.PlayerSession.GetMind() is { } mind)
         {
             var session = actor.PlayerSession;
-            if (!_ticker.OnGhostAttempt(mind, false))
+            if (!_ghostSystem.OnGhostAttempt(mind, false))
                 return;
 
             ent.Comp.StolenMind = mind;
@@ -51,7 +51,8 @@ public sealed class CursedMaskSystem : SharedCursedMaskSystem
         }
 
         var npcFaction = EnsureComp<NpcFactionMemberComponent>(wearer);
-        ent.Comp.OldFactions = npcFaction.Factions;
+        ent.Comp.OldFactions.Clear();
+        ent.Comp.OldFactions.UnionWith(npcFaction.Factions);
         _npcFaction.ClearFactions((wearer, npcFaction), false);
         _npcFaction.AddFaction((wearer, npcFaction), ent.Comp.CursedMaskFaction);
 
@@ -81,7 +82,7 @@ public sealed class CursedMaskSystem : SharedCursedMaskSystem
             {
                 _mind.TransferTo(ent.Comp.StolenMind.Value, args.Wearer);
                 _adminLog.Add(LogType.Action,
-                    LogImpact.Extreme,
+                    LogImpact.Medium,
                     $"{ToPrettyString(args.Wearer):player} was restored to their body after the removal of {ToPrettyString(ent):entity}.");
                 ent.Comp.StolenMind = null;
             }
