@@ -116,14 +116,14 @@ public sealed partial class FoodSlicingData : FoodSourceData
 public sealed partial class FoodRecipeData : FoodSourceData
 {
     [DataField]
-    public ProtoId<FoodRecipePrototype> Recipe;
+    public ProtoId<MicrowaveMealRecipePrototype> Recipe;
 
     [DataField]
     public EntProtoId Result;
 
     public override int OutputCount => 1;
 
-    public FoodRecipeData(FoodRecipePrototype proto)
+    public FoodRecipeData(MicrowaveMealRecipePrototype proto)
     {
         Identitier = proto.Name;
         Recipe = proto.ID;

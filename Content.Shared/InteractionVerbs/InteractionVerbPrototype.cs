@@ -3,6 +3,7 @@ using Content.Shared.InteractionVerbs.Events;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
