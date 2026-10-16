@@ -7,6 +7,6 @@ public sealed partial class NPCCombatSystem
 
     private bool IsRememberedMeleeAttacker(EntityUid uid, EntityUid target)
     {
-        return _retaliation.TryGetPlayerAttacker(uid, out var attacker) && attacker == target;
+        return _retaliation.IsRememberedPlayerAttacker(uid, target);
     }
 }
