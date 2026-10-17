@@ -93,11 +93,20 @@ public static class ClientPackaging
 
         var inputPass = graph.Input;
 
+        // Forge-Secrets-Start
+        var clientAssemblies = new List<string> { "Content.Client", "Content.Shared", "Content.Shared.Database" };
+        if (UseSecrets)
+        {
+            clientAssemblies.Add("Content.Secrets.Shared");
+            clientAssemblies.Add("Content.Secrets.Client");
+        }
+        // Forge-Secrets-End
+
         await RobustSharedPackaging.WriteContentAssemblies(
             inputPass,
             contentDir,
             "Content.Client",
-            new[] { "Content.Client", "Content.Shared", "Content.Shared.Database" },
+            clientAssemblies,
             cancel: cancel);
 
         await RobustClientPackaging.WriteClientResources(contentDir, pass, cancel);
