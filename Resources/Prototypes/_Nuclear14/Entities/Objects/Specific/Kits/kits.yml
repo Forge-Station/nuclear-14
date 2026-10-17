@@ -341,75 +341,48 @@
     size: Huge
   - type: SpawnItemsOnUse #Forge-Change
     items:
-    # - id: N14ClothingOuterCoatLab
-    # - id: N14ClothingBeltMedicalFilled
-    # - id: N14ClothingHandsGlovesNitrile
-    # - id: N14ClothingHeadHatNCRBeretMedic #
       - id: N14WeaponSMG45
       - id: Magazine45SubMachineGun
         amount: 3
-    # - id: N14WeaponPistol9mm
-    # - id: N14MagazinePistol9mm
-    #   amount: 2
       - id: Defibrillator
       - id: N14MedicatedSuture
       - id: N14RegenerativeOintment
       - id: N14SuperStimpak
-    # - id: Brutepack
-    # - id: N14Ointment10
       - id: Bloodpack
-    # - id: N14Antidote
       - id: N14BoxCardboardMREBoxCFilled
       - id: N14Stimpak
-    # - id: N14RadAwayBloodbag
       - id: N14CleanGauze10
-      # amount: 2
-    # - id: N14Flare # Forge-Change
     sound:
       path: /Audio/Effects/unwrap.ogg
 
-- type: entity
-  name: medic's field kit
-  parent: KitBase
-  id: KitNCR_MedDoctor
-  description: A crate containing all an NCR medic needs to perform their job.
-  components:
-  - type: Sprite
-    state: medic
-  - type: Item
-    size: Huge
-  - type: SpawnItemsOnUse # Forge-Change
-    items:
-    # - id: N14ClothingBeltMedicalFilled
-    # - id: N14ClothingHandsGlovesNitrile
-    # - id: N14ClothingHeadHatNCRBeretMedic
-      - id: N14WeaponPistol45Colt
-      - id: N14MagazinePistol45
-        amount: 2
-      - id: N14JugBlood
-        amount: 2
-      - id: LargeBeaker
-      - id: N14MortarpestleGrinder
-      - id: N14JugAntiseptic
-      - id: N14JugExtractXander
-      - id: N14JugExtractBroc
-      - id: JugSilicon
-    # - id: N14WeaponPistol9mm
-    # - id: N14MagazinePistol9mm
-    #   amount: 2
-    # - id: Brutepack
-    # - id: N14Ointment10
-    # - id: Bloodpack
-    # - id: N14Antidote
-      - id: N14BoxCardboardMREBoxCFilled
-      - id: N14Stimpak
-        #amount: 2
-    # - id: N14RadAwayBloodbag
-      - id: N14CleanGauze10
-        #amount: 2
-    # - id: N14Flare
-    sound:
-      path: /Audio/Effects/unwrap.ogg
+# - type: entity
+#   name: medic's field kit
+#   parent: KitBase
+#   id: KitNCR_MedDoctor
+#   description: A crate containing all an NCR medic needs to perform their job.
+#   components:
+#   - type: Sprite
+#     state: medic
+#   - type: Item
+#     size: Huge
+#   - type: SpawnItemsOnUse #Forge-Change
+#     items:
+#       - id: N14WeaponPistol45Colt
+#       - id: N14MagazinePistol45
+#         amount: 2
+#       - id: N14JugBlood
+#         amount: 2
+#       - id: LargeBeaker
+#       - id: N14MortarpestleGrinder
+#       - id: N14JugAntiseptic
+#       - id: N14JugExtractXander
+#       - id: N14JugExtractBroc
+#       - id: JugSilicon
+#       - id: N14BoxCardboardMREBoxCFilled
+#       - id: N14Stimpak
+#       - id: N14CleanGauze10
+#     sound:
+#       path: /Audio/Effects/unwrap.ogg
 
 - type: entity
   name: medic's combat kit
@@ -423,13 +396,11 @@
     size: Huge
   - type: SpawnItemsOnUse # Forge-Change
     items:
-    # - id: N14ClothingBeltMedicalFilled # Forge-Change
-    # - id: N14ClothingHeadHatNCRHelmetMetalMedic # Forge-Change
-      - id: N14InjectionCarbine # Forge-add-start
+      - id: N14InjectionCarbine
       - id: N14InjectionSyringe
         amount: 4
       - id: N14LastBreathPoisonChemistryBottle
-      - id: N14ColourlessPoisonChemistryBottle # Forge-add-end
+      - id: N14ColourlessPoisonChemistryBottle
       - id: N14WeaponPistol9mm
       - id: N14MagazinePistol9mm
         amount: 2
@@ -438,7 +409,6 @@
       - id: N14BoxCardboardMREBoxCFilled
       - id: N14Stimpak
       - id: N14CleanGauze10
-    # - id: N14Flare # Forge-Change
     sound:
       path: /Audio/Effects/unwrap.ogg
 

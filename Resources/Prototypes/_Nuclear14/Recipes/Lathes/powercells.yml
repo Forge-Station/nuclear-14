@@ -11,7 +11,7 @@
 
 - type: latheRecipe
   id: N14PowerCellHigh
-  result: N14PowerCellHigh
+  result: PowerCellHighPrinted # Forge-Change
   category: Parts
   completetime: 10
   materials:

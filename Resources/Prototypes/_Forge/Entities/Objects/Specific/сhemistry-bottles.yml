@@ -13,6 +13,20 @@
           Quantity: 30
 
 - type: entity
+  id: N14ExtractFungusRadChemistryBottle
+  name: бутылочка экстракт радиоактивного гриба
+  description: Если капнуть частичку этого раствора на растение, то может спровоцировать мутации.
+  parent: BaseChemistryBottleFilled
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 30
+        reagents:
+        - ReagentId: ExtractFungusRad
+          Quantity: 30
+
+- type: entity
   id: N14NightstalkerBloodChemistryBottle
   name: бутылочка крови ночного охотника
   description: Зачем вам кровь ночного охотника? Вы уверены, что хотите это пить?

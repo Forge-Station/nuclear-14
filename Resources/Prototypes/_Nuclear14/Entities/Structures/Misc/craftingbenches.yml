@@ -323,11 +323,9 @@
     - MagazineBoxNail # Forge-Change
     - DrumMagazineNailGun # Forge-Change
     #Электроника # Forge-Add
-    - HydroponicsTrayMachineCircuitboard
     - HotplateMachineCircuitboard
     - MicrowaveMachineCircuitboard
     - ReagentGrinderMachineCircuitboard
-    - MaterialReclaimerMachineCircuitboard
     - CellRechargerCircuitboard
     - PowerCageRechargerCircuitboard
     - N14PowerCellMedium
