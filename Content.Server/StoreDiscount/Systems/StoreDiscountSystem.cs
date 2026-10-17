@@ -24,11 +24,11 @@ public sealed partial class StoreDiscountSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<StoreInitializedEvent>(OnStoreInitialized);
-        SubscribeLocalEvent<StoreBuyFinishedEvent>(OnBuyFinished);
+        SubscribeLocalEvent<Content.Shared.Store.StoreBuyFinishedEvent>(OnBuyFinished);
     }
 
     /// <summary> Decrements discounted item count, removes discount modifier and category, if counter reaches zero. </summary>
-    private void OnBuyFinished(ref StoreBuyFinishedEvent ev)
+    private void OnBuyFinished(ref Content.Shared.Store.StoreBuyFinishedEvent ev)
     {
         var (storeId, purchasedItem) = ev;
         if (!TryComp<StoreDiscountComponent>(storeId, out var discountsComponent))

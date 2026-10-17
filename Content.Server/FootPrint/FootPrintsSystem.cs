@@ -10,6 +10,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Content.Shared.Forensics.Components;
 
 namespace Content.Server.FootPrint;
 

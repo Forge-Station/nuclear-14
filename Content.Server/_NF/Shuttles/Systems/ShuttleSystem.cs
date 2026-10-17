@@ -5,6 +5,7 @@ using Content.Server.Shuttles.Components;
 using Content.Shared._NF.Shuttles.Events;
 using Content.Shared.CCVar;
 using Robust.Shared.Physics.Components;
+using Content.Shared.Shuttles.Components;
 
 namespace Content.Server.Shuttles.Systems;
 

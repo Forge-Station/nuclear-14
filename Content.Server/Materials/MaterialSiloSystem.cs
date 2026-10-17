@@ -7,6 +7,7 @@ using Content.Shared.Materials;
 using Robust.Server.GameStates;
 using Robust.Shared.Timing;
 using Content.Shared.Station.Components;
+using Content.Shared.DeviceLinking.Components;
 
 namespace Content.Server.Materials;
 

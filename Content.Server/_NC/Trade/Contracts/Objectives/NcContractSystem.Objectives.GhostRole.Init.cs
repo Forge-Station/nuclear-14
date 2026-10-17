@@ -4,6 +4,7 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Customization.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+using Content.Shared.Ghost.Roles.Raffles;
 
 
 namespace Content.Server._NC.Trade;

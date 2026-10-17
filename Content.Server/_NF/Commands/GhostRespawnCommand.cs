@@ -12,6 +12,8 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Console;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
+using Content.Shared.GameTicking;
+using Content.Shared.Ghost.Components;
 
 namespace Content.Server._NF.Commands;
 

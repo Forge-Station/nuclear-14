@@ -12,6 +12,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Nutrition.Components;
 
 namespace Content.Server.Abilities.Chitinid;
 

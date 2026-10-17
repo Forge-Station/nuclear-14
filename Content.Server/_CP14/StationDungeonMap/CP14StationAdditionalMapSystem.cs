@@ -8,6 +8,7 @@ using Robust.Shared.EntitySerialization;
 using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Prototypes;
 using Content.Shared.Station.Systems;
+using Content.Shared.Station.Components;
 
 namespace Content.Server._CP14.StationDungeonMap;
 

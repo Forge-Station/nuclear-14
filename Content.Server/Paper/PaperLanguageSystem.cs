@@ -7,7 +7,8 @@ using Content.Shared.Language.Components;
 using Content.Shared.Language.Systems;
 using Content.Shared.Paper;
 using Robust.Shared.Prototypes;
-using static Content.Shared.Paper.SharedPaperComponent;
+using static Content.Shared.Paper.PaperComponent;
+using Content.Shared.Ghost.Components;
 
 namespace Content.Server.Paper;
 

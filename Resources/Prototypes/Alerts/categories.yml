@@ -36,3 +36,6 @@
 
 - type: alertCategory
   id: Chemicals
+
+- type: alertCategory # Forge-Change
+  id: Mood

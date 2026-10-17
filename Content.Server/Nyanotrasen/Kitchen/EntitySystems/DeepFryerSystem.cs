@@ -60,6 +60,8 @@ using Robust.Shared.Physics.Components;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Cargo;
+using Content.Shared.Nutrition.Components;
+using Content.Shared.Temperature.Components;
 
 namespace Content.Server.Nyanotrasen.Kitchen.EntitySystems;
 
@@ -108,7 +110,6 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
 
         SubscribeLocalEvent<DeepFryerComponent, ComponentInit>(OnInitDeepFryer);
         SubscribeLocalEvent<DeepFryerComponent, PowerChangedEvent>(OnPowerChange);
-        SubscribeLocalEvent<DeepFryerComponent, RefreshPartsEvent>(OnRefreshParts);
         SubscribeLocalEvent<DeepFryerComponent, MachineDeconstructedEvent>(OnDeconstruct);
         SubscribeLocalEvent<DeepFryerComponent, DestructionEventArgs>(OnDestruction);
         SubscribeLocalEvent<DeepFryerComponent, ThrowHitByEvent>(OnThrowHitBy);
@@ -454,14 +455,6 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
     private void OnDestruction(EntityUid uid, DeepFryerComponent component, DestructionEventArgs args)
     {
         _containerSystem.EmptyContainer(component.Storage, true);
-    }
-
-    private void OnRefreshParts(EntityUid uid, DeepFryerComponent component, RefreshPartsEvent args)
-    {
-        var ratingStorage = args.PartRatings[component.MachinePartStorageMax];
-
-        component.StorageMaxEntities = component.BaseStorageMaxEntities +
-                                       (int) (component.StoragePerPartRating * (ratingStorage - 1));
     }
 
     /// <summary>

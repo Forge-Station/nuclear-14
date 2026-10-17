@@ -6,6 +6,7 @@ using Content.Shared.Actions;
 using Content.Shared.Corvax.GuideGenerator;
 using Content.Shared.Labels.Components;
 using Robust.Shared.Prototypes;
+using Content.Shared.Actions.Components;
 
 namespace Content.Server.Corvax.GuideGenerator;
 

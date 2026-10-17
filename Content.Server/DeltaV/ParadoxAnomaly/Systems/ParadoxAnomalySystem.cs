@@ -19,6 +19,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Station.Systems;
+using Content.Shared.Spawners.Components;
 
 namespace Content.Server.DeltaV.ParadoxAnomaly.Systems;
 

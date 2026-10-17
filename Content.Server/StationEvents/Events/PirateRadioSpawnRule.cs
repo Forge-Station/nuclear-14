@@ -17,6 +17,7 @@ using Content.Shared.Salvage;
 using System.Linq;
 using Content.Shared.GameTicking;
 using Content.Shared.Station.Systems;
+using Content.Shared.Station.Components;
 
 namespace Content.Server.StationEvents.Events;
 
@@ -99,7 +100,7 @@ public sealed class PirateRadioSpawnRule : StationEventSystem<PirateRadioSpawnRu
         }
     }
 
-    protected override void Ended(EntityUid uid, PirateRadioSpawnRuleComponent component, GameRuleComponent gameRule, GameRuleEndedEvent args)
+    protected override void Ended(Entity<PirateRadioSpawnRuleComponent> rule, ref GameRuleEndedEvent args)
     {
         base.Ended(uid, component, gameRule, args);
 

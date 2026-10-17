@@ -2,6 +2,7 @@ using Content.Server.Ghost.Roles;
 using Content.Shared._NC.Trade;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
+using Content.Shared.Roles.Components;
 
 
 namespace Content.Server._NC.Trade;

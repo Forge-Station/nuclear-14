@@ -7,6 +7,7 @@ using Content.Shared.CriminalRecords;
 using Content.Shared.StationRecords;
 using Content.Shared.Station.Systems;
 using Content.Shared.StationRecords.Events;
+using Content.Shared.StationRecords.Components;
 
 namespace Content.Server.CartridgeLoader.Cartridges;
 

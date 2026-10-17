@@ -2,6 +2,7 @@ using Content.Shared.Abilities.Psionics;
 using Content.Shared.Actions.Events;
 using Content.Server.Atmos.Components;
 using Robust.Shared.Map;
+using Content.Shared.Atmos.Components;
 
 namespace Content.Server.Abilities.Psionics;
 

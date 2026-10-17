@@ -13,6 +13,8 @@ using Robust.Shared.Random;
 using Content.Server.Light.Components;
 using Content.Shared.NPC.Components;
 using Content.Shared.NPC.Systems;
+using Content.Shared.Light.Components;
+using Content.Shared.Temperature.Components;
 
 
 namespace Content.Server.Shadowkin;

@@ -20,6 +20,8 @@ using Content.Shared.GameTicking.Components;
 using Content.Shared.GameTicking;
 using Content.Shared.Station.Systems;
 using Content.Shared.GameTicking.Rules;
+using Content.Shared.Cargo.Components;
+using Content.Shared.Spawners.Components;
 
 
 namespace Content.Server.GameTicking.Rules;
@@ -66,7 +68,7 @@ public sealed class WaveDefenseRuleSystem : GameRuleSystem<WaveDefenseRuleCompon
         RestartTimer();
     }
 
-    protected override void Ended(EntityUid uid, WaveDefenseRuleComponent rules, GameRuleComponent gameRule, GameRuleEndedEvent args)
+    protected override void Ended(Entity<WaveDefenseRuleComponent> rule, ref GameRuleEndedEvent args)
     {
         StopTimer();
     }

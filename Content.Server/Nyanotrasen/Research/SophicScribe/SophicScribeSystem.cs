@@ -9,6 +9,7 @@ using Content.Shared.Psionics.Glimmer;
 using Content.Shared.Radio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Content.Shared.Radio.Components;
 
 namespace Content.Server.Nyanotrasen.Research.SophicScribe;
 

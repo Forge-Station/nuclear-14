@@ -10,6 +10,7 @@ using Content.Shared.WhiteDream.BloodCult.BloodCultist;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Prototypes;
+using Content.Shared.Roles.Components;
 
 namespace Content.Server.WhiteDream.BloodCult.Constructs.SoulShard;
 

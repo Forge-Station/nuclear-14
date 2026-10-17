@@ -4,6 +4,7 @@ using Content.Shared.Body.Systems;
 using Content.Shared._Shitmed.Body.Organ;
 using Content.Server._Shitmed.DelayedDeath;
 using Content.Shared.Body.Components;
+using Content.Shared.Body;
 
 namespace Content.Server._Shitmed.Body.Organ;
 
@@ -14,11 +15,11 @@ public sealed class HeartSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<HeartComponent, OrganAddedToBodyEvent>(HandleAddition);
-        SubscribeLocalEvent<HeartComponent, OrganRemovedFromBodyEvent>(HandleRemoval);
+        SubscribeLocalEvent<HeartComponent, OrganGotInsertedEvent>(HandleAddition);
+        SubscribeLocalEvent<HeartComponent, OrganGotRemovedEvent>(HandleRemoval);
     }
 
-    private void HandleRemoval(EntityUid uid, HeartComponent _, ref OrganRemovedFromBodyEvent args)
+    private void HandleRemoval(EntityUid uid, HeartComponent _, ref OrganGotRemovedEvent args)
     {
         if (TerminatingOrDeleted(uid) || TerminatingOrDeleted(args.OldBody))
             return;
@@ -27,7 +28,7 @@ public sealed class HeartSystem : EntitySystem
         EnsureComp<DelayedDeathComponent>(args.OldBody);
     }
 
-    private void HandleAddition(EntityUid uid, HeartComponent _, ref OrganAddedToBodyEvent args)
+    private void HandleAddition(EntityUid uid, HeartComponent _, ref OrganGotInsertedEvent args)
     {
         if (TerminatingOrDeleted(uid) || TerminatingOrDeleted(args.Body))
             return;

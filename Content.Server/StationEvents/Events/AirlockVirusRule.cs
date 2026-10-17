@@ -11,6 +11,7 @@ using Content.Server.Station.Components;
 using Content.Server.Station.Systems;
 using Content.Shared.GameTicking;
 using Content.Shared.Station.Systems;
+using Content.Shared.Station.Components;
 
 namespace Content.Server.StationEvents.Events;
 

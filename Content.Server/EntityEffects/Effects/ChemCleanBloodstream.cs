@@ -2,6 +2,7 @@ using Content.Server.Body.Systems;
 using Content.Shared.EntityEffects;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
+using Content.Shared.Body.Systems;
 
 namespace Content.Server.EntityEffects.Effects;
 

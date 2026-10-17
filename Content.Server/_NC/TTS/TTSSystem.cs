@@ -15,6 +15,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
 using Content.Shared.Chat;
+using Content.Shared.Radio.Components;
 
 
 namespace Content.Server._NC.TTS;

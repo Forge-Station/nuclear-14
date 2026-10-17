@@ -38,8 +38,6 @@ public sealed class ReverseEngineeringSystem : EntitySystem
         base.Initialize();
         SubscribeLocalEvent<ReverseEngineeringMachineComponent, EntInsertedIntoContainerMessage>(OnEntInserted);
         SubscribeLocalEvent<ReverseEngineeringMachineComponent, EntRemovedFromContainerMessage>(OnEntRemoved);
-        SubscribeLocalEvent<ReverseEngineeringMachineComponent, RefreshPartsEvent>(OnRefreshParts);
-        SubscribeLocalEvent<ReverseEngineeringMachineComponent, UpgradeExamineEvent>(OnExamineParts);
 
         SubscribeLocalEvent<ActiveReverseEngineeringMachineComponent, ComponentStartup>(OnStartup);
         SubscribeLocalEvent<ActiveReverseEngineeringMachineComponent, ComponentShutdown>(OnShutdown);
@@ -100,21 +98,6 @@ public sealed class ReverseEngineeringSystem : EntitySystem
 
         if (TryComp<AppearanceComponent>(uid, out var appearance))
             _appearanceSystem.SetData(uid, ReverseEngineeringVisuals.ChamberOpen, true, appearance);
-    }
-
-    private void OnRefreshParts(EntityUid uid, ReverseEngineeringMachineComponent component, RefreshPartsEvent args)
-    {
-        var bonusRating = args.PartRatings[component.MachinePartScanBonus];
-        var aversionRating = args.PartRatings[component.MachinePartDangerAversionScore];
-
-        component.ScanBonus = (int) bonusRating;
-        component.DangerAversionScore = (int) aversionRating;
-    }
-
-    private void OnExamineParts(EntityUid uid, ReverseEngineeringMachineComponent component, UpgradeExamineEvent args)
-    {
-        args.AddNumberUpgrade("reverse-engineering-machine-bonus-upgrade", component.ScanBonus - 1);
-        args.AddNumberUpgrade("reverse-engineering-machine-aversion-upgrade", component.DangerAversionScore - 1);
     }
 
     private void OnStartup(EntityUid uid, ActiveReverseEngineeringMachineComponent component, ComponentStartup args)

@@ -6,6 +6,7 @@ using Content.Shared.Abilities.Psionics;
 using Content.Server.Speech.Components;
 using Content.Server.StationEvents.Components;
 using Content.Shared.Mobs.Systems;
+using Content.Shared.Speech.Components;
 
 namespace Content.Server.StationEvents.Events;
 

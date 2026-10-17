@@ -21,6 +21,7 @@ using System.Linq;
 using Content.Shared.Chemistry.Reagent;
 using Robust.Server.Audio;
 using Content.Shared.Body.Components;
+using Content.Shared.Timing.Components;
 
 namespace Content.Server.Chemistry.EntitySystems;
 

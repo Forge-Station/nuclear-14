@@ -5,6 +5,7 @@ using Content.Server.Electrocution;
 using Robust.Shared.Containers;
 using Content.Shared.Timing.Systems;
 using Content.Shared.Trigger;
+using Content.Shared.Timing.Components;
 
 namespace Content.Server.ShockCollar;
 

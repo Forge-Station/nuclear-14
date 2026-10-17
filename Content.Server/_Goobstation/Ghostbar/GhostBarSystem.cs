@@ -23,6 +23,7 @@ using Content.Shared.Roles.Jobs; // Einstein Engines - use JobComponent
 using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Events;
 using Content.Shared.Station.Systems;
+using Content.Shared.Ghost.Components;
 
 namespace Content.Server._Goobstation.Ghostbar;
 

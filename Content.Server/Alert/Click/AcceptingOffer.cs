@@ -1,24 +1,26 @@
-using Content.Shared.OfferItem;
 using Content.Server.OfferItem;
-using Content.Shared.Alert;
-using JetBrains.Annotations;
+using Content.Shared._Forge.Alert;
+using Content.Shared.OfferItem;
 
 namespace Content.Server.Alert.Click;
 
 /// <summary>
-/// Accepting the offer and receive item
+/// Принимает предложенный предмет по нажатию на алерт.
 /// </summary>
-[UsedImplicitly]
-[DataDefinition]
-public sealed partial class AcceptOffer : IAlertClick
+public sealed class AcceptOfferAlertSystem : EntitySystem
 {
-    public void AlertClicked(EntityUid player)
-    {
-        var entManager = IoCManager.Resolve<IEntityManager>();
+    [Dependency] private readonly OfferItemSystem _offerItem = default!;
 
-        if (entManager.TryGetComponent(player, out OfferItemComponent? offerItem))
-        {
-            entManager.System<OfferItemSystem>().Receive(player, offerItem);
-        }
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        SubscribeLocalEvent<OfferItemComponent, AcceptOfferAlertEvent>(OnAcceptOffer);
+    }
+
+    private void OnAcceptOffer(Entity<OfferItemComponent> ent, ref AcceptOfferAlertEvent args)
+    {
+        _offerItem.Receive(ent.Owner, ent.Comp);
+        args.Handled = true;
     }
 }

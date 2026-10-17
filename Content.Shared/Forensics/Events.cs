@@ -60,3 +60,10 @@ public sealed class TryAccessFingerprintEvent : CancellableEntityEventArgs, IInv
     /// </summary>
     public EntityUid? Blocker;
 }
+
+/// <summary>
+/// Forge-Change: форковое событие отслеживания запаха, потерянное вместе с
+/// апстримной версией этого файла.
+/// </summary>
+[Serializable, NetSerializable]
+public sealed partial class ScentTrackerDoAfterEvent : SimpleDoAfterEvent;

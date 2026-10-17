@@ -15,6 +15,7 @@ using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
 using System.Numerics;
 using Content.Shared.Warps;
+using Content.Shared.Ghost.Components;
 
 namespace Content.Server.Warps;
 

@@ -25,7 +25,6 @@ public sealed partial class PoweredSealableClothingSystem : SharedPoweredSealabl
         SubscribeLocalEvent<SealableClothingRequiresPowerComponent, PowerCellChangedEvent>(OnPowerCellChanged);
         SubscribeLocalEvent<SealableClothingRequiresPowerComponent, PowerCellSlotEmptyEvent>(OnPowerCellEmpty);
         SubscribeLocalEvent<SealableClothingRequiresPowerComponent, ClothingControlSealCompleteEvent>(OnRequiresPowerSealCompleteEvent);
-        SubscribeLocalEvent<SealableClothingRequiresPowerComponent, InventoryRelayedEvent<FindInventoryBatteryEvent>>(OnFindInventoryBatteryEvent);
     }
 
     private void OnPowerCellChanged(Entity<SealableClothingRequiresPowerComponent> entity, ref PowerCellChangedEvent args)
@@ -100,13 +99,4 @@ public sealed partial class PoweredSealableClothingSystem : SharedPoweredSealabl
         _alertsSystem.ShowAlert(controlComp.WearerEntity.Value, comp.SuitPowerAlert, (short) severity);
     }
 
-    /// Tries to find battery for charger
-    private void OnFindInventoryBatteryEvent(Entity<SealableClothingRequiresPowerComponent> entity, ref InventoryRelayedEvent<FindInventoryBatteryEvent> args)
-    {
-        if (args.Args.FoundBattery != null)
-            return;
-
-        if (_powerCellSystem.TryGetBatteryFromSlot(entity, out var batteryEnt, out var battery))
-            args.Args.FoundBattery = (batteryEnt.Value, battery);
-    }
 }

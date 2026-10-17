@@ -1,6 +1,7 @@
 using Content.Server.Shuttles.Components;
 using Content.Server.Station.Events;
 using Content.Shared.Physics;
+using Content.Shared.Shuttles.Components;
 
 namespace Content.Server.Station.Systems;
 

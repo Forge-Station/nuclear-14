@@ -6,6 +6,7 @@ using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Robust.Shared.Timing;
 using Content.Server.Chemistry.EntitySystems;
+using Content.Shared.Nutrition;
 
 namespace Content.Server.Animals.Systems;
 

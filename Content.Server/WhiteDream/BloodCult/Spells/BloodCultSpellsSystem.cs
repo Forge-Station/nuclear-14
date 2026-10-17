@@ -18,6 +18,7 @@ using Content.Shared.WhiteDream.BloodCult.Spells;
 using Robust.Server.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.Actions.Components;
 
 namespace Content.Server.WhiteDream.BloodCult.Spells;
 

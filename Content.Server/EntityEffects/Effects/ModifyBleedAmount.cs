@@ -2,6 +2,8 @@ using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Shared.EntityEffects;
 using Robust.Shared.Prototypes;
+using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
 
 namespace Content.Server.EntityEffects.Effects;
 

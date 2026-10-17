@@ -3,6 +3,7 @@ using Content.Shared.CartridgeLoader;
 using Content.Shared.DeltaV.CartridgeLoader.Cartridges;
 using Content.Shared.DeltaV.NanoChat;
 using Content.Shared.CartridgeLoader.Cartridges;
+using Content.Shared.Interaction;
 
 namespace Content.Server.CartridgeLoader.Cartridges;
 
@@ -59,15 +60,15 @@ public sealed partial class LogProbeCartridgeSystem
     }
 
     private void ScanNanoChatCard(Entity<LogProbeCartridgeComponent> ent,
-        CartridgeAfterInteractEvent args,
+        AfterInteractEvent args,
         EntityUid target,
         NanoChatCardComponent card)
     {
         _audioSystem.PlayEntity(ent.Comp.SoundScan,
-            args.InteractEvent.User,
+            args.User,
             target,
             AudioHelpers.WithVariation(0.25f, _random));
-        _popupSystem.PopupCursor(Loc.GetString("log-probe-scan-nanochat", ("card", target)), args.InteractEvent.User);
+        _popupSystem.PopupCursor(Loc.GetString("log-probe-scan-nanochat", ("card", target)), args.User);
 
         ent.Comp.PulledAccessLogs.Clear();
 

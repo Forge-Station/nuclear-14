@@ -47,6 +47,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.Traits.Assorted.Components;
 
 namespace Content.Server.Zombies;
 

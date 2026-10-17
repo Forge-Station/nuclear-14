@@ -13,6 +13,8 @@ using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
 using Robust.Shared.Random;
+using Content.Shared.Atmos.Components;
+using Content.Shared.Body.Components;
 
 namespace Content.Server.WhiteDream.BloodCult.Runes.BloodBoil;
 

@@ -28,6 +28,7 @@ using Content.Shared.Nutrition.Components;
 using Robust.Shared.Enums;
 using Content.Shared.Damage.Components;
 using Content.Shared.Body.Components;
+using Content.Shared.Speech.Components;
 
 namespace Content.Server.Cloning;
 
@@ -281,13 +282,13 @@ public sealed partial class CloningSystem
     }
 
     /// <summary>
-    ///     Updates the HumanoidAppearanceComponent of the clone.
+    ///     Updates the HumanoidProfileComponent of the clone.
     ///     If a species swap is occuring, this updates all relevant information as per server config.
     /// </summary>
     private void UpdateCloneAppearance(
         EntityUid mob,
         HumanoidCharacterProfile pref,
-        HumanoidAppearanceComponent humanoid,
+        HumanoidProfileComponent humanoid,
         List<Sex> sexes,
         Gender oldGender,
         bool switchingSpecies,
@@ -295,7 +296,7 @@ public sealed partial class CloningSystem
         out Gender gender)
     {
         gender = oldGender;
-        if (!TryComp<HumanoidAppearanceComponent>(mob, out var newHumanoid))
+        if (!TryComp<HumanoidProfileComponent>(mob, out var newHumanoid))
             return;
 
         if (switchingSpecies && !forceOldProfile)

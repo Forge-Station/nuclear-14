@@ -12,6 +12,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Content.Shared.Kitchen;
+using Content.Shared.Kitchen.Components;
 
 namespace Content.Server.DeltaV.NanoChat;
 

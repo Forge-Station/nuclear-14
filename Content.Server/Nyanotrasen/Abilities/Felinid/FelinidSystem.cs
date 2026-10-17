@@ -23,6 +23,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Prototypes;
 using Content.Shared.Medical;
+using Content.Shared.Body.Components;
 
 namespace Content.Server.Abilities.Felinid;
 
@@ -30,7 +31,7 @@ public sealed partial class FelinidSystem : EntitySystem
 {
 
     [Dependency] private readonly SharedActionsSystem _actionsSystem = default!;
-    [Dependency] private readonly HungerSystem _hungerSystem = default!;
+    [Dependency] private readonly SatiationSystem _hungerSystem = default!;
     [Dependency] private readonly VomitSystem _vomitSystem = default!;
     [Dependency] private readonly SolutionContainerSystem _solutionSystem = default!;
     [Dependency] private readonly IRobustRandom _robustRandom = default!;

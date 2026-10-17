@@ -7,6 +7,7 @@ using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Shared.Storage.Components;
 
 
 namespace Content.Server._NC.Trade;

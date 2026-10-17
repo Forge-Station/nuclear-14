@@ -8,7 +8,7 @@ public sealed class GlimmerEventSystem : StationEventSystem<GlimmerEventComponen
 {
     [Dependency] private readonly GlimmerSystem _glimmerSystem = default!;
 
-    protected override void Ended(EntityUid uid, GlimmerEventComponent component, GameRuleComponent gameRule, GameRuleEndedEvent args)
+    protected override void Ended(Entity<GlimmerEventComponent> rule, ref GameRuleEndedEvent args)
     {
         base.Ended(uid, component, gameRule, args);
 

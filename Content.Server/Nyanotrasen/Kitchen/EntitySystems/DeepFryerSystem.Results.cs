@@ -15,6 +15,8 @@ using Content.Shared.NPC;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nyanotrasen.Kitchen.Components;
 using Robust.Shared.Random;
+using Content.Shared.Body.Components;
+using Content.Shared.Paper;
 
 namespace Content.Server.Nyanotrasen.Kitchen.EntitySystems;
 

@@ -20,6 +20,7 @@ using Content.Shared.Nutrition.Components;
 using Content.Shared.Storage;
 using Robust.Shared.Utility;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Speech.Components;
 
 namespace Content.Server.Cocoon
 {

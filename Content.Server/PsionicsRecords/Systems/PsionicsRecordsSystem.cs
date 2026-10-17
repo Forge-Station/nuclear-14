@@ -5,6 +5,7 @@ using Content.Shared.Psionics;
 using Content.Shared.StationRecords;
 using Content.Server.GameTicking;
 using Content.Shared.GameTicking;
+using Content.Shared.StationRecords.Events;
 
 /// <summary>
 /// EVERYTHING HERE IS A MODIFIED VERSION OF CRIMINAL RECORDS
@@ -29,10 +30,10 @@ public sealed class PsionicsRecordsSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<AfterGeneralRecordCreatedEvent>(OnGeneralRecordCreated);
+        SubscribeLocalEvent<GeneralRecordCreatedEvent>(OnGeneralRecordCreated);
     }
 
-    private void OnGeneralRecordCreated(AfterGeneralRecordCreatedEvent ev)
+    private void OnGeneralRecordCreated(GeneralRecordCreatedEvent ev)
     {
         _stationRecords.AddRecordEntry(ev.Key, new PsionicsRecord());
         _stationRecords.Synchronize(ev.Key);

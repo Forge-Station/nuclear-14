@@ -5,6 +5,7 @@ using Content.Shared.Forensics;
 using Content.Shared.Examine;
 using Robust.Shared.Utility;
 using Content.Shared.IdentityManagement;
+using Content.Shared.Forensics.Components;
 
 namespace Content.Server.Forensics
 {

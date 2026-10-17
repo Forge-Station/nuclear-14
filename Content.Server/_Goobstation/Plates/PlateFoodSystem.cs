@@ -11,6 +11,7 @@ using Content.Shared.Interaction.Events;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Verbs;
 using Robust.Shared.Utility;
+using Content.Shared.Nutrition.EntitySystems;
 
 namespace Content.Goobstation.Server.Plates;
 
@@ -20,7 +21,7 @@ namespace Content.Goobstation.Server.Plates;
 /// </summary>
 public sealed class PlateFoodSystem : EntitySystem
 {
-    [Dependency] private readonly FoodSystem _food = default!;
+    [Dependency] private readonly IngestionSystem _food = default!;
     [Dependency] private readonly ItemSlotsSystem _itemSlots = default!;
 
     public override void Initialize()
@@ -82,7 +83,7 @@ public sealed class PlateFoodSystem : EntitySystem
         });
     }
 
-    private bool TryGetFood(EntityUid plate, out EntityUid food, out FoodComponent foodComp)
+    private bool TryGetFood(EntityUid plate, out EntityUid food, out EdibleComponent foodComp)
     {
         food = default;
         foodComp = default!;

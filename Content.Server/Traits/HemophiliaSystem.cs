@@ -2,6 +2,7 @@ using Content.Server.Body.Systems;
 using Content.Server.Body.Components;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Body.Components;
 
 namespace Content.Server.Traits.Assorted;
 

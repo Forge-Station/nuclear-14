@@ -1,41 +1,43 @@
 using Content.Server.Chat.Managers;
-using Content.Shared.Alert;
+using Content.Shared._Forge.Alert;
 using Content.Shared.Chat;
-using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
 using Content.Shared.HealthExaminable;
-using JetBrains.Annotations;
 using Robust.Server.Player;
 using Robust.Shared.Player;
-using Content.Shared.Damage.Components;
 
 namespace Content.Server.Alert.Click;
 
-[UsedImplicitly]
-[DataDefinition]
-public sealed partial class CheckHealth : IAlertClick
+/// <summary>
+/// Показывает состояние здоровья в чат по нажатию на алерт.
+/// </summary>
+public sealed class CheckHealthAlertSystem : EntitySystem
 {
-    public void AlertClicked(EntityUid player)
+    [Dependency] private readonly IChatManager _chat = default!;
+    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private readonly HealthExaminableSystem _healthExaminable = default!;
+
+    public override void Initialize()
     {
-        var chatManager = IoCManager.Resolve<IChatManager>();
-        var entityManager = IoCManager.Resolve<IEntityManager>();
-        var playerManager = IoCManager.Resolve<IPlayerManager>();
+        base.Initialize();
 
-        var healthExaminableSystem = entityManager.System<HealthExaminableSystem>();
-
-        if (!entityManager.TryGetComponent(player, out HealthExaminableComponent? healthExaminable) ||
-            !entityManager.TryGetComponent(player, out DamageableComponent? damageable) ||
-            !playerManager.TryGetSessionByEntity(player, out var session))
-            return;
-
-        var baseMsg = Loc.GetString("health-alert-start");
-        SendMessage(chatManager, baseMsg, session);
-        var markup = healthExaminableSystem.GetMarkup(player, (player, healthExaminable), damageable).ToMarkup();
-        SendMessage(chatManager, markup, session);
+        SubscribeLocalEvent<HealthExaminableComponent, CheckHealthAlertEvent>(OnCheckHealth);
     }
 
-    private static void SendMessage(IChatManager chatManager, string msg, ICommonSession session)
+    private void OnCheckHealth(Entity<HealthExaminableComponent> ent, ref CheckHealthAlertEvent args)
     {
-        chatManager.ChatMessageToOne(ChatChannel.Emotes,
+        if (!TryComp<DamageableComponent>(ent, out var damageable)
+            || !_player.TryGetSessionByEntity(ent, out var session))
+            return;
+
+        SendMessage(Loc.GetString("health-alert-start"), session);
+        SendMessage(_healthExaminable.GetMarkup(ent, (ent.Owner, ent.Comp), damageable).ToMarkup(), session);
+        args.Handled = true;
+    }
+
+    private void SendMessage(string msg, ICommonSession session)
+    {
+        _chat.ChatMessageToOne(ChatChannel.Emotes,
             msg,
             msg,
             EntityUid.Invalid,

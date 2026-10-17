@@ -3,6 +3,7 @@ using Content.Server.Atmos.EntitySystems;
 using Content.Shared.EntityEffects;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
+using Content.Shared.Atmos.Components;
 
 namespace Content.Server.EntityEffects.Effects
 {

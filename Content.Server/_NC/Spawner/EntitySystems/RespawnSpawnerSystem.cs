@@ -6,6 +6,8 @@ using Content.Shared.Mobs.Components;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Timing;
+using Content.Shared.Ghost.Components;
+using Content.Shared.Roles.Components;
 
 namespace Content.Server._NC.Spawner.EntitySystems;
 

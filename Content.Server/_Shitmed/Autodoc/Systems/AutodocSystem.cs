@@ -7,6 +7,7 @@ using Content.Server.Power.EntitySystems;
 using Content.Shared._Shitmed.Autodoc.Components;
 using Content.Shared._Shitmed.Autodoc.Systems;
 using Content.Shared.Bed.Sleep;
+using Content.Shared.Body.Components;
 
 
 namespace Content.Server._Shitmed.Autodoc.Systems;

@@ -5,6 +5,7 @@ using Content.Server.Shuttles.Systems;
 using Content.Server.Station.Events;
 using Robust.Server.Console;
 using Timer = Robust.Shared.Timing.Timer;
+using Content.Shared.Atmos.Components;
 
 namespace Content.Server._NF.NuclearMapFix
 {

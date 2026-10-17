@@ -18,10 +18,14 @@ using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Random;
 using Content.Shared.Damage.Components;
+using Content.Shared.Nutrition.EntitySystems;
+using Content.Shared.Nutrition.Prototypes;
 
 namespace Content.Server.Chat;
 public sealed partial class TelepathicChatSystem
 {
+    [Dependency] private readonly SatiationSystem _satiation = default!;
+
     public string SourceToDescriptor(EntityUid source)
     {
         var ev = new GetPsychognomicDescriptorEvent();
@@ -37,7 +41,7 @@ public sealed partial class TelepathicChatSystem
         SubscribeLocalEvent<GrammarComponent, GetPsychognomicDescriptorEvent>(DescribeGrammar);
         SubscribeLocalEvent<DamageableComponent, GetPsychognomicDescriptorEvent>(DescribeDamage);
         SubscribeLocalEvent<MobStateComponent, GetPsychognomicDescriptorEvent>(DescribeMobState);
-        SubscribeLocalEvent<HungerComponent, GetPsychognomicDescriptorEvent>(DescribeHunger);
+        SubscribeLocalEvent<SatiationComponent, GetPsychognomicDescriptorEvent>(DescribeHunger);
         SubscribeLocalEvent<PhysicsComponent, GetPsychognomicDescriptorEvent>(DescribePhysics);
         SubscribeLocalEvent<FixturesComponent, GetPsychognomicDescriptorEvent>(DescribeFixtures);
         SubscribeLocalEvent<MetempsychosisKarmaComponent, GetPsychognomicDescriptorEvent>(DescribeKarma);
@@ -83,9 +87,16 @@ public sealed partial class TelepathicChatSystem
         ev.Descriptors.Add(Loc.GetString("p-descriptor-liminal"));
     }
 
-    private void DescribeHunger(EntityUid uid, HungerComponent component, GetPsychognomicDescriptorEvent ev)
+    private void DescribeHunger(EntityUid uid, SatiationComponent component, GetPsychognomicDescriptorEvent ev)
     {
-        if (component.CurrentThreshold > HungerThreshold.Peckish)
+        // Голод стал сытостью: порог задаётся именем из прототипа, а значение
+        // возвращается, только если сытость не выше него.
+        if (!_satiation.TryGetValueByThreshold((uid, component),
+                SatiationSystem.Hunger,
+                new Dictionary<SatiationValue, bool> { ["Peckish"] = true },
+                out _,
+                out _,
+                out _))
             return;
 
         ev.Descriptors.Add(Loc.GetString("p-descriptor-hungry"));

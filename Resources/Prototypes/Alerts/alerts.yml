@@ -192,6 +192,7 @@
 - type: alert
   id: HumanHealth
   category: Health
+  clickEvent: !type:CheckHealthAlertEvent # Forge-Change
   icons:
   - sprite: /Textures/Interface/Alerts/human_alive.rsi
     state: health0

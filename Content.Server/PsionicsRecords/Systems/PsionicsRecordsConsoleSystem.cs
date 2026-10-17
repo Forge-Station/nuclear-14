@@ -14,6 +14,8 @@ using System.Diagnostics.CodeAnalysis;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Psionics.Components;
 using Content.Shared.Station.Systems;
+using Content.Shared.StationRecords.Components;
+using Content.Shared.StationRecords.Events;
 
 /// <summary>
 /// EVERYTHING HERE IS A MODIFIED VERSION OF CRIMINAL RECORDS

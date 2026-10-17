@@ -20,12 +20,15 @@ using Robust.Shared.Player;
 using Robust.Shared.Configuration;
 using Content.Shared.CCVar;
 using Content.Shared.Damage.Systems;
+using Content.Shared._Forge.Alert;
 
 namespace Content.Server.Mood;
 
 public sealed class MoodSystem : EntitySystem
 {
     [Dependency] private readonly AlertsSystem _alerts = default!;
+    [Dependency] private readonly IChatManager _chat = default!;
+    [Dependency] private readonly IPlayerManager _player = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeedModifier = default!;
     [Dependency] private readonly SharedJetpackSystem _jetpack = default!;
@@ -36,6 +39,8 @@ public sealed class MoodSystem : EntitySystem
 
     public override void Initialize()
     {
+        SubscribeLocalEvent<MoodComponent, ShowMoodEffectsAlertEvent>(OnShowMoodEffects);
+
         base.Initialize();
 
         SubscribeLocalEvent<MoodComponent, ComponentStartup>(OnInit);
@@ -393,59 +398,36 @@ public sealed class MoodSystem : EntitySystem
         var ev = new MoodEffectEvent(protoId);
         RaiseLocalEvent(uid, ev);
     }
-}
 
-[UsedImplicitly, DataDefinition]
-public sealed partial class ShowMoodEffects : IAlertClick
-{
-    public void AlertClicked(EntityUid uid)
+    private void OnShowMoodEffects(Entity<MoodComponent> ent, ref ShowMoodEffectsAlertEvent args)
     {
-        var entityManager = IoCManager.Resolve<IEntityManager>();
-        var prototypeManager = IoCManager.Resolve<IPrototypeManager>();
-        var chatManager = IoCManager.Resolve<IChatManager>();
-        var playerManager = IoCManager.Resolve<IPlayerManager>();
-
-        if (!entityManager.TryGetComponent<MoodComponent>(uid, out var comp)
-            || comp.CurrentMoodThreshold == MoodThreshold.Dead
-            || !playerManager.TryGetSessionByEntity(uid, out var session))
+        if (ent.Comp.CurrentMoodThreshold == MoodThreshold.Dead
+            || !_player.TryGetSessionByEntity(ent, out var session))
             return;
 
+        args.Handled = true;
+
         var msgStart = Loc.GetString("mood-show-effects-start");
-        chatManager.ChatMessageToOne(ChatChannel.Emotes, msgStart, msgStart, EntityUid.Invalid, false,
-            session.Channel);
+        _chat.ChatMessageToOne(ChatChannel.Emotes, msgStart, msgStart, EntityUid.Invalid, false, session.Channel);
 
-        foreach (var (_, protoId) in comp.CategorisedEffects)
+        foreach (var (_, protoId) in ent.Comp.CategorisedEffects)
         {
-            if (!prototypeManager.TryIndex<MoodEffectPrototype>(protoId, out var proto)
-                || proto.Hidden)
-                continue;
-
-            SendDescToChat(proto, session);
+            if (_prototypeManager.TryIndex<MoodEffectPrototype>(protoId, out var proto) && !proto.Hidden)
+                SendDescToChat(proto, session);
         }
 
-        foreach (var (protoId, _) in comp.UncategorisedEffects)
+        foreach (var (protoId, _) in ent.Comp.UncategorisedEffects)
         {
-            if (!prototypeManager.TryIndex<MoodEffectPrototype>(protoId, out var proto)
-                || proto.Hidden)
-                continue;
-
-            SendDescToChat(proto, session);
+            if (_prototypeManager.TryIndex<MoodEffectPrototype>(protoId, out var proto) && !proto.Hidden)
+                SendDescToChat(proto, session);
         }
     }
 
     private void SendDescToChat(MoodEffectPrototype proto, ICommonSession session)
     {
-        var chatManager = IoCManager.Resolve<IChatManager>();
-
-        var color = (proto.MoodChange > 0) ? "#008000" : "#BA0000";
+        var color = proto.MoodChange > 0 ? "#008000" : "#BA0000";
         var msg = $"[font size=10][color={color}]{proto.Description}[/color][/font]";
 
-        chatManager.ChatMessageToOne(
-            ChatChannel.Emotes,
-            msg,
-            msg,
-            EntityUid.Invalid,
-            false,
-            session.Channel);
+        _chat.ChatMessageToOne(ChatChannel.Emotes, msg, msg, EntityUid.Invalid, false, session.Channel);
     }
 }

@@ -4,6 +4,7 @@ using Content.Shared.GameTicking.Components;
 using Content.Shared.Humanoid;
 using Content.Shared.Mind.Components;
 using Content.Shared.Traits.Assorted;
+using Content.Shared.Traits.Assorted.Components;
 
 namespace Content.Server.StationEvents.Events;
 

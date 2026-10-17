@@ -7,6 +7,7 @@ using Content.Shared.Mind.Components;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using Robust.Shared.Prototypes;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.Ghost.Roles
 {

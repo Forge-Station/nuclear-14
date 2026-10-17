@@ -5,6 +5,7 @@ using Content.Shared.Fluids.Components;
 using Content.Shared.Forensics;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Prototypes;
+using Content.Shared.Forensics.Components;
 
 
 namespace Content.Server.FootPrint;

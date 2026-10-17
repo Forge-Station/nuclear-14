@@ -8,6 +8,7 @@ using Content.Shared.HeightAdjust;
 using Robust.Shared.Configuration;
 using Content.Shared.Body.Systems;
 using Content.Server.Chemistry.EntitySystems;
+using Content.Shared.Body.Components;
 
 namespace Content.Server.HeightAdjust;
 
