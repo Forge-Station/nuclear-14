@@ -10,6 +10,14 @@ namespace Content.Packaging;
 
 public static class ClientPackaging
 {
+
+    // Forge-Secrets-Start
+    private static readonly string SecretsClientProject =
+        Path.Combine("FalloutSecrets", "Content.Secrets.Client", "Content.Secrets.Client.csproj");
+
+    public static bool UseSecrets => File.Exists(SecretsClientProject);
+    // Forge-Secrets-End
+    
     /// <summary>
     /// Be advised this can be called from server packaging during a HybridACZ build.
     /// </summary>
