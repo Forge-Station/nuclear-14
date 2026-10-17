@@ -1,6 +1,7 @@
 using Content.Shared.Actions;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Actions.Components;
 
 namespace Content.Shared.Actions.Components;
 

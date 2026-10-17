@@ -1,5 +1,6 @@
 using Content.Shared.Damage;
 using Robust.Shared.GameStates;
+using Content.Shared.Flash.Components;
 
 namespace Content.Shared.Flash.Components;
 

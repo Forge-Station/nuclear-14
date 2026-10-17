@@ -1,6 +1,6 @@
 using System.Numerics;
 using Content.Shared.CCVar;
-using Content.Shared.Humanoid;
+using Content.Shared.Sprite;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 using Robust.Shared.Configuration;
@@ -13,7 +13,7 @@ public sealed class HeightAdjustSystem : EntitySystem
 {
     [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly SharedContentEyeSystem _eye = default!;
-    [Dependency] private readonly SharedHumanoidAppearanceSystem _appearance = default!;
+    [Dependency] private readonly SharedScaleVisualsSystem _scale = default!;
     [Dependency] private readonly IConfigurationManager _config = default!;
 
 
@@ -50,10 +50,8 @@ public sealed class HeightAdjustSystem : EntitySystem
         else
             succeeded = false;
 
-        if (EntityManager.HasComponent<HumanoidAppearanceComponent>(uid))
-            _appearance.SetScale(uid, scale);
-        else
-            succeeded = false;
+        // Upstream moved sprite scaling off the humanoid system onto ScaleVisuals.
+        _scale.SetSpriteScale(uid, scale);
 
         RaiseLocalEvent(uid, new HeightAdjustedEvent { NewScale = scale });
 

@@ -1,4 +1,5 @@
 using Robust.Shared.GameStates;
+using Content.Shared.Forensics.Components;
 
 namespace Content.Shared.Forensics.Components;
 

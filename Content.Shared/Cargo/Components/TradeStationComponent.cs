@@ -1,4 +1,5 @@
 using Robust.Shared.GameStates;
+using Content.Shared.Cargo.Components;
 
 namespace Content.Shared.Cargo.Components;
 

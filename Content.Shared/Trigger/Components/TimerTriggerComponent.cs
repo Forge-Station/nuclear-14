@@ -4,6 +4,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 using System.Linq;
+using Content.Shared.Trigger.Components;
 
 namespace Content.Shared.Trigger.Components;
 

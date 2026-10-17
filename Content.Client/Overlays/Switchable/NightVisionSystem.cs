@@ -4,6 +4,7 @@ using Content.Shared.Inventory.Events;
 using Content.Shared.Overlays.Switchable;
 using Robust.Client.Graphics;
 using Robust.Shared.Timing;
+using Content.Shared.Overlays;
 
 namespace Content.Client.Overlays.Switchable;
 

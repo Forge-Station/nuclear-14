@@ -1,6 +1,7 @@
 using Content.Shared.Botany.Systems;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Botany.Items.Components;
 
 namespace Content.Shared.Botany.Items.Components;
 

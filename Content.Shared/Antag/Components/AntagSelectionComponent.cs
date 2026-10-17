@@ -3,6 +3,7 @@ using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
+using Content.Shared.Antag.Components;
 
 namespace Content.Shared.Antag.Components;
 

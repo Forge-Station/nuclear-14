@@ -1,6 +1,7 @@
 using Content.Shared.Temperature.Systems;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
+using Content.Shared.Temperature.Components;
 
 namespace Content.Shared.Temperature.Components;
 

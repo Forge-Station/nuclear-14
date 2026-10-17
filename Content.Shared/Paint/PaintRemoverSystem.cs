@@ -31,7 +31,7 @@ public sealed class PaintRemoverSystem : SharedPaintSystem
         if (args.Handled
             || !args.CanReach
             || args.Target is not { Valid: true } target
-            || !HasComp<PaintedComponent>(target))
+            || !HasComp<PaintedVisualsComponent>(target))
             return;
 
         _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, args.User, component.CleanDelay, new PaintRemoverDoAfterEvent(), uid, args.Target, uid)
@@ -49,14 +49,14 @@ public sealed class PaintRemoverSystem : SharedPaintSystem
             || args.Handled
             || args.Args.Target == null
             || args.Target is not { Valid: true } target
-            || !TryComp(target, out PaintedComponent? paint))
+            || !TryComp(target, out PaintedVisualsComponent? paint))
             return;
 
         paint.Enabled = false;
         _audio.PlayPredicted(component.Sound, target, args.User);
         _popup.PopupClient(Loc.GetString("paint-removed", ("target", target)), args.User, args.User, PopupType.Medium);
         _appearanceSystem.SetData(target, PaintVisuals.Painted, false);
-        RemComp<PaintedComponent>(target);
+        RemComp<PaintedVisualsComponent>(target);
         Dirty(target, paint);
 
         args.Handled = true;

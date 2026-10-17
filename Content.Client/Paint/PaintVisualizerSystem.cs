@@ -8,7 +8,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Client.Paint;
 
-public sealed class PaintedVisualizerSystem : VisualizerSystem<PaintedComponent>
+public sealed class PaintedVisualizerSystem : VisualizerSystem<PaintedVisualsComponent>
 {
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
     [Dependency] private readonly IPrototypeManager _protoMan = default!;
@@ -18,13 +18,13 @@ public sealed class PaintedVisualizerSystem : VisualizerSystem<PaintedComponent>
     {
         base.Initialize();
 
-        SubscribeLocalEvent<PaintedComponent, HeldVisualsUpdatedEvent>(OnHeldVisualsUpdated);
-        SubscribeLocalEvent<PaintedComponent, ComponentShutdown>(OnShutdown);
-        SubscribeLocalEvent<PaintedComponent, EquipmentVisualsUpdatedEvent>(OnEquipmentVisualsUpdated);
+        SubscribeLocalEvent<PaintedVisualsComponent, HeldVisualsUpdatedEvent>(OnHeldVisualsUpdated);
+        SubscribeLocalEvent<PaintedVisualsComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<PaintedVisualsComponent, EquipmentVisualsUpdatedEvent>(OnEquipmentVisualsUpdated);
     }
 
 
-    protected override void OnAppearanceChange(EntityUid uid, PaintedComponent component, ref AppearanceChangeEvent args)
+    protected override void OnAppearanceChange(EntityUid uid, PaintedVisualsComponent component, ref AppearanceChangeEvent args)
     {
         if (args.Sprite == null
             || !_appearance.TryGetData(uid, PaintVisuals.Painted, out bool isPainted))
@@ -44,7 +44,7 @@ public sealed class PaintedVisualizerSystem : VisualizerSystem<PaintedComponent>
         }
     }
 
-    private void OnShutdown(EntityUid uid, PaintedComponent component, ref ComponentShutdown args)
+    private void OnShutdown(EntityUid uid, PaintedVisualsComponent component, ref ComponentShutdown args)
     {
         if (!TryComp(uid, out SpriteComponent? sprite))
             return;
@@ -65,11 +65,11 @@ public sealed class PaintedVisualizerSystem : VisualizerSystem<PaintedComponent>
         }
     }
 
-    private void OnHeldVisualsUpdated(EntityUid uid, PaintedComponent component, HeldVisualsUpdatedEvent args) =>
+    private void OnHeldVisualsUpdated(EntityUid uid, PaintedVisualsComponent component, HeldVisualsUpdatedEvent args) =>
         UpdateVisuals(component, args);
-    private void OnEquipmentVisualsUpdated(EntityUid uid, PaintedComponent component, EquipmentVisualsUpdatedEvent args) =>
+    private void OnEquipmentVisualsUpdated(EntityUid uid, PaintedVisualsComponent component, EquipmentVisualsUpdatedEvent args) =>
         UpdateVisuals(component, args);
-    private void UpdateVisuals(PaintedComponent component, EntityEventArgs args)
+    private void UpdateVisuals(PaintedVisualsComponent component, EntityEventArgs args)
     {
         var layers = new HashSet<string>();
         var entity = EntityUid.Invalid;

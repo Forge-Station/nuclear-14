@@ -50,7 +50,7 @@ public sealed partial class LoadoutPreferenceSelector : Control
             DescriptionEdit.TextRope = new Rope.Leaf(value.CustomDescription ?? "");
             ColorEdit.Color = Color.FromHex(value.CustomColorTint, Color.White);
             if (value.CustomColorTint != null)
-                UpdatePaint(new(DummyEntityUid, _entityManager.GetComponent<PaintedComponent>(DummyEntityUid)), _entityManager);
+                UpdatePaint(new(DummyEntityUid, _entityManager.GetComponent<PaintedVisualsComponent>(DummyEntityUid)), _entityManager);
             HeirloomButton.Pressed = value.CustomHeirloom ?? false;
             PreferenceButton.Pressed = value.Selected;
         }
@@ -137,7 +137,7 @@ public sealed partial class LoadoutPreferenceSelector : Control
         DummyEntityUid = dummyLoadoutItem;
 
         entityManager.EnsureComponent<AppearanceComponent>(dummyLoadoutItem);
-        entityManager.EnsureComponent<PaintedComponent>(dummyLoadoutItem, out var paint);
+        entityManager.EnsureComponent<PaintedVisualsComponent>(dummyLoadoutItem, out var paint);
 
         var loadoutName =
             Loc.GetString($"loadout-name-{loadout.ID}") == $"loadout-name-{loadout.ID}"
@@ -233,7 +233,7 @@ public sealed partial class LoadoutPreferenceSelector : Control
         ColorEdit.OnColorChanged += _ =>
         {
             _preference.CustomColorTint = SpecialColorTintToggle.Pressed ? ColorEdit.Color.ToHex() : null;
-            UpdatePaint(new Entity<PaintedComponent>(dummyLoadoutItem, paint), entityManager);
+            UpdatePaint(new Entity<PaintedVisualsComponent>(dummyLoadoutItem, paint), entityManager);
         };
 
         NameEdit.PlaceHolder = loadoutName;
@@ -286,7 +286,7 @@ public sealed partial class LoadoutPreferenceSelector : Control
     }
 
 
-    private void UpdatePaint(Entity<PaintedComponent> entity, IEntityManager entityManager)
+    private void UpdatePaint(Entity<PaintedVisualsComponent> entity, IEntityManager entityManager)
     {
         if (_preference.CustomColorTint != null)
         {

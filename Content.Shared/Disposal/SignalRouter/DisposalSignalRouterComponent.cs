@@ -2,6 +2,7 @@ using Content.Shared.DeviceLinking;
 using Content.Shared.Disposal.SignalRouter;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Disposal.Tube;
 
 namespace Content.Shared.Disposal.Tube;
 

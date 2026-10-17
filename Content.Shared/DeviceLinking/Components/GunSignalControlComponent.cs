@@ -2,6 +2,7 @@ using Content.Shared.DeviceLinking.Systems;
 using Content.Shared.Weapons.Ranged.Components;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.DeviceLinking.Components;
 
 namespace Content.Shared.DeviceLinking.Components;
 

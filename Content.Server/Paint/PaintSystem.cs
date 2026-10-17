@@ -102,7 +102,7 @@ public sealed class PaintSystem : SharedPaintSystem
             return;
         }
 
-        if (HasComp<PaintedComponent>(target) || HasComp<RandomSpriteComponent>(target))
+        if (HasComp<PaintedVisualsComponent>(target) || HasComp<RandomSpriteComponent>(target))
         {
             _popup.PopupEntity(Loc.GetString("paint-failure-painted", ("target", target)), user, user, PopupType.Medium);
             return;
@@ -118,7 +118,7 @@ public sealed class PaintSystem : SharedPaintSystem
 
         if (CanPaint(entity, target))
         {
-            EnsureComp<PaintedComponent>(target, out var paint);
+            EnsureComp<PaintedVisualsComponent>(target, out var paint);
             EnsureComp<AppearanceComponent>(target);
 
             paint.Color = entity.Comp.Color;
@@ -132,14 +132,14 @@ public sealed class PaintSystem : SharedPaintSystem
                 foreach (var slot in slotDefinitions)
                 {
                     if (!_inventory.TryGetSlotEntity(target, slot.Name, out var slotEnt)
-                        || HasComp<PaintedComponent>(slotEnt.Value)
+                        || HasComp<PaintedVisualsComponent>(slotEnt.Value)
                         || _whitelist.IsWhitelistFail(entity.Comp.Whitelist, slotEnt.Value)
                         || _whitelist.IsBlacklistPass(entity.Comp.Blacklist, slotEnt.Value)
                         || HasComp<RandomSpriteComponent>(slotEnt.Value)
                         || HasComp<HumanoidAppearanceComponent>(slotEnt.Value))
                         continue;
 
-                    EnsureComp<PaintedComponent>(slotEnt.Value, out var slotToPaint);
+                    EnsureComp<PaintedVisualsComponent>(slotEnt.Value, out var slotToPaint);
                     EnsureComp<AppearanceComponent>(slotEnt.Value);
                     slotToPaint.Color = entity.Comp.Color;
                     _appearanceSystem.SetData(slotEnt.Value, PaintVisuals.Painted, true);
@@ -164,7 +164,7 @@ public sealed class PaintSystem : SharedPaintSystem
             || !HasComp<MetaDataComponent>(target)) // TODO: FIND THE STUPID RACE CONDITION THAT IS MAKING ME CHECK FOR THIS.
             return;
 
-        EnsureComp<PaintedComponent>(target, out var paint);
+        EnsureComp<PaintedVisualsComponent>(target, out var paint);
         EnsureComp<AppearanceComponent>(target);
 
         paint.Color = color;
@@ -180,7 +180,7 @@ public sealed class PaintSystem : SharedPaintSystem
                     || _whitelist.IsBlacklistPass(blacklist, slotEnt.Value))
                     continue;
 
-                EnsureComp<PaintedComponent>(slotEnt.Value, out var slotToPaint);
+                EnsureComp<PaintedVisualsComponent>(slotEnt.Value, out var slotToPaint);
                 EnsureComp<AppearanceComponent>(slotEnt.Value);
                 slotToPaint.Color = color;
                 _appearanceSystem.SetData(slotEnt.Value, PaintVisuals.Painted, true);

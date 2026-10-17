@@ -6,6 +6,7 @@ using Content.Shared.Coordinates.Helpers;
 using Content.Shared.Maps;
 using Robust.Server.GameObjects;
 using Robust.Shared.Map;
+using Content.Shared.Trigger.Components.Effects;
 
 namespace Content.Server.Explosion.EntitySystems;
 

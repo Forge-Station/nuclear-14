@@ -1,5 +1,6 @@
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
+using Content.Shared.Trigger.Components.Effects;
 
 namespace Content.Shared.Trigger.Components.Effects;
 

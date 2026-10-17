@@ -1,5 +1,6 @@
-﻿using Content.Server.Administration.Components;
+using Content.Server.Administration.Components;
 using Content.Shared.Weapons.Ranged.Events;
+using Content.Shared.Administration.Components;
 
 namespace Content.Server.Administration.Systems;
 

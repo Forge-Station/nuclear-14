@@ -2,6 +2,7 @@ using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Traits.Assorted.Components;
+using Content.Shared.Traits.Assorted;
 
 namespace Content.Shared.Traits.Assorted.Systems;
 public sealed class LightweightDrunkSystem : EntitySystem

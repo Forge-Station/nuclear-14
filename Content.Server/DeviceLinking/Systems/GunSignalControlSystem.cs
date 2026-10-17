@@ -4,6 +4,7 @@ using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Map;
 using System.Numerics;
+using Content.Shared.DeviceLinking.Components;
 
 namespace Content.Server.DeviceLinking.Systems;
 

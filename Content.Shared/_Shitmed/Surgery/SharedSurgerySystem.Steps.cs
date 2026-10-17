@@ -21,12 +21,13 @@ using Content.Shared._Shitmed.Medical.Surgery.Tools;
 using Content.Shared.Inventory;
 using Content.Shared.Item;
 using Content.Shared._Shitmed.Body.Organ;
-using Content.Shared._Shitmed.Body.Part;
 using Content.Shared.Popups;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Toolshed.TypeParsers;
 using System.Linq;
 using Content.Shared.Damage.Components;
+
+using Content.Shared.Body;
 
 namespace Content.Shared._Shitmed.Medical.Surgery;
 
@@ -626,37 +627,51 @@ public abstract partial class SharedSurgerySystem
     // TODO: Refactor bodies to include ears as a prototype instead of doing whatever the hell this is.
     private void OnAddMarkingStep(Entity<SurgeryAddMarkingStepComponent> ent, ref SurgeryStepEvent args)
     {
-        if (!TryComp(args.Body, out HumanoidAppearanceComponent? bodyAppearance)
-            || ent.Comp.Organ == null)
+        if (ent.Comp.Organ == null)
             return;
 
         var organType = ent.Comp.Organ.Values.FirstOrDefault();
         if (organType == default)
             return;
 
-        var markingCategory = MarkingCategoriesConversion.FromHumanoidVisualLayers(ent.Comp.MarkingCategory);
+        // Upstream's Nubody keeps markings on the organ itself, keyed by organ category,
+        // so the graft goes through SharedVisualBodySystem instead of the body's old MarkingSet.
+        if (!TryComp<OrganComponent>(args.Part, out var organ) || organ.Category is not { } category)
+            return;
+
+        _visualBody.TryGatherMarkingsData((args.Body, null), null, out _, out _, out var applied);
+
         foreach (var tool in args.Tools)
         {
-            if (TryComp(tool, out MarkingContainerComponent? markingComp)
-                && HasComp(tool, organType.Component.GetType()))
+            if (!TryComp(tool, out MarkingContainerComponent? markingComp)
+                || !HasComp(tool, organType.Component.GetType()))
+                continue;
+
+            var existing = applied is not null
+                           && applied.TryGetValue(category, out var byLayer)
+                           && byLayer.TryGetValue(ent.Comp.MarkingCategory, out var layerMarkings)
+                ? layerMarkings
+                : new List<Marking>();
+
+            if (existing.Any(marking => marking.MarkingId.Contains(ent.Comp.MatchString)))
+                continue;
+
+            var updated = new List<Marking>(existing) { new Marking(markingComp.Marking, 1) };
+
+            _visualBody.ApplyMarkings(args.Body, new()
             {
-                if (!bodyAppearance.MarkingSet.Markings.TryGetValue(markingCategory, out var markingList)
-                    || !markingList.Any(marking => marking.MarkingId.Contains(ent.Comp.MatchString)))
-                {
-                    EnsureComp<BodyPartAppearanceComponent>(args.Part);
-                    _body.ModifyMarkings(args.Body, args.Part, bodyAppearance, ent.Comp.MarkingCategory, markingComp.Marking);
+                [category] = new() { [ent.Comp.MarkingCategory] = updated },
+            });
 
-                    if (ent.Comp.Accent != null
-                        && ent.Comp.Accent.Values.FirstOrDefault() is { } accent)
-                    {
-                        var compType = accent.Component.GetType();
-                        if (!HasComp(args.Body, compType))
-                            AddComp(args.Body, _compFactory.GetComponent(compType));
-                    }
-
-                    QueueDel(tool); // Again since this isnt actually being inserted we just delete it lol.
-                }
+            if (ent.Comp.Accent != null
+                && ent.Comp.Accent.Values.FirstOrDefault() is { } accent)
+            {
+                var compType = accent.Component.GetType();
+                if (!HasComp(args.Body, compType))
+                    AddComp(args.Body, _compFactory.GetComponent(compType));
             }
+
+            QueueDel(tool); // Again since this isnt actually being inserted we just delete it lol.
         }
 
     }

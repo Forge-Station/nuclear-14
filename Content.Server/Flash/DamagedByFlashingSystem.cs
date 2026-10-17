@@ -1,6 +1,7 @@
 using Content.Server.Flash.Components;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Flash.Components;
 
 namespace Content.Server.Flash;
 public sealed class DamagedByFlashingSystem : EntitySystem

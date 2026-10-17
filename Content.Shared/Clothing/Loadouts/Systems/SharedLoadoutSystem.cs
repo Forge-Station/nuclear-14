@@ -151,7 +151,7 @@ public sealed class SharedLoadoutSystem : EntitySystem
                 if (loadout.CustomColorTint != null)
                 {
                     EnsureComp<AppearanceComponent>(item);
-                    EnsureComp<PaintedComponent>(item, out var paint);
+                    EnsureComp<PaintedVisualsComponent>(item, out var paint);
                     paint.Color = Color.FromHex(loadout.CustomColorTint);
                     paint.Enabled = true;
                     _appearance.TryGetData(item, PaintVisuals.Painted, out bool data);

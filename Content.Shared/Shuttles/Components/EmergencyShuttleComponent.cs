@@ -1,3 +1,4 @@
+using Content.Shared.Shuttles.Components;
 namespace Content.Shared.Shuttles.Components;
 
 /// <summary>

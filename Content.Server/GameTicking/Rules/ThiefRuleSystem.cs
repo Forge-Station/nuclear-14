@@ -7,6 +7,8 @@ using Content.Shared.Humanoid;
 using Content.Shared.Mind;
 using Content.Shared.Objectives.Components;
 using Robust.Shared.Random;
+using Content.Shared.GameTicking.Rules.Components;
+using Content.Shared.Roles.Components;
 
 namespace Content.Server.GameTicking.Rules;
 

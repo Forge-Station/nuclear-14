@@ -1,5 +1,6 @@
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Speech.Components;
 
 namespace Content.Shared.Speech.Components;
 

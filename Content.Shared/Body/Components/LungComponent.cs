@@ -4,6 +4,7 @@ using Content.Shared.Atmos;
 using Content.Shared.Chemistry.Components;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Body.Components;
 
 namespace Content.Shared.Body.Components;
 

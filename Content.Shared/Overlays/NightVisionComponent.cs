@@ -2,6 +2,7 @@ using Content.Shared.Actions;
 using Content.Shared.Inventory;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Overlays;
 
 namespace Content.Shared.Overlays;
 

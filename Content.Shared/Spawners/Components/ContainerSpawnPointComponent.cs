@@ -1,6 +1,7 @@
 using Content.Shared.Roles;
 using Content.Shared.Spawners.EntitySystems;
 using Robust.Shared.Prototypes;
+using Content.Shared.Spawners.Components;
 
 namespace Content.Shared.Spawners.Components;
 

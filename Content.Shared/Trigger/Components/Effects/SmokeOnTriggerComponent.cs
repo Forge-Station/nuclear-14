@@ -1,6 +1,7 @@
 using Content.Shared.Chemistry.Components;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Trigger.Components.Effects;
 
 namespace Content.Shared.Trigger.Components.Effects;
 

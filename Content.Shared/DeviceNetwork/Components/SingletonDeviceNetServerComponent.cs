@@ -1,5 +1,6 @@
 using Content.Shared.DeviceNetwork.Systems;
 using Robust.Shared.GameStates;
+using Content.Shared.DeviceNetwork.Components;
 
 namespace Content.Shared.DeviceNetwork.Components;
 

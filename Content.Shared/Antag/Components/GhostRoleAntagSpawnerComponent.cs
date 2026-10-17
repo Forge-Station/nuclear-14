@@ -1,4 +1,5 @@
 using Robust.Shared.Prototypes;
+using Content.Shared.Antag.Components;
 
 namespace Content.Shared.Antag.Components;
 

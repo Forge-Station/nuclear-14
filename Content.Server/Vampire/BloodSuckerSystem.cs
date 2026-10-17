@@ -19,6 +19,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Utility;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Body.Components;
 
 namespace Content.Server.Vampiric
 {

@@ -3,6 +3,7 @@ using Content.Shared.Timing;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Timing;
 using Content.Shared.Timing.Systems;
+using Content.Shared.Trigger.Components.Effects;
 
 namespace Content.Server.IgnitionSource;
 

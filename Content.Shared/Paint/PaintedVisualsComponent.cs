@@ -5,7 +5,7 @@ namespace Content.Shared.Paint;
 
 /// Component applied to target entity when painted
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
-public sealed partial class PaintedComponent : Component
+public sealed partial class PaintedVisualsComponent : Component
 {
     [DataField, AutoNetworkedField]
     public Color Color = Color.FromHex("#2cdbd5");

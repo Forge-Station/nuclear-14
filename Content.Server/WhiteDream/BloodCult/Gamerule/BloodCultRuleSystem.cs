@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Server.Actions;
 using Content.Server.Antag;
@@ -37,6 +37,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
 using Content.Shared.NPC.Systems;
+using Content.Shared.Antag.Components;
 
 
 namespace Content.Server.WhiteDream.BloodCult.Gamerule;

@@ -4,6 +4,7 @@ using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Overlays.Switchable;
 using Robust.Shared.Network;
+using Content.Shared.Overlays;
 
 namespace Content.Shared.Chemistry;
 

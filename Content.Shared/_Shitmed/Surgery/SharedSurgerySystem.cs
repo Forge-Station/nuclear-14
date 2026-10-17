@@ -30,6 +30,8 @@ using Robust.Shared.Timing;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 
+using Content.Shared.Body;
+
 namespace Content.Shared._Shitmed.Medical.Surgery;
 
 public abstract partial class SharedSurgerySystem : EntitySystem
@@ -40,6 +42,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SharedBodySystem _body = default!;
+    [Dependency] private readonly SharedVisualBodySystem _visualBody = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;

@@ -2,6 +2,7 @@ using Content.Shared.Advertise.Systems;
 using Content.Shared.Dataset;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Advertise.Components;
 
 namespace Content.Shared.Advertise.Components;
 

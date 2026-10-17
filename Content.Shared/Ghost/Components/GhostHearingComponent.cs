@@ -1,3 +1,4 @@
+using Content.Shared.Ghost.Components;
 namespace Content.Shared.Ghost.Components;
 
 /// <summary>

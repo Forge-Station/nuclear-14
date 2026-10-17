@@ -1,6 +1,7 @@
 using Content.Server.Advertise;
 using Content.Server.Advertise.Components;
 using Content.Shared.DeltaV.VendingMachines;
+using Content.Shared.Advertise.Components;
 
 namespace Content.Server.DeltaV.VendingMachines;
 

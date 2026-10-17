@@ -10,6 +10,7 @@ using JetBrains.Annotations;
 using Robust.Shared.Audio;
 using Robust.Shared.Enums;
 using Robust.Shared.Player;
+using Content.Shared.Antag.Components;
 
 namespace Content.Server.Antag;
 

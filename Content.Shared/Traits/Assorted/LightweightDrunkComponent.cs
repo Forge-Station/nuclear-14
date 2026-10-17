@@ -1,5 +1,6 @@
 using Robust.Shared.GameStates;
 using Content.Shared.Drunk;
+using Content.Shared.Traits.Assorted;
 
 namespace Content.Shared.Traits.Assorted;
 

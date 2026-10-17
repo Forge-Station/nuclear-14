@@ -39,7 +39,7 @@ public abstract class SharedAutodocSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<AutodocComponent, NewLinkEvent>(OnNewLink);
-        SubscribeLocalEvent<AutodocComponent, PortDisconnectedEvent>(OnPortDisconnected);
+        SubscribeLocalEvent<AutodocComponent, SinkPortDisconnectedEvent>(OnPortDisconnected);
         Subs.BuiEvents<AutodocComponent>(AutodocUiKey.Key, s =>
         {
             s.Event<AutodocCreateProgramMessage>(OnCreateProgram);
@@ -66,7 +66,7 @@ public abstract class SharedAutodocSystem : EntitySystem
         }
     }
 
-    private void OnPortDisconnected(Entity<AutodocComponent> ent, ref PortDisconnectedEvent args)
+    private void OnPortDisconnected(Entity<AutodocComponent> ent, ref SinkPortDisconnectedEvent args)
     {
         if (args.Port != ent.Comp.OperatingTablePort)
             return;

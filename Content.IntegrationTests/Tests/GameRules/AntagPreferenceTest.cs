@@ -8,6 +8,7 @@ using Content.Shared.GameTicking;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
+using Content.Shared.Antag.Components;
 
 namespace Content.IntegrationTests.Tests.GameRules;
 

@@ -2,6 +2,7 @@ using Content.Shared.DeviceNetwork;
 using Content.Shared.Radio.EntitySystems;
 using Robust.Shared.Serialization;
 using Robust.Shared.GameStates;
+using Content.Shared.Radio.Components;
 
 namespace Content.Shared.Radio.Components;
 

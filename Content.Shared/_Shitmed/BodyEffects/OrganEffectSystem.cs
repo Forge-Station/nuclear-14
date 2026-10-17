@@ -20,7 +20,7 @@ public partial class OrganEffectSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<OrganComponent, OrganComponentsModifyEvent>(OnOrganComponentsModify);
+        SubscribeLocalEvent<ShitmedOrganComponent, OrganComponentsModifyEvent>(OnOrganComponentsModify);
     }
 
     // While I would love to kill this function, problem is that if we happen to have two parts that add the same
@@ -32,7 +32,7 @@ public partial class OrganEffectSystem : EntitySystem
         if (!_net.IsServer) // TODO: Kill this once I figure out whats breaking the Diagnostic Cybernetics.
             return;
 
-        var query = EntityQueryEnumerator<OrganEffectComponent, OrganComponent>();
+        var query = EntityQueryEnumerator<OrganEffectComponent, ShitmedOrganComponent>();
         var now = _gameTiming.CurTime;
         while (query.MoveNext(out var uid, out var comp, out var part))
         {
@@ -44,7 +44,7 @@ public partial class OrganEffectSystem : EntitySystem
         }
     }
 
-    private void OnOrganComponentsModify(Entity<OrganComponent> organEnt,
+    private void OnOrganComponentsModify(Entity<ShitmedOrganComponent> organEnt,
         ref OrganComponentsModifyEvent ev)
     {
         if (!_net.IsServer) // TODO: Kill this once I figure out whats breaking the Diagnostic Cybernetics.

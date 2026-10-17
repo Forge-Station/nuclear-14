@@ -1,3 +1,4 @@
+using Content.Shared.GameTicking.Rules.Components;
 namespace Content.Shared.GameTicking.Rules.Components;
 
 /// <summary>

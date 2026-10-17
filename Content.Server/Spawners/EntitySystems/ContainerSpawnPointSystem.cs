@@ -1,4 +1,4 @@
-﻿using Content.Server.GameTicking;
+using Content.Server.GameTicking;
 using Content.Server.Spawners.Components;
 using Content.Server.Station.Systems;
 using Content.Shared.Preferences;
@@ -7,6 +7,7 @@ using Robust.Server.Containers;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Content.Shared.Spawners.Components;
 
 namespace Content.Server.Spawners.EntitySystems;
 

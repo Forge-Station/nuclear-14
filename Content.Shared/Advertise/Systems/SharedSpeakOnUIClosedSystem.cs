@@ -1,4 +1,5 @@
 using SpeakOnUIClosedComponent = Content.Shared.Advertise.Components.SpeakOnUIClosedComponent;
+using Content.Shared.Advertise.Components;
 
 namespace Content.Shared.Advertise.Systems;
 
