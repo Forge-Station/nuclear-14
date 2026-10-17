@@ -4,9 +4,9 @@
   description: job-description-detective
   playTimeTracker: JobDetective
   requirements:
-  - !type:RoleTimeRequirement
-    role: JobSecurityOfficer
-    time: 5h
+  - !type:CharacterPlaytimeRequirement
+    tracker: JobSecurityOfficer
+    min: 5h
   startingGear: DetectiveGear
   icon: "JobIconDetective"
   supervisors: job-supervisors-hos

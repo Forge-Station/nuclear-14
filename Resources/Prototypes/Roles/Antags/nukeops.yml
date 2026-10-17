@@ -5,8 +5,8 @@
   setPreference: true
   objective: roles-antag-nuclear-operative-objective
   requirements:
-  - !type:OverallPlaytimeRequirement
-    time: 5h
+  - !type:CharacterOverallTimeRequirement
+    min: 5h
   guides: [ NuclearOperatives ]
   tags:
   - OffStation
@@ -19,11 +19,11 @@
   setPreference: true
   objective: roles-antag-nuclear-operative-agent-objective
   requirements:
-  - !type:OverallPlaytimeRequirement
-    time: 5h
-  - !type:RoleTimeRequirement
-    role: JobChemist
-    time: 3h
+  - !type:CharacterOverallTimeRequirement
+    min: 5h
+  - !type:CharacterPlaytimeRequirement
+    tracker: JobChemist
+    min: 3h
   guides: [ NuclearOperatives ]
   tags:
   - OffStation
@@ -36,11 +36,11 @@
   setPreference: true
   objective: roles-antag-nuclear-operative-commander-objective
   requirements:
-  - !type:OverallPlaytimeRequirement
-    time: 5h
-  - !type:DepartmentTimeRequirement
+  - !type:CharacterOverallTimeRequirement
+    min: 5h
+  - !type:CharacterDepartmentTimeRequirement
     department: Security
-    time: 5h
+    min: 5h
   # should be changed to nukie playtime when thats tracked (wyci)
   guides: [ NuclearOperatives ]
   tags:

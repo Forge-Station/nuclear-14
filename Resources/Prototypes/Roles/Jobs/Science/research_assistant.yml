@@ -4,9 +4,9 @@
   description: job-description-research-assistant
   playTimeTracker: JobResearchAssistant
   requirements:
-    - !type:DepartmentTimeRequirement
+    - !type:CharacterDepartmentTimeRequirement
       department: Science
-      time: 10h
+      min: 10h
       inverted: true # stop playing intern if you're good at science!
   startingGear: ResearchAssistantGear
   icon: "JobIconResearchAssistant"

@@ -211,7 +211,7 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
         if (TryComp<DamageableComponent>(ent, out var damageable))
         {
             var fraction = amount / (ent.Comp.MaxCondition - ent.Comp.Condition);
-            _damage.TryChangeDamage(ent, damageable.Damage * -fraction, ignoreResistances: true,
+            _damage.TryChangeDamage(ent.Owner, damageable.Damage * -fraction, ignoreResistances: true,
                 interruptsDoAfters: false);
         }
 

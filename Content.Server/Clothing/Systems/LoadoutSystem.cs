@@ -159,7 +159,7 @@ public sealed class LoadoutSystem : EntitySystem
         if (!TryComp(uid, out MindContainerComponent? mind) || mind.Mind == null)
             return;
 
-        if (!_job.MindTryGetJob(mind.Mind.Value, out _, out var jobPrototype) || jobPrototype.StartingGear == null)
+        if (!_job.MindTryGetJob(mind.Mind.Value, out var jobPrototype) || jobPrototype.StartingGear == null) // Forge-Change
             return;
 
         if (!_protoMan.TryIndex(jobPrototype.StartingGear, out StartingGearPrototype? gear))

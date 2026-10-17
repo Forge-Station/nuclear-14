@@ -4,6 +4,7 @@ using Content.Shared.Damage.Prototypes;
 using Content.Shared.FixedPoint;
 using Robust.Shared.Prototypes;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Body.Part;
 using Content.Shared._Shitmed.Targeting;
 
 namespace Content.Shared.Damage.Systems;
@@ -75,7 +76,10 @@ public sealed partial class DamageableSystem
         EntityUid? origin = null,
         bool ignoreGlobalModifiers = false,
         bool canSever = true, // Forge-Change
-        TargetBodyPart? targetPart = null // Forge-Change
+        TargetBodyPart? targetPart = null, // Forge-Change
+        bool canEvade = false, // Forge-Change
+        float partMultiplier = 1.00f, // Forge-Change
+        bool doPartDamage = true // Forge-Change
     )
     {
         //! Empty just checks if the DamageSpecifier is _literally_ empty, as in, is internal dictionary of damage types is empty.
@@ -88,7 +92,10 @@ public sealed partial class DamageableSystem
             origin,
             ignoreGlobalModifiers,
             canSever,
-            targetPart);
+            targetPart,
+            canEvade,
+            partMultiplier,
+            doPartDamage);
     }
 
     /// <summary>
@@ -111,7 +118,10 @@ public sealed partial class DamageableSystem
         EntityUid? origin = null,
         bool ignoreGlobalModifiers = false,
         bool canSever = true, // Forge-Change
-        TargetBodyPart? targetPart = null // Forge-Change
+        TargetBodyPart? targetPart = null, // Forge-Change
+        bool canEvade = false, // Forge-Change
+        float partMultiplier = 1.00f, // Forge-Change
+        bool doPartDamage = true // Forge-Change
     )
     {
         //! Empty just checks if the DamageSpecifier is _literally_ empty, as in, is internal dictionary of damage types is empty.
@@ -123,7 +133,10 @@ public sealed partial class DamageableSystem
             origin,
             ignoreGlobalModifiers,
             canSever,
-            targetPart);
+            targetPart,
+            canEvade,
+            partMultiplier,
+            doPartDamage);
         return !newDamage.Empty;
     }
 
@@ -146,7 +159,10 @@ public sealed partial class DamageableSystem
         EntityUid? origin = null,
         bool ignoreGlobalModifiers = false,
         bool canSever = true, // Forge-Change
-        TargetBodyPart? targetPart = null // Forge-Change
+        TargetBodyPart? targetPart = null, // Forge-Change
+        bool canEvade = false, // Forge-Change
+        float partMultiplier = 1.00f, // Forge-Change
+        bool doPartDamage = true // Forge-Change
     )
     {
         var damageDone = new DamageSpecifier();
@@ -162,6 +178,17 @@ public sealed partial class DamageableSystem
 
         if (before.Cancelled)
             return damageDone;
+
+        // Forge-Change: урон по конечностям Shitmed. Тело само решает, в какую часть
+        // пришёл удар, и может увернуться - тогда по самому телу урон не проходит.
+        if (doPartDamage)
+        {
+            var partDamage = new TryChangePartDamageEvent(damage, origin, targetPart, ignoreResistances, canSever, canEvade, partMultiplier);
+            RaiseLocalEvent(ent, ref partDamage);
+
+            if (partDamage.Evaded || partDamage.Cancelled)
+                return damageDone;
+        }
 
         // Apply resistances
         if (!ignoreResistances)

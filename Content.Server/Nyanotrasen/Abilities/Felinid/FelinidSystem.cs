@@ -24,6 +24,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Prototypes;
 using Content.Shared.Medical;
 using Content.Shared.Body.Components;
+using Content.Shared.Charges.Systems;
 
 namespace Content.Server.Abilities.Felinid;
 
@@ -31,7 +32,8 @@ public sealed partial class FelinidSystem : EntitySystem
 {
 
     [Dependency] private readonly SharedActionsSystem _actionsSystem = default!;
-    [Dependency] private readonly SatiationSystem _hungerSystem = default!;
+    [Dependency] private readonly SatiationSystem _satiation = default!;
+    [Dependency] private readonly SharedChargesSystem _charges = default!; // Forge-Change
     [Dependency] private readonly VomitSystem _vomitSystem = default!;
     [Dependency] private readonly SolutionContainerSystem _solutionSystem = default!;
     [Dependency] private readonly IRobustRandom _robustRandom = default!;
@@ -127,10 +129,11 @@ public sealed partial class FelinidSystem : EntitySystem
         if (component.EatActionTarget == null)
             return;
 
-        if (!TryComp<HungerComponent>(uid, out var hunger))
+        // Forge-Change: голод стал сытостью, уровни задаются именами из прототипа.
+        if (!TryComp<SatiationComponent>(uid, out var satiation))
             return;
 
-        if (hunger.CurrentThreshold == Shared.Nutrition.Components.HungerThreshold.Overfed)
+        if (_satiation.IsValueInRange((uid, satiation), SatiationSystem.Hunger, above: "Okay"))
         {
             _popupSystem.PopupEntity(
                 Loc.GetString("food-system-you-cannot-eat-any-more"),
@@ -150,7 +153,7 @@ public sealed partial class FelinidSystem : EntitySystem
 
         if (component.HairballAction != null)
         {
-            _actionsSystem.SetCharges(component.HairballAction, 1); // You get the charge back and that's it. Tough.
+            _charges.SetCharges(component.HairballAction.Value, 1); // Forge-Change: заряды переехали в SharedChargesSystem
             _actionsSystem.SetEnabled(component.HairballAction, true);
         }
 
@@ -159,13 +162,13 @@ public sealed partial class FelinidSystem : EntitySystem
 
         _audio.PlayPvs("/Audio/DeltaV/Items/eatfood.ogg", uid, AudioHelpers.WithVariation(0.15f));
 
-        _hungerSystem.ModifyHunger(uid, 50f, hunger);
+        _satiation.ModifyValue((uid, satiation), SatiationSystem.Hunger, 50f);
 
-        if (component.EatAction is not null && _actionsSystem.TryGetActionData(uid, out var result))
+        if (component.EatAction is { } eatAction && _actionsSystem.GetAction(eatAction) is { } action)
         {
-            if (result.AttachedEntity == null)
+            if (action.Comp.AttachedEntity == null)
                 return;
-            _actionsSystem.RemoveAction(uid, component.EatAction.Value);
+            _actionsSystem.RemoveAction(uid, eatAction);
         }
     }
 
@@ -174,9 +177,9 @@ public sealed partial class FelinidSystem : EntitySystem
         var hairball = EntityManager.SpawnEntity(component.HairballPrototype, Transform(uid).Coordinates);
         var hairballComp = Comp<HairballComponent>(hairball);
 
-        if (TryComp<BloodstreamComponent>(uid, out var bloodstream) && bloodstream.ChemicalSolution.HasValue)
+        if (TryComp<BloodstreamComponent>(uid, out var bloodstream) && bloodstream.MetabolitesSolution.HasValue)
         {
-            var temp = _solutionSystem.SplitSolution(bloodstream.ChemicalSolution.Value, 20);
+            var temp = _solutionSystem.SplitSolution(bloodstream.MetabolitesSolution.Value, 20);
 
             if (_solutionSystem.TryGetSolution(hairball, hairballComp.SolutionName, out var hairballSolution))
             {

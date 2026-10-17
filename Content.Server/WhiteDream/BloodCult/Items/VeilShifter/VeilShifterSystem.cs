@@ -1,4 +1,4 @@
-﻿using Content.Server.Popups;
+using Content.Server.Popups;
 using Content.Shared.Coordinates.Helpers;
 using Content.Shared.Examine;
 using Content.Shared.Interaction.Events;
@@ -10,6 +10,7 @@ using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Random;
+using Content.Shared.Movement.Pulling.Components;
 
 namespace Content.Server.WhiteDream.BloodCult.Items.VeilShifter;
 
@@ -63,7 +64,7 @@ public sealed class VeilShifterSystem : EntitySystem
             var distance = _random.Next(veil.Comp.TeleportDistanceMin, veil.Comp.TeleportDistanceMax);
             coords = userTransform.Coordinates.Offset(offset + direction * distance).SnapToGrid();
 
-            if (!coords.TryGetTileRef(out var tileRef) || _turf.IsTileBlocked(tileRef.Value, CollisionGroup.MobMask))
+            if (!_turf.TryGetTileRef(coords, out var tileRef) || _turf.IsTileBlocked(tileRef.Value, CollisionGroup.MobMask))
                 continue;
             foundPos = true;
             break;
@@ -75,8 +76,10 @@ public sealed class VeilShifterSystem : EntitySystem
             return false;
         }
 
-        if (_pulling.TryGetPulledEntity(user, out var pulledEntity))
-            _pulling.TryStopPull(pulledEntity.Value);
+        // Forge-Change: кого тянет пользователь, лежит в его PullerComponent.
+        var pulledEntity = CompOrNull<PullerComponent>(user)?.Pulling;
+        if (pulledEntity is { } pulledUid && TryComp(pulledUid, out PullableComponent? pulled))
+            _pulling.TryStopPull(pulledUid, pulled);
 
         _transform.SetCoordinates(user, coords);
         if (pulledEntity.HasValue)

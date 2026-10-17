@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Numerics;
 using Content.Server.WhiteDream.BloodCult.Spells;
 using Content.Shared.Alert;
@@ -32,14 +32,14 @@ public sealed class BloodCultEmpoweredSystem : EntitySystem
 
     private void OnEmpowerStartup(Entity<BloodCultEmpoweredComponent> cultist, ref ComponentStartup args)
     {
-        _alerts.ShowAlert(cultist, cultist.Comp.EmpoweredAlert);
+        _alerts.ShowAlert(cultist.Owner, cultist.Comp.EmpoweredAlert);
         if (TryComp(cultist, out BloodCultSpellsHolderComponent? spellsHolder))
             spellsHolder.MaxSpells += cultist.Comp.ExtraSpells;
     }
 
     private void OnEmpowerShutdown(Entity<BloodCultEmpoweredComponent> cultist, ref ComponentShutdown args)
     {
-        _alerts.ClearAlert(cultist, cultist.Comp.EmpoweredAlert);
+        _alerts.ClearAlert(cultist.Owner, cultist.Comp.EmpoweredAlert);
         if (TryComp(cultist, out BloodCultSpellsHolderComponent? spellsHolder))
             spellsHolder.MaxSpells -= cultist.Comp.ExtraSpells;
     }

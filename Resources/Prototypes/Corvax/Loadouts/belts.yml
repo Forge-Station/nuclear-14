@@ -3,7 +3,7 @@
   category: Items
   cost: 3
   requirements:
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 3600
     - !type:CharacterDepartmentRequirement
       inverted: true
@@ -37,7 +37,7 @@
   category: Items
   cost: 4
   requirements:      
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 3600
     - !type:CharacterDepartmentRequirement
       inverted: true

@@ -21,20 +21,20 @@ public sealed class HeartSystem : EntitySystem
 
     private void HandleRemoval(EntityUid uid, HeartComponent _, ref OrganGotRemovedEvent args)
     {
-        if (TerminatingOrDeleted(uid) || TerminatingOrDeleted(args.OldBody))
+        if (TerminatingOrDeleted(uid) || TerminatingOrDeleted(args.Target))
             return;
 
         // TODO: Add some form of very violent bleeding effect.
-        EnsureComp<DelayedDeathComponent>(args.OldBody);
+        EnsureComp<DelayedDeathComponent>(args.Target);
     }
 
     private void HandleAddition(EntityUid uid, HeartComponent _, ref OrganGotInsertedEvent args)
     {
-        if (TerminatingOrDeleted(uid) || TerminatingOrDeleted(args.Body))
+        if (TerminatingOrDeleted(uid) || TerminatingOrDeleted(args.Target))
             return;
 
-        if (_bodySystem.TryGetBodyOrganComponents<BrainComponent>(args.Body, out var _))
-            RemComp<DelayedDeathComponent>(args.Body);
+        if (_bodySystem.TryGetBodyOrganComponents<BrainComponent>(args.Target, out var _))
+            RemComp<DelayedDeathComponent>(args.Target);
     }
     // Shitmed-End
 }

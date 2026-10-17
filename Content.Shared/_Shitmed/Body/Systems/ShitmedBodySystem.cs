@@ -17,7 +17,7 @@ namespace Content.Shared.Body.Systems;
 /// BodySystem) and the fork's partials and consumers already use it, so renaming would
 /// churn every call site for no behavioural gain.
 /// </summary>
-public abstract partial class SharedBodySystem : EntitySystem
+public partial class SharedBodySystem : EntitySystem
 {
     [Dependency] protected readonly BodySystem Body = default!;
     [Dependency] protected readonly OrganRelationSystem Relations = default!;

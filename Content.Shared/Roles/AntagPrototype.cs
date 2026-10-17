@@ -1,6 +1,7 @@
 using Content.Shared.Guidebook;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
+using Content.Shared.Customization.Systems;
 
 namespace Content.Shared.Roles;
 
@@ -47,8 +48,8 @@ public sealed partial class AntagPrototype : IPrototype
     /// <summary>
     ///     Requirements that must be met to opt in to this antag role.
     /// </summary>
-    [DataField, Access(typeof(SharedRoleSystem), Other = AccessPermissions.None)]
-    public HashSet<JobRequirement>? Requirements;
+    [DataField("requirements")] // Forge-Change: форковые требования
+    public List<CharacterRequirement>? Requirements;
 
     /// <summary>
     /// Optional list of guides associated with this antag. If the guides are opened, the first entry in this list

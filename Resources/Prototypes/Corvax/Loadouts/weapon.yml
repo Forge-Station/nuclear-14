@@ -45,7 +45,7 @@
   category: Weapons
   cost: 2
   requirements:
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 3600
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
@@ -67,7 +67,7 @@
   category: Weapons
   cost: 2
   requirements:
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 3600
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
@@ -90,7 +90,7 @@
   category: Weapons
   cost: 3
   requirements:
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 7200
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
@@ -113,7 +113,7 @@
   category: Weapons
   cost: 4
   requirements:
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 4800
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
@@ -136,7 +136,7 @@
   category: Weapons
   cost: 3
   requirements:
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 12800
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
@@ -158,7 +158,7 @@
   category: Weapons
   cost: 6
   requirements:
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 16800
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns

@@ -21,7 +21,10 @@ public sealed partial class NcContractSystem : EntitySystem
         var dirty = false;
 
         if (config.GhostRoleCharacterSex is { } sex)
-            _contractGhostRoleHumanoid.SetSex(mob, sex, false, humanoid);
+        {
+            humanoid.Sex = sex;
+            dirty = true;
+        }
 
         if (config.GhostRoleCharacterGender is { } gender)
         {
@@ -35,42 +38,9 @@ public sealed partial class NcContractSystem : EntitySystem
             dirty = true;
         }
 
-        if (config.GhostRoleCharacterSkinColor is { } skinColor)
-        {
-            _contractGhostRoleHumanoid.SetSkinColor(mob, skinColor, false, true, humanoid);
-            dirty = true;
-        }
-
-        if (!string.IsNullOrWhiteSpace(config.GhostRoleCharacterHair))
-        {
-            humanoid.MarkingSet.RemoveCategory(MarkingCategories.Hair);
-            _contractGhostRoleHumanoid.AddMarking(
-                mob,
-                config.GhostRoleCharacterHair,
-                config.GhostRoleCharacterHairColor,
-                false,
-                true,
-                humanoid);
-            dirty = true;
-        }
-
-        if (!string.IsNullOrWhiteSpace(config.GhostRoleCharacterFacialHair))
-        {
-            humanoid.MarkingSet.RemoveCategory(MarkingCategories.FacialHair);
-            _contractGhostRoleHumanoid.AddMarking(
-                mob,
-                config.GhostRoleCharacterFacialHair,
-                config.GhostRoleCharacterFacialHairColor,
-                false,
-                true,
-                humanoid);
-            dirty = true;
-        }
-        else if (humanoid.Sex == Sex.Female)
-        {
-            humanoid.MarkingSet.RemoveCategory(MarkingCategories.FacialHair);
-            dirty = true;
-        }
+        // Forge-Change: цвет кожи и причёски у апстрима больше не поля гуманоида - они
+        // стали метками на органах Nubody (SharedVisualBodySystem). Пока контракт их не
+        // задаёт; см. долг по переносу прототипов тел.
 
         if (dirty)
             Dirty(mob, humanoid);
@@ -158,8 +128,10 @@ public sealed partial class NcContractSystem : EntitySystem
             !_contractMind.TryGetMind(mob, out var mindId, out var mind))
             return;
 
-        if (TryComp(mindId, out GhostRoleMarkerRoleComponent? marker))
-            marker.Name = Loc.GetString("nc-store-contract-ghost-role-manifest-role");
+        // Forge-Change: GhostRoleMarkerRoleComponent стал голой меткой на сущности-роли,
+        // имя роли теперь берётся из самой сущности.
+        if (_contractRoles.MindHasRole<GhostRoleMarkerRoleComponent>(mindId, out var marker))
+            _contractMeta.SetEntityName(marker.Value.Owner, Loc.GetString("nc-store-contract-ghost-role-manifest-role"));
 
         AddGhostRoleBriefing(mindId, contract);
         TryAddGhostRoleSurvivalObjective(key, state, contract, mindId, mind);

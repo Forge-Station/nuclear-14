@@ -88,6 +88,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
     [Dependency] private readonly AmbientSoundSystem _ambientSoundSystem = default!;
     [Dependency] private readonly MetaDataSystem _metaDataSystem = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
+    [Dependency] private readonly SharedEntityEffectsSystem _entityEffects = default!; // Forge-Change
 
     private static readonly string CookingDamageType = "Heat";
     private static readonly float CookingDamageAmount = 10.0f;
@@ -218,30 +219,30 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
         if (TryComp<TemperatureComponent>(item, out var tempComp))
         {
             // Push the temperature towards what it should be but no higher.
-            var delta = (component.PoweredTemperature - tempComp.Temperature) * _temperature.GetHeatCapacity(item, tempComp);
+            var delta = (component.PoweredTemperature - tempComp.Temperature) * tempComp.HeatCapacity; // Forge-Change: теплоёмкость живёт в компоненте
 
             if (delta > 0f)
-                _temperature.ChangeHeat(item, delta, false, tempComp);
+                _temperature.ChangeHeat((item, tempComp), delta);
         }
 
-        if (TryComp<SolutionContainerManagerComponent>(item, out var solutions) && solutions.Solutions != null)
+        // Forge-Change: словарь растворов закрыт доступом, перебираем через систему.
+        if (TryComp<SolutionManagerComponent>(item, out var solutions))
         {
-            foreach (var (_, solution) in solutions.Solutions)
+            foreach (var (_, solution) in _solutionContainerSystem.EnumerateSolutions((item, solutions)))
             {
-                if(_solutionContainerSystem.TryGetSolution(item, solution.Name, out var solutionRef))
-                    _solutionContainerSystem.SetTemperature(solutionRef!.Value, component.PoweredTemperature);
+                _solutionContainerSystem.SetTemperature(solution, component.PoweredTemperature);
             }
         }
 
         // Damage non-food items and mobs.
-        if ((!HasComp<FoodComponent>(item) || HasComp<MobStateComponent>(item)) &&
+        if ((!HasComp<EdibleComponent>(item) || HasComp<MobStateComponent>(item)) &&
             TryComp<DamageableComponent>(item, out var damageableComponent))
         {
             var damage = new DamageSpecifier(_prototypeManager.Index<DamageTypePrototype>(CookingDamageType),
                 CookingDamageAmount);
 
-            var result = _damageableSystem.TryChangeDamage(item, damage, origin: uid);
-            if (result?.GetTotal() > FixedPoint2.Zero)
+            var result = _damageableSystem.ChangeDamage((item, damageableComponent), damage, origin: uid); // Forge-Change
+            if (result.GetTotal() > FixedPoint2.Zero)
             {
                 // TODO: Smoke, waste, sound, or some indication.
             }
@@ -253,7 +254,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
     /// </summary>
     private void BurnItem(EntityUid uid, DeepFryerComponent component, EntityUid item)
     {
-        if (HasComp<FoodComponent>(item) &&
+        if (HasComp<EdibleComponent>(item) &&
             !HasComp<MobStateComponent>(item) &&
             MetaData(item).EntityPrototype?.ID != component.CharredPrototype)
         {
@@ -394,31 +395,16 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
             _sawmill.Warning(
                 $"{ToPrettyString(uid)} did not have a {component.StorageName} container. It has been created.");
 
-        component.Solution =
-            _solutionContainerSystem.EnsureSolution(uid, component.SolutionName, out var solutionExisted);
+        // Forge-Change: EnsureSolution теперь отдаёт сущность раствора, а возвращает признак.
+        var solutionExisted = _solutionContainerSystem.EnsureSolution(uid, component.SolutionName, out var solutionEnt);
+        component.Solution = solutionEnt.Comp.Solution;
 
         if (!solutionExisted)
             _sawmill.Warning(
                 $"{ToPrettyString(uid)} did not have a {component.SolutionName} solution container. It has been created.");
-        foreach (var reagent in component.Solution.Contents.ToArray())
-        {
-            //JJ Comment - not sure this works. Need to check if Reagent.ToString is correct.
-            _prototypeManager.TryIndex<ReagentPrototype>(reagent.Reagent.ToString(), out var proto);
-            var effectsArgs = new EntityEffectReagentArgs(uid,
-                EntityManager,
-                null,
-                component.Solution,
-                reagent.Quantity,
-                proto!,
-                null,
-                1f);
-            foreach (var effect in component.UnsafeOilVolumeEffects)
-            {
-                if (!effect.ShouldApply(effectsArgs, _random))
-                    continue;
-                effect.Effect(effectsArgs);
-            }
-        }
+        // Forge-Change: эффекты больше не вызываются напрямую и не знают реагента -
+        // апстрим применяет их списком через SharedEntityEffectsSystem.
+        _entityEffects.ApplyEffects(uid, component.UnsafeOilVolumeEffects.ToArray());
     }
 
     /// <summary>
@@ -460,13 +446,14 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
     /// <summary>
     ///     Allow thrown items to land in a basket.
     /// </summary>
-    private void OnThrowHitBy(EntityUid uid, DeepFryerComponent component, ThrowHitByEvent args)
+    // Forge-Change: ThrowHitByEvent стал ByRef-записью без User и Handled - кидавший
+    // теперь лежит в самом брошенном предмете.
+    private void OnThrowHitBy(EntityUid uid, DeepFryerComponent component, ref ThrowHitByEvent args)
     {
-        if (args.Handled)
-            return;
+        var user = args.Component.Thrower;
 
         // Chefs never miss this. :)
-        var missChance = HasComp<ProfessionalChefComponent>(args.User) ? 0f : ThrowMissChance;
+        var missChance = user != null && HasComp<ProfessionalChefComponent>(user.Value) ? 0f : ThrowMissChance;
 
         if (!CanInsertItem(uid, component, args.Thrown) ||
             _random.Prob(missChance) ||
@@ -476,10 +463,10 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
                 Loc.GetString("deep-fryer-thrown-missed"),
                 uid);
 
-            if (args.User != null)
+            if (user != null)
             {
                 _adminLogManager.Add(LogType.Action, LogImpact.Low,
-                    $"{ToPrettyString(args.User.Value)} threw {ToPrettyString(args.Thrown)} at {ToPrettyString(uid)}, and it missed.");
+                    $"{ToPrettyString(user.Value)} threw {ToPrettyString(args.Thrown)} at {ToPrettyString(uid)}, and it missed.");
             }
 
             return;
@@ -498,15 +485,13 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
                 uid);
         }
 
-        if (args.User != null)
+        if (user != null)
         {
             _adminLogManager.Add(LogType.Action, LogImpact.Low,
-                $"{ToPrettyString(args.User.Value)} threw {ToPrettyString(args.Thrown)} at {ToPrettyString(uid)}, and it landed inside.");
+                $"{ToPrettyString(user.Value)} threw {ToPrettyString(args.Thrown)} at {ToPrettyString(uid)}, and it landed inside.");
         }
 
         AfterInsert(uid, component, args.Thrown);
-
-        args.Handled = true;
     }
 
     private void OnSolutionChange(EntityUid uid, DeepFryerComponent component, SolutionChangedEvent args)
@@ -574,7 +559,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
         if (!TryComp<HandsComponent>(user, out var handsComponent))
             return false;
 
-        heldItem = handsComponent.ActiveHandId;
+        _handsSystem.TryGetActiveItem((user, handsComponent), out heldItem); // Forge-Change: ActiveHandId - имя руки, не предмет
 
         if (heldItem == null ||
             !TryComp<SolutionTransferComponent>(heldItem, out var solutionTransferComponent) ||
@@ -603,7 +588,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
                 out var transferAmount))
             return;
 
-        if (!_solutionContainerSystem.TryGetSolution(component.Owner, component.Solution.Name, out var solution))
+        if (!_solutionContainerSystem.TryGetSolution(component.Owner, component.SolutionName, out var solution))
             return;
 
         _solutionTransferSystem.Transfer(user,
@@ -685,7 +670,8 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
         if (!_solutionContainerSystem.TryGetSolution(uid, component.SolutionName, out var solution))
             return;
 
-        if (!_solutionContainerSystem.TryGetSolution(args.Used!.Value, args.Solution.Name, out var targetSolution))
+        // Forge-Change: у Solution больше нет имени, так что раствор в руке ищем как заливаемый.
+        if (!_solutionContainerSystem.TryGetRefillableSolution(args.Used!.Value, out var targetSolution, out _))
             return;
 
         _solutionContainerSystem.UpdateChemicals(solution.Value);

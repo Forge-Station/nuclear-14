@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.Body;
 using Content.Shared.Body.Part;
@@ -17,7 +18,7 @@ namespace Content.Shared.Body.Systems;
 /// Слотов нет вообще, поэтому их имена здесь остались только как ключи для прототипов
 /// и условий хирургии: они больше ничего не адресуют.
 /// </remarks>
-public abstract partial class SharedBodySystem
+public partial class SharedBodySystem
 {
     [Dependency] private readonly SharedContainerSystem _bodyContainer = default!;
 
@@ -259,6 +260,18 @@ public abstract partial class SharedBodySystem
     }
 
     /// <summary>
+    /// Отрывает часть тела и рассыпает её содержимое. Вызывается порогом разрушения.
+    /// </summary>
+    public void GibPart(EntityUid partId, BodyPartComponent? part = null)
+    {
+        if (!Resolve(partId, ref part, false))
+            return;
+
+        DropSlotContents((partId, part));
+        DropPart((partId, part));
+    }
+
+    /// <summary>
     /// Отрывает всё, что держится на этой части.
     /// </summary>
     public void DropSlotContents(Entity<BodyPartComponent> part)
@@ -285,5 +298,33 @@ public abstract partial class SharedBodySystem
         }
 
         return _bodyContainer.Insert(organId, container, force: true);
+    }
+
+    /// <summary>
+    /// Органы тела, у которых есть компонент <typeparamref name="T"/>, вместе с их
+    /// органными компонентами Shitmed.
+    /// </summary>
+    public bool TryGetBodyOrganComponents<T>(
+        EntityUid uid,
+        [NotNullWhen(true)] out List<(T Comp, ShitmedOrganComponent Organ)>? comps,
+        BodyComponent? body = null)
+        where T : IComponent
+    {
+        comps = null;
+        if (!Resolve(uid, ref body, false))
+            return false;
+
+        var found = new List<(T Comp, ShitmedOrganComponent Organ)>();
+        foreach (var organ in Body.EnumerateOrgans<T>((uid, body)))
+        {
+            if (TryComp<ShitmedOrganComponent>(organ.Owner, out var shitmed))
+                found.Add((organ.Comp2, shitmed));
+        }
+
+        if (found.Count == 0)
+            return false;
+
+        comps = found;
+        return true;
     }
 }

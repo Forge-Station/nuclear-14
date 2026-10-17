@@ -189,6 +189,22 @@ public sealed partial class TileSystem : EntitySystem
         return DeconstructTile(tileRef);
     }
 
+    /// <summary>
+    /// Forge-Change: разбирает плитку лопатой (Nyanotrasen).
+    /// </summary>
+    public bool DigTile(TileRef tileRef)
+    {
+        var tile = tileRef.Tile;
+
+        if (tile.IsEmpty)
+            return false;
+
+        if (_tileDefinitionManager[tile.TypeId] is not ContentTileDefinition tileDef || !tileDef.CanShovel)
+            return false;
+
+        return DeconstructTile(tileRef);
+    }
+
     public bool ReplaceTile(TileRef tileref, ContentTileDefinition replacementTile)
     {
         if (!TryComp<MapGridComponent>(tileref.GridUid, out var grid))

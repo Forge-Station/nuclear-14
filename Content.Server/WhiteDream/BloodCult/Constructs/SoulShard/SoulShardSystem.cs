@@ -1,4 +1,4 @@
-﻿using Content.Shared.Bible.Components;
+using Content.Shared.Bible.Components;
 using Content.Server.Mind;
 using Content.Server.Popups;
 using Content.Server.Roles;
@@ -72,7 +72,7 @@ public sealed class SoulShardSystem : EntitySystem
             return;
 
         _popup.PopupEntity(Loc.GetString("bible-sizzle"), args.User, args.User);
-        _audio.PlayPvs(bible.HealSoundPath, args.User);
+        _audio.PlayPvs(bible.HealSound, args.User);
         _appearanceSystem.SetData(shard, SoulShardVisualState.Blessed, true);
         _lightSystem.SetColor(shard, shard.Comp.BlessedLightColor);
         shard.Comp.IsBlessed = true;

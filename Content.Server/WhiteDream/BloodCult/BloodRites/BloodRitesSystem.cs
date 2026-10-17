@@ -96,7 +96,7 @@ public sealed class BloodRitesSystem : EntitySystem
             ConsumePuddles(args.Target.Value, rites);
             args.Handled = true;
         }
-        else if (TryComp(args.Target, out SolutionContainerManagerComponent? solutionContainer))
+        else if (TryComp(args.Target, out SolutionManagerComponent? solutionContainer))
         {
             ConsumeBloodFromSolution((args.Target.Value, solutionContainer), rites);
             args.Handled = true;
@@ -200,7 +200,7 @@ public sealed class BloodRitesSystem : EntitySystem
             if (toHeal > healingLeft)
                 toHeal = healingLeft;
 
-            _damageable.TryChangeDamage(target, new DamageSpecifier(damageType, -toHeal));
+            _damageable.TryChangeDamage(target.Owner, new DamageSpecifier(damageType, -toHeal));
 
             healingLeft -= toHeal;
             if (healingLeft == 0)
@@ -235,8 +235,8 @@ public sealed class BloodRitesSystem : EntitySystem
             bloodCost = rites.Comp.StoredBlood;
         }
 
-        _bloodstream.TryModifyBleedAmount(target, -3);
-        _bloodstream.TryModifyBloodLevel(target, bloodCost / rites.Comp.BloodRegenerationRatio);
+        _bloodstream.TryModifyBleedAmount(target.Owner, -3);
+        _bloodstream.TryModifyBloodLevel(target.Owner, bloodCost / rites.Comp.BloodRegenerationRatio);
 
         rites.Comp.StoredBlood -= bloodCost;
         return true;
@@ -253,7 +253,7 @@ public sealed class BloodRitesSystem : EntitySystem
 
         foreach (var puddle in lookup)
         {
-            if (!TryComp(puddle, out SolutionContainerManagerComponent? solutionContainer))
+            if (!TryComp(puddle, out SolutionManagerComponent? solutionContainer))
                 continue;
             ConsumeBloodFromSolution((puddle, solutionContainer), rites);
         }
@@ -262,7 +262,7 @@ public sealed class BloodRitesSystem : EntitySystem
     }
 
     private void ConsumeBloodFromSolution(
-        Entity<SolutionContainerManagerComponent?> ent,
+        Entity<SolutionManagerComponent?> ent,
         Entity<BloodRitesAuraComponent> rites
     )
     {

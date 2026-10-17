@@ -138,6 +138,12 @@ public static class FieldStoreId
         DictionaryValue
     }
 
+    /// <remarks>
+    /// Forge-Change: из движка убрали все сериализаторы идентификаторов прототипов,
+    /// кроме <see cref="AbstractPrototypeIdArraySerializer{T}"/> - вместо них теперь
+    /// <c>ProtoId&lt;T&gt;</c>, который разбирается обычным путём. Поэтому здесь остался
+    /// только один вид.
+    /// </remarks>
     private static bool TryGetEntityPrototypeSerializerKind(Type? serializerType, out EntityPrototypeSerializerKind kind)
     {
         kind = default;
@@ -147,33 +153,9 @@ public static class FieldStoreId
         var def = serializerType.GetGenericTypeDefinition();
         var args = serializerType.GetGenericArguments();
 
-        if ((def == typeof(PrototypeIdSerializer<>) || def == typeof(AbstractPrototypeIdSerializer<>)) &&
-            args[0] == typeof(EntityPrototype))
-        {
-            kind = EntityPrototypeSerializerKind.Single;
-            return true;
-        }
-
-        if ((def == typeof(PrototypeIdListSerializer<>) || def == typeof(AbstractPrototypeIdListSerializer<>)
-             || def == typeof(PrototypeIdHashSetSerializer<>) || def == typeof(AbstractPrototypeIdHashSetSerializer<>)
-             || def == typeof(PrototypeIdArraySerializer<>) || def == typeof(AbstractPrototypeIdArraySerializer<>)) &&
-            args[0] == typeof(EntityPrototype))
+        if (def == typeof(AbstractPrototypeIdArraySerializer<>) && args[0] == typeof(EntityPrototype))
         {
             kind = EntityPrototypeSerializerKind.Sequence;
-            return true;
-        }
-
-        if ((def == typeof(PrototypeIdDictionarySerializer<,>) || def == typeof(AbstractPrototypeIdDictionarySerializer<,>)) &&
-            args[1] == typeof(EntityPrototype))
-        {
-            kind = EntityPrototypeSerializerKind.DictionaryKey;
-            return true;
-        }
-
-        if ((def == typeof(PrototypeIdValueDictionarySerializer<,>) || def == typeof(AbstractPrototypeIdValueDictionarySerializer<,>)) &&
-            args[1] == typeof(EntityPrototype))
-        {
-            kind = EntityPrototypeSerializerKind.DictionaryValue;
             return true;
         }
 

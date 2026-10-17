@@ -70,8 +70,8 @@ public sealed class BlindHealingSystem : SharedBlindHealingSystem
     {
 
         if (args.Handled
-            || !TryComp<DamageableComponent>(args.User, out var damageable)
-            || damageable.DamageContainerID != null && !component.DamageContainers.Contains(damageable.DamageContainerID)
+            || !TryComp<InjurableComponent>(args.User, out var injurable)
+            || injurable.DamageContainer != null && !component.DamageContainers.Contains(injurable.DamageContainer.Value)
             || !TryComp<BlindableComponent>(args.User, out var blindcomp)
             || blindcomp.EyeDamage == 0
             || args.User == args.Target && !component.AllowSelfHeal)
@@ -86,8 +86,8 @@ public sealed class BlindHealingSystem : SharedBlindHealingSystem
     private void OnUse(EntityUid uid, BlindHealingComponent component, ref UseInHandEvent args)
     {
         if (args.Handled
-            || !TryComp<DamageableComponent>(args.User, out var damageable)
-            || damageable.DamageContainerID != null && !component.DamageContainers.Contains(damageable.DamageContainerID)
+            || !TryComp<InjurableComponent>(args.User, out var injurable)
+            || injurable.DamageContainer != null && !component.DamageContainers.Contains(injurable.DamageContainer.Value)
             || !TryComp<BlindableComponent>(args.User, out var blindcomp)
             || blindcomp.EyeDamage == 0
             || !component.AllowSelfHeal)

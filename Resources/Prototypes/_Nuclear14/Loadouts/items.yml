@@ -235,7 +235,7 @@
   category: Items
   cost: 5
   requirements:
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 3600
     - !type:CharacterDepartmentRequirement
       inverted: true

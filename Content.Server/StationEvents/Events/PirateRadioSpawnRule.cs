@@ -27,7 +27,7 @@ public sealed class PirateRadioSpawnRule : StationEventSystem<PirateRadioSpawnRu
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly IConfigurationManager _confMan = default!;
-    [Dependency] private readonly GameTicker _gameTicker = default!;
+    [Dependency] private readonly ServerGameTicker _gameTicker = default!; // Forge-Change
     [Dependency] private readonly TransformSystem _xform = default!;
     [Dependency] private readonly MapSystem _mapSystem = default!;
     [Dependency] private readonly StationSystem _station = default!;
@@ -42,7 +42,7 @@ public sealed class PirateRadioSpawnRule : StationEventSystem<PirateRadioSpawnRu
         var stationGrids = new HashSet<EntityUid>();
         foreach (var stations in station)
         {
-            if (TryComp<StationDataComponent>(stations, out var data) && _station.GetLargestGrid(data) is { } grid)
+            if (TryComp<StationDataComponent>(stations, out var data) && _station.GetLargestGrid((stations, data)) is { } grid)
                 stationGrids.Add(grid);
         }
 
@@ -85,14 +85,14 @@ public sealed class PirateRadioSpawnRule : StationEventSystem<PirateRadioSpawnRu
                 var salvPrototypes = _prototypeManager.EnumeratePrototypes<SalvageMapPrototype>().ToList();
                 var salvageProto = _random.Pick(salvPrototypes);
 
-                if (!_mapSystem.MapExists(GameTicker.DefaultMap))
+                if (!_mapSystem.MapExists(_gameTicker.DefaultMap))
                     return;
 
                 // Round didn't start before running this, leading to a null-space test fail.
-                if (GameTicker.DefaultMap == MapId.Nullspace)
+                if (_gameTicker.DefaultMap == MapId.Nullspace)
                     return;
 
-                if (!_map.TryLoadGrid(GameTicker.DefaultMap, salvageProto.MapPath, out _, offset: offset))
+                if (!_map.TryLoadGrid(_gameTicker.DefaultMap, salvageProto.MapPath, out _, offset: offset))
                     return;
 
                 k++;
@@ -102,9 +102,9 @@ public sealed class PirateRadioSpawnRule : StationEventSystem<PirateRadioSpawnRu
 
     protected override void Ended(Entity<PirateRadioSpawnRuleComponent> rule, ref GameRuleEndedEvent args)
     {
-        base.Ended(uid, component, gameRule, args);
+        base.Ended(rule, ref args); // Forge-Change: у Ended теперь Entity<T> и ByRef-событие
 
-        if (component.AdditionalRule != null)
-            GameTicker.EndGameRule(component.AdditionalRule.Value);
+        if (rule.Comp.AdditionalRule != null)
+            GameTicker.EndGameRule(rule.Comp.AdditionalRule.Value);
     }
 }

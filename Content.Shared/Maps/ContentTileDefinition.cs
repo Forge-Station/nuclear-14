@@ -16,6 +16,9 @@ public sealed partial class ContentTileDefinition : IPrototype, IInheritingProto
 {
     public static readonly ProtoId<ToolQualityPrototype> PryingToolQuality = "Prying";
 
+    /// <summary>Forge-Change: качество инструмента для копания (Nyanotrasen).</summary>
+    public static readonly ProtoId<ToolQualityPrototype> DiggingToolQuality = "Digging";
+
     public const string SpaceID = "Space";
 
     [ParentDataField(typeof(AbstractPrototypeIdArraySerializer<ContentTileDefinition>))]
@@ -61,6 +64,12 @@ public sealed partial class ContentTileDefinition : IPrototype, IInheritingProto
     /// Legacy AF but nice to have.
     /// </remarks>
     public bool CanCrowbar => DeconstructTools.Contains(PryingToolQuality);
+
+    /// <remarks>
+    /// Forge-Change: раньше было отдельное поле canShovel. Апстрим свёл разборку
+    /// плитки к набору качеств инструмента, так что копание - одно из них.
+    /// </remarks>
+    public bool CanShovel => DeconstructTools.Contains(DiggingToolQuality);
 
     /// <summary>
     /// These play when the mob has shoes on.

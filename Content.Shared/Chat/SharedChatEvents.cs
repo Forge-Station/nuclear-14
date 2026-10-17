@@ -3,6 +3,7 @@ using Content.Shared.Radio;
 using Content.Shared.Speech;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
+using Content.Shared.Language;
 
 namespace Content.Shared.Chat;
 
@@ -68,12 +69,28 @@ public sealed class EntitySpokeEvent : EntityEventArgs
     /// </summary>
     public RadioChannelPrototype? Channel;
 
-    public EntitySpokeEvent(EntityUid source, string message, RadioChannelPrototype? channel, string? obfuscatedMessage)
+    /// <summary>
+    /// Forge-Change: язык, на котором сказано. Нужен TTS, баркам и переводчикам.
+    /// </summary>
+    public readonly LanguagePrototype? Language;
+
+    /// <summary>
+    /// Forge-Change: шёпот ли это. Апстрим помечает шёпот тем, что у него есть
+    /// затёртый вариант сообщения, так что отдельное поле не нужно.
+    /// </summary>
+    public bool IsWhisper => ObfuscatedMessage != null;
+
+    public EntitySpokeEvent(EntityUid source,
+        string message,
+        RadioChannelPrototype? channel,
+        string? obfuscatedMessage,
+        LanguagePrototype? language = null) // Forge-Change
     {
         Source = source;
         Message = message;
         Channel = channel;
         ObfuscatedMessage = obfuscatedMessage;
+        Language = language; // Forge-Change
     }
 }
 

@@ -10,8 +10,8 @@
   - Roundstart
   - Unkillable
   requirements:
-  - !type:OverallPlaytimeRequirement
-    time: 5h
+  - !type:CharacterOverallTimeRequirement
+    min: 5h
 
 - type: antagSpecifier
   parent: RestrictedAntag

@@ -49,8 +49,10 @@ public sealed partial class CultRuneBaseSystem
         if (TryComp(target, out PullableComponent? pullable) && pullable.BeingPulled)
             _pulling.TryStopPull(target, pullable);
 
-        // I wish there was a better way to do it
-        if (_pulling.TryGetPulledEntity(target, out var pulling))
-            _pulling.TryStopPull(pulling.Value);
+        // Forge-Change: кого тянет сам target, лежит прямо в его PullerComponent.
+        if (TryComp(target, out PullerComponent? puller)
+            && puller.Pulling is { } pulling
+            && TryComp(pulling, out PullableComponent? pulled))
+            _pulling.TryStopPull(pulling, pulled);
     }
 }

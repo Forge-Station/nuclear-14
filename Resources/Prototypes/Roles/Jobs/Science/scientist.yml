@@ -4,9 +4,9 @@
   description: job-description-scientist
   playTimeTracker: JobScientist
   requirements:
-    - !type:DepartmentTimeRequirement
+    - !type:CharacterDepartmentTimeRequirement
       department: Science
-      time: 2.5h
+      min: 2.5h
   startingGear: ScientistGear
   icon: "JobIconScientist"
   supervisors: job-supervisors-rd

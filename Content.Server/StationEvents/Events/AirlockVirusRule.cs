@@ -19,7 +19,7 @@ namespace Content.Server.StationEvents.Events;
 public sealed class AirlockVirusRule : StationEventSystem<AirlockVirusRuleComponent>
 {
     [Dependency] private readonly AnnouncerSystem _announcer = default!;
-    [Dependency] private readonly GameTicker _gameTicker = default!;
+    [Dependency] private readonly ServerGameTicker _gameTicker = default!; // Forge-Change
     [Dependency] private readonly EmagSystem _emag = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly StationSystem _station = default!;

@@ -4,9 +4,9 @@
   description: job-description-bartender
   playTimeTracker: JobBartender
   requirements:
-    - !type:DepartmentTimeRequirement
+    - !type:CharacterDepartmentTimeRequirement
       department: Service
-      time: 0.5h
+      min: 0.5h
   startingGear: BartenderGear
   icon: "JobIconBartender"
   supervisors: job-supervisors-hop

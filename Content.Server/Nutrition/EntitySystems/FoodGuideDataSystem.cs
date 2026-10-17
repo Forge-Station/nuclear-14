@@ -1,5 +1,4 @@
 using System.Linq;
-using Content.Client.Chemistry.EntitySystems;
 using Content.Server.Chemistry.ReactionEffects;
 using Content.Server.EntityEffects.Effects;
 using Content.Server.Nutrition.Components;
@@ -8,11 +7,15 @@ using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Kitchen;
 using Content.Shared.Nutrition.Components;
+using Content.Client.Chemistry.EntitySystems; // Forge-Change: SharedFoodGuideDataSystem лежит в Content.Shared, но в клиентском пространстве имён
 using Robust.Server.Player;
 using Robust.Shared.Enums;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.EntityEffects.Effects.EntitySpawning;
+using Content.Shared.Tools.Components;
+using Content.Shared.Chemistry.Components;
 
 namespace Content.Server.Nutrition.EntitySystems;
 
@@ -49,7 +52,7 @@ public sealed class FoodGuideDataSystem : SharedFoodGuideDataSystem
     private void OnPrototypesReloaded(PrototypesReloadedEventArgs args)
     {
         if (!args.WasModified<EntityPrototype>()
-            && !args.WasModified<FoodRecipePrototype>()
+            && !args.WasModified<MicrowaveMealRecipePrototype>() // Forge-Change
             && !args.WasModified<ReactionPrototype>()
         )
             return;
@@ -83,16 +86,23 @@ public sealed class FoodGuideDataSystem : SharedFoodGuideDataSystem
                 }
             }
 
-            if (ent.TryGetComponent<SliceableFoodComponent>(out var sliceable, _componentFactory) && sliceable.Slice is not null)
+            // Forge-Change: нарезка еды стала ToolRefinableComponent.
+            if (ent.TryGetComponent<ToolRefinableComponent>(out var refinable, _componentFactory))
             {
-                _sources.GetOrNew(sliceable.Slice).Add(new FoodSlicingData(ent, sliceable.Slice.Value, sliceable.TotalCount));
+                foreach (var slice in refinable.RefineResult)
+                {
+                    if (slice.PrototypeId is not { } sliceProto)
+                        continue;
+
+                    _sources.GetOrNew(sliceProto).Add(new FoodSlicingData(ent, sliceProto, slice.Amount));
+                }
             }
         }
 
         // Recipes
-        foreach (var recipe in _protoMan.EnumeratePrototypes<FoodRecipePrototype>())
+        foreach (var recipe in _protoMan.EnumeratePrototypes<MicrowaveMealRecipePrototype>()) // Forge-Change
         {
-            _sources.GetOrNew(recipe.Result).Add(new FoodRecipeData(recipe, _prototype.Index(recipe.Result).Name));
+            _sources.GetOrNew(recipe.Result).Add(new FoodRecipeData(recipe, _protoMan.Index(recipe.Result).Name));
         }
 
         // Entity-spawning reactions
@@ -100,10 +110,11 @@ public sealed class FoodGuideDataSystem : SharedFoodGuideDataSystem
         {
             foreach (var effect in reaction.Effects)
             {
-                if (effect is not CreateEntityReactionEffect entEffect)
+                // Forge-Change: эффект появления сущности теперь называется SpawnEntity.
+                if (effect is not SpawnEntity entEffect)
                     continue;
 
-                _sources.GetOrNew(entEffect.Entity).Add(new FoodReactionData(reaction, entEffect.Entity, (int) entEffect.Number));
+                _sources.GetOrNew(entEffect.Entity).Add(new FoodReactionData(reaction, entEffect.Entity, entEffect.Number));
             }
         }
 
@@ -112,8 +123,11 @@ public sealed class FoodGuideDataSystem : SharedFoodGuideDataSystem
         foreach (var (result, sources) in _sources)
         {
             var proto = _protoMan.Index<EntityPrototype>(result);
-            var composition = proto.TryGetComponent<FoodComponent>(out var food, _componentFactory) && proto.TryGetComponent<SolutionContainerManagerComponent>(out var manager)
-                ? manager?.Solutions?[food.Solution]?.Contents?.ToArray() ?? []
+            // Forge-Change: состав еды у апстрима лежит в прототипах растворов, а не в
+            // компоненте - собираем его из них.
+            var composition = proto.TryGetComponent<EdibleComponent>(out var food, _componentFactory)
+                              && proto.TryGetComponent<SolutionManagerComponent>(out var manager)
+                ? GetComposition(manager, food.Solution)
                 : [];
 
             // We filter out food without whitelisted reagents because well when people look for food they usually expect FOOD and not insulated gloves.
@@ -136,5 +150,26 @@ public sealed class FoodGuideDataSystem : SharedFoodGuideDataSystem
             return;
 
         RaiseNetworkEvent(new FoodGuideRegistryChangedEvent(Registry), args.Session);
+    }
+
+    /// <summary>
+    /// Forge-Change: содержимое раствора из прототипов сущностей-растворов.
+    /// </summary>
+    private ReagentQuantity[] GetComposition(SolutionManagerComponent manager, string solutionName)
+    {
+        if (manager.SolutionEnts is not { } ents)
+            return [];
+
+        foreach (var entId in ents)
+        {
+            if (!_protoMan.TryIndex(entId, out var solutionProto)
+                || !solutionProto.TryGetComponent<SolutionComponent>(out var solution, _componentFactory)
+                || solution.Id != solutionName)
+                continue;
+
+            return solution.Solution.Contents.ToArray();
+        }
+
+        return [];
     }
 }

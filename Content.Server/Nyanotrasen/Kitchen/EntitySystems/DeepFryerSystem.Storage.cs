@@ -1,4 +1,4 @@
-﻿using Content.Server.Kitchen.Components;
+using Content.Server.Kitchen.Components;
 using Content.Server.Nyanotrasen.Kitchen.Components;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Database;
@@ -82,11 +82,11 @@ public sealed partial class DeepFryerSystem
     {
         var user = EntityManager.GetEntity(args.Entity);
 
-        if (!TryComp<HandsComponent>(user, out var handsComponent) ||
-            handsComponent.ActiveHandId == null)
+        // Forge-Change: ActiveHandId - имя руки, предмет берём через систему рук.
+        if (!TryComp<HandsComponent>(user, out var handsComponent)
+            || !_handsSystem.TryGetActiveItem((user, handsComponent), out var heldItem))
             return;
 
-        if (handsComponent.ActiveHandId != null)
-            TryInsertItem(uid, component, user, handsComponent.ActiveHandId.Value);
+        TryInsertItem(uid, component, user, heldItem.Value);
     }
 }

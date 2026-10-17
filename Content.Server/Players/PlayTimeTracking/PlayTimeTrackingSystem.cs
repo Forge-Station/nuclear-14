@@ -305,7 +305,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
                 jobber.Requirements,
                 jobber,
                 (HumanoidCharacterProfile) _prefs.GetPreferences(userId).SelectedCharacter,
-                _tracking.GetPlayTimes(_playerManager.GetSessionById(userId)),
+                new Dictionary<string, TimeSpan>(_tracking.GetPlayTimes(_playerManager.GetSessionById(userId))), // Forge-Change
                 _playerManager.GetSessionById(userId).ContentData()?.Whitelisted ?? false,
                 jobber,
                 EntityManager,

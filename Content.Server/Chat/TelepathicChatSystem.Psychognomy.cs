@@ -39,7 +39,7 @@ public sealed partial class TelepathicChatSystem
     {
         SubscribeLocalEvent<HumanoidProfileComponent, GetPsychognomicDescriptorEvent>(DescribeHumanoid);
         SubscribeLocalEvent<GrammarComponent, GetPsychognomicDescriptorEvent>(DescribeGrammar);
-        SubscribeLocalEvent<DamageableComponent, GetPsychognomicDescriptorEvent>(DescribeDamage);
+        SubscribeLocalEvent<InjurableComponent, GetPsychognomicDescriptorEvent>(DescribeDamage);
         SubscribeLocalEvent<MobStateComponent, GetPsychognomicDescriptorEvent>(DescribeMobState);
         SubscribeLocalEvent<SatiationComponent, GetPsychognomicDescriptorEvent>(DescribeHunger);
         SubscribeLocalEvent<PhysicsComponent, GetPsychognomicDescriptorEvent>(DescribePhysics);
@@ -66,9 +66,9 @@ public sealed partial class TelepathicChatSystem
             ev.Descriptors.Add(component.Gender == Gender.Male ? Loc.GetString("p-descriptor-masculine") : Loc.GetString("p-descriptor-feminine"));
     }
 
-    private void DescribeDamage(EntityUid uid, DamageableComponent component, GetPsychognomicDescriptorEvent ev)
+    private void DescribeDamage(EntityUid uid, InjurableComponent component, GetPsychognomicDescriptorEvent ev)
     {
-        if (component.DamageContainerID == "CorporealSpirit")
+        if (component.DamageContainer == "CorporealSpirit")
         {
             ev.Descriptors.Add(Loc.GetString("p-descriptor-liminal"));
             if (!HasComp<HumanoidProfileComponent>(uid))

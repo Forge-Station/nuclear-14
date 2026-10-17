@@ -1,4 +1,5 @@
 using Content.Shared.Roles;
+using Content.Shared.Roles.Components;
 using Content.Shared.Roles.Jobs;
 using Content.Shared.Mind.Components;
 using Content.Shared.Interaction.Components;
@@ -29,18 +30,22 @@ public sealed partial class ClothingFactionAndRoleAddSystem : EntitySystem
         if (!TryComp(user, out MindContainerComponent? mind) || !mind.HasMind)
             return;
 
-        var mindId = mind.Mind.Value;
-        if (_job.MindTryGetJob(mindId, out _, out JobPrototype? prototype)
+        if (mind.Mind is not { } mindId)
+            return;
+
+        // Forge-Change: роль профессии стала сущностью с JobRoleComponent, а не компонентом
+        // на самом разуме, и ставится через MindAddJobRole.
+        if (_job.MindTryGetJob(mindId, out var prototype)
             && !_job.MindHasJobWithId(mindId, component.JobId))
         {
             if (!_removedJobs.ContainsKey(user))
             {
                 _removedJobs[user] = prototype.ID;
-                _roles.MindTryRemoveRole<JobComponent>(mindId);
+                _roles.MindRemoveRole<JobRoleComponent>(mindId);
             }
-            _roles.MindAddRole(mindId, new JobComponent { Prototype = component.JobId });
         }
-        else _roles.MindAddRole(mindId, new JobComponent { Prototype = component.JobId });
+
+        _roles.MindAddJobRole(mindId, jobPrototype: component.JobId);
 
         if (TryComp(user, out NpcFactionMemberComponent? npc) && !_npcFaction.IsMember(user, component.Faction))
         {
@@ -69,12 +74,14 @@ public sealed partial class ClothingFactionAndRoleAddSystem : EntitySystem
         if (!TryComp(user, out MindContainerComponent? mind) || !mind.HasMind)
             return;
 
-        var mindId = mind.Mind.Value;
-        if (_roles.MindTryRemoveRole<JobComponent>(mindId))
+        if (mind.Mind is not { } mindId)
+            return;
+
+        if (_roles.MindRemoveRole<JobRoleComponent>(mindId))
         {
             if (_removedJobs.TryGetValue(user, out var job))
             {
-                _roles.MindAddRole(mindId, new JobComponent { Prototype = job });
+                _roles.MindAddJobRole(mindId, jobPrototype: job); // Forge-Change
                 _removedJobs.Remove(user);
             }
         }

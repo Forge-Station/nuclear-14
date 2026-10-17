@@ -1,3 +1,4 @@
+using Content.Shared.Roles;
 using Content.Server.GameTicking;
 using Content.Server.Ghost.Roles;
 using Content.Server.Ghost.Roles.Components;
@@ -21,6 +22,7 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
+    [Dependency] private readonly SharedRoleSystem _contractRoles = default!; // Forge-Change
     [Dependency] private readonly MetaDataSystem _contractMeta = default!;
     [Dependency] private readonly MindSystem _contractMind = default!;
     [Dependency] private readonly GhostRoleSystem _ghostRoles = default!;

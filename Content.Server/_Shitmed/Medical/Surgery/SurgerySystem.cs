@@ -26,12 +26,14 @@ using System.Linq;
 using Content.Shared.Verbs;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Body;
+using Content.Shared.Body.Systems;
+using Content.Shared.StatusEffectNew;
 
 namespace Content.Server._Shitmed.Medical.Surgery;
 
 public sealed class SurgerySystem : SharedSurgerySystem
 {
-    [Dependency] private readonly BodySystem _body = default!;
+    [Dependency] private readonly SharedBodySystem _body = default!; // Forge-Change: API Shitmed живёт на SharedBodySystem
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly IConfigurationManager _config = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
@@ -39,6 +41,7 @@ public sealed class SurgerySystem : SharedSurgerySystem
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly RottingSystem _rot = default!;
+    [Dependency] private readonly StatusEffectsSystem _statusEffect = default!; // Forge-Change: принудительный сон стал статус-эффектом
     [Dependency] private readonly BlindableSystem _blindableSystem = default!;
 
     public override void Initialize()
@@ -153,7 +156,7 @@ public sealed class SurgerySystem : SharedSurgerySystem
     private void OnSurgeryDamageChange(Entity<SurgeryDamageChangeEffectComponent> ent, ref SurgeryStepDamageChangeEvent args)
     {
         var damageChange = ent.Comp.Damage;
-        if (HasComp<ForcedSleepingComponent>(args.Body))
+        if (_statusEffect.HasEffectComp<ForcedSleepingStatusEffectComponent>(args.Body))
             damageChange = damageChange * ent.Comp.SleepModifier;
 
         SetDamage(args.Body, damageChange, 0.5f, args.User, args.Part);
@@ -172,7 +175,7 @@ public sealed class SurgerySystem : SharedSurgerySystem
 
     private void OnStepScreamComplete(Entity<SurgeryStepEmoteEffectComponent> ent, ref SurgeryStepEvent args)
     {
-        if (HasComp<ForcedSleepingComponent>(args.Body))
+        if (_statusEffect.HasEffectComp<ForcedSleepingStatusEffectComponent>(args.Body))
             return;
 
         _chat.TryEmoteWithChat(args.Body, ent.Comp.Emote);

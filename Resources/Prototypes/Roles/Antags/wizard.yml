@@ -17,8 +17,8 @@
   # - Roundstart - Not currently available roundstart
   - Midround
   requirements: # I hate time locked roles but this should be enough time for someone to be acclimated
-  - !type:OverallPlaytimeRequirement
-    time: 5h
+  - !type:CharacterOverallTimeRequirement
+    min: 5h
 
 - type: antagSpecifier
   parent: RestrictedAntag

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Content.Server.Kitchen.Components;
 using Content.Server.Nyanotrasen.Kitchen.Components;
 using Content.Shared.Chemistry.Components;
@@ -29,7 +29,7 @@ public sealed partial class DeepFryerSystem
 
                 UpdateNextFryTime(uid, component);
 
-                if (!_solutionContainerSystem.TryGetSolution(uid, component.Solution.Name, out var solution))
+                if (!_solutionContainerSystem.TryGetSolution(uid, component.SolutionName, out var solution))
                     continue;
 
                 // Heat the vat solution and contained entities.
@@ -49,24 +49,8 @@ public sealed partial class DeepFryerSystem
                     if (oilVolume > FixedPoint2.Zero)
                     {
                         //JJ Comment - this code block makes the Linter fail, and doesn't seem to be necessary with the changes I made.
-                        foreach (var reagent in component.Solution.Contents.ToArray())
-                        {
-                            _prototypeManager.TryIndex<ReagentPrototype>(reagent.Reagent.ToString(), out var proto);
-
-                            foreach (var effect in component.UnsafeOilVolumeEffects)
-                            {
-                                var effectsArgs = new EntityEffectReagentArgs(uid,
-                                    EntityManager,
-                                    null,
-                                    component.Solution,
-                                    reagent.Quantity,
-                                    proto!,
-                                    null,
-                                    1f);
-                                effect.Effect(effectsArgs);
-                            }
-
-                        }
+                        // Forge-Change: эффекты применяются списком, реагента они уже не знают.
+                        _entityEffects.ApplyEffects(uid, component.UnsafeOilVolumeEffects.ToArray());
 
                         component.Solution.RemoveAllSolution();
 

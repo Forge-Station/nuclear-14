@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Content.Server.Atmos.Components;
 using Content.Server.Body.Components;
 using Content.Server.Ghost.Roles.Components;
@@ -17,6 +17,7 @@ using Content.Shared.Nyanotrasen.Kitchen.Components;
 using Robust.Shared.Random;
 using Content.Shared.Body.Components;
 using Content.Shared.Paper;
+using System.Linq;
 
 namespace Content.Server.Nyanotrasen.Kitchen.EntitySystems;
 
@@ -55,8 +56,9 @@ public sealed partial class DeepFryerSystem
             RemComp<RottingComponent>(mob);
 
             // Ensure it's Food here, so it passes the whitelist.
-            var mobFoodComponent = EnsureComp<FoodComponent>(mob);
-            _solutionContainerSystem.EnsureSolution(mob, mobFoodComponent.Solution, out var alreadyHadFood);
+            var mobFoodComponent = EnsureComp<EdibleComponent>(mob);
+            // Forge-Change: EnsureSolution теперь возвращает признак, а раствор отдаёт через out.
+            var alreadyHadFood = _solutionContainerSystem.EnsureSolution(mob, mobFoodComponent.Solution, out _);
 
             if (!_solutionContainerSystem.TryGetSolution(mob, mobFoodComponent.Solution, out var mobFoodSolution))
                 return false;
@@ -67,7 +69,7 @@ public sealed partial class DeepFryerSystem
             if (alreadyHadFood)
                 _solutionContainerSystem.RemoveAllSolution(mobFoodSolution.Value);
 
-            if (TryComp<BloodstreamComponent>(mob, out var bloodstreamComponent) && bloodstreamComponent.ChemicalSolution != null)
+            if (TryComp<BloodstreamComponent>(mob, out var bloodstreamComponent) && bloodstreamComponent.MetabolitesSolution != null)
             {
                 // Fry off any blood into protein.
                 var bloodSolution = bloodstreamComponent.BloodSolution;
@@ -85,9 +87,9 @@ public sealed partial class DeepFryerSystem
 
                 // Bring in whatever chemicals they had in them too.
                 mobFoodSolution.Value.Comp.Solution.MaxVolume +=
-                    bloodstreamComponent.ChemicalSolution.Value.Comp.Solution.Volume;
+                    bloodstreamComponent.MetabolitesSolution.Value.Comp.Solution.Volume;
                 _solutionContainerSystem.AddSolution(mobFoodSolution.Value,
-                    bloodstreamComponent.ChemicalSolution.Value.Comp.Solution);
+                    bloodstreamComponent.MetabolitesSolution.Value.Comp.Solution);
             }
 
             return true;
@@ -127,14 +129,15 @@ public sealed partial class DeepFryerSystem
             paperComponent.Content = stringBuilder.ToString();
         }
 
-        var foodComponent = EnsureComp<FoodComponent>(item);
+        var foodComponent = EnsureComp<EdibleComponent>(item);
         var extraSolution = new Solution();
         if (TryComp(item, out FlavorProfileComponent? flavorProfileComponent))
         {
-            HashSet<string> goodFlavors = new(flavorProfileComponent.Flavors);
+            // Forge-Change: вкусы стали ProtoId.
+            HashSet<string> goodFlavors = new(flavorProfileComponent.Flavors.Select(flavor => flavor.Id));
             goodFlavors.IntersectWith(component.GoodFlavors);
 
-            HashSet<string> badFlavors = new(flavorProfileComponent.Flavors);
+            HashSet<string> badFlavors = new(flavorProfileComponent.Flavors.Select(flavor => flavor.Id));
             badFlavors.IntersectWith(component.BadFlavors);
 
             deepFriedComponent.PriceCoefficient = Math.Max(0.01f,
@@ -168,16 +171,16 @@ public sealed partial class DeepFryerSystem
         }
 
         // Make sure there's enough room for the fryer solution.
-        var foodSolution = _solutionContainerSystem.EnsureSolution(item, foodComponent.Solution);
-        if (!_solutionContainerSystem.TryGetSolution(item, foodSolution.Name, out var foodContainer))
-            return;
+        // Forge-Change: EnsureSolution отдаёт сущность раствора.
+        _solutionContainerSystem.EnsureSolution(item, foodComponent.Solution, out var foodContainer);
 
         // The solution quantity is used to give the fried food an extra
         // buffer too, to support injectables or condiments.
+        var foodSolution = foodContainer.Comp.Solution;
         foodSolution.MaxVolume = 2 * solutionQuantity + foodSolution.Volume + extraSolution.Volume;
-        _solutionContainerSystem.AddSolution(foodContainer.Value,
+        _solutionContainerSystem.AddSolution(foodContainer,
             component.Solution.SplitSolution(solutionQuantity));
-        _solutionContainerSystem.AddSolution(foodContainer.Value, extraSolution);
-        _solutionContainerSystem.UpdateChemicals(foodContainer.Value);
+        _solutionContainerSystem.AddSolution(foodContainer, extraSolution);
+        _solutionContainerSystem.UpdateChemicals(foodContainer);
     }
 }

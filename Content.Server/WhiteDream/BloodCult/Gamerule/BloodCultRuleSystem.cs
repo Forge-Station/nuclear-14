@@ -45,6 +45,7 @@ using Content.Shared.Antag;
 using Content.Shared.Pinpointer;
 using Content.Shared.GameTicking.Rules;
 using Content.Shared.Cloning.Events;
+using Content.Shared.Gibbing;
 
 
 namespace Content.Server.WhiteDream.BloodCult.Gamerule;
@@ -56,7 +57,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     [Dependency] private readonly ActionsSystem _actions = default!;
     [Dependency] private readonly AntagSelectionSystem _antagSelection = default!;
     [Dependency] private readonly BloodSpearSystem _bloodSpear = default!;
-    [Dependency] private readonly BodySystem _body = default!;
+    [Dependency] private readonly GibbingSystem _gibbing = default!; // Forge-Change
     [Dependency] private readonly ContainerSystem _container = default!;
     [Dependency] private readonly HandsSystem _hands = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
@@ -137,7 +138,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
 
                 var harvester = Spawn(cult.HarvesterPrototype, Transform(ent.Owner).Coordinates);
                 _mind.TransferTo(mindContainer.Mind.Value, harvester);
-                _body.GibBody(ent);
+                _gibbing.Gib(ent); // Forge-Change: разделка переехала в GibbingSystem
             }
 
             return;
@@ -415,9 +416,9 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
             if (container.ContainedEntity != null && HasComp<CultItemComponent>(container.ContainedEntity.Value))
                 _container.Remove(container.ContainedEntity.Value, container, true, true);
 
-        foreach (var item in _hands.EnumerateHeld(cultist))
+        foreach (var item in _hands.EnumerateHeld(cultist.Owner))
             if (TryComp(item, out CultItemComponent? cultItem) && !cultItem.AllowUseToEveryone &&
-                !_hands.TryDrop(cultist, item, null, false, false))
+                !_hands.TryDrop(cultist.Owner, item, null, false, false))
                 QueueDel(item);
     }
 

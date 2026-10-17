@@ -1,4 +1,4 @@
-﻿using Content.Shared.Interaction;
+using Content.Shared.Interaction;
 using Content.Shared.Maps;
 using Content.Shared.Nyanotrasen.Digging;
 using Content.Shared.Physics;
@@ -6,6 +6,8 @@ using Content.Shared.Tools.Components;
 using Content.Shared.Tools.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
+using Content.Shared.Tools;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Digging;
 
@@ -42,7 +44,7 @@ public sealed class DiggingSystem : EntitySystem
 
         if (_tileDefManager[tile.Tile.TypeId] is not ContentTileDefinition tileDef
             || !tileDef.CanShovel
-            || string.IsNullOrEmpty(tileDef.BaseTurf)
+            || tileDef.BaseTurf is not { } baseTurf // Forge-Change: BaseTurf стал ProtoId?
             || _turfs.IsTileBlocked(tile, CollisionGroup.MobMask))
         {
             return;
@@ -81,8 +83,8 @@ public sealed class DiggingSystem : EntitySystem
 
         if (_tileDefManager[tile.Tile.TypeId] is not ContentTileDefinition tileDef
             || !tileDef.CanShovel
-            || string.IsNullOrEmpty(tileDef.BaseTurf)
-            || _tileDefManager[tileDef.BaseTurf] is not ContentTileDefinition
+            || tileDef.BaseTurf is not { } baseTurf // Forge-Change: BaseTurf стал ProtoId?
+            || _tileDefManager[baseTurf] is not ContentTileDefinition
             || _turfs.IsTileBlocked(tile, CollisionGroup.MobMask))
         {
             return false;
@@ -94,7 +96,7 @@ public sealed class DiggingSystem : EntitySystem
             user,
             target: shovel,
             doAfterDelay: component.Delay,
-            toolQualitiesNeeded: new[] { component.QualityNeeded },
+            toolQualitiesNeeded: new ProtoId<ToolQualityPrototype>[] { component.QualityNeeded }, // Forge-Change
             doAfterEv: ev,
             toolComponent: tool
         );

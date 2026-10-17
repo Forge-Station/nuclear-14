@@ -38,6 +38,7 @@ public sealed partial class CultRuneBaseSystem : EntitySystem
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly BloodCultRuleSystem _cultRule = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
+    [Dependency] private readonly TurfSystem _turf = default!; // Forge-Change
     [Dependency] private readonly DoAfterSystem _doAfter = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
@@ -139,7 +140,7 @@ public sealed partial class CultRuneBaseSystem : EntitySystem
         if (TryComp<BibleComponent>(args.Used, out var bible) && HasComp<BibleUserComponent>(args.User))
         {
             _popup.PopupEntity(Loc.GetString("cult-rune-erased"), rune, args.User);
-            _audio.PlayPvs(bible.HealSoundPath, args.User);
+            _audio.PlayPvs(bible.HealSound, args.User);
             EntityManager.DeleteEntity(args.Target);
             return;
         }
@@ -171,7 +172,7 @@ public sealed partial class CultRuneBaseSystem : EntitySystem
     private void EraseOnCollding(Entity<CultRuneBaseComponent> rune, ref StartCollideEvent args)
     {
         if (!rune.Comp.CanBeErased ||
-            !TryComp<SolutionContainerManagerComponent>(args.OtherEntity, out var solutionContainer) ||
+            !TryComp<SolutionManagerComponent>(args.OtherEntity, out var solutionContainer) ||
             !HasComp<VaporComponent>(args.OtherEntity) && !HasComp<SprayComponent>(args.OtherEntity))
             return;
 
@@ -247,7 +248,7 @@ public sealed partial class CultRuneBaseSystem : EntitySystem
             return false;
         }
 
-        var tile = transform.Coordinates.GetTileRef();
+        var tile = _turf.GetTileRef(transform.Coordinates); // Forge-Change
         if (tile.HasValue)
             return true;
 

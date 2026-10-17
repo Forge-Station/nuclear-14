@@ -13,12 +13,14 @@ using Robust.Shared.Timing;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Nutrition.Components;
+using Content.Shared.Charges.Systems;
 
 namespace Content.Server.Abilities.Chitinid;
 
 public sealed partial class ChitinidSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _actions = default!;
+    [Dependency] private readonly SharedChargesSystem _charges = default!; // Forge-Change
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
@@ -47,12 +49,14 @@ public sealed partial class ChitinidSystem : EntitySystem
             if (chitinid.AmountAbsorbed >= chitinid.MaximumAbsorbed || _mobState.IsDead(uid))
                 continue;
 
-            if (_damageable.TryChangeDamage(uid, chitinid.Healing, damageable: damageable) is {} delta)
+            // Forge-Change: TryChangeDamage больше не возвращает дельту, её отдаёт ChangeDamage.
+            var delta = _damageable.ChangeDamage((uid, damageable), chitinid.Healing);
+            if (!delta.Empty)
             {
                 chitinid.AmountAbsorbed += -delta.GetTotal().Float();
                 if (chitinid.ChitziteAction != null && chitinid.AmountAbsorbed >= chitinid.MaximumAbsorbed)
                 {
-                    _actions.SetCharges(chitinid.ChitziteAction, 1); // You get the charge back and that's it. Tough.
+                    _charges.SetCharges(chitinid.ChitziteAction.Value, 1); // Forge-Change
                     _actions.SetEnabled(chitinid.ChitziteAction, true);
                 }
             }

@@ -104,6 +104,21 @@ public sealed partial class BlindableSystem : EntitySystem
     /// </summary>
     /// <param name="blindable">The entity to update.</param>
     /// <param name="amount">The minimum amount the entity can be blinded.</param>
+    /// <summary>
+    /// Forge-Change: переносит состояние зрения с одной сущности на другую. Нужно
+    /// хирургии: глаза - отдельная сущность-орган, и при пересадке слепота едет с ней.
+    /// </summary>
+    public void TransferBlindness(BlindableComponent newSight, BlindableComponent oldSight, EntityUid newEntity)
+    {
+        newSight.IsBlind = oldSight.IsBlind;
+        newSight.EyeDamage = oldSight.EyeDamage;
+        newSight.LightSetup = oldSight.LightSetup;
+        newSight.GraceFrame = oldSight.GraceFrame;
+        newSight.MinDamage = oldSight.MinDamage;
+        newSight.MaxDamage = oldSight.MaxDamage;
+        UpdateEyeDamage((newEntity, newSight), true);
+    }
+
     public void SetMinDamage(Entity<BlindableComponent?> blindable, int amount)
     {
         if (!Resolve(blindable, ref blindable.Comp, false))

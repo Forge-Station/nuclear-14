@@ -30,7 +30,7 @@ public sealed partial class PoweredSealableClothingSystem : SharedPoweredSealabl
 
     private void OnPowerCellChanged(Entity<SealableClothingRequiresPowerComponent> entity, ref PowerCellChangedEvent args)
     {
-        if (!entity.Comp.IsPowered && _powerCellSystem.HasDrawCharge(entity))
+        if (!entity.Comp.IsPowered && _powerCellSystem.HasDrawCharge(entity.Owner))
         {
             entity.Comp.IsPowered = true;
             Dirty(entity);
@@ -90,7 +90,7 @@ public sealed partial class PoweredSealableClothingSystem : SharedPoweredSealabl
         if (!TryComp<SealableClothingControlComponent>(uid, out var controlComp) || controlComp.WearerEntity == null)
             return;
 
-        if (!_powerCellSystem.TryGetBatteryFromSlot(entity, out var battery) || !controlComp.IsCurrentlySealed)
+        if (!_powerCellSystem.TryGetBatteryFromSlot(entity.Owner, out var battery) || !controlComp.IsCurrentlySealed)
         {
             _alertsSystem.ClearAlert(controlComp.WearerEntity.Value, comp.SuitPowerAlert);
             return;

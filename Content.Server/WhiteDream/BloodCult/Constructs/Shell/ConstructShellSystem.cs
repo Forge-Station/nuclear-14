@@ -1,4 +1,4 @@
-﻿using Content.Server.Mind;
+using Content.Server.Mind;
 using Content.Server.Popups;
 using Content.Server.WhiteDream.BloodCult.Constructs.SoulShard;
 using Content.Shared.Containers.ItemSlots;
@@ -46,7 +46,7 @@ public sealed class ConstructShellSystem : EntitySystem
                 _ui.TryToggleUi(shellUid, RadialSelectorUiKey.Key, shell);
             };
         }
-        else if (_slots.GetItemOrNull(shell, shell.Comp.ShardSlotId) is { } shard && args.User == shard &&
+        else if (_slots.GetItemOrNull(shell.Owner, shell.Comp.ShardSlotId) is { } shard && args.User == shard &&
                  TryComp(shard, out SoulShardComponent? soulShard))
         {
             action = () =>
@@ -73,7 +73,7 @@ public sealed class ConstructShellSystem : EntitySystem
 
     private void OnShellInit(Entity<ConstructShellComponent> shell, ref ComponentInit args)
     {
-        _slots.AddItemSlot(shell, shell.Comp.ShardSlotId, shell.Comp.ShardSlot);
+        _slots.AddItemSlot(shell.Owner, shell.Comp.ShardSlotId, shell.Comp.ShardSlot);
     }
 
     private void OnInteractUsing(Entity<ConstructShellComponent> shell, ref ContainerIsInsertingAttemptEvent args)
@@ -90,7 +90,7 @@ public sealed class ConstructShellSystem : EntitySystem
             return;
         }
 
-        _slots.SetLock(shell, shell.Comp.ShardSlotId, true);
+        _slots.SetLock(shell.Owner, shell.Comp.ShardSlotId, true);
         _ui.SetUiState(shellUid,
             RadialSelectorUiKey.Key,
             new RadialSelectorState(soulShard.IsBlessed ? shell.Comp.PurifiedConstructs : shell.Comp.Constructs, true));
@@ -111,6 +111,6 @@ public sealed class ConstructShellSystem : EntitySystem
 
     private void OnShellRemove(Entity<ConstructShellComponent> shell, ref ComponentRemove args)
     {
-        _slots.RemoveItemSlot(shell, shell.Comp.ShardSlot);
+        _slots.RemoveItemSlot(shell.Owner, shell.Comp.ShardSlot);
     }
 }

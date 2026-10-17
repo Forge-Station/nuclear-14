@@ -14,13 +14,14 @@ using Content.Shared.StatusEffect;
 using Content.Shared.WhiteDream.BloodCult.BloodCultist;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Body;
+using Content.Shared.Gibbing;
 
 namespace Content.Server.WhiteDream.BloodCult.Runes.Offering;
 
 public sealed class CultRuneOfferingSystem : EntitySystem
 {
     [Dependency] private readonly BloodCultRuleSystem _bloodCultRule = default!;
-    [Dependency] private readonly BodySystem _body = default!;
+    [Dependency] private readonly GibbingSystem _gibbing = default!; // Forge-Change
     [Dependency] private readonly CuffableSystem _cuffable = default!;
     [Dependency] private readonly CultRuneBaseSystem _cultRune = default!;
     [Dependency] private readonly CultRuneReviveSystem _cultRuneRevive = default!;
@@ -103,16 +104,17 @@ public sealed class CultRuneOfferingSystem : EntitySystem
             _mind.UnVisit(mindId);
         }
 
-        _body.GibBody(target);
+        _gibbing.Gib(target); // Forge-Change: разделка переехала в GibbingSystem
     }
 
     private void Convert(Entity<CultRuneOfferingComponent> rune, EntityUid target, EntityUid user)
     {
         _bloodCultRule.Convert(target);
-        _stun.TryStun(target, TimeSpan.FromSeconds(2f), false);
+        _stun.TryAddStunDuration(target, TimeSpan.FromSeconds(2f)); // Forge-Change
         if (TryComp(target, out CuffableComponent? cuffs) && cuffs.Container.ContainedEntities.Count >= 1)
         {
-            var lastAddedCuffs = cuffs.LastAddedCuffs;
+            // Forge-Change: у наручников больше нет памяти о последних надетых.
+            var lastAddedCuffs = cuffs.Container.ContainedEntities[^1];
             _cuffable.Uncuff(target, user, lastAddedCuffs);
         }
 

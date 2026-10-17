@@ -86,7 +86,7 @@
   category: Weapons
   cost: 5
   requirements:
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 6800
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns

@@ -1,3 +1,4 @@
+using Content.Server.Language; // Forge-Change
 using System.Globalization;
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
@@ -44,6 +45,7 @@ public sealed partial class ChatSystem : SharedChatSystem
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private ReplacementAccentSystem _wordreplacement = default!;
     [Dependency] private ExamineSystemShared _examineSystem = default!;
+    [Dependency] private LanguageSystem _language = default!; // Forge-Change
     [Dependency] private EntityQuery<GhostHearingComponent> _ghostHearingQuery = default!;
 
     private bool _loocEnabled = true;

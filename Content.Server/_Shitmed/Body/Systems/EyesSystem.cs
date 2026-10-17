@@ -5,6 +5,7 @@ using Content.Shared._Shitmed.Body.Organ;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Eye.Blinding.Systems;
 using Content.Shared.Body;
+using Content.Shared.StatusEffectNew;
 
 namespace Content.Server.Body.Systems
 {
@@ -13,6 +14,7 @@ namespace Content.Server.Body.Systems
         [Dependency] private readonly IEntityManager _entityManager = default!;
         [Dependency] private readonly BlindableSystem _blindableSystem = default!;
         [Dependency] private readonly BodySystem _bodySystem = default!;
+        [Dependency] private readonly StatusEffectsSystem _statusEffect = default!; // Forge-Change
 
         public override void Initialize()
         {
@@ -47,13 +49,11 @@ namespace Content.Server.Body.Systems
                     hasOtherEyes = true;
                 else
                 {
-                    foreach (var (organ, _) in _bodySystem.GetBodyOrgans(oldEntity, body))
+                    // Forge-Change: у Nubody органы тела перечисляются сразу с нужным компонентом.
+                    foreach (var _ in _bodySystem.EnumerateOrgans<EyesComponent>((oldEntity, body)))
                     {
-                        if (TryComp<EyesComponent>(organ, out var eyes))
-                        {
-                            hasOtherEyes = true;
-                            break;
-                        }
+                        hasOtherEyes = true;
+                        break;
                     }
                     //TODO (MS14): Should we do this for body parts too? might be a little overpowered but could be funny/interesting
                 }
@@ -71,7 +71,7 @@ namespace Content.Server.Body.Systems
             || args.Organ.Comp.Body is not { Valid: true } body)
                 return;
 
-            RemComp<TemporaryBlindnessComponent>(body);
+            _statusEffect.TryRemoveStatusEffect(body, BlindnessSystem.BlindingStatusEffect); // Forge-Change
             HandleSight(uid, body);
         }
 
@@ -81,7 +81,7 @@ namespace Content.Server.Body.Systems
             || args.Organ.Comp.Body is not { Valid: true } body)
                 return;
 
-            EnsureComp<TemporaryBlindnessComponent>(body);
+            _statusEffect.TrySetStatusEffectDuration(body, BlindnessSystem.BlindingStatusEffect); // Forge-Change
             HandleSight(body, uid);
         }
     }

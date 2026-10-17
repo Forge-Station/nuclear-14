@@ -133,7 +133,7 @@ public sealed class PylonSystem : EntitySystem
         foreach (var target in targets)
         {
             if ((HasComp<BloodCultistComponent>(target) || HasComp<ConstructComponent>(target)) && !_mobState.IsDead(target))
-                _damageable.TryChangeDamage(target, pylon.Comp.Healing, true);
+                _damageable.TryChangeDamage(target.Owner, pylon.Comp.Healing, true);
         }
     }
 }

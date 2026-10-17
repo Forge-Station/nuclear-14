@@ -1,5 +1,6 @@
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Part;
+using Content.Shared.Body.Systems;
 using JetBrains.Annotations;
 
 // Leaving this one in the default namespace because I am afraid to test it 
@@ -15,7 +16,8 @@ public sealed partial class GibPartBehavior : IThresholdBehavior
         if (!system.EntityManager.TryGetComponent(owner, out BodyPartComponent? part))
             return;
 
-        system.BodySystem.GibPart(owner, part);
+        // Forge-Change: API Shitmed живёт на SharedBodySystem.
+        system.EntityManager.System<SharedBodySystem>().GibPart(owner, part);
     }
 }
 

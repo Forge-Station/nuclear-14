@@ -1,4 +1,4 @@
-﻿using Content.Server.Actions;
+using Content.Server.Actions;
 using Content.Server.DoAfter;
 using Content.Server.Emp;
 using Content.Server.Hands.Systems;
@@ -117,7 +117,7 @@ public sealed class BloodCultSpellsSystem : EntitySystem
         {
             if (EntityUid.TryParse(args.SelectedItem, out var actionUid))
             {
-                _actions.RemoveAction(cultist, actionUid);
+                _actions.RemoveAction(cultist.Owner, actionUid);
                 cultist.Comp.SelectedSpells.Remove(actionUid);
             }
 

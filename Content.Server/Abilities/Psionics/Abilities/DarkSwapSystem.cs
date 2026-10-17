@@ -13,6 +13,7 @@ namespace Content.Server.Abilities.Psionics
         [Dependency] private readonly SharedPsionicAbilitiesSystem _psionics = default!;
         [Dependency] private readonly SharedPopupSystem _popup = default!;
         [Dependency] private readonly PhysicsSystem _physics = default!;
+        [Dependency] private readonly TurfSystem _turf = default!; // Forge-Change
 
         public override void Initialize()
         {
@@ -24,7 +25,7 @@ namespace Content.Server.Abilities.Psionics
         {
             if (TryComp<EtherealComponent>(args.Performer, out var ethereal))
             {
-                var tileref = Transform(args.Performer).Coordinates.GetTileRef();
+                var tileref = _turf.GetTileRef(Transform(args.Performer).Coordinates); // Forge-Change
                 if (tileref != null
                 && _physics.GetEntitiesIntersectingBody(args.Performer, (int) CollisionGroup.Impassable).Count > 0)
                 {

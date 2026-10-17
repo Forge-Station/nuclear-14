@@ -11,7 +11,7 @@
       species:
       - Human
       - Ghoul
-    - !type:OverallTimeRequirement
+    - !type:CharacterOverallTimeRequirement
       min: 3600 # 1 hour
   startingGear: TribalGear
   alwaysUseSpawner: true

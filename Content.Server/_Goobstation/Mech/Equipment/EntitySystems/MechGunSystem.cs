@@ -19,8 +19,8 @@ public sealed class MechGunSystem : EntitySystem
     {
         base.Initialize();
         SubscribeLocalEvent<MechEquipmentComponent, HandleMechEquipmentBatteryEvent>(OnHandleMechEquipmentBattery);
-        SubscribeLocalEvent<HitscanBatteryAmmoProviderComponent, CheckMechWeaponBatteryEvent>(OnCheckBattery);
-        SubscribeLocalEvent<ProjectileBatteryAmmoProviderComponent, CheckMechWeaponBatteryEvent>(OnCheckBattery);
+        // Forge-Change: апстрим свёл оба поставщика заряда в один BatteryAmmoProviderComponent.
+        SubscribeLocalEvent<BatteryAmmoProviderComponent, CheckMechWeaponBatteryEvent>(OnCheckBattery);
     }
 
     private void OnHandleMechEquipmentBattery(EntityUid uid, MechEquipmentComponent component, HandleMechEquipmentBatteryEvent args)
@@ -43,9 +43,10 @@ public sealed class MechGunSystem : EntitySystem
         }
     }
 
-    private void OnCheckBattery(EntityUid uid, BatteryAmmoProviderComponent component, CheckMechWeaponBatteryEvent args)
+    private void OnCheckBattery(EntityUid uid, BatteryAmmoProviderComponent component, ref CheckMechWeaponBatteryEvent args)
     {
-        if (args._battery.GetCharge((Battery.Owner, Battery)) > component.FireCost)
+        // Forge-Change: заряд теперь считает система, а не хранит компонент.
+        if (_battery.GetCharge((uid, args.Battery)) > component.FireCost)
             args.Cancelled = true;
     }
 
@@ -69,7 +70,7 @@ public sealed class MechGunSystem : EntitySystem
         if (!_mech.TryChangeEnergy(mechEquipment.EquipmentOwner.Value, -chargeDelta, mech))
             return;
 
-        _battery.SetCharge(uid, component.MaxCharge, component);
+        _battery.SetCharge((uid, component), component.MaxCharge); // Forge-Change
     }
 }
 

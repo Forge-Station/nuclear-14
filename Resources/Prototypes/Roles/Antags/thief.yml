@@ -9,8 +9,8 @@
   - OnStation
   - Roundstart
   requirements:
-  - !type:OverallPlaytimeRequirement
-    time: 1h
+  - !type:CharacterOverallTimeRequirement
+    min: 1h
 
 - type: antagSpecifier
   parent: RestrictedAntag

@@ -12,6 +12,8 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared._NC.Sponsor;
+using Content.Shared.Customization.Systems;
 
 namespace Content.Client.Players.PlayTimeTracking;
 
@@ -149,7 +151,7 @@ public sealed partial class JobRequirementsManager : ISharedPlaytimeManager
 
         // Check other role requirements
         var reqs = _entManager.System<SharedRoleSystem>().GetRoleRequirements(job);
-        if (!CheckRoleRequirements(reqs, profile, out reason))
+        if (!CheckRoleRequirements(reqs, job, job, profile, out reason))
             return false;
 
         return true;
@@ -176,28 +178,41 @@ public sealed partial class JobRequirementsManager : ISharedPlaytimeManager
 
         // Check other role requirements
         var reqs = _entManager.System<SharedRoleSystem>().GetRoleRequirements(antag);
-        if (!CheckRoleRequirements(reqs, profile, out reason))
+        if (!CheckRoleRequirements(reqs, null, antag, profile, out reason))
             return false;
 
         return true;
     }
 
     // This must be private so code paths can't accidentally skip requirement overrides. Call this through IsAllowed()
-    private bool CheckRoleRequirements(HashSet<JobRequirement>? requirements, HumanoidCharacterProfile? profile, [NotNullWhen(false)] out FormattedMessage? reason)
+    // Forge-Change: требования форковые (CharacterRequirement), поэтому проверяем их через
+    // CharacterRequirementsSystem. У антагов профессии нет, им передаётся пустая - все их
+    // требования по времени, профессию они не читают.
+    private bool CheckRoleRequirements(
+        List<CharacterRequirement>? requirements,
+        JobPrototype? job,
+        IPrototype prototype,
+        HumanoidCharacterProfile? profile,
+        [NotNullWhen(false)] out FormattedMessage? reason)
     {
         reason = null;
 
-        if (requirements == null || !_cfg.GetCVar(CCVars.GameRoleTimers))
+        if (requirements == null || profile == null || !_cfg.GetCVar(CCVars.GameRoleTimers))
             return true;
 
-        var reasons = new List<string>();
-        foreach (var requirement in requirements)
-        {
-            if (requirement.Check(_entManager, _prototypes, profile, _roles, out var jobReason))
-                continue;
-
-            reasons.Add(jobReason.ToMarkup());
-        }
+        if (_entManager.System<CharacterRequirementsSystem>().CheckRequirementsValid(
+                requirements,
+                job ?? new JobPrototype(),
+                profile,
+                new Dictionary<string, TimeSpan>(_roles),
+                IsWhitelisted(),
+                prototype,
+                _entManager,
+                _prototypes,
+                _cfg,
+                IoCManager.Resolve<ISharedSponsorManager>(),
+                out var reasons))
+            return true;
 
         reason = reasons.Count == 0 ? null : FormattedMessage.FromMarkupOrThrow(string.Join('\n', reasons));
         return reason == null;

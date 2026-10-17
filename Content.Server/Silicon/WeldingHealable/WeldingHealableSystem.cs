@@ -33,12 +33,13 @@ public sealed class WeldingHealableSystem : SharedWeldingHealableSystem
     {
         if (args.Cancelled || args.Used == null
             || !TryComp<DamageableComponent>(args.Target, out var damageable)
+            || !TryComp<InjurableComponent>(args.Target, out var injurable)
             || !TryComp<WeldingHealingComponent>(args.Used, out var component)
-            || damageable.DamageContainerID is null
-            || !component.DamageContainers.Contains(damageable.DamageContainerID)
+            || injurable.DamageContainer is null
+            || !component.DamageContainers.Contains(injurable.DamageContainer.Value)
             || !HasDamage((args.Target.Value, damageable), component, args.User)
             || !TryComp<WelderComponent>(args.Used, out var welder)
-            || !TryComp<SolutionContainerManagerComponent>(args.Used, out var solutionContainer))
+            || !TryComp<SolutionManagerComponent>(args.Used, out var solutionContainer))
             return;
 
         _damageableSystem.TryChangeDamage(uid, component.Damage, true, false, origin: args.User);
@@ -73,8 +74,9 @@ public sealed class WeldingHealableSystem : SharedWeldingHealableSystem
         if (args.Handled
             || !EntityManager.TryGetComponent(args.Used, out WeldingHealingComponent? component)
             || !EntityManager.TryGetComponent(args.Target, out DamageableComponent? damageable)
-            || damageable.DamageContainerID is null
-            || !component.DamageContainers.Contains(damageable.DamageContainerID)
+            || !EntityManager.TryGetComponent(args.Target, out InjurableComponent? injurable)
+            || injurable.DamageContainer is null
+            || !component.DamageContainers.Contains(injurable.DamageContainer.Value)
             || !HasDamage((args.Target, damageable), component, args.User)
             || !_toolSystem.HasQuality(args.Used, component.QualityNeeded)
             || args.User == args.Target && !component.AllowSelfHeal)

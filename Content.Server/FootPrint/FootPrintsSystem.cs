@@ -93,7 +93,7 @@ public sealed class FootPrintsSystem : EntitySystem
             ? (newPos - component.LastStepPos).ToAngle() + Angle.FromDegrees(-90f)
             : args.Component.LocalRotation + Angle.FromDegrees(180f);
 
-        if (!TryComp<SolutionContainerManagerComponent>(footprintUid, out var solutionContainer)
+        if (!TryComp<SolutionManagerComponent>(footprintUid, out var solutionContainer)
             || !_solution.ResolveSolution((footprintUid, solutionContainer), footPrintComponent.SolutionName, ref footPrintComponent.Solution, out var solution))
             return;
 

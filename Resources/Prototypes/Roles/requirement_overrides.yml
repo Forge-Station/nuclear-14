@@ -2,15 +2,15 @@
   id: Reduced
   jobs:
     Captain:
-    - !type:DepartmentTimeRequirement
+    - !type:CharacterDepartmentTimeRequirement
       department: Engineering
-      time: 1h
-    - !type:DepartmentTimeRequirement
+      min: 1h
+    - !type:CharacterDepartmentTimeRequirement
       department: Medical
-      time: 1h
-    - !type:DepartmentTimeRequirement
+      min: 1h
+    - !type:CharacterDepartmentTimeRequirement
       department: Security
-      time: 1h
-    - !type:DepartmentTimeRequirement
+      min: 1h
+    - !type:CharacterDepartmentTimeRequirement
       department: Command
-      time: 1h
+      min: 1h

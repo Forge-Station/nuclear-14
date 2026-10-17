@@ -4,12 +4,12 @@
   description: job-description-warden
   playTimeTracker: JobWarden
   requirements:
-    - !type:RoleTimeRequirement
-      role: JobSecurityOfficer
-      time: 5h
-    - !type:DepartmentTimeRequirement
+    - !type:CharacterPlaytimeRequirement
+      tracker: JobSecurityOfficer
+      min: 5h
+    - !type:CharacterDepartmentTimeRequirement
       department: Security
-      time: 10h
+      min: 10h
   startingGear: WardenGear
   icon: "JobIconWarden"
   supervisors: job-supervisors-hos

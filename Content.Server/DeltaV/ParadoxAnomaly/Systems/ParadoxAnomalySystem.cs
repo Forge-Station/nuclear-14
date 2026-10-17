@@ -1,4 +1,3 @@
-using Content.Server.Clothing.Systems;
 using Content.Server.DeltaV.ParadoxAnomaly.Components;
 using Content.Shared.DetailExaminable;
 using Content.Server.GenericAntag;
@@ -20,6 +19,8 @@ using Robust.Shared.Random;
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Station.Systems;
 using Content.Shared.Spawners.Components;
+using Content.Shared.Body;
+using Content.Shared.Roles.Components;
 
 namespace Content.Server.DeltaV.ParadoxAnomaly.Systems;
 
@@ -40,7 +41,8 @@ public sealed class ParadoxAnomalySystem : EntitySystem
     [Dependency] private readonly SharedRoleSystem _role = default!;
     [Dependency] private readonly StationSystem _station = default!;
     [Dependency] private readonly StationSpawningSystem _stationSpawning = default!;
-    [Dependency] private readonly LoadoutSystem _loadout = default!;
+    [Dependency] private readonly SharedVisualBodySystem _visualBody = default!; // Forge-Change
+    [Dependency] private readonly SharedJobSystem _jobs = default!; // Forge-Change
 
     public override void Initialize()
     {
@@ -68,18 +70,17 @@ public sealed class ParadoxAnomalySystem : EntitySystem
     {
         twin = null;
 
-        // Get a list of potential candidates
-        var candidates = new List<(EntityUid, EntityUid, SpeciesPrototype, HumanoidCharacterProfile)>();
+        // Forge-Change: профиль персонажа апстрим на сущности больше не хранит, поэтому
+        // близнец собирается из самого тела: вид и внешность копируются с оригинала.
+        var candidates = new List<(EntityUid, EntityUid, SpeciesPrototype)>();
         var query = EntityQueryEnumerator<MindContainerComponent, HumanoidProfileComponent>();
         while (query.MoveNext(out var uid, out var mindContainer, out var humanoid))
         {
-            if (humanoid.LastProfileLoaded is not {} profile)
-                continue;
-
             if (!_proto.TryIndex<SpeciesPrototype>(humanoid.Species, out var species))
                 continue;
 
-            if (_mind.GetMind(uid, mindContainer) is not {} mindId || !HasComp<JobComponent>(mindId))
+            if (_mind.GetMind(uid, mindContainer) is not {} mindId
+                || !_role.MindHasRole<JobRoleComponent>(mindId, out _))
                 continue;
 
             if (_role.MindIsAntagonist(mindId))
@@ -87,22 +88,22 @@ public sealed class ParadoxAnomalySystem : EntitySystem
 
             // TODO: when metempsychosis real skip whoever has Karma
 
-            candidates.Add((uid, mindId, species, profile));
+            candidates.Add((uid, mindId, species));
         }
 
         twin = SpawnParadoxAnomaly(candidates, rule);
         return twin != null;
     }
 
-    private EntityUid? SpawnParadoxAnomaly(List<(EntityUid, EntityUid, SpeciesPrototype, HumanoidCharacterProfile)> candidates, string rule)
+    private EntityUid? SpawnParadoxAnomaly(List<(EntityUid, EntityUid, SpeciesPrototype)> candidates, string rule)
     {
         // Select a candidate.
         if (candidates.Count == 0)
             return null;
 
-        var (uid, mindId, species, profile) = _random.Pick(candidates);
-        var jobId = Comp<JobComponent>(mindId).Prototype;
-        var job = _proto.Index<JobPrototype>(jobId!);
+        var (uid, mindId, species) = _random.Pick(candidates);
+        if (!_jobs.MindTryGetJob(mindId, out var job)) // Forge-Change
+            return null;
 
         // Find a suitable spawn point.
         var station = _station.GetOwningStation(uid);
@@ -135,7 +136,19 @@ public sealed class ParadoxAnomalySystem : EntitySystem
         //////////////////////////
 
         // Copy the details.
-        _humanoid.LoadProfile(spawned, profile);
+        // Forge-Change: профиль берём с самого оригинала, внешность - через Nubody.
+        if (TryComp<HumanoidProfileComponent>(uid, out var sourceProfile))
+        {
+            var twinProfile = EnsureComp<HumanoidProfileComponent>(spawned);
+            twinProfile.Gender = sourceProfile.Gender;
+            twinProfile.Age = sourceProfile.Age;
+            twinProfile.Species = sourceProfile.Species;
+            twinProfile.Sex = sourceProfile.Sex;
+            twinProfile.Voice = sourceProfile.Voice;
+            Dirty(spawned, twinProfile);
+        }
+
+        _visualBody.CopyAppearanceFrom(uid, spawned);
         _metaData.SetEntityName(spawned, Name(uid));
 
         if (TryComp<DetailExaminableComponent>(uid, out var detail))
@@ -147,11 +160,9 @@ public sealed class ParadoxAnomalySystem : EntitySystem
         if (job.StartingGear != null && _proto.TryIndex<StartingGearPrototype>(job.StartingGear, out var gear))
         {
             _stationSpawning.EquipStartingGear(spawned, gear);
-            _stationSpawning.EquipIdCard(spawned,
-                profile.Name,
-                job,
-                station);
-            _loadout.ApplyCharacterLoadout(spawned, job, profile, [], false); // TODO: find a way to get playtimes and whitelisted
+            // Forge-Change: EquipIdCard стал SetPdaAndIdCardData; форковый набор снаряжения
+            // близнецу не выдаётся - для него нужен профиль, которого у нас больше нет.
+            _stationSpawning.SetPdaAndIdCardData(spawned, Name(uid), job, station);
         }
 
         foreach (var special in job.Special)

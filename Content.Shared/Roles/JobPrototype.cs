@@ -4,6 +4,7 @@ using Content.Shared.Guidebook;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.StatusIcon;
 using Robust.Shared.Prototypes;
+using Content.Shared.Customization.Systems;
 
 namespace Content.Shared.Roles;
 
@@ -53,8 +54,8 @@ public sealed partial class JobPrototype : IPrototype
     /// <summary>
     /// Requirements for the job.
     /// </summary>
-    [DataField, Access(typeof(SharedRoleSystem), Other = AccessPermissions.None)]
-    public HashSet<JobRequirement>? Requirements;
+    [DataField("requirements")] // Forge-Change: форковые требования
+    public List<CharacterRequirement>? Requirements;
 
     /// <summary>
     /// When true - the station will have announcement about arrival of this player.
@@ -118,6 +119,13 @@ public sealed partial class JobPrototype : IPrototype
 
     [DataField(serverOnly: true)]
     public JobSpecial[] Special { get; private set; } = Array.Empty<JobSpecial>();
+
+    /// <summary>
+    /// Forge-Change: особые действия, которые выполняются уже после выдачи набора
+    /// снаряжения. У апстрима набор выдаётся иначе, поэтому поле форковое.
+    /// </summary>
+    [DataField("afterLoadoutSpecial", serverOnly: true)]
+    public JobSpecial[] AfterLoadoutSpecial { get; private set; } = [];
 
     [DataField]
     public IReadOnlyCollection<ProtoId<AccessLevelPrototype>> Access = Array.Empty<ProtoId<AccessLevelPrototype>>();

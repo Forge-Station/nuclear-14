@@ -30,10 +30,11 @@ namespace Content.Server.Abilities.Oni
             heldComp.Holder = uid;
 
             if (TryComp<ToolComponent>(args.Entity, out var tool) && _toolSystem.HasQuality(args.Entity, "Prying", tool))
-                _toolSystem.SetSpeedModifier((args.Entity, tool), tool.SpeedModifier * 1.66f);
+                _toolSystem.ChangeSpeedModifier((args.Entity, tool), tool.SpeedModifier * 1.66f); // Forge-Change
 
-            if (_gunSystem.TryGetGun(args.Entity, out _, out var gun))
+            if (_gunSystem.TryGetGun(args.Entity, out var gunEnt)) // Forge-Change
             {
+                var gun = gunEnt.Comp;
                 gun.MinAngle *= 15f;
                 gun.AngleIncrease *= 15f;
                 gun.MaxAngle *= 15f;
@@ -43,10 +44,11 @@ namespace Content.Server.Abilities.Oni
         private void OnEntRemoved(EntityUid uid, OniComponent component, EntRemovedFromContainerMessage args)
         {
             if (TryComp<ToolComponent>(args.Entity, out var tool) && _toolSystem.HasQuality(args.Entity, "Prying", tool))
-                _toolSystem.SetSpeedModifier((args.Entity, tool), tool.SpeedModifier / 1.66f);
+                _toolSystem.ChangeSpeedModifier((args.Entity, tool), tool.SpeedModifier / 1.66f); // Forge-Change
 
-            if (_gunSystem.TryGetGun(args.Entity, out _, out var gun))
+            if (_gunSystem.TryGetGun(args.Entity, out var gunEnt)) // Forge-Change
             {
+                var gun = gunEnt.Comp;
                 gun.MinAngle /= 15f;
                 gun.AngleIncrease /= 15f;
                 gun.MaxAngle /= 15f;

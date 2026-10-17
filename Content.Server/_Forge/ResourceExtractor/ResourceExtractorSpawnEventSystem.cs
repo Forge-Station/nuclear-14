@@ -22,6 +22,8 @@ public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly SharedMapSystem _maps = default!; // Forge-Change
+    [Dependency] private readonly TurfSystem _turf = default!; // Forge-Change
 
     private int _maxEventsPerProduction;
     private int _maxEventSpawnsPerProduction;
@@ -187,7 +189,7 @@ public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
     {
         coordinates = default;
         selectedTile = default;
-        if (!Transform(extractor).Coordinates.TryGetTileRef(out var originRef) ||
+        if (!_turf.TryGetTileRef(Transform(extractor).Coordinates, out var originRef) || // Forge-Change
             originRef is not { } origin ||
             !TryComp(origin.GridUid, out MapGridComponent? grid))
         {
@@ -210,14 +212,14 @@ public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
         foreach (var candidate in candidates)
         {
             if (reservedTiles.Contains(candidate) ||
-                !grid.TryGetTileRef(candidate, out var tile) ||
+                !_maps.TryGetTileRef(origin.GridUid, grid, candidate, out var tile) || // Forge-Change
                 tile.Tile.IsEmpty ||
                 IsBlockedByConstruction(tile, grid))
             {
                 continue;
             }
 
-            coordinates = grid.GridTileToLocal(candidate);
+            coordinates = _maps.GridTileToLocal(origin.GridUid, grid, candidate); // Forge-Change
             selectedTile = candidate;
             return true;
         }
@@ -227,7 +229,7 @@ public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
 
     private bool IsAvailableSpawnTile(EntityCoordinates coordinates)
     {
-        if (!coordinates.TryGetTileRef(out var tileRef) || tileRef is not { } tile || tile.Tile.IsEmpty ||
+        if (!_turf.TryGetTileRef(coordinates, out var tileRef) || tileRef is not { } tile || tile.Tile.IsEmpty || // Forge-Change
             !TryComp(tile.GridUid, out MapGridComponent? grid))
         {
             return false;
@@ -238,7 +240,7 @@ public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
 
     private bool IsBlockedByConstruction(TileRef tile, MapGridComponent grid)
     {
-        foreach (var entity in grid.GetAnchoredEntities(tile.GridIndices))
+        foreach (var entity in _maps.GetAnchoredEntities(tile.GridUid, grid, tile.GridIndices)) // Forge-Change
         {
             if (!TryComp<FixturesComponent>(entity, out var fixtures))
                 continue;

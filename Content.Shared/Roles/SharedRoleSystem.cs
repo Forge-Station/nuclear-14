@@ -17,6 +17,7 @@ using Robust.Shared.Utility;
 using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Content.Shared.Customization.Systems;
 
 namespace Content.Shared.Roles;
 
@@ -730,7 +731,7 @@ public abstract partial class SharedRoleSystem : EntitySystem
     /// <summary>
     /// Returns the list of requirements for a role, or null. May be altered by requirement overrides.
     /// </summary>
-    public HashSet<JobRequirement>? GetRoleRequirements(JobPrototype job)
+    public List<CharacterRequirement>? GetRoleRequirements(JobPrototype job)
     {
         if (_requirementOverride != null && _requirementOverride.Jobs.TryGetValue(job.ID, out var req))
             return req;
@@ -740,7 +741,7 @@ public abstract partial class SharedRoleSystem : EntitySystem
 
     // TODO ROLES Change to readonly?
     /// <inheritdoc cref="GetRoleRequirements(JobPrototype)"/>
-    public HashSet<JobRequirement>? GetRoleRequirements(AntagPrototype antag)
+    public List<CharacterRequirement>? GetRoleRequirements(AntagPrototype antag)
     {
         if (_requirementOverride != null && _requirementOverride.Antags.TryGetValue(antag.ID, out var req))
             return req;
@@ -750,14 +751,14 @@ public abstract partial class SharedRoleSystem : EntitySystem
 
     // TODO ROLES Change to readonly?
     /// <inheritdoc cref="GetRoleRequirements(JobPrototype)"/>
-    public HashSet<JobRequirement>? GetRoleRequirements(ProtoId<JobPrototype> jobId)
+    public List<CharacterRequirement>? GetRoleRequirements(ProtoId<JobPrototype> jobId)
     {
         return ProtoMan.TryIndex(jobId, out var job) ? GetRoleRequirements(job) : null;
     }
 
     // TODO ROLES Change to readonly?
     /// <inheritdoc cref="GetRoleRequirements(JobPrototype)"/>
-    public HashSet<JobRequirement>? GetRoleRequirements(ProtoId<AntagPrototype> antagId)
+    public List<CharacterRequirement>? GetRoleRequirements(ProtoId<AntagPrototype> antagId)
     {
         return ProtoMan.TryIndex(antagId, out var antag) ? GetRoleRequirements(antag) : null;
     }

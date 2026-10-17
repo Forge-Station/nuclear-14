@@ -17,7 +17,7 @@ namespace Content.Server.StationEvents.Events;
 
 public sealed class GlimmerMobRule : StationEventSystem<GlimmerMobRuleComponent>
 {
-    [Dependency] private readonly GameTicker _gameTicker = default!;
+    [Dependency] private readonly ServerGameTicker _gameTicker = default!; // Forge-Change
     [Dependency] private readonly GlimmerSystem _glimmer = default!;
     [Dependency] private readonly StationSystem _stations = default!;
 

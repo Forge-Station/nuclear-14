@@ -37,7 +37,7 @@ public sealed partial class FabricateActionsSystem : EntitySystem
             if (actionEntity is not { Valid: true })
                 continue;
 
-            _actions.RemoveAction(entity, actionEntity);
+            _actions.RemoveAction(entity.Owner, actionEntity);
             entity.Comp.ActionEntities.Remove(actionId);
         }
     }
