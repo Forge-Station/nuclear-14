@@ -22,3 +22,10 @@ Entries:
   id: 3
   time: '2026-10-17T10:38:53.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/547
+- author: akino-tech
+  changes:
+    - type: Fix
+      message: Исправлено устранение клина по Z у оружия с переключением хвата.
+  id: 4
+  time: '2026-10-17T11:07:42.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/555
