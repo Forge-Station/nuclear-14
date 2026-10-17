@@ -79,7 +79,7 @@ public partial class SharedBodySystem
         if (!TryComp<DamageableComponent>(entity, out var damageable))
             return;
 
-        var damage = damageable.TotalDamage;
+        var damage = _damageable.GetTotalDamage((entity.Owner, damageable));
 
         if (entity.Comp is { Body: { } body }
             && damage > entity.Comp.MinIntegrity
@@ -241,7 +241,7 @@ public partial class SharedBodySystem
             && delta != null
             && !HasComp<BodyPartReattachedComponent>(partEnt)
             && !partEnt.Comp.Enabled
-            && damageable.TotalDamage >= partEnt.Comp.SeverIntegrity
+            && _damageable.GetTotalDamage((partEnt.Owner, damageable)) >= partEnt.Comp.SeverIntegrity
             && _severingDamageTypes.Any(damageType => delta.DamageDict.TryGetValue(damageType, out var value) && value > 0))
             severed = true;
 
@@ -311,7 +311,7 @@ public partial class SharedBodySystem
         if (!Resolve(partEnt, ref damageable))
             return;
 
-        var integrity = damageable.TotalDamage;
+        var integrity = _damageable.GetTotalDamage((partEnt.Owner, damageable));
 
         // KILL the body part
         if (partEnt.Comp.Enabled && integrity >= partEnt.Comp.IntegrityThresholds[TargetIntegrity.CriticallyWounded])
@@ -369,7 +369,8 @@ public partial class SharedBodySystem
             var targetBodyPart = GetTargetBodyPart(partComponent.Component.PartType, partComponent.Component.Symmetry);
 
             if (targetBodyPart != null && TryComp<DamageableComponent>(partComponent.Id, out var damageable))
-                result[targetBodyPart.Value] = GetIntegrityThreshold(partComponent.Component, damageable.TotalDamage.Float(), false);
+                result[targetBodyPart.Value] = GetIntegrityThreshold(partComponent.Component,
+                    _damageable.GetTotalDamage((partComponent.Id, damageable)).Float(), false);
         }
 
         // Hardcoded shitcode for Groin :)

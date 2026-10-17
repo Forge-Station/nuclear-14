@@ -647,3 +647,19 @@ binds:
   type: State
   key: MouseRight
   canFocus: true
+
+# Forge-Change-Start
+- function: OfferItem
+  type: State
+  key: F
+- function: ToggleCrawlingUnder
+  type: State
+  mod1: Shift
+  key: R
+- function: OpenLanguageMenu
+  type: State
+  key: L
+- function: LookUp
+  type: State
+  key: Space
+# Forge-Change-End

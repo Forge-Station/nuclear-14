@@ -7,11 +7,13 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Mood;
 using Robust.Shared.Configuration;
 using Robust.Shared.Physics.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Contests;
 
 public sealed partial class ContestsSystem : EntitySystem
 {
+    [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly MobThresholdSystem _mobThreshold = default!;
 
@@ -232,8 +234,8 @@ public sealed partial class ContestsSystem : EntitySystem
             return 1f;
 
         return ContestClamp(ContestClampOverride(bypassClamp)
-            ? 1 - damage.TotalDamage.Float() / threshold.Value.Float()
-            : 1 - Math.Clamp(damage.TotalDamage.Float() / threshold.Value.Float(), 0, 0.25f * rangeFactor));
+            ? 1 - _damageable.GetTotalDamage((performer, damage)).Float() / threshold.Value.Float()
+            : 1 - Math.Clamp(_damageable.GetTotalDamage((performer, damage)).Float() / threshold.Value.Float(), 0, 0.25f * rangeFactor));
     }
 
     /// <summary>
@@ -256,10 +258,10 @@ public sealed partial class ContestsSystem : EntitySystem
             return 1f;
 
         return ContestClamp(ContestClampOverride(bypassClamp)
-            ? (1 - perfDamage.TotalDamage.Float() / perfThreshold.Value.Float())
-                / (1 - targetDamage.TotalDamage.Float() / targetThreshold.Value.Float())
-            : (1 - Math.Clamp(perfDamage.TotalDamage.Float() / perfThreshold.Value.Float(), 0, 0.25f * rangeFactor))
-                / (1 - Math.Clamp(targetDamage.TotalDamage.Float() / targetThreshold.Value.Float(), 0, 0.25f * rangeFactor)));
+            ? (1 - _damageable.GetTotalDamage((performer, perfDamage)).Float() / perfThreshold.Value.Float())
+                / (1 - _damageable.GetTotalDamage((target, targetDamage)).Float() / targetThreshold.Value.Float())
+            : (1 - Math.Clamp(_damageable.GetTotalDamage((performer, perfDamage)).Float() / perfThreshold.Value.Float(), 0, 0.25f * rangeFactor))
+                / (1 - Math.Clamp(_damageable.GetTotalDamage((target, targetDamage)).Float() / targetThreshold.Value.Float(), 0, 0.25f * rangeFactor)));
     }
     #endregion
 

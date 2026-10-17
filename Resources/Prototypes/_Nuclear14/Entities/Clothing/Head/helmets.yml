@@ -585,7 +585,9 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/midwest-brotherhood/bosreconhelmet.rsi
   - type: NightVision # Forge-Change
-    isEquipment: true
+    relayOverlay: true
+    enabled: false
+    action: ActionToggleNightVision
   - type: Tag
     tags:
     - HidesHair

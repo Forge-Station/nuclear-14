@@ -13,6 +13,7 @@ public sealed class BaseSwitchableOverlay<TComp> : Overlay where TComp : Switcha
     public override bool RequestScreenTexture => true;
     public override OverlaySpace Space => OverlaySpace.WorldSpace;
 
+    private static readonly ProtoId<ShaderPrototype> Shader = "SwitchableVision";
     private readonly ShaderInstance _shader;
 
     public TComp? Comp = null;
@@ -22,7 +23,7 @@ public sealed class BaseSwitchableOverlay<TComp> : Overlay where TComp : Switcha
     public BaseSwitchableOverlay()
     {
         IoCManager.InjectDependencies(this);
-        _shader = _prototype.Index<ShaderPrototype>("NightVision").InstanceUnique();
+        _shader = _prototype.Index(Shader).InstanceUnique();
     }
 
     protected override void Draw(in OverlayDrawArgs args)

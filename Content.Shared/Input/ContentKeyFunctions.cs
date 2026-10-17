@@ -64,6 +64,23 @@ namespace Content.Shared.Input
         public static readonly BoundKeyFunction ZoomIn = "ZoomIn";
         public static readonly BoundKeyFunction ResetZoom = "ResetZoom";
 
+        // Forge-Change-Start: кейбинды форка, которых нет у апстрима
+        public static readonly BoundKeyFunction OfferItem = "OfferItem";
+        public static readonly BoundKeyFunction LookUp = "LookUp";
+        public static readonly BoundKeyFunction OpenLanguageMenu = "OpenLanguageMenu";
+        public static readonly BoundKeyFunction ToggleCrawlingUnder = "ToggleCrawlingUnder";
+        public static readonly BoundKeyFunction TargetHead = "TargetHead";
+        public static readonly BoundKeyFunction TargetTorso = "TargetTorso";
+        public static readonly BoundKeyFunction TargetLeftArm = "TargetLeftArm";
+        public static readonly BoundKeyFunction TargetLeftHand = "TargetLeftHand";
+        public static readonly BoundKeyFunction TargetRightArm = "TargetRightArm";
+        public static readonly BoundKeyFunction TargetRightHand = "TargetRightHand";
+        public static readonly BoundKeyFunction TargetLeftLeg = "TargetLeftLeg";
+        public static readonly BoundKeyFunction TargetLeftFoot = "TargetLeftFoot";
+        public static readonly BoundKeyFunction TargetRightLeg = "TargetRightLeg";
+        public static readonly BoundKeyFunction TargetRightFoot = "TargetRightFoot";
+        // Forge-Change-End
+
         public static readonly BoundKeyFunction ArcadeUp = "ArcadeUp";
         public static readonly BoundKeyFunction ArcadeDown = "ArcadeDown";
         public static readonly BoundKeyFunction ArcadeLeft = "ArcadeLeft";

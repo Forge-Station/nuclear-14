@@ -36,7 +36,7 @@
   - type: TelescopicBaton
   - type: KnockdownOnHit
     duration: 1.5
-    dropHeldItemsBehavior: NoDrop
+    dropHeldItems: false
   - type: MeleeWeapon
     attackRate: 1.25
     bluntStaminaDamageFactor: 1.5

@@ -450,3 +450,21 @@ ui-options-admin-overlay-ghost-hide-distance = Ghost overlay hide range from mou
 
 ui-options-admin-strip-overlay-title = Strip Overlay
 ui-options-admin-strip-overlay-setting = Show strip overlay by default
+
+# Forge-Change-Start
+ui-options-function-offer-item = Offer something
+ui-options-function-toggle-crawling-under = Toggle crawling under furniture
+ui-options-function-look-up = Look up/Take aim
+ui-options-function-hold-look-up = Hold down the key to aim
+ui-options-header-targeting = Targeting
+ui-options-function-target-head = Target head
+ui-options-function-target-torso = Target torso
+ui-options-function-target-left-arm = Target left arm
+ui-options-function-target-left-hand = Target left hand
+ui-options-function-target-right-arm = Target right arm
+ui-options-function-target-right-hand = Target right hand
+ui-options-function-target-left-leg = Target left leg
+ui-options-function-target-left-foot = Target left foot
+ui-options-function-target-right-leg = Target right leg
+ui-options-function-target-right-foot = Target right foot
+# Forge-Change-End

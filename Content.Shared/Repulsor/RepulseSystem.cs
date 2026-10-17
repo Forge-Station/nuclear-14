@@ -45,6 +45,6 @@ public sealed class RepulseSystem : EntitySystem
 
         _physics.ApplyLinearImpulse(user, impulse);
         _stunSystem.TryStun(user, repulsor.Comp.StunDuration, true);
-        _stunSystem.TryKnockdown(user, repulsor.Comp.KnockdownDuration, true, DropHeldItemsBehavior.DropIfStanding);
+        _stunSystem.TryKnockdown(user, repulsor.Comp.KnockdownDuration, true, drop: true);
     }
 }

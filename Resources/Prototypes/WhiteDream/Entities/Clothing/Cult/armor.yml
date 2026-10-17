@@ -114,12 +114,10 @@
   - type: FlashImmunity
   - type: EyeProtection
   - type: NightVision
-    isActive: true
-    isEquipment: true
-    toggleAction: null
-    activateSound: null
-    deactivateSound: null
-    color: White
+    enabled: true
+    relayOverlay: true
+    action: null
+    overlayColor: White
   - type: ShowHealthBars
     damageContainers:
     - Biological

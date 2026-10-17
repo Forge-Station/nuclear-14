@@ -39,8 +39,10 @@
         Piercing: 0.95
         Heat: 0.95
   - type: NightVision
-    isEquipment: true
+    relayOverlay: true
 
+    enabled: false
+    action: ActionToggleNightVision
 - type: entity
   parent: ClothingMaskGasCombat
   id: N14ClothingMaskGasRangerEliteDeserted

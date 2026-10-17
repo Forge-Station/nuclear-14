@@ -27,14 +27,10 @@ public sealed class KnockdownOnHitSystem : EntitySystem
 
         foreach (var target in args.HitEntities)
         {
-            if (!TryComp(target, out StatusEffectsComponent? statusEffects))
-                continue;
-
             _stun.TryKnockdown(target,
                 entity.Comp.Duration,
                 entity.Comp.RefreshDuration,
-                entity.Comp.DropHeldItemsBehavior,
-                statusEffects);
+                drop: entity.Comp.DropHeldItems);
         }
     }
 }

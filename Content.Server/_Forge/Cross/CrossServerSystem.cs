@@ -657,12 +657,12 @@ public sealed class CrossServerSystem : EntitySystem
 
         if (isHung)
             _appearance.SetData(target, RotationVisuals.RotationState, RotationState.Vertical);
-        else if (TryComp<StandingStateComponent>(target, out var standing))
+        else if (HasComp<StandingStateComponent>(target))
         {
             _appearance.SetData(
                 target,
                 RotationVisuals.RotationState,
-                standing.CurrentState == StandingState.Standing ? RotationState.Vertical : RotationState.Horizontal);
+                _standing.IsDown(target) ? RotationState.Horizontal : RotationState.Vertical);
         }
     }
 

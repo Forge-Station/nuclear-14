@@ -104,7 +104,7 @@
   - type: WeldingHealable
   - type: PsionicInsulation
   - type: OfferItem
-  - type: LayingDown
+  - type: CrawlUnder
   - type: Carriable
   - type: StatusIcon
     bounds: -0.5,-0.5,0.5,0.5

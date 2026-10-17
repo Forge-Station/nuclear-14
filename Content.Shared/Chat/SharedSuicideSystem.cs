@@ -27,7 +27,7 @@ public sealed class SharedSuicideSystem : EntitySystem
         // Mob thresholds are sorted from alive -> crit -> dead,
         // grabbing the last key will give us how much damage is needed to kill a target from zero
         // The exact lethal damage amount is adjusted based on their current damage taken
-        var lethalAmountOfDamage = mobThresholds.Thresholds.Keys.Last() - target.Comp.TotalDamage;
+        var lethalAmountOfDamage = mobThresholds.Thresholds.Keys.Last() - _damageableSystem.GetTotalDamage(target.Owner);
         var totalDamage = appliedDamageSpecifier.GetTotal();
 
         // Removing structural because it causes issues against entities that cannot take structural damage,
@@ -38,7 +38,7 @@ public sealed class SharedSuicideSystem : EntitySystem
         foreach (var (key, value) in appliedDamageSpecifier.DamageDict)
             appliedDamageSpecifier.DamageDict[key] = Math.Ceiling((double) (value * lethalAmountOfDamage / totalDamage));
 
-        _damageableSystem.TryChangeDamage(target, appliedDamageSpecifier, true, origin: target);
+        _damageableSystem.TryChangeDamage(target.Owner, appliedDamageSpecifier, true, origin: target);
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public sealed class SharedSuicideSystem : EntitySystem
         // Mob thresholds are sorted from alive -> crit -> dead,
         // grabbing the last key will give us how much damage is needed to kill a target from zero
         // The exact lethal damage amount is adjusted based on their current damage taken
-        var lethalAmountOfDamage = mobThresholds.Thresholds.Keys.Last() - target.Comp.Damage.GetTotal();
+        var lethalAmountOfDamage = mobThresholds.Thresholds.Keys.Last() - _damageableSystem.GetTotalDamage(target.Owner);
 
         // We don't want structural damage for the same reasons listed above
         if (!_prototypeManager.TryIndex(damageType, out var damagePrototype) || damagePrototype.ID == "Structural")
@@ -62,6 +62,6 @@ public sealed class SharedSuicideSystem : EntitySystem
         }
 
         var damage = new DamageSpecifier(damagePrototype, lethalAmountOfDamage);
-        _damageableSystem.TryChangeDamage(target, damage, true, origin: target);
+        _damageableSystem.TryChangeDamage(target.Owner, damage, true, origin: target);
     }
 }

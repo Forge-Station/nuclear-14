@@ -3,11 +3,14 @@ using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared._N14.Radiation.Components;
 using Content.Shared.FixedPoint;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared._N14.Radiation;
 
 public sealed partial class RadiationHealingSystem : EntitySystem
 {
+    [Dependency] private readonly DamageableSystem _damageable = default!;
+
     private static readonly string[] HealableTypes = { "Blunt", "Slash", "Piercing", "Heat" };
 
     public override void Initialize()
@@ -21,10 +24,11 @@ public sealed partial class RadiationHealingSystem : EntitySystem
         if (component.CurrentExposure <= 0f)
             return;
 
-        if (!TryComp(uid, out DamageableComponent? damage) || damage.TotalDamage >= 90f)
+        if (!TryComp(uid, out DamageableComponent? damage)
+            || _damageable.GetTotalDamage((uid, damage)) >= 90f)
             return;
 
-        var healable = GetHealableDamage(damage);
+        var healable = GetHealableDamage((uid, damage));
         if (healable <= 0f)
             return;
 
@@ -32,12 +36,13 @@ public sealed partial class RadiationHealingSystem : EntitySystem
         args.ModifySpeed(mod);
     }
 
-    private static float GetHealableDamage(DamageableComponent damage)
+    private float GetHealableDamage(Entity<DamageableComponent> damage)
     {
+        var dict = _damageable.GetAllDamage(damage).DamageDict;
         float amount = 0f;
         foreach (var type in HealableTypes)
         {
-            if (damage.Damage.DamageDict.TryGetValue(type, out var val) && val > FixedPoint2.Zero)
+            if (dict.TryGetValue(type, out var val) && val > FixedPoint2.Zero)
                 amount += val.Float();
         }
 

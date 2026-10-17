@@ -74,7 +74,9 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/Eyes/NVG2.rsi
   - type: NightVision
-    isEquipment: true
+    relayOverlay: true
+    enabled: false
+    action: ActionToggleNightVision
   - type: ClothingSpeedModifier
     walkModifier: 0.975
     sprintModifier: 0.975

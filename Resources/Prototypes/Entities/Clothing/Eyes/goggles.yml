@@ -11,7 +11,9 @@
   - type: Clothing
     sprite: Clothing/Eyes/Goggles/nightvision.rsi
   - type: NightVision
-    isEquipment: true
+    relayOverlay: true
+    enabled: false
+    action: ActionToggleNightVision
   - type: IdentityBlocker
     coverage: EYES
 

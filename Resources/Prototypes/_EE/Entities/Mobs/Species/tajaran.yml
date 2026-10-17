@@ -41,9 +41,9 @@
   - type: Flammable
     fireStackIncreaseMultiplier: 1.35 # until you light it up, cuz it's oily too
   - type: NightVision
-    color: "#808080"
-    activateSound: null
-    deactivateSound: null
+    overlayColor: "#808080"
+    enabled: false
+    action: ActionToggleNightVision
   - type: Flashable
     eyeDamageChance: 0.3
     eyeDamage: 1

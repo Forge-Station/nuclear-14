@@ -330,7 +330,7 @@
       lightningExplode: false
     - type: FootPrints
     - type: Carriable
-    - type: LayingDown
+    - type: CrawlUnder
 
 
 - type: damageModifierSet

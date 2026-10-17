@@ -327,7 +327,7 @@ public abstract partial class SharedSurgerySystem
     }
 
     // I wonder if theres not a function that can do this already.
-    private bool HasDamageGroup(EntityUid entity, string[] group, out DamageableComponent? damageable)
+    private bool HasDamageGroup(EntityUid entity, string[] group, out Entity<DamageableComponent>? damageable)
     {
         if (!TryComp<DamageableComponent>(entity, out var damageableComp))
         {
@@ -335,8 +335,9 @@ public abstract partial class SharedSurgerySystem
             return false;
         }
 
-        damageable = damageableComp;
-        return group.Any(damageType => damageableComp.Damage.DamageDict.TryGetValue(damageType, out var value) && value > 0);
+        damageable = (entity, damageableComp);
+        var dict = _damageable.GetAllDamage(damageable.Value).DamageDict;
+        return group.Any(damageType => dict.TryGetValue(damageType, out var value) && value > 0);
 
     }
 
@@ -351,7 +352,8 @@ public abstract partial class SharedSurgerySystem
 
 
         // Right now the bonus is based off the body's total damage, maybe we could make it based off each part in the future.
-        var bonus = ent.Comp.HealMultiplier * damageable.DamagePerGroup[ent.Comp.MainGroup];
+        var bonus = ent.Comp.HealMultiplier
+                    * _damageable.GetDamagePerGroup(damageable.Value)[ent.Comp.MainGroup];
         if (_mobState.IsDead(args.Body))
             bonus *= 0.2;
 

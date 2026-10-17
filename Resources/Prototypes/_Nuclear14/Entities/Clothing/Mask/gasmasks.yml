@@ -113,7 +113,9 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/Mask/Gasmask/combatgasmask.rsi
   - type: NightVision
-    isEquipment: true
+    relayOverlay: true
+    enabled: false
+    action: ActionToggleNightVision
   - type: Appearance
   - type: Armor
     modifiers:

@@ -48,6 +48,13 @@ namespace Content.Client.Options.UI.Tabs
             }
         }
 
+        // Forge-Change-Start
+        private void HandleHoldLookUp(BaseButton.ButtonToggledEventArgs args)
+        {
+            _cfg.SetCVar(CCVars.HoldLookUp, args.Pressed);
+        }
+        // Forge-Change-End
+
         private void HandleToggleWalk(BaseButton.ButtonToggledEventArgs args)
         {
             _cfg.SetCVar(CCVars.ToggleWalk, args.Pressed);
@@ -171,6 +178,11 @@ namespace Content.Client.Options.UI.Tabs
             AddCheckBox("ui-options-hotkey-toggle-walk", _cfg.GetCVar(CCVars.ToggleWalk), HandleToggleWalk);
             InitToggleWalk();
             AddButton(ContentKeyFunctions.ToggleKnockdown);
+            // Forge-Change-Start
+            AddButton(ContentKeyFunctions.ToggleCrawlingUnder);
+            AddButton(ContentKeyFunctions.LookUp);
+            AddCheckBox("ui-options-function-hold-look-up", _cfg.GetCVar(CCVars.HoldLookUp), HandleHoldLookUp);
+            // Forge-Change-End
 
             AddHeader("ui-options-header-camera");
             AddButton(EngineKeyFunctions.CameraRotateLeft);
@@ -193,6 +205,7 @@ namespace Content.Client.Options.UI.Tabs
             AddButton(ContentKeyFunctions.SwapHandsReverse);
             AddButton(ContentKeyFunctions.MoveStoredItem);
             AddButton(ContentKeyFunctions.RotateStoredItem);
+            AddButton(ContentKeyFunctions.OfferItem); // Forge-Change
             AddButton(ContentKeyFunctions.SaveItemLocation);
 
             AddHeader("ui-options-header-interaction-adv");
@@ -243,6 +256,19 @@ namespace Content.Client.Options.UI.Tabs
             AddButton(EngineKeyFunctions.EscapeMenu);
             AddButton(ContentKeyFunctions.EscapeContext);
 
+            // Forge-Change-Start
+            AddHeader("ui-options-header-targeting");
+            AddButton(ContentKeyFunctions.TargetHead);
+            AddButton(ContentKeyFunctions.TargetTorso);
+            AddButton(ContentKeyFunctions.TargetLeftArm);
+            AddButton(ContentKeyFunctions.TargetLeftHand);
+            AddButton(ContentKeyFunctions.TargetRightArm);
+            AddButton(ContentKeyFunctions.TargetRightHand);
+            AddButton(ContentKeyFunctions.TargetLeftLeg);
+            AddButton(ContentKeyFunctions.TargetLeftFoot);
+            AddButton(ContentKeyFunctions.TargetRightLeg);
+            AddButton(ContentKeyFunctions.TargetRightFoot);
+            // Forge-Change-End
             AddHeader("ui-options-header-misc");
             AddButton(ContentKeyFunctions.TakeScreenshot);
             AddButton(ContentKeyFunctions.TakeScreenshotNoUI);

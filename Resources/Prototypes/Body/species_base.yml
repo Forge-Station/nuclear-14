@@ -4,6 +4,7 @@
   id: BaseSpeciesMob
   components:
   - type: Crawler
+  - type: CrawlUnder # Forge-Change
 
 - type: entity
   abstract: true
@@ -17,6 +18,7 @@
   id: BaseSpeciesMobNoCrawl
   save: false
   components:
+  - type: OfferItem # Forge-Change
   - type: DamageVisuals
     thresholds: [ 10, 20, 30, 50, 70, 100 ]
     targetLayers:
@@ -241,3 +243,4 @@
   save: false
   components:
   - type: Crawler
+  - type: CrawlUnder # Forge-Change

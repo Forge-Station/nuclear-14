@@ -35,3 +35,9 @@ reagent-effect-guidebook-luck-modifier =
         [1] Изменяет
        *[other] изменяют
     } удачу на { $luck } минимум на { NATURALFIXED($time, 3) } { MANY("second", $time) }
+
+reagent-effect-guidebook-nocturine-night-vision =
+    { $chance ->
+        [1] Даёт
+        *[other] дают
+    } ночное зрение на {NATURALFIXED($time, 1)} {MANY("секунда", $time)}

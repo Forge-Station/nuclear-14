@@ -26,6 +26,8 @@ public sealed class FootPrintsSystem : EntitySystem
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
 
     private EntityQuery<AppearanceComponent> _appearanceQuery;
+    [Dependency] private readonly StandingStateSystem _standing = default!; // Forge-Change
+
     private EntityQuery<StandingStateComponent> _standingStateQuery;
 
     public override void Initialize()
@@ -52,7 +54,7 @@ public sealed class FootPrintsSystem : EntitySystem
             return;
 
         var newPos = _transform.ToMapCoordinates(args.NewPosition).Position;
-        var dragging = _standingStateQuery.TryComp(uid, out var standing) && standing.CurrentState == StandingState.Lying;
+        var dragging = _standingStateQuery.HasComp(uid) && _standing.IsDown(uid);
         var distance = (newPos - component.LastStepPos).Length();
         var stepSize = dragging ? component.DragSize : component.StepSize;
 

@@ -493,7 +493,9 @@
         Piercing: 0.875
         Heat: 0.9
   - type: NightVision
-    isEquipment: true
+    relayOverlay: true
+    enabled: false
+    action: ActionToggleNightVision
   - type: HideLayerClothing
     slots:
     - Hair
@@ -596,7 +598,9 @@
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/wboslordhelmet.rsi
   - type: NightVision
-    isEquipment: true
+    relayOverlay: true
+    enabled: false
+    action: ActionToggleNightVision
   - type: HideLayerClothing
     force: true
     slots:

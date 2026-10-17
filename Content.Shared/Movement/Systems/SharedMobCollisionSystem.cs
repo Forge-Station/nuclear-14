@@ -25,7 +25,8 @@ public abstract partial class SharedMobCollisionSystem : EntitySystem
     [Dependency] protected EntityQuery<MobCollisionComponent> MobQuery = default!;
     [Dependency] protected EntityQuery<PhysicsComponent> PhysicsQuery = default!;
     [Dependency] protected EntityQuery<MountableComponent> MountQuery = default!; // Corvax-Change
-    [Dependency] protected EntityQuery<StandingStateComponent> StandingQuery = default!; // Corvax-Change
+    [Dependency] protected readonly StandingStateSystem Standing = default!; // Forge-Change
+    protected EntityQuery<StandingStateComponent> StandingQuery; // Corvax-Change
 
     /// <summary>
     /// <see cref="CCVars.MovementPushingCap"/>
@@ -207,7 +208,7 @@ public abstract partial class SharedMobCollisionSystem : EntitySystem
         if (MountQuery.HasComp(entity.Owner))
             return false;
 
-        if (StandingQuery.TryComp(entity.Owner, out var standing) && standing.CurrentState == StandingState.Lying)
+        if (StandingQuery.HasComp(entity.Owner) && Standing.IsDown(entity.Owner))
             return false;
         // Corvax-Change-End
 
@@ -252,7 +253,7 @@ public abstract partial class SharedMobCollisionSystem : EntitySystem
                 continue;
 
             // Corvax-Change-Start
-            if (StandingQuery.TryComp(other, out var otherStanding) && otherStanding.CurrentState == StandingState.Lying)
+            if (StandingQuery.HasComp(other) && Standing.IsDown(other))
                 continue;
 
             if (MountQuery.HasComp(other))

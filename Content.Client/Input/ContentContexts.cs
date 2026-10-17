@@ -117,6 +117,22 @@ namespace Content.Client.Input
             }
             human.AddFunction(ContentKeyFunctions.ToggleKnockdown);
             human.AddFunction(ContentKeyFunctions.OpenEmotesMenu);
+            // Forge-Change-Start
+            human.AddFunction(ContentKeyFunctions.OfferItem);
+            human.AddFunction(ContentKeyFunctions.LookUp);
+            human.AddFunction(ContentKeyFunctions.OpenLanguageMenu);
+            human.AddFunction(ContentKeyFunctions.ToggleCrawlingUnder);
+            human.AddFunction(ContentKeyFunctions.TargetHead);
+            human.AddFunction(ContentKeyFunctions.TargetTorso);
+            human.AddFunction(ContentKeyFunctions.TargetLeftArm);
+            human.AddFunction(ContentKeyFunctions.TargetLeftHand);
+            human.AddFunction(ContentKeyFunctions.TargetRightArm);
+            human.AddFunction(ContentKeyFunctions.TargetRightHand);
+            human.AddFunction(ContentKeyFunctions.TargetLeftLeg);
+            human.AddFunction(ContentKeyFunctions.TargetLeftFoot);
+            human.AddFunction(ContentKeyFunctions.TargetRightLeg);
+            human.AddFunction(ContentKeyFunctions.TargetRightFoot);
+            // Forge-Change-End
 
             var ghost = contexts.New("ghost", "human");
             ghost.AddFunction(EngineKeyFunctions.MoveUp);

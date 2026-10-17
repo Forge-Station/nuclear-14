@@ -1,0 +1,4 @@
+- type: shader
+  id: SwitchableVision
+  kind: source
+  path: "/Textures/_Nuclear14/Shaders/switchable_vision.swsl"

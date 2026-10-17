@@ -50,11 +50,13 @@ public sealed partial class StandingStateRequirement : InteractionRequirement
         if (deps.EntMan.HasComponent<KnockedDownComponent>(args.Target))
             return AllowKnockedDown;
 
-        if (!deps.EntMan.TryGetComponent<StandingStateComponent>(args.Target, out var state))
+        if (!deps.EntMan.HasComponent<StandingStateComponent>(args.Target))
             return false;
 
-        return state.CurrentState == StandingState.Standing && AllowStanding
-            || state.CurrentState == StandingState.Lying && AllowLaying;
+        // Апстрим свёл состояние к Standing/нет, промежуточного GettingUp больше нет.
+        return deps.EntMan.System<StandingStateSystem>().IsDown(args.Target)
+            ? AllowLaying
+            : AllowStanding;
     }
 }
 
