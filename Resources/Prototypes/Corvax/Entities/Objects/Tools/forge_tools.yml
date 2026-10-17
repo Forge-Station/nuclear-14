@@ -1,0 +1,79 @@
+#MARK: Legion Forge Tools
+- type: entity
+  parent: BaseItem
+  id: N14ForgeHammer
+  name: blacksmith hammer
+  description: A heavy forging hammer used to work a dirty bloom on a smithing anvil.
+  components:
+  - type: Item
+    size: Normal
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/TOOLS/hammer.rsi
+    state: icon
+  - type: Clothing
+    sprite: Corvax/Objects/Specific/LegionForge/TOOLS/hammer
+    quickEquip: false
+    slots:
+    - back
+    - suitStorage
+  - type: ClothingSpeedModifier # Corvax-Add
+    walkModifier: 0.85
+    sprintModifier: 0.85
+  - type: Tool
+    qualities:
+    - N14Blacksmithing
+  - type: Tag
+    tags:
+    - N14ForgeHammer
+  - type: N14ForgeItem
+  - type: MeleeWeapon
+    damage:
+      types:
+        Blunt: 8
+    attackRate: 2
+    range: 0.9
+    angle: 90
+  - type: UseDelay
+    delay: 0.4
+
+- type: entity
+  parent: BaseItem
+  id: N14ForgeSledgehammer
+  name: blacksmith sledgehammer
+  description: A massive sledgehammer meant to shape metal plates into armor parts on a smithing anvil.
+  components:
+  - type: Item
+    size: Large
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/TOOLS/sledgehammer.rsi
+    state: icon
+  - type: Clothing
+    sprite: Corvax/Objects/Specific/LegionForge/TOOLS/sledgehammer
+    quickEquip: false
+    slots:
+    - back
+    - suitStorage
+  - type: ClothingSpeedModifier # Corvax-Add
+    walkModifier: 0.70
+    sprintModifier: 0.70
+  - type: Wieldable
+  - type: Tag
+    tags:
+    - N14ForgeSledgehammer
+  - type: N14ForgeItem
+  - type: MeleeWeapon
+    damage:
+      types:
+        Blunt: 20
+    attackRate: 1.4
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1.2
+    heavyStaminaCost: 20
+    range: 1.2
+    angle: 60
+  - type: StaminaDamageOnHit
+    damage: 8
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 15

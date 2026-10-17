@@ -4,3 +4,10 @@
   toolName: tool-quality-n14-gun-maintenance-tool-name
   spawn: N14ToolboxWeaponMaintenance
   icon: { sprite: Objects/Tools/Toolboxes/toolbox_blue.rsi, state: icon }
+
+- type: tool
+  id: N14Blacksmithing
+  name: tool-quality-n14-blacksmithing-name
+  toolName: tool-quality-n14-blacksmithing-tool-name
+  spawn: N14ForgeHammer
+  icon: { sprite: Corvax/Objects/Specific/LegionForge/TOOLS/hammer.rsi, state: icon }

@@ -1,0 +1,13 @@
+- type: stack
+  id: N14ForgeBloom
+  name: bloom
+  icon: { sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/blooms/bloomM.rsi, state: icon }
+  spawn: N14ForgeBloom
+  maxCount: 10
+
+- type: stack
+  id: N14ForgePlate
+  name: plate
+  icon: { sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plate.rsi, state: plate }
+  spawn: N14ForgePlate
+  maxCount: 10

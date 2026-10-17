@@ -4,6 +4,10 @@
   name: legioner shield
   description: He had seen worse battles.
   components:
+    - type: Repairable
+      qualityNeeded: N14Blacksmithing
+      fuelCost: 0
+      doAfterDelay: 1
     - type: Sprite
       sprite: Corvax/Objects/Weapons/Melee/romanshield.rsi
       state: icon
@@ -63,6 +67,10 @@
   name: legioner shield
   description: Lightweight legionary shield.
   components:
+    - type: Repairable
+      qualityNeeded: N14Blacksmithing
+      fuelCost: 0
+      doAfterDelay: 1
     - type: Sprite
       sprite: Corvax/Objects/Weapons/Melee/romanbuckler.rsi
       state: icon

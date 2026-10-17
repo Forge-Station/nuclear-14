@@ -1,0 +1,18 @@
+- type: entity
+  id: N14ForgeSparks
+  name: forge sparks
+  components:
+  - type: TimedDespawn
+    lifetime: 0.3
+  - type: Sprite
+    drawdepth: Effects
+    noRot: true
+    layers:
+    - shader: unshaded
+      map: ["enum.EffectLayers.Unshaded"]
+      sprite: Corvax/Effects/sparks.rsi
+      state: sparks
+  - type: EffectVisuals
+  - type: Tag
+    tags:
+    - HideContextMenu

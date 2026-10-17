@@ -87,3 +87,16 @@
 
 - type: Tag
   id: N14PowerCellFusionCellAdvansed
+
+#MARK: Legion Forge
+- type: Tag
+  id: N14ForgeStation
+
+- type: Tag
+  id: N14ForgeHammer
+
+- type: Tag
+  id: N14ForgeSledgehammer
+
+- type: Tag # forge-add
+  id: N14ForgeForgedTorsoplate

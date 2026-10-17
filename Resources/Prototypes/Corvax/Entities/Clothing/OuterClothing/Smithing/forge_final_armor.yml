@@ -1,0 +1,195 @@
+#MARK: Legion Forge Final Armor
+
+# Base for the completed Legion forged armor.
+- type: entity
+  parent: [N14FalloutArmorBase, N14ClothingOuterBase]
+  id: N14ForgeLegionArmorBase
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV1.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV1.rsi
+    equipDelay: 3
+    unequipDelay: 6
+    equipSound:
+      path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Enter_01.ogg
+      params:
+        volume: -12
+    unequipSound:
+      path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Enter_01.ogg
+      params:
+        volume: -12
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.65
+        Heat: 0.65
+    priceMultiplier: 1
+  - type: ExplosionResistance
+    damageCoefficient: 0.75
+  - type: N14ForgeItem
+  - type: N14ForgePowerArmor
+  - type: EmitsSoundOnMove
+    soundCollection:
+      collection: N14FootstepPowerArmor
+      params:
+        volume: -6
+    requiresWorn: true
+    distanceWalking: 2
+    distanceSprinting: 3
+  - type: Tag
+    tags:
+    - N14ForgeStation # not a station; marker tag reused to identify forge output
+
+- type: entity
+  parent: N14ForgeLegionArmorBase
+  id: N14ForgeLegionArmor
+  name: forged legion armor
+  description: A massive suit of hand-forged metal armor, assembled piece by piece on a mannequin by an artisan smith.
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.65
+        Heat: 0.65
+    priceMultiplier: 1
+  - type: ClothingSpeedModifier
+    walkModifier: 0.97
+    sprintModifier: 0.97
+  - type: ToggleableClothing
+    clothingPrototype: N14ForgeLegionHelmet
+    slot: head
+
+- type: entity
+  parent: N14ForgeLegionArmorBase
+  id: N14ForgeLegionArmorTempered
+  name: tempered forged legion armor
+  description: A masterpiece of metalworking. Every piece was quenched in water while hot, making this suit nigh impenetrable.
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.6
+        Slash: 0.6
+        Piercing: 0.6
+        Heat: 0.6
+    priceMultiplier: 1.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.6
+  - type: ClothingSpeedModifier
+    walkModifier: 0.97
+    sprintModifier: 0.97
+  - type: ToggleableClothing
+    clothingPrototype: N14ForgeLegionHelmet
+    slot: head
+
+# V2
+- type: entity
+  parent: N14ForgeLegionArmorBase
+  id: N14ForgeLegionArmorV2
+  name: forged legion armor V2
+  description: A massive suit of hand-forged metal armor, assembled piece by piece on a mannequin by an artisan smith.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV2.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV2.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.65
+        Heat: 0.65
+    priceMultiplier: 1
+  - type: ClothingSpeedModifier
+    walkModifier: 0.97
+    sprintModifier: 0.97
+  - type: ToggleableClothing
+    clothingPrototype: N14ForgeLegionHelmetV2
+    slot: head
+
+- type: entity
+  parent: N14ForgeLegionArmorBase
+  id: N14ForgeLegionArmorV2Tempered
+  name: tempered forged legion armor V2
+  description: A masterpiece of metalworking. Every piece was quenched in water while hot, making this suit nigh impenetrable.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV2.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV2.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.6
+        Slash: 0.6
+        Piercing: 0.6
+        Heat: 0.6
+    priceMultiplier: 1.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.6
+  - type: ClothingSpeedModifier
+    walkModifier: 0.97
+    sprintModifier: 0.97
+  - type: ToggleableClothing
+    clothingPrototype: N14ForgeLegionHelmetV2
+    slot: head
+
+# V3
+- type: entity
+  parent: N14ForgeLegionArmorBase
+  id: N14ForgeLegionArmorV3
+  name: forged legion armor V3
+  description: A massive suit of hand-forged metal armor, assembled piece by piece on a mannequin by an artisan smith.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV3.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV3.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.65
+        Heat: 0.65
+    priceMultiplier: 1
+  - type: ClothingSpeedModifier
+    walkModifier: 0.97
+    sprintModifier: 0.97
+  - type: ToggleableClothing
+    clothingPrototype: N14ForgeLegionHelmetV3
+    slot: head
+
+- type: entity
+  parent: N14ForgeLegionArmorBase
+  id: N14ForgeLegionArmorV3Tempered
+  name: tempered forged legion armor V3
+  description: A masterpiece of metalworking. Every piece was quenched in water while hot, making this suit nigh impenetrable.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV3.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/forgedlegionarmorV3.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.6
+        Slash: 0.6
+        Piercing: 0.6
+        Heat: 0.6
+    priceMultiplier: 1.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.6
+  - type: ClothingSpeedModifier
+    walkModifier: 0.97
+    sprintModifier: 0.97
+  - type: ToggleableClothing
+    clothingPrototype: N14ForgeLegionHelmetV3
+    slot: head

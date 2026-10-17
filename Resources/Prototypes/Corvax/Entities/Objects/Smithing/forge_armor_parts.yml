@@ -1,0 +1,476 @@
+#MARK: Legion Forge Armor Parts (Monstruum)
+
+# Base for all armor parts.
+- type: entity
+  parent: BaseItem
+  id: N14ForgeArmorPartBase
+  abstract: true
+  components:
+  - type: Item
+    size: Small
+  - type: N14ForgeItem
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.N14ForgePartVisuals.Stage:
+        enum.N14ForgePartVisualLayer.Layer:
+          Icon: { state: icon }
+          OnAnvil: { state: onanvil }
+          OnAnvil2: { state: onanvil2 }
+          OnDummy: { state: ondummy }
+
+# ---- Arms ----
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmRight
+  name: right arm piece
+  description: A forged metal arm piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/arms/rightARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Right
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmLeft
+  name: left arm piece
+  description: A forged metal arm piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/arms/leftARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Left
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmRightTempered
+  name: tempered right arm piece
+  description: A hardened, tempered metal arm piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/arms/rightARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Right
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmLeftTempered
+  name: tempered left arm piece
+  description: A hardened, tempered metal arm piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/arms/leftARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Left
+    tempered: true
+
+# ---- Legs ----
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegRight
+  name: right leg piece
+  description: A forged metal leg piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/legs/rightLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Right
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegLeft
+  name: left leg piece
+  description: A forged metal leg piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/legs/leftLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Left
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegRightTempered
+  name: tempered right leg piece
+  description: A hardened, tempered metal leg piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/legs/rightLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Right
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegLeftTempered
+  name: tempered left leg piece
+  description: A hardened, tempered metal leg piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/legs/leftLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Left
+    tempered: true
+
+# ---- Torso ----
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorTorso
+  name: torso piece
+  description: A forged metal chest piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/torso.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Torso
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorTorsoTempered
+  name: tempered torso piece
+  description: A hardened, tempered metal chest piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/torso.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Torso
+    tempered: true
+# v2
+# V2 parts
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmRightV2
+  name: right arm piece (V2)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/arms/rightARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Right
+
+# V2/V3 parts added
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegRightV2
+  name: right leg piece (V2)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/legs/rightLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Right
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegLeftV2
+  name: left leg piece (V2)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/legs/leftLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Left
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorTorsoV2
+  name: torso piece (V2)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/torso.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Torso
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmLeftV2
+  name: left arm piece (V2)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/arms/leftARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Left
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmRightV3
+  name: right arm piece (V3)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/arms/rightARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Right
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmLeftV3
+  name: left arm piece (V3)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/arms/leftARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Left
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegRightV3
+  name: right leg piece (V3)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/legs/rightLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Right
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegLeftV3
+  name: left leg piece (V3)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/legs/leftLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Left
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorTorsoV3
+  name: torso piece (V3)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/torso.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Torso
+
+# Tempered V2 (Kratos) parts
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmRightTemperedV2
+  name: tempered right arm piece (V2)
+  description: A hardened, tempered metal arm piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/arms/rightARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Right
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmLeftTemperedV2
+  name: tempered left arm piece (V2)
+  description: A hardened, tempered metal arm piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/arms/leftARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Left
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegRightTemperedV2
+  name: tempered right leg piece (V2)
+  description: A hardened, tempered metal leg piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/legs/rightLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Right
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegLeftTemperedV2
+  name: tempered left leg piece (V2)
+  description: A hardened, tempered metal leg piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/legs/leftLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Left
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorTorsoTemperedV2
+  name: tempered torso piece (V2)
+  description: A hardened, tempered metal chest piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/torso.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Torso
+    tempered: true
+
+# Tempered V3 (Bull) parts
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmRightTemperedV3
+  name: tempered right arm piece (V3)
+  description: A hardened, tempered metal arm piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/arms/rightARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Right
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorArmLeftTemperedV3
+  name: tempered left arm piece (V3)
+  description: A hardened, tempered metal arm piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/arms/leftARM.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Arm
+    side: Left
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegRightTemperedV3
+  name: tempered right leg piece (V3)
+  description: A hardened, tempered metal leg piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/legs/rightLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Right
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorLegLeftTemperedV3
+  name: tempered left leg piece (V3)
+  description: A hardened, tempered metal leg piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/legs/leftLEG.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Leg
+    side: Left
+    tempered: true
+
+- type: entity
+  parent: N14ForgeArmorPartBase
+  id: N14ForgeArmorTorsoTemperedV3
+  name: tempered torso piece (V3)
+  description: A hardened, tempered metal chest piece for a suit of heavy armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/torso.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+  - type: N14ForgeArmorPart
+    kind: Torso
+    tempered: true

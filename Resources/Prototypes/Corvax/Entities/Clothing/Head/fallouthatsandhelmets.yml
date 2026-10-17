@@ -1,0 +1,74 @@
+- type: entity
+  parent: N14ClothingHeadHatBaseHelmetMetal
+  id: N14ForgeLegionHelmet
+  name: forged legion helmet
+  description: A hand-forged helmet designed to pair with the forged legion armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/forgedlegionhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/forgedlegionhelmet.rsi
+    equipDelay: 3
+    unequipDelay: 6
+    equipSound: /Audio/Mecha/mechmove03.ogg
+    unequipSound: /Audio/Mecha/mechmove03.ogg
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.85
+        Slash: 0.85
+        Piercing: 0.85
+        Heat: 0.85
+    priceMultiplier: 0.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
+
+- type: entity
+  parent: N14ClothingHeadHatBaseHelmetMetal
+  id: N14ForgeLegionHelmetV2
+  name: forged legion helmet V2
+  description: A hand-forged helmet designed to pair with the forged legion armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/forgedlegionhelmetV2.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/forgedlegionhelmetV2.rsi
+    equipDelay: 3
+    unequipDelay: 6
+    equipSound: /Audio/Mecha/mechmove03.ogg
+    unequipSound: /Audio/Mecha/mechmove03.ogg
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.85
+        Slash: 0.85
+        Piercing: 0.85
+        Heat: 0.85
+    priceMultiplier: 0.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
+
+- type: entity
+  parent: N14ClothingHeadHatBaseHelmetMetal
+  id: N14ForgeLegionHelmetV3
+  name: forged legion helmet V3
+  description: A hand-forged helmet designed to pair with the forged legion armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/forgedlegionhelmetV3.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/forgedlegionhelmetV3.rsi
+    equipDelay: 3
+    unequipDelay: 6
+    equipSound: /Audio/Mecha/mechmove03.ogg
+    unequipSound: /Audio/Mecha/mechmove03.ogg
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.85
+        Slash: 0.85
+        Piercing: 0.85
+        Heat: 0.85
+    priceMultiplier: 0.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
