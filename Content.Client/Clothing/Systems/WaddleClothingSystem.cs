@@ -16,7 +16,7 @@ public sealed class WaddleClothingSystem : EntitySystem
 
     private void OnGotEquipped(EntityUid entity, WaddleWhenWornComponent comp, GotEquippedEvent args)
     {
-        var waddleAnimComp = EnsureComp<WaddleAnimationComponent>(args.Equipee);
+        var waddleAnimComp = EnsureComp<WaddleAnimationComponent>(args.EquipTarget);
 
         waddleAnimComp.AnimationLength = comp.AnimationLength;
         waddleAnimComp.HopIntensity = comp.HopIntensity;
@@ -26,6 +26,6 @@ public sealed class WaddleClothingSystem : EntitySystem
 
     private void OnGotUnequipped(EntityUid entity, WaddleWhenWornComponent comp, GotUnequippedEvent args)
     {
-        RemComp<WaddleAnimationComponent>(args.Equipee);
+        RemComp<WaddleAnimationComponent>(args.EquipTarget);
     }
 }

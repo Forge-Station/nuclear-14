@@ -1,3 +1,4 @@
+using Content.Client.VendingMachines;
 using Content.Shared.DeltaV.VendingMachines;
 using Content.Shared.VendingMachines;
 using Robust.Client.Animations;
@@ -34,35 +35,35 @@ public sealed class ShopVendorSystem : SharedShopVendorSystem
         if (!Resolve(ent, ref ent.Comp2))
             return;
 
-        if (!_appearance.TryGetData<VendingMachineVisualState>(ent, VendingMachineVisuals.VisualState, out var state))
-            state = VendingMachineVisualState.Normal;
+        if (!_appearance.TryGetData<ShopVendorVisualState>(ent, ShopVendorVisuals.VisualState, out var state))
+            state = ShopVendorVisualState.Normal;
 
         var sprite = ent.Comp2;
         SetLayerState(VendingMachineVisualLayers.Base, ent.Comp1.OffState, sprite);
         SetLayerState(VendingMachineVisualLayers.Screen, ent.Comp1.ScreenState, sprite);
         switch (state)
         {
-            case VendingMachineVisualState.Normal:
+            case ShopVendorVisualState.Normal:
                 SetLayerState(VendingMachineVisualLayers.BaseUnshaded, ent.Comp1.NormalState, sprite);
                 break;
 
-            case VendingMachineVisualState.Deny:
+            case ShopVendorVisualState.Deny:
                 if (ent.Comp1.LoopDenyAnimation)
                     SetLayerState(VendingMachineVisualLayers.BaseUnshaded, ent.Comp1.DenyState, sprite);
                 else
                     PlayAnimation(ent, VendingMachineVisualLayers.BaseUnshaded, ent.Comp1.DenyState, ent.Comp1.DenyDelay, sprite);
                 break;
 
-            case VendingMachineVisualState.Eject:
+            case ShopVendorVisualState.Eject:
                 PlayAnimation(ent, VendingMachineVisualLayers.BaseUnshaded, ent.Comp1.EjectState, ent.Comp1.EjectDelay, sprite);
                 break;
 
-            case VendingMachineVisualState.Broken:
+            case ShopVendorVisualState.Broken:
                 HideLayers(sprite);
                 SetLayerState(VendingMachineVisualLayers.Base, ent.Comp1.BrokenState, sprite);
                 break;
 
-            case VendingMachineVisualState.Off:
+            case ShopVendorVisualState.Off:
                 HideLayers(sprite);
                 break;
         }

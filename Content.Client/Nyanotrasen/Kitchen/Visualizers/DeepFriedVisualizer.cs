@@ -60,7 +60,7 @@ namespace Content.Client.Kitchen.Visualizers
                 return;
             }
 
-            if (!TryComp(args.Equipee, out SpriteComponent? sprite))
+            if (!TryComp(args.EquipTarget, out SpriteComponent? sprite))
                 return;
 
             foreach (var key in args.RevealedLayers)

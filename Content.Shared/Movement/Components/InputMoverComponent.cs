@@ -82,8 +82,16 @@ namespace Content.Shared.Movement.Components
         public const float SprintingSoundModifier = 3.5f;
         public const float WalkingSoundModifier = 1.5f;
 
+        /// <summary>
+        /// Бежать ли без нажатой кнопки ходьбы. Выключается клиентским
+        /// control.default_walk, тогда кнопка ходьбы работает наоборот.
+        /// </summary>
+        public bool DefaultSprinting = true; // Forge-Change
+
         [ViewVariables]
-        public bool Sprinting => (HeldMoveButtons & MoveButtons.Walk) == 0x0;
+        public bool Sprinting => DefaultSprinting // Forge-Change
+            ? (HeldMoveButtons & MoveButtons.Walk) == 0x0
+            : (HeldMoveButtons & MoveButtons.Walk) != 0x0;
 
         [ViewVariables(VVAccess.ReadWrite)]
         public bool CanMove = true;

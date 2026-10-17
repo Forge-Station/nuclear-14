@@ -93,7 +93,7 @@ public sealed partial class ClientClothingSystem : ClothingSystem
     [SubscribeLocalEvent]
     private void OnGetVisuals(Entity<ClothingComponent> ent, ref GetEquipmentVisualsEvent args)
     {
-        if (!InventoryQuery.TryComp(args.Equipee, out var inventory))
+        if (!InventoryQuery.TryComp(args.EquipTarget, out var inventory))
             return;
 
         List<PrototypeLayerData>? layers = null;

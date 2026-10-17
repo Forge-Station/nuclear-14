@@ -12,7 +12,7 @@ public abstract class SharedFlightSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _actionsSystem = default!;
     [Dependency] private readonly SharedVirtualItemSystem _virtualItem = default!;
-    [Dependency] private readonly StaminaSystem _staminaSystem = default!;
+    [Dependency] private readonly SharedStaminaSystem _staminaSystem = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
 
@@ -62,19 +62,20 @@ public abstract class SharedFlightSystem : EntitySystem
     private void BlockHands(EntityUid uid, HandsComponent handsComponent)
     {
         var freeHands = 0;
-        foreach (var hand in _hands.EnumerateHands(uid, handsComponent))
+        foreach (var hand in _hands.EnumerateHands((uid, handsComponent)))
         {
-            if (hand.HeldEntity == null)
+            var held = _hands.GetHeldItem((uid, handsComponent), hand);
+            if (held == null)
             {
                 freeHands++;
                 continue;
             }
 
             // Is this entity removable? (they might have handcuffs on)
-            if (HasComp<UnremoveableComponent>(hand.HeldEntity) && hand.HeldEntity != uid)
+            if (HasComp<UnremoveableComponent>(held) && held != uid)
                 continue;
 
-            _hands.DoDrop(uid, hand, true, handsComponent);
+            _hands.TryDrop((uid, handsComponent), hand);
             freeHands++;
             if (freeHands == 2)
                 break;

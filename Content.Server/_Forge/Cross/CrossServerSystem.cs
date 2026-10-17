@@ -461,7 +461,7 @@ public sealed class CrossServerSystem : EntitySystem
         if (applyBreakEffects && !TerminatingOrDeleted(target))
         {
             _damageable.TryChangeDamage(target, cross.Comp.BreakDamage, origin: cross.Owner);
-            _stun.TryParalyze(target, cross.Comp.BreakStunDuration, true);
+            _stun.TryUpdateParalyzeDuration(target, cross.Comp.BreakStunDuration);
         }
 
         RemoveRestraints(target);

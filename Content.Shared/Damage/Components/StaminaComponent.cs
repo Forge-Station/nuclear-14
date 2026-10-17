@@ -17,6 +17,25 @@ public sealed partial class StaminaComponent : Component
     /// <summary>
     /// Have we reached peak stamina damage and been paralyzed?
     /// </summary>
+    /// <summary>
+    /// Источники непрерывного расхода стамины: ключ - источник, значение -
+    /// скорость расхода за тик и нужно ли при этом замедлять.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public Dictionary<EntityUid, (float DrainRate, bool ModifiesSpeed)> ActiveDrains = new(); // Forge-Change
+
+    /// <summary>
+    /// Минимальная доля порога крита, с которой моб начинает замедляться.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float SlowdownThresholdFactor = 0.5f; // Forge-Change
+
+    /// <summary>
+    /// Множитель скорости при низкой стамине, тем сильнее, чем ближе крит.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float SlowdownMultiplier = 0.75f; // Forge-Change
+
     [ViewVariables(VVAccess.ReadWrite), DataField, AutoNetworkedField]
     public bool Critical;
 

@@ -36,14 +36,14 @@ public sealed partial class NpcFactionSystem
         if (!clothing.Slots.HasFlag(args.SlotFlags))
             return;
 
-        if (!TryComp<NpcFactionMemberComponent>(args.Equipee, out var factionComponent))
+        if (!TryComp<NpcFactionMemberComponent>(args.EquipTarget, out var factionComponent))
             return;
 
         if (factionComponent.Factions.Contains(component.Faction))
             return;
 
         component.IsActive = true;
-        AddFaction(args.Equipee, component.Faction);
+        AddFaction(args.EquipTarget, component.Faction);
     }
 
     private void OnClothingUnequipped(EntityUid uid, ClothingAddFactionComponent component, GotUnequippedEvent args)
@@ -52,6 +52,6 @@ public sealed partial class NpcFactionSystem
             return;
 
         component.IsActive = false;
-        RemoveFaction(args.Equipee, component.Faction);
+        RemoveFaction(args.EquipTarget, component.Faction);
     }
 }

@@ -119,7 +119,9 @@ public sealed partial class MoverController : SharedMoverController
         // Logger.Info($"[{_gameTiming.CurTick}/{subTick}] Sprint: {enabled}");
         base.SetSprinting(entity, subTick, walking);
 
-        if (walking && _cfg.GetCVar(CCVars.ToggleWalk))
+        // Forge-Change: с control.default_walk моб идёт шагом без нажатой кнопки,
+        // поэтому смотрим на фактическое состояние, а не на нажатие.
+        if (!entity.Comp.Sprinting && (_cfg.GetCVar(CCVars.ToggleWalk) || _cfg.GetCVar(CCVars.DefaultWalk)))
             _alerts.ShowAlert(entity.Owner, WalkingAlert, showCooldown: false, autoRemove: false);
         else
             _alerts.ClearAlert(entity.Owner, WalkingAlert);

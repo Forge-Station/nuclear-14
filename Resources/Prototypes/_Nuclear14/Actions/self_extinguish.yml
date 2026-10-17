@@ -1,0 +1,20 @@
+# Форковое действие: мердж взял Actions/types.yml со стороны апстрима и потерял его,
+# хотя SelfExtinguisherComponent.Action до сих пор на него ссылается.
+- type: entity
+  parent: BaseAction
+  id: ActionSelfExtinguish
+  name: Self-Extinguish
+  description: Extinguishes you if you are on fire and insulated against self-ignition.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: LimitedCharges
+    maxCharges: 4
+  - type: Action
+    itemIconStyle: BigItem
+  - type: InstantAction
+    event: !type:SelfExtinguishEvent
+  - type: Sprite
+    sprite: Objects/Misc/fire_extinguisher.rsi
+    layers:
+    - state: fire_extinguisher_open
+      map: ["enum.ActionVisuals.Icon"]

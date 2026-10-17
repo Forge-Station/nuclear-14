@@ -25,7 +25,7 @@ namespace Content.Shared.Abilities.Psionics
             if (!clothing.Slots.HasFlag(args.SlotFlags))
                 return;
 
-            var insul = EnsureComp<PsionicInsulationComponent>(args.Equipee);
+            var insul = EnsureComp<PsionicInsulationComponent>(args.EquipTarget);
             insul.Passthrough = component.Passthrough;
             component.IsActive = true;
         }
@@ -36,7 +36,7 @@ namespace Content.Shared.Abilities.Psionics
                 return;
 
             if (!_statusEffects.HasStatusEffect(uid, "PsionicallyInsulated"))
-                RemComp<PsionicInsulationComponent>(args.Equipee);
+                RemComp<PsionicInsulationComponent>(args.EquipTarget);
 
             component.IsActive = false;
         }
@@ -51,13 +51,13 @@ namespace Content.Shared.Abilities.Psionics
                 return;
             // does the user already has this power?
             var componentType = _componentFactory.GetRegistration(component.Power).Type;
-            if (EntityManager.HasComponent(args.Equipee, componentType)) return;
+            if (EntityManager.HasComponent(args.EquipTarget, componentType)) return;
 
 
             var newComponent = (Component) _componentFactory.GetComponent(componentType);
-            newComponent.Owner = args.Equipee;
+            newComponent.Owner = args.EquipTarget;
 
-            EntityManager.AddComponent(args.Equipee, newComponent);
+            EntityManager.AddComponent(args.EquipTarget, newComponent);
 
             component.IsActive = true;
         }
@@ -69,9 +69,9 @@ namespace Content.Shared.Abilities.Psionics
 
             component.IsActive = false;
             var componentType = _componentFactory.GetRegistration(component.Power).Type;
-            if (EntityManager.HasComponent(args.Equipee, componentType))
+            if (EntityManager.HasComponent(args.EquipTarget, componentType))
             {
-                EntityManager.RemoveComponent(args.Equipee, componentType);
+                EntityManager.RemoveComponent(args.EquipTarget, componentType);
             }
         }
     }

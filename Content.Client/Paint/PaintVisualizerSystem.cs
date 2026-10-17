@@ -82,7 +82,7 @@ public sealed class PaintedVisualizerSystem : VisualizerSystem<PaintedVisualsCom
                 break;
             case EquipmentVisualsUpdatedEvent eqs:
                 layers = eqs.RevealedLayers;
-                entity = eqs.Equipee;
+                entity = eqs.EquipTarget;
                 break;
         }
 

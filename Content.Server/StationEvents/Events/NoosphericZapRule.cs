@@ -33,7 +33,7 @@ internal sealed class NoosphericZapRule : StationEventSystem<NoosphericZapRuleCo
             if (!_mobStateSystem.IsAlive(psion) || HasComp<PsionicInsulationComponent>(psion))
                 continue;
 
-            _stunSystem.TryParalyze(psion, TimeSpan.FromSeconds(component.StunDuration), false);
+            _stunSystem.TryAddParalyzeDuration(psion, TimeSpan.FromSeconds(component.StunDuration));
             _statusEffectsSystem.TryAddStatusEffect(psion, "Stutter", TimeSpan.FromSeconds(component.StutterDuration), false, "StutteringAccent");
 
             if (!psionicComponent.CanReroll)

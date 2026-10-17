@@ -67,6 +67,7 @@ public abstract partial class SharedStaminaSystem : EntitySystem
 
         InitializeModifier();
         InitializeResistance();
+        InitializeSlowdown(); // Forge-Change
 
         Subs.CVar(_config, CCVars.PlaytestStaminaDamageModifier, value => UniversalStaminaDamageModifier = value, true);
     }
@@ -425,11 +426,13 @@ public abstract partial class SharedStaminaSystem : EntitySystem
         {
             // Just in case we have active but not stamina we'll check and account for it.
             if (!_stamQuery.TryComp(uid, out var comp) ||
-                comp.StaminaDamage <= 0f && !comp.Critical)
+                comp.StaminaDamage <= 0f && !comp.Critical && comp.ActiveDrains.Count == 0) // Forge-Change
             {
                 RemComp<ActiveStaminaComponent>(uid);
                 continue;
             }
+
+            ApplyActiveDrains(uid, comp, frameTime); // Forge-Change
 
             // Shouldn't need to consider paused time as we're only iterating non-paused stamina components.
             var nextUpdate = comp.NextUpdate;
@@ -443,10 +446,12 @@ public abstract partial class SharedStaminaSystem : EntitySystem
 
             comp.NextUpdate += TimeSpan.FromSeconds(1f);
 
-            TakeStaminaDamage(
-                uid,
-                comp.AfterCritical ? -comp.Decay * comp.AfterCritDecayMultiplier : -comp.Decay, // Recover faster after crit
-                comp);
+            // Forge-Change: пока стамину кто-то тратит, она не восстанавливается.
+            if (comp.ActiveDrains.Count == 0)
+                TakeStaminaDamage(
+                    uid,
+                    comp.AfterCritical ? -comp.Decay * comp.AfterCritDecayMultiplier : -comp.Decay, // Recover faster after crit
+                    comp);
 
             Dirty(uid, comp);
         }

@@ -29,7 +29,7 @@ public sealed class PipBoyRadioWearerSystem : EntitySystem
             if (cartridge.LoaderUid != uid)
                 continue;
 
-            radio.WearerUid = args.Equipee;
+            radio.WearerUid = args.EquipTarget;
         }
     }
 

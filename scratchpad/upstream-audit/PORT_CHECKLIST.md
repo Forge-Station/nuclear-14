@@ -1,0 +1,86 @@
+# Чек-лист порта: файлы, ссылающиеся на удалённые апстримом API
+
+## Nubody (части тела)
+- Content.Client/_Shitmed/Autodoc/PickSurgeryWindow.xaml.cs
+- Content.Client/_Shitmed/Medical/Surgery/SurgeryBui.cs
+- Content.Server/Atmos/EntitySystems/IgniteFromGasSystem.cs
+- Content.Server/Chapel/SacrificialAltarSystem.cs
+- Content.Server/Silicon/WeldingHealable/WeldingHealableSystem.cs
+- Content.Server/_Forge/Body/SeveredPartNamingSystem.cs
+- Content.Server/_Shitmed/Body/Organ/HeartSystem.cs
+- Content.Server/_Shitmed/Body/Organ/StatusEffectOrganSystem.cs
+- Content.Server/_Shitmed/Body/Systems/DebrainedSystem.cs
+- Content.Server/_Shitmed/Cybernetics/CyberneticsSystem.cs
+- Content.Server/_Shitmed/Destructible/Thresholds/Behaviors/GibPartBehavior.cs
+- Content.Server/_Shitmed/Medical/Surgery/SurgerySystem.cs
+- Content.Server/_Shitmed/Targeting/TargetingSystem.cs
+- Content.Shared/Clothing/Loadouts/Systems/SharedLoadoutSystem.cs
+- Content.Shared/Traits/Assorted/Systems/LegsParalyzedSystem.cs
+- Content.Shared/_Shitmed/Autodoc/AutodocSteps.cs
+- Content.Shared/_Shitmed/Autodoc/Systems/SharedAutodocSystem.cs
+- Content.Shared/_Shitmed/Body/Events/BodyPartEvents.cs
+- Content.Shared/_Shitmed/Body/Organ/HeartSystem.cs
+- Content.Shared/_Shitmed/Body/Organ/OrganEvents.cs
+- Content.Shared/_Shitmed/Body/Systems/SharedBodySystem.BodyCapacity.cs
+- Content.Shared/_Shitmed/Body/Systems/SharedBodySystem.PartAppearance.cs
+- Content.Shared/_Shitmed/Body/Systems/SharedBodySystem.Targeting.cs
+- Content.Shared/_Shitmed/Body/Vascular/VascularSystem.cs
+- Content.Shared/_Shitmed/BodyEffects/BodyPartEffectSystem.cs
+- Content.Shared/_Shitmed/BodyEffects/OrganEffectSystem.cs
+- Content.Shared/_Shitmed/BodyEffects/Subsystems/GenerateChildPartSystem.cs
+- Content.Shared/_Shitmed/Surgery/Conditions/SurgeryBodyComponentConditionComponent.cs
+- Content.Shared/_Shitmed/Surgery/Conditions/SurgeryOrganConditionComponent.cs
+- Content.Shared/_Shitmed/Surgery/Conditions/SurgeryOrganOnAddConditionComponent.cs
+- Content.Shared/_Shitmed/Surgery/Conditions/SurgeryPartComponentConditionComponent.cs
+- Content.Shared/_Shitmed/Surgery/Conditions/SurgeryPartConditionComponent.cs
+- Content.Shared/_Shitmed/Surgery/Conditions/SurgeryPartRemovedConditionComponent.cs
+- Content.Shared/_Shitmed/Surgery/Conditions/SurgeryValidEvent.cs
+- Content.Shared/_Shitmed/Surgery/Conditions/SurgeryWoundedConditionComponent.cs
+- Content.Shared/_Shitmed/Surgery/SharedSurgerySystem.Steps.cs
+- Content.Shared/_Shitmed/Surgery/SharedSurgerySystem.cs
+- Content.Shared/_Shitmed/Surgery/Tools/SurgeryToolExamineSystem.cs
+
+## Humanoid (кастомизация)
+- Content.Client/Cocoon/CocoonSystem.cs
+- Content.Client/DeltaV/Lamiae/SnakeOverlay.cs
+- Content.Client/Shadowkin/ShadowkinSystem.cs
+- Content.Server/Antag/AntagSelectionSystem.cs
+- Content.Server/Chapel/SacrificialAltarSystem.cs
+- Content.Server/Chat/TelepathicChatSystem.Psychognomy.cs
+- Content.Server/Cloning/CloningSystem.Utility.cs
+- Content.Server/Cocoon/CocoonerSystem.cs
+- Content.Server/DeltaV/Administration/Commands/LoadCharacter.cs
+- Content.Server/DeltaV/ParadoxAnomaly/Systems/ParadoxAnomalySystem.cs
+- Content.Server/EntityEffects/EffectConditions/Species.cs
+- Content.Server/EntityEffects/Effects/MakeSentient.cs
+- Content.Server/GameTicking/Rules/RevolutionaryRuleSystem.cs
+- Content.Server/GameTicking/Rules/ThiefRuleSystem.cs
+- Content.Server/Ghoul/GhoulifySystem.cs
+- Content.Server/Humanoid/Systems/RandomHumanoidAppearanceSystem.cs
+- Content.Server/Jobs/ModifyEnvirohelmSpecial.cs
+- Content.Server/Jobs/ModifyEnvirosuitSpecial.cs
+- Content.Server/Paint/PaintSystem.cs
+- Content.Server/Shadowkin/ShadowkinSystem.cs
+- Content.Server/Silicon/Charge/Systems/SiliconChargeDeathSystem.cs
+- Content.Server/Thief/Systems/ThiefUndeterminedBackpackSystem.cs
+- Content.Server/Wagging/WaggingSystem.cs
+- Content.Server/WhiteDream/BloodCult/Gamerule/BloodCultRuleSystem.cs
+- Content.Server/WhiteDream/BloodCult/Items/BloodSpear/BloodSpearSystem.cs
+- Content.Server/WhiteDream/BloodCult/Runes/CultRuneBaseSystem.Helpers.cs
+- Content.Server/Xenoarchaeology/XenoArtifacts/Effects/Systems/PolyOthersArtifactSystem.cs
+- Content.Server/_NC/Trade/Contracts/Objectives/NcContractSystem.Objectives.GhostRole.Character.cs
+- Content.Shared/DeltaV/Harpy/HarpyVisualsSystem.cs
+- Content.Shared/HeightAdjust/HeightAdjustSystem.cs
+- Content.Shared/Humanoid/RandomHumanoidAppearanceComponent.cs
+- Content.Shared/SegmentedEntity/SegmentedEntitySystem.cs
+- Content.Shared/Whistle/WhistleComponent.cs
+- Content.Shared/_NC/Barks/BarkDefaults.cs
+- Content.Shared/_NC/TTS/TtsDefaults.cs
+- Content.Shared/_Shitmed/Body/Systems/SharedBodySystem.PartAppearance.cs
+- Content.Shared/_Shitmed/Surgery/SharedSurgerySystem.Steps.cs
+- Content.Shared/_Shitmed/Surgery/SharedSurgerySystem.cs
+
+## Погода
+- Content.Shared/Weather/BlockWeatherComponent.cs
+- Content.Shared/Weather/SharedWeatherSystem.cs
+

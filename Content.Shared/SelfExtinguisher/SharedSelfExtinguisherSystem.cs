@@ -46,10 +46,7 @@ public abstract partial class SharedSelfExtinguisherSystem : EntitySystem
         // regarding the cooldowns and charges, and the action component will just mirror any changes.
         _actions.SetUseDelay(component.ActionEntity, component.Cooldown);
         if (TryComp<LimitedChargesComponent>(uid, out var charges))
-        {
-            _actions.SetCharges(component.ActionEntity, charges.Charges);
-            _actions.SetMaxCharges(component.ActionEntity, charges.MaxCharges);
-        }
+            MirrorCharges(component.ActionEntity, (uid, charges));
     }
 
     public void SetCharges(EntityUid uid, int? charges, int? maxCharges, SelfExtinguisherComponent? component = null)
@@ -58,11 +55,33 @@ public abstract partial class SharedSelfExtinguisherSystem : EntitySystem
             !TryComp<LimitedChargesComponent>(uid, out var chargeComp))
             return;
 
-        _charges.SetCharges((uid, chargeComp), charges, maxCharges);
-        _actions.SetCharges(component.ActionEntity, chargeComp.Charges);
-        _actions.SetMaxCharges(component.ActionEntity, chargeComp.MaxCharges);
+        if (maxCharges != null)
+            _charges.SetMaxCharges((uid, chargeComp), maxCharges.Value);
 
-        _actions.SetEnabled(component.ActionEntity, chargeComp.Charges != 0);
+        if (charges != null)
+            _charges.SetCharges((uid, chargeComp), charges.Value);
+
+        MirrorCharges(component.ActionEntity, (uid, chargeComp));
+    }
+
+    /// <summary>
+    /// Действие только отражает заряды самого предмета: источник истины -
+    /// его LimitedCharges, как и было до переезда на апстримную систему зарядов.
+    /// </summary>
+    private void MirrorCharges(EntityUid? action, Entity<LimitedChargesComponent> source)
+    {
+        if (action == null)
+            return;
+
+        var current = _charges.GetCurrentCharges((source.Owner, source.Comp));
+
+        if (TryComp<LimitedChargesComponent>(action, out var actionCharges))
+        {
+            _charges.SetMaxCharges((action.Value, actionCharges), source.Comp.MaxCharges);
+            _charges.SetCharges((action.Value, actionCharges), current);
+        }
+
+        _actions.SetEnabled(action, current != 0);
     }
 
     private void GetRelayedVerbs(EntityUid uid, SelfExtinguisherComponent component, InventoryRelayedEvent<GetVerbsEvent<EquipmentVerb>> args)
@@ -100,7 +119,7 @@ public abstract partial class SharedSelfExtinguisherSystem : EntitySystem
             !TryComp<LimitedChargesComponent>(uid, out var charges))
             return;
 
-        if (charges.Charges >= charges.MaxCharges)
+        if (_charges.GetCurrentCharges((uid, charges)) >= charges.MaxCharges)
         {
             if (!SetPopupCooldown((uid, component)))
                 return;
@@ -110,11 +129,10 @@ public abstract partial class SharedSelfExtinguisherSystem : EntitySystem
         }
 
         // Add charges
-        _charges.AddCharges(uid, refill.RefillAmount, charges);
-        _actions.SetCharges(component.ActionEntity, charges.Charges);
+        _charges.AddCharges(uid, refill.RefillAmount);
 
-        // Reenable action
-        _actions.SetEnabled(component.ActionEntity, charges.Charges != 0);
+        // Mirror the new charges onto the action and reenable it
+        MirrorCharges(component.ActionEntity, (uid, charges));
 
         // Reset cooldown
         _actions.ClearCooldown(component.ActionEntity);
@@ -130,7 +148,7 @@ public abstract partial class SharedSelfExtinguisherSystem : EntitySystem
 
     private void OnExamined(EntityUid uid, SelfExtinguisherComponent component, ExaminedEvent args)
     {
-        if (TryComp<LimitedChargesComponent>(uid, out var charges) && charges.Charges == 0)
+        if (TryComp<LimitedChargesComponent>(uid, out var charges) && _charges.IsEmpty((uid, charges)))
             return;
 
         var curTime = _timing.CurTime;

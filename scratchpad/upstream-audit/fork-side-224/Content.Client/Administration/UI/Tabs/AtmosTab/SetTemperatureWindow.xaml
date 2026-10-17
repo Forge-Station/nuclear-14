@@ -1,0 +1,26 @@
+﻿<DefaultWindow
+    xmlns="https://spacestation14.io" Title="{Loc ui-tab-atmos-set-temperature-title}"> <!-- Corvax-Localization -->
+    <BoxContainer Orientation="Vertical">
+        <BoxContainer Orientation="Horizontal">
+            <Label Text="{Loc ui-tab-atmos-grid}" MinSize="100 0" /> <!-- Corvax-Localization -->
+            <Control MinSize="50 0" />
+            <OptionButton Name="GridOptions" MinSize="100 0" HorizontalExpand="True" />
+        </BoxContainer>
+        <BoxContainer Orientation="Horizontal">
+            <Label Text="{Loc ui-tab-atmos-tileX}" MinSize="100 0" /> <!-- Corvax-Localization -->
+            <Control MinSize="50 0" />
+            <SpinBox Name="TileXSpin" MinSize="100 0" HorizontalExpand="True" />
+        </BoxContainer>
+        <BoxContainer Orientation="Horizontal">
+            <Label Text="{Loc ui-tab-atmos-tileY}" MinSize="100 0" /> <!-- Corvax-Localization -->
+            <Control MinSize="50 0" />
+            <SpinBox Name="TileYSpin" MinSize="100 0" HorizontalExpand="True" />
+        </BoxContainer>
+        <BoxContainer Orientation="Horizontal">
+            <Label Text="{Loc ui-tab-atmos-temperature}" MinSize="100 0" /> <!-- Corvax-Localization -->
+            <Control MinSize="50 0" />
+            <SpinBox Name="TemperatureSpin" MinSize="100 0" HorizontalExpand="True" />
+        </BoxContainer>
+        <Button Name="SubmitButton" Text="{Loc ui-tab-atmos-button}" /> <!-- Corvax-Localization -->
+    </BoxContainer>
+</DefaultWindow>

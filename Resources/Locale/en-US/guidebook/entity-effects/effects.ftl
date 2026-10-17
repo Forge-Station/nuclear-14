@@ -561,3 +561,7 @@ entity-effect-guidebook-make-trap-in-container =
         [1] Traps
         *[other] traps
     } the metabolizer inside a { $entityname }
+
+# Forge-Change
+entity-effect-guidebook-make-polymorph-unknown = unknown
+entity-effect-guidebook-make-polymorph-random = { $names } (random)

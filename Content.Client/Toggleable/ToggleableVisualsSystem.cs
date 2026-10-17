@@ -79,7 +79,7 @@ public sealed partial class ToggleableVisualsSystem : VisualizerSystem<Toggleabl
             || !enabled)
             return;
 
-        if (!TryComp(args.Equipee, out InventoryComponent? inventory))
+        if (!TryComp(args.EquipTarget, out InventoryComponent? inventory))
             return;
         List<PrototypeLayerData>? layers = null;
 

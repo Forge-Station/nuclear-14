@@ -66,7 +66,7 @@ public sealed class CultItemSystem : EntitySystem
             return;
 
         args.Cancel();
-        KnockdownAndDropItem(item, args.Equipee, Loc.GetString("cult-item-component-equip-fail"));
+        KnockdownAndDropItem(item, args.EquipTarget, Loc.GetString("cult-item-component-equip-fail"));
     }
 
     private void OnMeleeAttempt(Entity<CultItemComponent> item, ref AttemptMeleeEvent args)

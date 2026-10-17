@@ -40,12 +40,12 @@ public sealed class ShowEtherealSystem : EntitySystem
             || !clothing.Slots.HasFlag(args.SlotFlags))
             return;
 
-        EnsureComp<ShowEtherealComponent>(args.Equipee);
+        EnsureComp<ShowEtherealComponent>(args.EquipTarget);
     }
 
     private void OnUnequipped(EntityUid uid, ShowEtherealComponent component, GotUnequippedEvent args)
     {
-        RemComp<ShowEtherealComponent>(args.Equipee);
+        RemComp<ShowEtherealComponent>(args.EquipTarget);
     }
 
     private void Toggle(EntityUid uid, bool toggle)

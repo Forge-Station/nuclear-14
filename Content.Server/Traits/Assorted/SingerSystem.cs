@@ -67,7 +67,7 @@ public sealed class SingerSystem : SharedSingerSystem
         if (TryComp<AddAccentClothingComponent>(args.Equipment, out var accent) &&
             accent.ReplacementPrototype == "mumble" &&
             args.Slot == "mask")
-            CloseMidiUi(args.Equipee);
+            CloseMidiUi(args.EquipTarget);
     }
 
     private void OnMobStateChangedEvent(EntityUid uid, SharedInstrumentComponent component, MobStateChangedEvent args)

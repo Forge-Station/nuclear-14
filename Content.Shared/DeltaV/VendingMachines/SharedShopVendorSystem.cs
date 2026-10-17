@@ -140,29 +140,29 @@ public abstract class SharedShopVendorSystem : EntitySystem
 
     protected void UpdateVisuals(Entity<ShopVendorComponent> ent)
     {
-        var state = VendingMachineVisualState.Normal;
+        var state = ShopVendorVisualState.Normal;
         var lit = true;
         if (ent.Comp.Broken)
         {
-            state = VendingMachineVisualState.Broken;
+            state = ShopVendorVisualState.Broken;
             lit = false;
         }
         else if (ent.Comp.Ejecting != null)
         {
-            state = VendingMachineVisualState.Eject;
+            state = ShopVendorVisualState.Eject;
         }
         else if (ent.Comp.Denying)
         {
-            state = VendingMachineVisualState.Deny;
+            state = ShopVendorVisualState.Deny;
         }
         else if (!_power.IsPowered(ent.Owner))
         {
-            state = VendingMachineVisualState.Off;
+            state = ShopVendorVisualState.Off;
             lit = true;
         }
 
         _light.SetEnabled(ent, lit);
-        _appearance.SetData(ent, VendingMachineVisuals.VisualState, state);
+        _appearance.SetData(ent, ShopVendorVisuals.VisualState, state);
     }
 }
 

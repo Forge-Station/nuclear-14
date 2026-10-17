@@ -1,0 +1,46 @@
+=== карта: куда уехали удалённые файлы ===
+MOVED  Content.Client/Body/Systems/BodySystem.cs  ->  Content.Shared/Body/BodySystem.cs 
+GONE   Content.Client/Humanoid/HumanoidAppearanceSystem.cs
+GONE   Content.Server/Administration/Systems/AdminVerbSystem.Smites.cs
+GONE   Content.Server/Body/Commands/AttachBodyPartCommand.cs
+MOVED  Content.Server/Body/Components/BrainComponent.cs  ->  Content.Shared/Body/Components/BrainComponent.cs 
+MOVED  Content.Server/Body/Systems/BodySystem.cs  ->  Content.Shared/Body/BodySystem.cs 
+MOVED  Content.Server/Body/Systems/BrainSystem.cs  ->  Content.Shared/Body/Systems/BrainSystem.cs 
+MOVED  Content.Server/Body/Systems/LungSystem.cs  ->  Content.Shared/Body/Systems/LungSystem.cs 
+MOVED  Content.Server/Cargo/Components/StationBankAccountComponent.cs  ->  Content.Shared/Cargo/Components/StationBankAccountComponent.cs 
+GONE   Content.Server/Damage/Components/DamageUserOnTriggerComponent.cs
+GONE   Content.Server/Damage/Systems/DamageUserOnTriggerSystem.cs
+GONE   Content.Server/DeltaV/Weapons/Ranged/Systems/EnergyGunSystem.cs
+GONE   Content.Server/Ensnaring/EnsnareableSystem.Ensnaring.cs
+GONE   Content.Server/EntityEffects/Effects/HealthChange.cs
+MOVED  Content.Server/IdentityManagement/IdentitySystem.cs  ->  Content.Shared/IdentityManagement/IdentitySystem.cs 
+GONE   Content.Server/Kitchen/Components/SharpComponent.cs
+GONE   Content.Server/Kitchen/EntitySystems/KitchenSpikeSystem.cs
+MOVED  Content.Server/Labels/Label/LabelSystem.cs  ->  Content.Shared/Labels/EntitySystems/LabelSystem.cs 
+MOVED  Content.Server/Medical/Components/HealthAnalyzerComponent.cs  ->  Content.Shared/Medical/HealthAnalyzer/HealthAnalyzerComponent.cs 
+MOVED  Content.Server/Medical/HealingSystem.cs  ->  Content.Shared/Medical/Healing/HealingSystem.cs 
+MOVED  Content.Server/Medical/HealthAnalyzerSystem.cs  ->  Content.Shared/Medical/HealthAnalyzer/HealthAnalyzerSystem.cs 
+GONE   Content.Server/Nutrition/Components/FoodComponent.cs
+GONE   Content.Server/Nutrition/EntitySystems/FoodSystem.cs
+GONE   Content.Server/Nutrition/EntitySystems/SliceableFoodSystem.cs
+MOVED  Content.Server/Paper/PaperComponent.cs  ->  Content.Shared/Paper/PaperComponent.cs 
+MOVED  Content.Server/Paper/PaperSystem.cs  ->  Content.Shared/Paper/PaperSystem.cs 
+MOVED  Content.Server/Power/EntitySystems/ChargerSystem.cs  ->  Content.Shared/Power/EntitySystems/ChargerSystem.cs 
+MOVED  Content.Server/PowerCell/PowerCellSystem.cs  ->  Content.Shared/PowerCell/PowerCellSystem.cs 
+MOVED  Content.Server/Speech/EntitySystems/StutteringSystem.cs  ->  Content.Shared/Speech/EntitySystems/StutteringSystem.cs 
+MOVED  Content.Server/StationRecords/Systems/StationRecordsSystem.cs  ->  Content.Shared/StationRecords/Systems/StationRecordsSystem.cs 
+MOVED  Content.Server/VoiceMask/VoiceMaskComponent.cs  ->  Content.Shared/VoiceMask/VoiceMaskComponent.cs 
+MOVED  Content.Shared/Access/SharedAgentIDCardSystem.cs  ->  Content.Shared/Access/Systems/SharedAgentIDCardSystem.cs 
+MOVED  Content.Shared/Body/Organ/OrganComponent.cs  ->  Content.Shared/Body/OrganComponent.cs 
+GONE   Content.Shared/Body/Part/BodyPartComponent.cs
+GONE   Content.Shared/Body/Systems/SharedBodySystem.Body.cs
+GONE   Content.Shared/Body/Systems/SharedBodySystem.Organs.cs
+GONE   Content.Shared/Body/Systems/SharedBodySystem.Parts.cs
+GONE   Content.Shared/Body/Systems/SharedBodySystem.cs
+MOVED  Content.Shared/Ghost/SharedGhostSystem.cs  ->  Content.Shared/Ghost/Systems/SharedGhostSystem.cs 
+GONE   Content.Shared/Humanoid/HumanoidAppearanceComponent.cs
+GONE   Content.Shared/Humanoid/SharedHumanoidAppearanceSystem.cs
+GONE   Content.Shared/Humanoid/SkinColor.cs
+GONE   Content.Shared/MedicalScanner/HealthAnalyzerScannedUserMessage.cs
+GONE   Content.Shared/Station/SharedStationSpawningSystem.cs
+GONE   Content.Shared/Weather/WeatherComponent.cs

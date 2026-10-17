@@ -2,6 +2,7 @@ using Content.Shared._Goobstation.Clothing.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Popups;
 using Content.Shared.PowerCell;
+using Content.Shared.PowerCell.Components;
 using Content.Shared.Wires;
 
 namespace Content.Shared._Goobstation.Clothing.Systems;
@@ -23,10 +24,11 @@ public abstract class SharedPoweredSealableClothingSystem : EntitySystem
 
     private void OnRequiresPowerMapInit(Entity<SealableClothingRequiresPowerComponent> entity, ref MapInitEvent args)
     {
-        if (!TryComp(entity, out SealableClothingControlComponent? control) || !TryComp(entity, out PowerCellDrawComponent? draw))
+        if (!TryComp(entity, out SealableClothingControlComponent? control)
+            || !HasComp<PowerCellDrawComponent>(entity))
             return;
 
-        draw.Enabled = control.IsCurrentlySealed;
+        _powerCellSystem.SetDrawEnabled(entity.Owner, control.IsCurrentlySealed);
     }
 
     /// Checks if control have enough power to seal
@@ -49,7 +51,8 @@ public abstract class SharedPoweredSealableClothingSystem : EntitySystem
         if (controlComp.IsCurrentlySealed)
             return;
 
-        if (!_powerCellSystem.HasDrawCharge(entity, cellDrawComp) || !_powerCellSystem.HasActivatableCharge(entity, cellDrawComp))
+        if (!_powerCellSystem.HasDrawCharge((entity.Owner, cellDrawComp, null))
+            || !_powerCellSystem.HasActivatableCharge((entity.Owner, cellDrawComp, null)))
         {
             _popupSystem.PopupClient(Loc.GetString(entity.Comp.NotPoweredPopup), entity, args.User);
             args.Cancel();

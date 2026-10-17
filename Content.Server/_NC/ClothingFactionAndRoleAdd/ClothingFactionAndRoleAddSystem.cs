@@ -25,7 +25,7 @@ public sealed partial class ClothingFactionAndRoleAddSystem : EntitySystem
 
     private void OnClothingEquipped(EntityUid uid, ClothingFactionAndRoleAddComponent component, GotEquippedEvent args)
     {
-        var user = args.Equipee;
+        var user = args.EquipTarget;
         if (!TryComp(user, out MindContainerComponent? mind) || !mind.HasMind)
             return;
 
@@ -64,7 +64,7 @@ public sealed partial class ClothingFactionAndRoleAddSystem : EntitySystem
         if (!component.IsActive)
             return;
 
-        var user = args.Equipee;
+        var user = args.EquipTarget;
 
         if (!TryComp(user, out MindContainerComponent? mind) || !mind.HasMind)
             return;

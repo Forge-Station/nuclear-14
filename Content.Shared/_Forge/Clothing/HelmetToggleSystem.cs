@@ -34,7 +34,7 @@ public sealed class HelmetToggleSystem : EntitySystem
 
         comp.IsToggled = false;
         Dirty(uid, comp);
-        RaiseToggleEvent(uid, comp, args.Equipee);
+        RaiseToggleEvent(uid, comp, args.EquipTarget);
     }
 
     private void OnToggle(EntityUid uid, HelmetToggleComponent comp, ToggleHelmetEvent args)
