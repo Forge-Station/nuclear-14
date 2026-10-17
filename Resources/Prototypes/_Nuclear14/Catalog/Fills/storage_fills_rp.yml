@@ -2337,7 +2337,7 @@
         - id: N14WeaponRevolverThatGun
           prob: 0.025
           orGroup: Weapon
-        - id: N14WeaponSMGAmerican180
+        - id: N14WeaponSMG22Silenced
           prob: 0.02
           orGroup: Weapon
         - id: N14WeaponPistol10mm
@@ -2358,7 +2358,7 @@
         - id: N14WeaponSMG12mmAdvanced
           prob: 0.025
           orGroup: Weapon
-        - id: N14WeaponShotgunBlowback
+        - id: N14WeaponBlowback
           prob: 0.05
           orGroup: Weapon
         - id: N14WeaponShotgunRiot
