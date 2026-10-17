@@ -122,7 +122,7 @@ namespace Content.Server.Cocoon
                 return;
 
             var damage = args.DamageDelta * component.DamagePassthrough;
-            _damageableSystem.TryChangeDamage(component.Victim, damage);
+            _damageableSystem.TryChangeDamage(component.Victim.Value, damage); // Forge-Change
         }
 
         private void StartCocooning(EntityUid uid, CocoonerComponent component, EntityUid target)
@@ -170,9 +170,9 @@ namespace Content.Server.Cocoon
             if (!TryComp<ItemSlotsComponent>(cocoon, out var slots))
                 return;
 
-            _itemSlots.SetLock(cocoon, BodySlot, false, slots);
+            _itemSlots.SetLock((cocoon, slots), BodySlot, false); // Forge-Change
             _itemSlots.TryInsert(cocoon, BodySlot, args.Args.Target.Value, args.Args.User);
-            _itemSlots.SetLock(cocoon, BodySlot, true, slots);
+            _itemSlots.SetLock((cocoon, slots), BodySlot, true); // Forge-Change
 
             var impact = (spawnProto == "CocoonedHumanoid") ? LogImpact.High : LogImpact.Medium;
 

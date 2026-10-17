@@ -77,7 +77,7 @@ public sealed class SpawnCharacter : IConsoleCommand
 
         var coordinates = player.AttachedEntity != null
             ? _entityManager.GetComponent<TransformComponent>(player.AttachedEntity.Value).Coordinates
-            : _entitySys.GetEntitySystem<GameTicker>().GetObserverSpawnPoint();
+            : _entitySys.GetEntitySystem<ServerGameTicker>().GetObserverSpawnPoint();
 
         if (player.AttachedEntity == null ||
             !mindSystem.TryGetMind(player.AttachedEntity.Value, out var mindId, out var mind))

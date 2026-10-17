@@ -71,7 +71,7 @@ namespace Content.Server._N14.Support
 
                     if (_mapSystem.TryFindGridAt(comp.Target, out var gridUid, out var grid))
                     {
-                        var tile = grid.WorldToTile(comp.Target.Position);
+                        var tile = _mapSystem.WorldToTile(gridUid, grid, comp.Target.Position);
                         RoofComponent? roof = null;
                         if (Resolve(gridUid, ref roof, false))
                         {
@@ -105,7 +105,7 @@ namespace Content.Server._N14.Support
 
                 if (_mapSystem.TryFindGridAt(comp.Target, out var gridUid1, out var grid1))
                 {
-                    var tile = grid1.WorldToTile(comp.Target.Position);
+                    var tile = _mapSystem.WorldToTile(gridUid1, grid1, comp.Target.Position);
                     RoofComponent? roof2 = null;
                     if (Resolve(gridUid1, ref roof2, false))
                     {
@@ -134,6 +134,7 @@ namespace Content.Server._N14.Support
                     comp.Intensity,
                     comp.Slope,
                     comp.MaxIntensity,
+                    null, // Forge-Change: у QueueExplosion появился виновник взрыва
                     comp.TileBreakScale,
                     canCreateVacuum: false);
                 if (comp.FireSound != null)

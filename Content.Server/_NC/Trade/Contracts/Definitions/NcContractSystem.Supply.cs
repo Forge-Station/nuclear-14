@@ -76,8 +76,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool IsSupplyWorldTurnInPrototype(string prototypeId) =>
         _prototypes.TryIndex<EntityPrototype>(prototypeId, out var proto) &&
-        proto.HasComponent<MobStateComponent>(_compFactory) &&
-        proto.HasComponent<PullableComponent>(_compFactory);
+        proto.TryGetComponent<MobStateComponent>(out _, _compFactory) && // Forge-Change
+        proto.TryGetComponent<PullableComponent>(out _, _compFactory);
 
     private bool IsSupplyWorldTurnInTagTarget(string tagTargetId)
     {

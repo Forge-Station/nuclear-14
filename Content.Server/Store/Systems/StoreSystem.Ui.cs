@@ -238,11 +238,8 @@ public sealed partial class StoreSystem
         if (msg.SoundSource != null && GetEntity(msg.SoundSource) != null)
             _audio.PlayEntity(component.BuySuccessSound, msg.Actor, GetEntity(msg.SoundSource.Value)); //cha-ching!
 
-        var buyFinished = new StoreBuyFinishedEvent
-        {
-            PurchasedItem = listing,
-            StoreUid = uid
-        };
+        // Forge-Change: событие теперь апстримное и несёт покупателя.
+        var buyFinished = new StoreBuyFinishedEvent(buyer, uid, listing);
         RaiseLocalEvent(ref buyFinished);
 
         UpdateUserInterface(buyer, uid, component);
@@ -363,13 +360,3 @@ public sealed partial class StoreSystem
     }
 }
 
-/// <summary>
-/// Event of successfully finishing purchase in store (<see cref="StoreSystem"/>.
-/// </summary>
-/// <param name="StoreUid">EntityUid on which store is placed.</param>
-/// <param name="PurchasedItem">ListingItem that was purchased.</param>
-[ByRefEvent]
-public readonly record struct StoreBuyFinishedEvent(
-    EntityUid StoreUid,
-    ListingDataWithCostModifiers PurchasedItem
-);

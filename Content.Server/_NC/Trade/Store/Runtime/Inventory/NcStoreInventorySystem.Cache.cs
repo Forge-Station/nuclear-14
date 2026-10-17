@@ -134,9 +134,9 @@ public sealed partial class NcStoreInventorySystem
 
         if (_ents.TryGetComponent(owner, out HandsComponent? hands))
         {
-            foreach (var hand in hands.Hands.Values)
-                if (hand.HeldEntity.HasValue)
-                    Enqueue(hand.HeldEntity.Value);
+            // Forge-Change: предметы в руках перечисляет система рук.
+            foreach (var held in _hands.EnumerateHeld((owner, hands)))
+                Enqueue(held);
         }
 
         if (_ents.TryGetComponent(owner, out ContainerManagerComponent? cmcRoot))

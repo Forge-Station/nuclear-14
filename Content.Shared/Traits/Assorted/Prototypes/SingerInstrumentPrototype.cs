@@ -16,7 +16,7 @@ public sealed partial class SingerInstrumentPrototype : IPrototype
     ///     byte 2 = instrument midi bank
     /// </summary>
     [DataField(required: true)]
-    public Dictionary<string, (byte, byte)> InstrumentList = new();
+    public Dictionary<LocId, (byte, byte)> InstrumentList = new(); // Forge-Change: ключ стал LocId, как у SwappableInstrumentComponent
 
     /// <summary>
     ///     Instrument in <see cref="InstrumentList"/> that is used by default.

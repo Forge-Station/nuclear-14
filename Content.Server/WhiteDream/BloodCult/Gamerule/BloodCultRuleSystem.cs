@@ -235,11 +235,14 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
             if (!TryComp(ruleUid, out AntagSelectionComponent? antagSelection))
                 continue;
 
+            // Forge-Change: определения антагов стали прототипами, а выдача - одним методом,
+            // который сам ищет свободную роль и откатывается на последнюю.
             var antagSelectionEnt = (ruleUid, antagSelection);
-            if (!_antagSelection.TryGetNextAvailableDefinition(antagSelectionEnt, out var def))
-                def = antagSelection.Definitions.Last();
+            if (_antagSelection.TryAssignNextAvailableAntag(antagSelectionEnt, actor.PlayerSession))
+                continue;
 
-            _antagSelection.MakeAntag(antagSelectionEnt, actor.PlayerSession, def.Value);
+            if (antagSelection.Antags.Length > 0)
+                _antagSelection.TryMakeAntag(antagSelectionEnt, antagSelection.Antags[^1].Proto, actor.PlayerSession);
         }
     }
 

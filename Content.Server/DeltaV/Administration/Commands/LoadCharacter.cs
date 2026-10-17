@@ -122,7 +122,7 @@ public sealed class LoadCharacter : IConsoleCommand
 
         var coordinates = player.AttachedEntity != null
             ? _entityManager.GetComponent<TransformComponent>(player.AttachedEntity.Value).Coordinates
-            : EntitySystem.Get<GameTicker>().GetObserverSpawnPoint();
+            : EntitySystem.Get<ServerGameTicker>().GetObserverSpawnPoint();
 
         EntitySystem.Get<StationSpawningSystem>()
             .SpawnPlayerMob(coordinates, profile: character, entity: target, job: null, station: null);

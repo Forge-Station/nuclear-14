@@ -54,9 +54,15 @@ public sealed class SiliconChargeSystem : EntitySystem
             return false;
 
         // try get a battery directly on the inserted entity
-        if (TryComp(silicon, out batteryComp)
-            || _powerCell.TryGetBatteryFromSlot(silicon, out batteryComp))
+        // Forge-Change: батарея из слота теперь возвращается сущностью.
+        if (TryComp(silicon, out batteryComp))
             return true;
+
+        if (_powerCell.TryGetBatteryFromSlot(silicon, out var batteryEnt))
+        {
+            batteryComp = batteryEnt.Value.Comp;
+            return true;
+        }
 
         //DebugTools.Assert("SiliconComponent does not contain Battery");
         return false;
@@ -179,9 +185,11 @@ public sealed class SiliconChargeSystem : EntitySystem
 
             siliconComp.OverheatAccumulator -= 5;
 
+            // Forge-Change: порог перегрева переехал в TemperatureDamageComponent.
             if (!EntityManager.TryGetComponent<FlammableComponent>(silicon, out var flamComp)
                 || flamComp is { OnFire: true }
-                || !(temperComp.Temperature > temperComp.HeatDamageThreshold))
+                || !EntityManager.TryGetComponent<TemperatureDamageComponent>(silicon, out var temperDamage)
+                || !(temperComp.Temperature > temperDamage.HeatDamageThreshold))
                 return hotTempMulti;
 
             _popup.PopupEntity(Loc.GetString("silicon-overheating"), silicon, silicon, PopupType.MediumCaution);

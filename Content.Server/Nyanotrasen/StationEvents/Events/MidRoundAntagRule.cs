@@ -1,6 +1,7 @@
 using Content.Shared.GameTicking.Components;
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.StationEvents.Components;
+using Content.Shared.Station.Components;
 using Robust.Shared.Random;
 
 namespace Content.Server.StationEvents.Events;
@@ -11,7 +12,7 @@ public sealed class MidRoundAntagRule : StationEventSystem<MidRoundAntagRuleComp
     {
         base.Started(uid, component, gameRule, args);
 
-        if (!TryGetRandomStation(out var station))
+        if (!Station.TryGetRandomStation<StationEventEligibleComponent>(out var station)) // Forge-Change
             return;
 
         var spawnLocations = FindSpawns(station.Value);
@@ -34,7 +35,7 @@ public sealed class MidRoundAntagRule : StationEventSystem<MidRoundAntagRuleComp
         var query = EntityQueryEnumerator<MidRoundAntagSpawnLocationComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out _, out var xform))
         {
-            if (StationSystem.GetOwningStation(uid, xform) == station && xform.GridUid != null)
+            if (Station.GetOwningStation(uid, xform) == station && xform.GridUid != null)
                 spawns.Add(xform);
         }
 
@@ -47,7 +48,7 @@ public sealed class MidRoundAntagRule : StationEventSystem<MidRoundAntagRuleComp
         var fallbackQuery = EntityQueryEnumerator<VentCritterSpawnLocationComponent, TransformComponent>();
         while (fallbackQuery.MoveNext(out var uid, out _, out var xform))
         {
-            if (StationSystem.GetOwningStation(uid, xform) == station && xform.GridUid != null)
+            if (Station.GetOwningStation(uid, xform) == station && xform.GridUid != null)
                 spawns.Add(xform);
         }
 

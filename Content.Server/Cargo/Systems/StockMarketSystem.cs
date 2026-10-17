@@ -151,7 +151,7 @@ public sealed class StockMarketSystem : EntitySystem
         if (amount > 0)
         {
             // Buying: see if we can afford it
-            if (bank.Balance < totalValue)
+            if (_cargo.GetBalanceFromAccount(station, bank.PrimaryAccount) < totalValue) // Forge-Change
                 return false;
         }
         else
@@ -169,7 +169,7 @@ public sealed class StockMarketSystem : EntitySystem
             stockMarket.StockOwnership.Remove(companyIndex);
 
         // Update the bank account (take away for buying and give for selling)
-        _cargo.UpdateBankAccount(station, bank, -totalValue);
+        _cargo.UpdateBankAccount(station, -totalValue, bank.PrimaryAccount); // Forge-Change
 
         // Log the transaction
         var verb = amount > 0 ? "bought" : "sold";

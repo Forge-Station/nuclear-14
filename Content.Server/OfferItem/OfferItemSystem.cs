@@ -25,7 +25,7 @@ public sealed class OfferItemSystem : SharedOfferItemSystem
                 continue;
 
             if (offerItem.Hand != null &&
-                hands.Hands[offerItem.Hand].HeldEntity == null)
+                _hands.GetHeldItem((uid, hands), offerItem.Hand) == null) // Forge-Change
             {
                 if (offerItem.Target != null)
                 {

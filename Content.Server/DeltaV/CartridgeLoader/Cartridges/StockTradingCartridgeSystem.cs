@@ -8,12 +8,14 @@ using Content.Shared.Cargo.Components;
 using Content.Shared.CartridgeLoader;
 using Content.Shared.CartridgeLoader.Cartridges;
 using Content.Shared.Station.Systems;
+using Content.Shared.Cargo;
 
 namespace Content.Server.DeltaV.CartridgeLoader.Cartridges;
 
 public sealed class StockTradingCartridgeSystem : EntitySystem
 {
     [Dependency] private readonly CartridgeLoaderSystem _cartridgeLoader = default!;
+    [Dependency] private readonly SharedCargoSystem _cargo = default!; // Forge-Change
     [Dependency] private readonly StationSystem _station = default!;
 
     public override void Initialize()
@@ -86,7 +88,7 @@ public sealed class StockTradingCartridgeSystem : EntitySystem
         var state = new StockTradingUiState(
             entries: stockMarket.Companies,
             ownedStocks: stockMarket.StockOwnership,
-            balance: bankAccount.Balance
+            balance: _cargo.GetBalanceFromAccount(ent.Comp.Station.Value, bankAccount.PrimaryAccount) // Forge-Change
         );
 
         _cartridgeLoader.UpdateCartridgeUiState(loader, state);

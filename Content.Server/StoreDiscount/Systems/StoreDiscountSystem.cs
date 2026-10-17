@@ -30,7 +30,7 @@ public sealed partial class StoreDiscountSystem : EntitySystem
     /// <summary> Decrements discounted item count, removes discount modifier and category, if counter reaches zero. </summary>
     private void OnBuyFinished(ref Content.Shared.Store.StoreBuyFinishedEvent ev)
     {
-        var (storeId, purchasedItem) = ev;
+        var (_, storeId, purchasedItem) = ev; // Forge-Change: в событии появился покупатель
         if (!TryComp<StoreDiscountComponent>(storeId, out var discountsComponent))
         {
             return;

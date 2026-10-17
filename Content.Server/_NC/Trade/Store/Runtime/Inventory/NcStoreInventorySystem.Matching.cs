@@ -82,8 +82,9 @@ public sealed partial class NcStoreInventorySystem
     {
         if (!_ents.TryGetComponent(user, out HandsComponent? hands))
             return false;
-        foreach (var hand in hands.Hands.Values)
-            if (hand.HeldEntity == item)
+        // Forge-Change: предметы в руках перечисляет система рук.
+        foreach (var held in _hands.EnumerateHeld((user, hands)))
+            if (held == item)
                 return true;
         return false;
     }

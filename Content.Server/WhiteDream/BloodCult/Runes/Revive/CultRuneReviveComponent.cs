@@ -1,4 +1,4 @@
-﻿using Content.Shared.Damage;
+using Content.Shared.Damage;
 using Content.Shared.FixedPoint;
 
 namespace Content.Server.WhiteDream.BloodCult.Runes.Revive;
@@ -12,7 +12,7 @@ public sealed partial class CultRuneReviveComponent : Component
     [DataField]
     public DamageSpecifier Healing = new()
     {
-        DamageDict = new Dictionary<string, FixedPoint2>
+        DamageDict = new() // Forge-Change: ключом стал ProtoId<DamageTypePrototype>
         {
             ["Brute"] = -100,
             ["Burn"] = -100,

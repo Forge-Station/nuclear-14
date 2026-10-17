@@ -15,6 +15,8 @@ using Content.Shared.NPC.Components;
 using Content.Shared.NPC.Systems;
 using Content.Shared.Light.Components;
 using Content.Shared.Temperature.Components;
+using Content.Server.Atmos.EntitySystems;
+using Content.Shared.StatusEffectNew;
 
 
 namespace Content.Server.Shadowkin;
@@ -29,6 +31,7 @@ public sealed class EtherealSystem : SharedEtherealSystem
     [Dependency] private readonly SharedPointLightSystem _light = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private readonly StatusEffectsSystem _statusEffect = default!; // Forge-Change
 
     public override void OnStartup(EntityUid uid, EtherealComponent component, MapInitEvent args)
     {
@@ -42,15 +45,18 @@ public sealed class EtherealSystem : SharedEtherealSystem
         if (TryComp<EyeComponent>(uid, out var eye))
             _eye.SetVisibilityMask(uid, eye.VisibilityMask | (int) (VisibilityFlags.Ethereal), eye);
 
-        if (TryComp<TemperatureComponent>(uid, out var temp))
-            temp.AtmosTemperatureTransferEfficiency = 0;
+        // Forge-Change: обмен температурой с атмосферой апстрим считает через площадь
+        // открытой поверхности, а не через отдельный коэффициент.
+        if (TryComp<AtmosExposedComponent>(uid, out var exposed))
+            exposed.ExposedArea = 0f;
 
         var stealth = EnsureComp<StealthComponent>(uid);
         _stealth.SetVisibility(uid, 0.8f, stealth);
 
         SuppressFactions(uid, component, true);
 
-        EnsureComp<PressureImmunityComponent>(uid);
+        // Forge-Change: невосприимчивость к давлению стала статус-эффектом.
+        _statusEffect.TrySetStatusEffectDuration(uid, PressureImmunityStatusEffectSystem.PressureImmunityEffect);
         EnsureComp<RespiratorImmuneComponent>(uid);
         EnsureComp<MovementIgnoreGravityComponent>(uid);
 
@@ -72,13 +78,13 @@ public sealed class EtherealSystem : SharedEtherealSystem
         if (TryComp<EyeComponent>(uid, out var eye))
             _eye.SetVisibilityMask(uid, (int) VisibilityFlags.Normal, eye);
 
-        if (TryComp<TemperatureComponent>(uid, out var temp))
-            temp.AtmosTemperatureTransferEfficiency = 0.1f;
+        if (TryComp<AtmosExposedComponent>(uid, out var exposed)) // Forge-Change
+            exposed.ExposedArea = 2f;
 
         SuppressFactions(uid, component, false);
 
         RemComp<StealthComponent>(uid);
-        RemComp<PressureImmunityComponent>(uid);
+        _statusEffect.TryRemoveStatusEffect(uid, PressureImmunityStatusEffectSystem.PressureImmunityEffect); // Forge-Change
         RemComp<RespiratorImmuneComponent>(uid);
         RemComp<MovementIgnoreGravityComponent>(uid);
 

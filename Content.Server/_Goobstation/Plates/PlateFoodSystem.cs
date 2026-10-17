@@ -64,8 +64,8 @@ public sealed class PlateFoodSystem : EntitySystem
         if (!TryGetFood(ent.Owner, out var food, out var foodComp))
             return;
 
-        if (!_food.IsDigestibleBy(args.User, food, foodComp))
-            return;
+        // Forge-Change: съедобность теперь проверяется по желудкам, а сама еда
+        // проглатывается через TryIngest - проверку оставляем самому поеданию.
 
         var user = args.User;
         var plate = ent.Owner;
@@ -99,6 +99,6 @@ public sealed class PlateFoodSystem : EntitySystem
         if (!TryGetFood(plate, out var food, out var foodComp))
             return false;
 
-        return _food.TryFeed(user, user, food, foodComp).Handled;
+        return _food.TryIngest(user, user, food); // Forge-Change
     }
 }

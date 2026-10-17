@@ -40,7 +40,7 @@ public sealed class PsionicsRecordsConsoleSystem : SharedPsionicsRecordsConsoleS
     public override void Initialize()
     {
         SubscribeLocalEvent<PsionicsRecordsConsoleComponent, RecordModifiedEvent>(UpdateUserInterface);
-        SubscribeLocalEvent<PsionicsRecordsConsoleComponent, AfterGeneralRecordCreatedEvent>(UpdateUserInterface);
+        SubscribeLocalEvent<PsionicsRecordsConsoleComponent, GeneralRecordCreatedEvent>(UpdateUserInterface); // Forge-Change
 
         Subs.BuiEvents<PsionicsRecordsConsoleComponent>(PsionicsRecordsConsoleKey.Key, subs =>
         {
@@ -105,7 +105,7 @@ public sealed class PsionicsRecordsConsoleSystem : SharedPsionicsRecordsConsoleS
         var name = RecordName(key.Value);
         var officer = Loc.GetString("psionics-records-console-unknown-officer");
 
-        var tryGetIdentityShortInfoEvent = new TryGetIdentityShortInfoEvent(null, mob.Value);
+        var tryGetIdentityShortInfoEvent = new TryGetIdentityShortInfoEvent(mob.Value, null, false); // Forge-Change
         RaiseLocalEvent(tryGetIdentityShortInfoEvent);
         if (tryGetIdentityShortInfoEvent.Title != null)
         {

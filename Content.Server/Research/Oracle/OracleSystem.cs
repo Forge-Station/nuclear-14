@@ -26,12 +26,14 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Content.Server.Chemistry.EntitySystems;
+using Content.Shared.Botany.Components;
 
 namespace Content.Server.Research.Oracle;
 
 public sealed class OracleSystem : EntitySystem
 {
     [Dependency] private readonly ChatSystem _chat = default!;
+    [Dependency] private readonly IComponentFactory _compFactory = default!; // Forge-Change
     [Dependency] private readonly TelepathicChatSystem _tChat = default!;
     [Dependency] private readonly IChatManager _chatMan = default!;
     [Dependency] private readonly GlimmerSystem _glimmer = default!;
@@ -233,8 +235,9 @@ public sealed class OracleSystem : EntitySystem
     private bool GetRandomTechProto(Entity<OracleComponent> oracle, [NotNullWhen(true)] out string? proto)
     {
         // Try to find the most advanced server.
-        var database = _research.GetServerIds()
-            .Select(x => _research.TryGetServerById(x, out var serverUid, out _) ? serverUid : null)
+        // Forge-Change: серверы исследований теперь ищутся относительно клиента.
+        var database = _research.GetServerIds(oracle)
+            .Select(x => _research.TryGetServerById(oracle, x, out var serverUid, out _) ? serverUid : null)
             .Where(x => x != null && Transform(x.Value).GridUid == Transform(oracle).GridUid)
             .Select(x =>
             {
@@ -281,8 +284,12 @@ public sealed class OracleSystem : EntitySystem
 
     private bool GetRandomPlantProto(Entity<OracleComponent> oracle, [NotNullWhen(true)] out string? proto)
     {
-        var allPlants = _protoMan.EnumeratePrototypes<SeedPrototype>()
-            .Select(x => x.ProductPrototypes.FirstOrDefault())
+        // Forge-Change: семена стали сущностями с PlantDataComponent вместо прототипа seed.
+        var allPlants = _protoMan.EnumeratePrototypes<EntityPrototype>()
+            .Where(x => !x.Abstract)
+            .Select(x => x.TryGetComponent<PlantDataComponent>(out var plant, _compFactory) ? plant : null)
+            .Where(x => x != null)
+            .Select(x => x!.ProductPrototypes.FirstOrDefault().Id)
             .Where(x => IsDemandValid(oracle, x))
             .ToList();
 

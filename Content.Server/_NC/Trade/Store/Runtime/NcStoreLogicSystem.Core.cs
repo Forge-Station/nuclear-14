@@ -98,10 +98,9 @@ public sealed partial class NcStoreLogicSystem : EntitySystem, IStoreRewardExecu
         crate = default;
         if (TryComp<HandsComponent>(user, out var hands))
         {
-            foreach (var hand in hands.Hands.Values)
+            // Forge-Change: предметы в руках перечисляет система рук.
+            foreach (var held in _hands.EnumerateHeld((user, hands)))
             {
-                if (hand.HeldEntity is not { } held)
-                    continue;
                 if (TryComp<EntityStorageComponent>(held, out var storage) && !storage.Open)
                 {
                     crate = held;

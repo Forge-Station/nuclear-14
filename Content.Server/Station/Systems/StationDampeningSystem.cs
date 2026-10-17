@@ -26,8 +26,8 @@ public sealed class StationDampeningSystem : EntitySystem
             // PassiveDampeningComponent conflicts with shuttles cruise control a frontier QOL and is resetting dampeners causing issues.
             // so if a station which shuttles have the station component too, then don't reset the physics to a near off state when it gets bumped
             dampening.Enabled = true;
-            dampening.LinearDampening = shuttleComponent?.LinearDamping ?? 0.01f;
-            dampening.AngularDampening = shuttleComponent?.AngularDamping ?? 0.01f;
+            dampening.LinearDampening = shuttleComponent?.BodyModifier ?? 0.01f; // Forge-Change
+            dampening.AngularDampening = shuttleComponent?.BodyModifier ?? 0.01f; // Forge-Change
 
         }
     }

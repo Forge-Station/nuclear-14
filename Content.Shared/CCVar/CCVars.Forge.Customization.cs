@@ -47,4 +47,40 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<int> GameLoadoutsPoints =
         CVarDef.Create("game.loadouts_points", 14, CVar.REPLICATED);
+
+    /// <summary>
+    /// Forge-Change (Frontier): трение космоса, когда инерционные гасители выключены.
+    /// </summary>
+    public static readonly CVarDef<float> SpaceFrictionStrength =
+        CVarDef.Create("shuttle.space_friction_strength", 0.0015f, CVar.REPLICATED);
+
+    /// <summary>
+    /// Forge-Change (Frontier): сила торможения, когда гасители удерживают судно на месте.
+    /// </summary>
+    public static readonly CVarDef<float> AnchorDampeningStrength =
+        CVarDef.Create("shuttle.ancho_dampening_strength", 0.5f, CVar.REPLICATED);
+
+    /// <summary>
+    /// Forge-Change: как часто ИИ-кремниевые тратят заряд, в секундах.
+    /// </summary>
+    public static readonly CVarDef<float> SiliconNpcUpdateTime =
+        CVarDef.Create("silicon.npcupdatetime", 1.5f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Forge-Change: подставлять в имя сервера текущую карту и режим.
+    /// </summary>
+    public static readonly CVarDef<bool> UseDynamicHostname =
+        CVarDef.Create("game.use_dynamic_hostname", false, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Forge-Change: наименьший промежуток между «колеблющимися» событиями станции, в секундах.
+    /// </summary>
+    public static readonly CVarDef<int> GameEventsOscillatingMinimumTime =
+        CVarDef.Create("game.events_oscillating_minimum_time", 40, CVar.SERVERONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    /// Forge-Change: промежуток между «колеблющимися» событиями при единичном хаосе, в секундах.
+    /// </summary>
+    public static readonly CVarDef<int> GameEventsOscillatingAverageTime =
+        CVarDef.Create("game.events_oscillating_average_time", 1200, CVar.SERVERONLY | CVar.ARCHIVE);
 }

@@ -34,7 +34,7 @@ public sealed class AirlockVirusRule : StationEventSystem<AirlockVirusRuleCompon
         var stationGrids = new HashSet<EntityUid>();
         foreach (var stations in station)
         {
-            if (TryComp<StationDataComponent>(stations, out var data) && _station.GetLargestGrid(data) is { } grid)
+            if (TryComp<StationDataComponent>(stations, out var data) && _station.GetLargestGrid((stations, data)) is { } grid)
                 stationGrids.Add(grid);
         }
 
@@ -47,11 +47,11 @@ public sealed class AirlockVirusRule : StationEventSystem<AirlockVirusRuleCompon
                 continue;
 
             Timer.Spawn(TimeSpan.FromSeconds(_random.NextDouble(component.MinimumTimeToEmag, component.MaximumTimeToEmag)), () =>
-                _emag.DoEmagEffect(uid, airlockUid));
+                _emag.TryEmagEffect(uid, uid, airlockUid)); // Forge-Change: ЭМИ-эффект теперь TryEmagEffect
         }
 
         _announcer.SendAnnouncement(
-            _announcer.GetAnnouncementId(args.RuleId),
+            _announcer.GetAnnouncementId(args.RuleId ?? string.Empty), // Forge-Change: идентификатор правила стал необязательным
             Filter.Broadcast(),
             "airlock-virus-event-announcement",
             null,

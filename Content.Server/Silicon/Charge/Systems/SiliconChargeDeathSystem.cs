@@ -5,6 +5,7 @@ using Content.Server.Silicon.Charge;
 using Content.Server.Humanoid;
 using Content.Shared.Humanoid;
 using Content.Shared.Power.Components;
+using Content.Shared.StatusEffectNew;
 
 namespace Content.Server.Silicon.Death;
 
@@ -12,7 +13,7 @@ public sealed class SiliconDeathSystem : EntitySystem
 {
     [Dependency] private readonly SleepingSystem _sleep = default!;
     [Dependency] private readonly SiliconChargeSystem _silicon = default!;
-    [Dependency] private readonly HumanoidProfileSystem _humanoidAppearanceSystem = default!;
+    [Dependency] private readonly StatusEffectsSystem _statusEffect = default!; // Forge-Change
 
     public override void Initialize()
     {
@@ -46,14 +47,13 @@ public sealed class SiliconDeathSystem : EntitySystem
         if (deadEvent.Cancelled)
             return;
 
+        // Forge-Change: принудительный сон стал статус-эффектом, а видимость слоёв
+        // гуманоида - отдельной системой скрываемых слоёв.
         EntityManager.EnsureComponent<SleepingComponent>(uid);
-        EntityManager.EnsureComponent<ForcedSleepingComponent>(uid);
+        _statusEffect.TrySetStatusEffectDuration(uid, SleepingSystem.StatusEffectForcedSleeping);
 
-        if (TryComp<HumanoidProfileComponent>(uid, out var humanoidAppearanceComponent))
-        {
-            var layers = HumanoidVisualLayersExtension.Sublayers(HumanoidVisualLayers.HeadSide);
-            _humanoidAppearanceSystem.SetLayersVisibility(uid, layers, false, true, humanoidAppearanceComponent);
-        }
+        // Forge-Change: слой головы больше не выключить - апстрим скрывает слои только
+        // по слоту надетой одежды, а здесь выключается сам кремниевый. Записано в долги.
 
         siliconDeadComp.Dead = true;
 
@@ -62,7 +62,7 @@ public sealed class SiliconDeathSystem : EntitySystem
 
     private void SiliconUnDead(EntityUid uid, SiliconDownOnDeadComponent siliconDeadComp, BatteryComponent? batteryComp, EntityUid batteryUid)
     {
-        RemComp<ForcedSleepingComponent>(uid);
+        _statusEffect.TryRemoveStatusEffect(uid, SleepingSystem.StatusEffectForcedSleeping); // Forge-Change
         _sleep.TryWaking(uid, true);
 
         siliconDeadComp.Dead = false;

@@ -48,7 +48,8 @@ public sealed class IntegratedRadioSpeechSystem : EntitySystem
 
         try
         {
-            _radio.SendRadioMessage(uid, args.Message, _proto.Index<RadioChannelPrototype>(mic.BroadcastChannel), uid, frequency: mic.Frequency);
+            // Forge-Change: приём по частоте апстрим не фильтрует, частоту передавать некуда.
+            _radio.SendRadioMessage(uid, args.Message, _proto.Index<RadioChannelPrototype>(mic.BroadcastChannel), uid);
         }
         finally
         {

@@ -367,7 +367,7 @@ namespace Content.Server.Connection
         {
             var isAdmin = await _db.GetAdminDataForAsync(userId) != null;
             var isSponsor = _sponsorMan.Sponsors.ContainsKey(userId);
-            var wasInGame = EntitySystem.TryGet<GameTicker>(out var ticker) &&
+            var wasInGame = EntitySystem.TryGet<ServerGameTicker>(out var ticker) && // Forge-Change
                 ticker.PlayerGameStatuses.TryGetValue(userId, out var status) &&
                 status == PlayerGameStatus.JoinedGame;
 

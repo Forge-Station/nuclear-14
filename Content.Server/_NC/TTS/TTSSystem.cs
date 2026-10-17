@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Content.Server.Chat.Systems;
 using Content.Server.Language;
 using Content.Server.Radio.Components;
@@ -24,6 +24,7 @@ namespace Content.Server._NC.TTS;
 public sealed partial class TTSSystem : EntitySystem
 {
     [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private readonly ISharedPlayerManager _playerManager = default!; // Forge-Change
     [Dependency] private readonly INetConfigurationManager _netCfg = default!;
     [Dependency] private readonly LanguageSystem _language = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
@@ -102,9 +103,11 @@ public sealed partial class TTSSystem : EntitySystem
     private async void OnEntitySpoke(EntityUid uid, TTSComponent component, EntitySpokeEvent args)
     {
         if (TryComp<MindContainerComponent>(uid, out var mindCon)
-            && TryComp<MindComponent>(mindCon.Mind, out var mind) && mind.Session != null)
+            && TryComp<MindComponent>(mindCon.Mind, out var mind)
+            && mind.UserId is { } userId
+            && _playerManager.TryGetSessionById(userId, out var mindSession)) // Forge-Change
         {
-            var channel = mind.Session.Channel;
+            var channel = mindSession.Channel;
             if (!_netCfg.GetClientCVar(channel, CorvaxVars.LocalTTSEnabled))
                 return;
         }

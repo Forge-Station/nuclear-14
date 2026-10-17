@@ -243,7 +243,7 @@ namespace Content.Server.Mail.Systems
                 if (_stationSystem.GetOwningStation(uid) != station)
                     continue;
 
-                _cargoSystem.UpdateBankAccount(station, account, component.Bounty);
+                _cargoSystem.UpdateBankAccount(station, component.Bounty, account.PrimaryAccount); // Forge-Change
             }
         }
 
@@ -300,7 +300,7 @@ namespace Content.Server.Mail.Systems
                 if (_stationSystem.GetOwningStation(uid) != station)
                     continue;
 
-                _cargoSystem.UpdateBankAccount(station, account, component.Penalty);
+                _cargoSystem.UpdateBankAccount(station, component.Penalty, account.PrimaryAccount); // Forge-Change
                 return;
             }
         }

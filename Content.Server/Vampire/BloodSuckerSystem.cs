@@ -28,7 +28,7 @@ namespace Content.Server.Vampiric
 {
     public sealed class BloodSuckerSystem : EntitySystem
     {
-        [Dependency] private readonly BodySystem _bodySystem = default!;
+        [Dependency] private readonly SharedBodySystem _bodySystem = default!; // Forge-Change
         [Dependency] private readonly SharedSolutionContainerSystem _solutionSystem = default!;
         [Dependency] private readonly PopupSystem _popups = default!;
         [Dependency] private readonly DoAfterSystem _doAfter = default!;
@@ -128,7 +128,7 @@ namespace Content.Server.Vampiric
                 }
             }
 
-            if (stream.BloodReagent != "Blood")
+            if (!stream.BloodReferenceSolution.ContainsPrototype("Blood")) // Forge-Change: кровь задаётся эталонным раствором
                 _popups.PopupEntity(Loc.GetString("bloodsucker-not-blood", ("target", victim)), victim, bloodsucker, Shared.Popups.PopupType.Medium);
             else if (_solutionSystem.PercentFull(victim) != 0)
                 _popups.PopupEntity(Loc.GetString("bloodsucker-fail-no-blood", ("target", victim)), victim, bloodsucker, Shared.Popups.PopupType.Medium);
@@ -158,15 +158,16 @@ namespace Content.Server.Vampiric
                 return false;
 
             // No blood left, yikes.
-            if (_bloodstreamSystem.GetBloodLevelPercentage(victim, bloodstream) == 0.0f)
+            if (_bloodstreamSystem.GetBloodLevel((victim, bloodstream)) == 0.0f) // Forge-Change
                 return false;
 
             // Does bloodsucker have a stomach?
-            var stomachList = _bodySystem.GetBodyOrganComponents<StomachComponent>(bloodsucker);
-            if (stomachList.Count == 0)
+            // Forge-Change: органы тела отдаёт SharedBodySystem, а раствор желудка лежит
+            // прямо в его компоненте.
+            if (!_bodySystem.TryGetBodyOrganComponents<StomachComponent>(bloodsucker, out var stomachList))
                 return false;
 
-            if (!_solutionSystem.TryGetSolution(stomachList[0].Comp.Owner, StomachSystem.DefaultSolutionName, out var stomachSolution))
+            if (stomachList[0].Comp.Solution is not { } stomachSolution)
                 return false;
 
             // Are we too full?

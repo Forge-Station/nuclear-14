@@ -261,6 +261,12 @@ public sealed partial class GunComponent : Component
     public bool ClumsyProof = false;
 
     /// <summary>
+    /// Forge-Change: с какой вероятностью оружие стреляет, если его бросили.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float FireOnDropChance = 0.1f;
+
+    /// <summary>
     /// Firing direction for an item not being held (e.g. shuttle cannons, thrown guns still firing).
     /// </summary>
     [DataField]

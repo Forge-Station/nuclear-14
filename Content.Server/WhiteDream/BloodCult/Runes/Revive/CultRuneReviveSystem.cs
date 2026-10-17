@@ -10,12 +10,14 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.WhiteDream.BloodCult.BloodCultist;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
+using Robust.Shared.Player;
 
 namespace Content.Server.WhiteDream.BloodCult.Runes.Revive;
 
 public sealed class CultRuneReviveSystem : EntitySystem
 {
     [Dependency] private readonly EuiManager _eui = default!;
+    [Dependency] private readonly ISharedPlayerManager _playerManager = default!; // Forge-Change
 
     [Dependency] private readonly CultRuneBaseSystem _cultRune = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
@@ -100,11 +102,14 @@ public sealed class CultRuneReviveSystem : EntitySystem
                 mind = cultist.OriginalMind.Value;
         }
 
-        if (mind?.Session is not { } playerSession || mind.CurrentEntity == target)
+        // Forge-Change: сессию разума ищем по его UserId, а окну нужен менеджер игроков.
+        if (mind?.UserId is not { } mindUserId
+            || !_playerManager.TryGetSessionById(mindUserId, out var playerSession)
+            || mind.CurrentEntity == target)
             return;
 
         // notify them they're being revived.
-        _eui.OpenEui(new ReturnToBodyEui(mind, _mind), playerSession);
+        _eui.OpenEui(new ReturnToBodyEui(mind, _mind, _playerManager), playerSession);
     }
 
     private ReviveRuneChargesProviderComponent? EnsureReviveRuneChargesProvider(EntityUid ent)

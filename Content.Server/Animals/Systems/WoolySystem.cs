@@ -47,14 +47,14 @@ public sealed class WoolySystem : EntitySystem
             // Actually there is food digestion so no problem with instant reagent generation "OnFeed"
             // Голод стал сытостью: без SatiationComponent животное производит
             // шерсть бесконечно, как и раньше без HungerComponent.
-            if (HasComp<SatiationComponent>(uid))
+            if (TryComp<SatiationComponent>(uid, out var satiation)) // Forge-Change
             {
                 // Is there enough nutrition to produce reagent?
-                if (_satiation.GetValueOrNull(uid, SatiationSystem.Hunger) is not { } hunger
+                if (_satiation.GetValueOrNull((uid, satiation), SatiationSystem.Hunger) is not { } hunger
                     || hunger < wooly.HungerUsage)
                     continue;
 
-                _satiation.ModifyValue(uid, SatiationSystem.Hunger, -wooly.HungerUsage);
+                _satiation.ModifyValue((uid, satiation), SatiationSystem.Hunger, -wooly.HungerUsage);
             }
 
             if (!_solutionContainer.ResolveSolution(uid, wooly.SolutionName, ref wooly.Solution))

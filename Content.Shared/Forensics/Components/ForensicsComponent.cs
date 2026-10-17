@@ -33,6 +33,12 @@ public sealed partial class ForensicsComponent : Component
     public HashSet<string> Residues = [];
 
     /// <summary>
+    /// Forge-Change: запах, по которому выслеживают. Нужен форковому «следопыту».
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public string Scent = string.Empty;
+
+    /// <summary>
     /// How close you must be to wipe the prints/blood/etc. off of this entity
     /// </summary>
     [DataField]

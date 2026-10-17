@@ -14,7 +14,7 @@ namespace Content.Server.DynamicHostname;
 public sealed class DynamicHostnameSystem : EntitySystem
 {
     [Dependency] private readonly IConfigurationManager _configuration = default!;
-    [Dependency] private readonly GameTicker _gameTicker = default!;
+    [Dependency] private readonly ServerGameTicker _gameTicker = default!; // Forge-Change: CurrentPreset живёт на серверном тикере
     [Dependency] private readonly IGameMapManager _mapManager = default!;
 
     private string OriginalHostname { get; set; } = string.Empty;

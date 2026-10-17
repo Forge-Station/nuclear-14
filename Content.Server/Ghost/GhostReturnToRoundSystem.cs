@@ -23,7 +23,7 @@ public sealed class GhostReturnToRoundSystem : EntitySystem
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly GameTicker _ticker = default!;
+    [Dependency] private readonly ServerGameTicker _ticker = default!; // Forge-Change
 
     public override void Initialize()
     {

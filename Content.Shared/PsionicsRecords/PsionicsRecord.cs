@@ -1,4 +1,5 @@
 using Content.Shared.Psionics;
+using Content.Shared.StationRecords;
 using Robust.Shared.Serialization;
 
 /// <summary>
@@ -12,7 +13,7 @@ namespace Content.Shared.PsionicsRecords;
 /// Can be viewed and edited in a psionics records console by epistemics.
 /// </summary>
 [Serializable, NetSerializable, DataRecord]
-public sealed partial record PsionicsRecord
+public sealed partial record PsionicsRecord : StationRecord // Forge-Change: у записей станции появился базовый тип
 {
     /// <summary>
     /// Status of the person (None, Suspect, Registered, Abusing).

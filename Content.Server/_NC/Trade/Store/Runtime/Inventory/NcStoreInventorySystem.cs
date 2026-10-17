@@ -1,3 +1,4 @@
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Content.Shared.Tag;
@@ -26,6 +27,7 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
     private readonly HashSet<EntityUid> _scratchVisited = new();
     [Dependency] private readonly SharedStackSystem _stacks = default!;
     [Dependency] private readonly TagSystem _tags = default!;
+    [Dependency] private readonly SharedHandsSystem _hands = default!; // Forge-Change
     private readonly List<EntityUid> _takeTransactionDeleteScratch = new();
     private readonly List<(EntityUid Ent, int PreviousCount)> _takeTransactionStackRestoreScratch = new();
     private bool _takeTransactionActive;

@@ -1,4 +1,4 @@
-﻿using Content.Shared.Weapons.Melee.Events;
+using Content.Shared.Weapons.Melee.Events;
 using Content.Server.Emp;
 using Content.Shared.Charges.Systems;
 using Content.Shared.Charges.Components;
@@ -22,11 +22,11 @@ public sealed class EmpOnHitSystem : EntitySystem
     {
 
         if (!TryComp(uid, out LimitedChargesComponent? charges)
-            || _charges.IsEmpty(uid, charges)
+            || _charges.IsEmpty((uid, charges)) // Forge-Change
             || args.HitEntities.Count <= 0)
             return false;
 
-        _charges.UseCharge(uid, charges);
+        _charges.TryUseCharge((uid, charges)); // Forge-Change
         return true;
     }
 
@@ -36,7 +36,7 @@ public sealed class EmpOnHitSystem : EntitySystem
             return;
 
         foreach (var affected in args.HitEntities)
-            _emp.EmpPulse(_transform.GetMapCoordinates(affected), comp.Range, comp.EnergyConsumption, comp.DisableDuration);
+            _emp.EmpPulse(_transform.GetMapCoordinates(affected), comp.Range, comp.EnergyConsumption, TimeSpan.FromSeconds(comp.DisableDuration)); // Forge-Change
 
         args.Handled = true;
     }

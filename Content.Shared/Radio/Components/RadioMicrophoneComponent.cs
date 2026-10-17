@@ -25,6 +25,13 @@ public sealed partial class RadioMicrophoneComponent : Component
     public int ListenRange = 4;
 
     /// <summary>
+    /// Forge-Change (Nuclear-14): частота, на которой вещает этот микрофон. Фильтрация
+    /// приёма по частоте у апстрима отсутствует - поле пока только показывается в меню.
+    /// </summary>
+    [DataField]
+    public int Frequency = 1459; // Common channel frequency
+
+    /// <summary>
     /// Whether the microphone is currently broadcasting.
     /// </summary>
     [DataField, AutoNetworkedField]

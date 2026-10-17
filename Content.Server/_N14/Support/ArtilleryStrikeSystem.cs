@@ -63,7 +63,7 @@ namespace Content.Server._N14.Support
 
                 if (_mapSystem.TryFindGridAt(comp.Target, out var gridUid, out var grid))
                 {
-                    var tile = grid.WorldToTile(comp.Target.Position);
+                    var tile = _mapSystem.WorldToTile(gridUid, grid, comp.Target.Position);
                     RoofComponent? roof = null;
                     if (Resolve(gridUid, ref roof, false))
                     {
@@ -82,6 +82,7 @@ namespace Content.Server._N14.Support
                     comp.Intensity,
                     comp.Slope,
                     comp.MaxIntensity,
+                    null, // Forge-Change: у QueueExplosion появился виновник взрыва
                     comp.TileBreakScale,
                     canCreateVacuum: false);
                 QueueDel(uid);

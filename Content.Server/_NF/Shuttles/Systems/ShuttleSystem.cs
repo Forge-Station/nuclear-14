@@ -13,6 +13,8 @@ public sealed partial class ShuttleSystem
 {
     private float _spaceFrictionStrength;
     private float _anchorDampeningStrength;
+    // Forge-Change: у шаттла больше нет своих значений торможения - апстрим считает их
+    // через множитель BodyModifier, его и берём за «обычный» режим гасителей.
     private void NfInitialize()
     {
         SubscribeLocalEvent<ShuttleConsoleComponent, SetInertiaDampeningRequest>(OnSetInertiaDampening);
@@ -34,17 +36,17 @@ public sealed partial class ShuttleSystem
         var linearDampeningStrength = args.Mode switch
         {
             InertiaDampeningMode.Off => _spaceFrictionStrength,
-            InertiaDampeningMode.Dampened => shuttleComponent.LinearDamping, // should i use Dampener Strength instead?
+            InertiaDampeningMode.Dampened => shuttleComponent.BodyModifier, // should i use Dampener Strength instead?
             InertiaDampeningMode.Anchored => _anchorDampeningStrength,
-            _ => shuttleComponent.LinearDamping, // if some how we end up here... just keep calm and carry on with your bad self
+            _ => shuttleComponent.BodyModifier, // if some how we end up here... just keep calm and carry on with your bad self
         };
 
         var angularDampeningStrength = args.Mode switch
         {
             InertiaDampeningMode.Off => _spaceFrictionStrength,
-            InertiaDampeningMode.Dampened => shuttleComponent.AngularDamping,
+            InertiaDampeningMode.Dampened => shuttleComponent.BodyModifier,
             InertiaDampeningMode.Anchored => _anchorDampeningStrength,
-            _ => shuttleComponent.AngularDamping, // if some how we end up here... just keep calm and carry on with your bad self
+            _ => shuttleComponent.BodyModifier, // if some how we end up here... just keep calm and carry on with your bad self
         };
 
         _physics.SetLinearDamping(transform.GridUid.Value, physicsComponent, linearDampeningStrength);

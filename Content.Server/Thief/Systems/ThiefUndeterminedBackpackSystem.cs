@@ -79,14 +79,8 @@ public sealed class ThiefUndeterminedBackpackSystem : EntitySystem
         {
             var set = _proto.Index(component.PossibleSets[i]);
 
-            if (set.Requirements.Count != 0 &&
-                TryComp<HumanoidProfileComponent>(user, out var appearance) &&
-                appearance.LastProfileLoaded != null &&
-                !_characterRequirements.CheckRequirementsValid(
-                    set.Requirements, new JobPrototype() /* not gonna bother with jobs */,
-                    appearance.LastProfileLoaded, new(), false, set, EntityManager, _proto, _config,
-                    _sponsorMan, out _)) // Forge-Change
-                continue;
+            // Forge-Change: у набора больше нет требований, а профиль персонажа апстрим
+            // на сущности не хранит - проверять нечего и нечем. Записано в долги.
 
             var selected = component.SelectedSets.Contains(i);
             var info = new ThiefBackpackSetInfo(
@@ -97,6 +91,6 @@ public sealed class ThiefUndeterminedBackpackSystem : EntitySystem
             data.Add(i, info);
         }
 
-        _ui.SetUiState(uid, ThiefBackpackUIKey.Key, new ThiefBackpackBoundUserInterfaceState(data, MaxSelectedSets));
+        _ui.SetUiState(uid, ThiefBackpackUIKey.Key, new ThiefBackpackBoundUserInterfaceState(data, component.MaxSelectedSets, component.ToolName, component.ToolDesc)); // Forge-Change
     }
 }
