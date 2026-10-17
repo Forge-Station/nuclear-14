@@ -27,6 +27,11 @@
   - type: Tag
     tags:
     - ForgeLootBone
+  - type: Extractable
+    juiceSolution:
+      reagents:
+      - ReagentId: BoneMeal
+        Quantity: 5
 - type: stack
   id: ForgeAnimalBone
   name: кости

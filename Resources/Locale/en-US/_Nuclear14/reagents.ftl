@@ -366,6 +366,8 @@ reagent-name-fertilizer = fertilizer
 reagent-desc-fertilizer = Ground fertilizer. Perfect for your plants!
 reagent-name-dung = dung
 reagent-desc-dung = Animal dung. Ripe for turning into compost.
+reagent-name-bone-meal = bone meal
+reagent-desc-bone-meal = Ground animal bones. A good fertilizer.
 
 
 # Other

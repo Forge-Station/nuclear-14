@@ -282,3 +282,19 @@
       - NCRPisoner
   items:
     - ClothingOuterArmoredWinterCoat
+
+- type: loadout
+  id: N14ClothingOuterCoatFollowersArmored
+  category: Outer
+  cost: 4
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterJobRequirement
+      jobs:
+        - Followers
+    - !type:CharacterPlaytimeRequirement
+      tracker: Followers
+      min: 72000 # 20 hours veterancy unlock
+  items:
+    - N14ClothingOuterCoatFollowersArmored

@@ -28,14 +28,17 @@
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitFollowers
     back: N14ClothingBackpackWastelanderFilled # N14TODO: Doctors Bag
-    shoes: N14ClothingBootsLeather # Forge-Change
+    shoes: N14ClothingBootsLeatherFilled # Forge-Change
     neck: ClothingNeckStethoscope # Forge-Change
     id: N14IDDoctorFollower
     outerClothing: N14ClothingOuterCoatFollowerLab # Forge-Change
     belt: N14ClothingBeltMedicalFilled
-  innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
-  satchel: N14ClothingBackpackSatchelWastelanderFilled
-  duffelbag: N14ClothingBackpackDuffelFilled  # N14TODO: Doctors Bag
+  # innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
+  # satchel: N14ClothingBackpackSatchelWastelanderFilled
+  # duffelbag: N14ClothingBackpackDuffelFilled  # N14TODO: Doctors Bag
+  storage: # Forge-Change
+    back:
+    - N14BoxPlasticFilledMilitary
 
 - type: playTimeTracker
   id: Followers

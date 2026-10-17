@@ -73,6 +73,7 @@
     staticRecipes: # Guns or melee weapons related only.
     # Guns
     - BowImprovised
+    - WeaponFlareGun # Forge-add
     # Ammo
     - ArrowRegular # Forge-add
     # Melee
@@ -153,6 +154,7 @@
     - N14TopMagazineSMG12mm
     - MagazineBox12
     # - N14ShellShotgun12
+    - ShellShotgunFlare # Forge-add
     - N14MagazineShotgun12
     - MagazineBox12gauge
     # - N14ShellShotgun20
@@ -320,6 +322,14 @@
     - DoorElectronics
     - MagazineBoxNail # Forge-Change
     - DrumMagazineNailGun # Forge-Change
+    #Электроника # Forge-Add
+    - HotplateMachineCircuitboard
+    - MicrowaveMachineCircuitboard
+    - ReagentGrinderMachineCircuitboard
+    - CellRechargerCircuitboard
+    - PowerCageRechargerCircuitboard
+    - N14PowerCellMedium
+    - N14PowerCellHigh
 
 - type: entity
   parent: BaseStructure
@@ -445,6 +455,7 @@
     - OreBag # Forge-add
     - ClothingHeadHatWelding # Forge-add
     - Binoculars # Forge-add
+    - FireExtinguisher # Forge-add
     # Kitchen
     - N14DrinkNukaColaEmpty # Forge-add
     - N14JunkTincan # Forge-add
@@ -502,7 +513,7 @@
     # - N14JetInhaler
     # - N14TurboInhaler
     # - N14HydraInhaler
-    # - N14StimpakEmpty 
+    # - N14StimpakEmpty
     # - N14ChemicalSyringeAntidoteEmpty
     # - N14PsychoSyringe
     # - N14RadAwayPhialEmpty # Forge-add-end
@@ -608,6 +619,9 @@
     # Other
     - Charcoal
     - CharcoalToCoal
+  - type: MaterialStorageMagnetPickup
+    magnetEnabled: True
+    range: 1.25
 
 - type: entity
   parent: N14WorkbenchBase

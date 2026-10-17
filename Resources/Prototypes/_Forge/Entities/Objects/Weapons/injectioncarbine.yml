@@ -46,8 +46,8 @@
   - type: Gun
     minAngle: 0
     maxAngle: 5
-    fireRate: 1
-    projectileSpeed: 45
+    fireRate: 0.8
+    projectileSpeed: 30
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
@@ -76,19 +76,19 @@
   - type: SolutionContainerManager
     solutions:
       ammo:
-        maxVol: 5
+        maxVol: 3
   - type: RefillableSolution
     solution: ammo
   - type: InjectableSolution
     solution: ammo
   - type: SolutionTransfer
-    maxTransferAmount: 5
+    maxTransferAmount: 3
   - type: Injector
     solutionName: ammo
     injectOnly: false
-    transferAmount: 5
+    transferAmount: 3
   - type: ExaminableSolution
     solution: ammo
   - type: SolutionInjectOnProjectileHit
-    transferAmount: 5
+    transferAmount: 3
     solution: ammo
