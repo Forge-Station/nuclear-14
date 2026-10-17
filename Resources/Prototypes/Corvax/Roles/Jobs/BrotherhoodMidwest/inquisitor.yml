@@ -44,6 +44,7 @@
     head:  N14ClothingHeadHatBoSInquisitorCap
     outerClothing: N14ClothingOuterBOSInquisitorCoat
     pocket1: BoSMidwestInquisitorKits
+    pocket2: N14CurrencyBoSDollar50 # Forge-Change
     gloves: N14ClothingHandsGlovesCombat
     id: N14IDBrotherhoodHolotagPaladin
     ears: N14ClothingHeadsetBOSMidwest
