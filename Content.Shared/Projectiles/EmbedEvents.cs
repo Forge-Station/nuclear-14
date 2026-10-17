@@ -1,11 +1,19 @@
+using Content.Shared._Shitmed.Targeting;
+
 namespace Content.Shared.Projectiles;
 
 /// <summary>
 /// Raised directed on an entity when it embeds in another entity.
 /// </summary>
 [ByRefEvent]
-public readonly record struct EmbedEvent(EntityUid? Shooter, EntityUid Embedded)
+// Forge-Change: BodyPart - прицельное попадание Shitmed.
+public readonly record struct EmbedEvent(EntityUid? Shooter, EntityUid Embedded, TargetBodyPart? BodyPart = null)
 {
+    /// <summary>
+    /// Часть тела, в которую воткнулось, если попадание было прицельным.
+    /// </summary>
+    public readonly TargetBodyPart? BodyPart = BodyPart;
+
     /// <summary>
     /// The entity that threw/shot the embed, if any.
     /// </summary>

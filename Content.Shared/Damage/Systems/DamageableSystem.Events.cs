@@ -9,6 +9,7 @@ using Content.Shared.Rejuvenate;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Content.Shared.Damage.Systems;
+using Content.Shared._Shitmed.Targeting;
 
 namespace Content.Shared.Damage.Systems;
 
@@ -242,7 +243,7 @@ public sealed partial class DamageableSystem
         }
 
         if (!damageDone.Empty)
-            OnEntityDamageChanged((ent, damageable), damageDone, args.InterruptsDoAfters, args.Origin);
+            OnEntityDamageChanged((ent, damageable), damageDone, args.InterruptsDoAfters, args.Origin, args.CanSever); // Forge-Change
     }
 }
 
@@ -250,7 +251,12 @@ public sealed partial class DamageableSystem
 ///     Raised before damage is done, so stuff can cancel it if necessary.
 /// </summary>
 [ByRefEvent]
-public record struct BeforeDamageChangedEvent(DamageSpecifier Damage, EntityUid? Origin = null, bool Cancelled = false);
+// Forge-Change: TargetPart - прицельный урон Shitmed.
+public record struct BeforeDamageChangedEvent(
+    DamageSpecifier Damage,
+    EntityUid? Origin = null,
+    bool Cancelled = false,
+    TargetBodyPart? TargetPart = null);
 
 /// <summary>
 ///     Raised on an entity when damage is about to be dealt,
@@ -259,9 +265,17 @@ public record struct BeforeDamageChangedEvent(DamageSpecifier Damage, EntityUid?
 ///
 ///     For example, armor.
 /// </summary>
-public sealed class DamageModifyEvent(DamageSpecifier damage, EntityUid? origin = null)
+public sealed class DamageModifyEvent(
+    DamageSpecifier damage,
+    EntityUid? origin = null,
+    TargetBodyPart? targetPart = null) // Forge-Change
     : EntityEventArgs, IInventoryRelayEvent
 {
+    /// <summary>
+    ///     Forge-Change: часть тела, в которую бьют, если урон прицельный.
+    /// </summary>
+    public readonly TargetBodyPart? TargetPart = targetPart;
+
     /// <inheritdoc/>
     /// <remarks>
     ///     Whenever locational damage is a thing, this should just check only that bit of armor.
@@ -292,7 +306,12 @@ public sealed class DamageModifyEvent(DamageSpecifier damage, EntityUid? origin 
 /// <param name="Origin">The originator of the damage</param>
 /// <param name="InterruptsDoAfters">If the damage being dealt will interrupt do-afters</param>
 [ByRefEvent]
-public readonly record struct DamageDealtEvent(DamageSpecifier Damage, EntityUid? Origin, bool InterruptsDoAfters);
+// Forge-Change: CanSever - урон, от которого конечность не отрывается.
+public readonly record struct DamageDealtEvent(
+    DamageSpecifier Damage,
+    EntityUid? Origin,
+    bool InterruptsDoAfters,
+    bool CanSever = true);
 
 [Obsolete("Will be replaced with damage-model specific events; general 'took damage' can be served by DamageDealtEvent")]
 public sealed class DamageChangedEvent : EntityEventArgs
@@ -330,16 +349,23 @@ public sealed class DamageChangedEvent : EntityEventArgs
     /// </summary>
     public readonly EntityUid? Origin;
 
+    /// <summary>
+    ///     Forge-Change: можно ли от этого урона оторвать конечность.
+    /// </summary>
+    public readonly bool CanSever;
+
     public DamageChangedEvent(
         DamageableComponent damageable,
         DamageSpecifier? damageDelta,
         bool interruptsDoAfters,
-        EntityUid? origin
+        EntityUid? origin,
+        bool canSever = true // Forge-Change
     )
     {
         Damageable = damageable;
         DamageDelta = damageDelta;
         Origin = origin;
+        CanSever = canSever; // Forge-Change
 
         if (DamageDelta is null)
             return;

@@ -86,7 +86,10 @@ public partial class SharedBodySystem
             && damage <= entity.Comp.IntegrityThresholds[TargetIntegrity.HeavilyWounded]
             && _queryTargeting.HasComp(body)
             && !_mobState.IsDead(body))
-            _damageable.TryChangeDamage(entity, GetHealingSpecifier(entity), canSever: false, targetPart: GetTargetBodyPart(entity));
+            _damageable.TryChangeDamage(entity.Owner,
+                GetHealingSpecifier(entity),
+                canSever: false,
+                targetPart: GetTargetBodyPart(entity));
     }
 
     public override void Update(float frameTime)
@@ -217,8 +220,11 @@ public partial class SharedBodySystem
                     continue;
                 }
 
-                var damageResult = _damageable.TryChangeDamage(part.FirstOrDefault().Id, damage * partMultiplier, ignoreResistances, canSever: canSever);
-                if (damageResult != null && damageResult.GetTotal() != 0)
+                if (_damageable.TryChangeDamage(part.FirstOrDefault().Id,
+                        damage * partMultiplier,
+                        out var damageResult,
+                        ignoreResistances)
+                    && damageResult.GetTotal() != 0)
                     landed = true;
             }
         }
@@ -248,7 +254,7 @@ public partial class SharedBodySystem
         CheckBodyPart(partEnt, GetTargetBodyPart(partEnt), severed, damageable);
 
         if (severed)
-            DropPart(partEnt);
+            DropPart(partEnt.AsNullable());
 
         Dirty(partEnt, partEnt.Comp);
     }
@@ -430,7 +436,7 @@ public partial class SharedBodySystem
     {
         var damage = new DamageSpecifier()
         {
-            DamageDict = new Dictionary<string, FixedPoint2>()
+            DamageDict = new Dictionary<ProtoId<DamageTypePrototype>, FixedPoint2>()
             {
                 { "Blunt", -part.SelfHealingAmount },
                 { "Slash", -part.SelfHealingAmount },

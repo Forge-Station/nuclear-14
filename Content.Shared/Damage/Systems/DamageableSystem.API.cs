@@ -4,6 +4,7 @@ using Content.Shared.Damage.Prototypes;
 using Content.Shared.FixedPoint;
 using Robust.Shared.Prototypes;
 using Content.Shared.Damage.Systems;
+using Content.Shared._Shitmed.Targeting;
 
 namespace Content.Shared.Damage.Systems;
 
@@ -72,12 +73,22 @@ public sealed partial class DamageableSystem
         bool ignoreResistances = false,
         bool interruptsDoAfters = true,
         EntityUid? origin = null,
-        bool ignoreGlobalModifiers = false
+        bool ignoreGlobalModifiers = false,
+        bool canSever = true, // Forge-Change
+        TargetBodyPart? targetPart = null // Forge-Change
     )
     {
         //! Empty just checks if the DamageSpecifier is _literally_ empty, as in, is internal dictionary of damage types is empty.
         // If you deal 0.0 of some damage type, Empty will be false!
-        return TryChangeDamage(ent, damage, out _, ignoreResistances, interruptsDoAfters, origin, ignoreGlobalModifiers);
+        return TryChangeDamage(ent,
+            damage,
+            out _,
+            ignoreResistances,
+            interruptsDoAfters,
+            origin,
+            ignoreGlobalModifiers,
+            canSever,
+            targetPart);
     }
 
     /// <summary>
@@ -98,12 +109,21 @@ public sealed partial class DamageableSystem
         bool ignoreResistances = false,
         bool interruptsDoAfters = true,
         EntityUid? origin = null,
-        bool ignoreGlobalModifiers = false
+        bool ignoreGlobalModifiers = false,
+        bool canSever = true, // Forge-Change
+        TargetBodyPart? targetPart = null // Forge-Change
     )
     {
         //! Empty just checks if the DamageSpecifier is _literally_ empty, as in, is internal dictionary of damage types is empty.
         // If you deal 0.0 of some damage type, Empty will be false!
-        newDamage = ChangeDamage(ent, damage, ignoreResistances, interruptsDoAfters, origin, ignoreGlobalModifiers);
+        newDamage = ChangeDamage(ent,
+            damage,
+            ignoreResistances,
+            interruptsDoAfters,
+            origin,
+            ignoreGlobalModifiers,
+            canSever,
+            targetPart);
         return !newDamage.Empty;
     }
 
@@ -124,7 +144,9 @@ public sealed partial class DamageableSystem
         bool ignoreResistances = false,
         bool interruptsDoAfters = true,
         EntityUid? origin = null,
-        bool ignoreGlobalModifiers = false
+        bool ignoreGlobalModifiers = false,
+        bool canSever = true, // Forge-Change
+        TargetBodyPart? targetPart = null // Forge-Change
     )
     {
         var damageDone = new DamageSpecifier();
@@ -135,7 +157,7 @@ public sealed partial class DamageableSystem
         if (damage.Empty)
             return damageDone;
 
-        var before = new BeforeDamageChangedEvent(damage, origin);
+        var before = new BeforeDamageChangedEvent(damage, origin, TargetPart: targetPart); // Forge-Change
         RaiseLocalEvent(ent, ref before);
 
         if (before.Cancelled)
@@ -149,7 +171,7 @@ public sealed partial class DamageableSystem
 
             // TODO DAMAGE
             // byref struct event.
-            var ev = new DamageModifyEvent(damage, origin);
+            var ev = new DamageModifyEvent(damage, origin, targetPart); // Forge-Change
             RaiseLocalEvent(ent, ev);
             damage = ev.Damage;
 
@@ -160,7 +182,7 @@ public sealed partial class DamageableSystem
         if (!ignoreGlobalModifiers)
             damage = ApplyUniversalAllModifiers(damage);
 
-        var evt = new DamageDealtEvent(damage, origin, interruptsDoAfters);
+        var evt = new DamageDealtEvent(damage, origin, interruptsDoAfters, canSever); // Forge-Change
         RaiseLocalEvent(ent, ref evt);
 
         return damage;

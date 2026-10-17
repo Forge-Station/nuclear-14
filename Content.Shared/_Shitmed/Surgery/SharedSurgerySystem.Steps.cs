@@ -336,7 +336,7 @@ public abstract partial class SharedSurgerySystem
         }
 
         damageable = (entity, damageableComp);
-        var dict = _damageable.GetAllDamage(damageable.Value).DamageDict;
+        var dict = _damageable.GetAllDamage(damageable.Value.Owner).DamageDict;
         return group.Any(damageType => dict.TryGetValue(damageType, out var value) && value > 0);
 
     }
@@ -353,7 +353,7 @@ public abstract partial class SharedSurgerySystem
 
         // Right now the bonus is based off the body's total damage, maybe we could make it based off each part in the future.
         var bonus = ent.Comp.HealMultiplier
-                    * _damageable.GetDamagePerGroup(damageable.Value)[ent.Comp.MainGroup];
+                    * _damageable.GetDamagePerGroup(damageable.Value.Owner)[ent.Comp.MainGroup];
         if (_mobState.IsDead(args.Body))
             bonus *= 0.2;
 
@@ -515,13 +515,13 @@ public abstract partial class SharedSurgerySystem
 
         // Adding organs is generally done for a single one at a time, so we only need to check for the first.
         var firstOrgan = organComp.Organ.Values.FirstOrDefault();
-        if (firstOrgan == default)
+        if (firstOrgan.Component is null)
             return;
 
         foreach (var tool in args.Tools)
         {
             if (HasComp(tool, firstOrgan.Component.GetType())
-                && TryComp<OrganComponent>(tool, out var insertedOrgan)
+                && TryComp<ShitmedOrganComponent>(tool, out var insertedOrgan)
                 && _body.InsertOrgan(args.Part, tool, insertedOrgan.SlotId, partComp, insertedOrgan))
             {
                 EnsureComp<OrganReattachedComponent>(tool);
@@ -633,7 +633,7 @@ public abstract partial class SharedSurgerySystem
             return;
 
         var organType = ent.Comp.Organ.Values.FirstOrDefault();
-        if (organType == default)
+        if (organType.Component is null)
             return;
 
         // Upstream's Nubody keeps markings on the organ itself, keyed by organ category,
@@ -655,7 +655,7 @@ public abstract partial class SharedSurgerySystem
                 ? layerMarkings
                 : new List<Marking>();
 
-            if (existing.Any(marking => marking.MarkingId.Contains(ent.Comp.MatchString)))
+            if (existing.Any(marking => marking.MarkingId.Id.Contains(ent.Comp.MatchString)))
                 continue;
 
             var updated = new List<Marking>(existing) { new Marking(markingComp.Marking, 1) };
@@ -680,11 +680,7 @@ public abstract partial class SharedSurgerySystem
 
     private void OnAddMarkingCheck(Entity<SurgeryAddMarkingStepComponent> ent, ref SurgeryStepCompleteCheckEvent args)
     {
-        var markingCategory = MarkingCategoriesConversion.FromHumanoidVisualLayers(ent.Comp.MarkingCategory);
-
-        if (!TryComp(args.Body, out HumanoidAppearanceComponent? bodyAppearance)
-            || !bodyAppearance.MarkingSet.Markings.TryGetValue(markingCategory, out var markingList)
-            || !markingList.Any(marking => marking.MarkingId.Contains(ent.Comp.MatchString)))
+        if (!HasBodyMarking(args.Body, ent.Comp.MarkingCategory, ent.Comp.MatchString))
             args.Cancelled = true;
     }
 

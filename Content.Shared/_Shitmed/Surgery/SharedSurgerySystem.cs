@@ -302,14 +302,32 @@ public abstract partial class SharedSurgerySystem : EntitySystem
 
     private void OnMarkingPresentValid(Entity<SurgeryMarkingConditionComponent> ent, ref SurgeryValidEvent args)
     {
-        var markingCategory = MarkingCategoriesConversion.FromHumanoidVisualLayers(ent.Comp.MarkingCategory);
-
-        var hasMarking = TryComp(args.Body, out HumanoidAppearanceComponent? bodyAppearance)
-            && bodyAppearance.MarkingSet.Markings.TryGetValue(markingCategory, out var markingList)
-            && markingList.Any(marking => marking.MarkingId.Contains(ent.Comp.MatchString));
+        var hasMarking = HasBodyMarking(args.Body, ent.Comp.MarkingCategory, ent.Comp.MatchString);
 
         if ((!ent.Comp.Inverse && hasMarking) || (ent.Comp.Inverse && !hasMarking))
             args.Cancelled = true;
+    }
+
+    /// <summary>
+    ///     Есть ли у тела маркировка нужного слоя, чей идентификатор содержит строку.
+    /// </summary>
+    /// <remarks>
+    ///     Nubody держит маркировки на органах и раскладывает их по категориям
+    ///     органов, а не в одном MarkingSet тела, поэтому ищем по всем категориям.
+    /// </remarks>
+    protected bool HasBodyMarking(EntityUid body, HumanoidVisualLayers layer, string match)
+    {
+        if (!_visualBody.TryGatherMarkingsData((body, null), null, out _, out _, out var applied))
+            return false;
+
+        foreach (var byLayer in applied.Values)
+        {
+            if (byLayer.TryGetValue(layer, out var markings)
+                && markings.Any(marking => marking.MarkingId.Id.Contains(match)))
+                return true;
+        }
+
+        return false;
     }
 
     /*private void OnRemoveLarva(Entity<SurgeryRemoveLarvaComponent> ent, ref SurgeryCompletedEvent args)
@@ -414,7 +432,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
 
         _allSurgeries.Clear();
         foreach (var entity in _prototypes.EnumeratePrototypes<EntityPrototype>())
-            if (entity.HasComponent<SurgeryComponent>())
+            if (entity.TryGetComponent<SurgeryComponent>(out _))
                 _allSurgeries.Add(new EntProtoId(entity.ID));
     }
 }

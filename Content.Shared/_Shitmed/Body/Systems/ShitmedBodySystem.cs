@@ -1,4 +1,7 @@
 using Content.Shared.Body.Part;
+using Content.Shared.Inventory;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
 
 namespace Content.Shared.Body.Systems;
 
@@ -18,6 +21,10 @@ public abstract partial class SharedBodySystem : EntitySystem
 {
     [Dependency] protected readonly BodySystem Body = default!;
     [Dependency] protected readonly OrganRelationSystem Relations = default!;
+    [Dependency] protected readonly DetachableOrganSystem Detachable = default!;
+    [Dependency] protected readonly IGameTiming _timing = default!;
+    [Dependency] protected readonly IPrototypeManager Prototypes = default!;
+    [Dependency] protected readonly InventorySystem _inventory = default!;
 
     public override void Initialize()
     {

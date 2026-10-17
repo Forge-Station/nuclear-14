@@ -28,7 +28,7 @@ public sealed class SurgeryToolExamineSystem : EntitySystem
         SubscribeLocalEvent<TweezersComponent, SurgeryToolExaminedEvent>(OnExamined);
 
         SubscribeLocalEvent<BodyPartComponent, SurgeryToolExaminedEvent>(OnExamined);
-        SubscribeLocalEvent<OrganComponent, SurgeryToolExaminedEvent>(OnExamined);
+        SubscribeLocalEvent<ShitmedOrganComponent, SurgeryToolExaminedEvent>(OnExamined);
     }
 
     private void OnGetVerbs(Entity<SurgeryToolComponent> ent, ref GetVerbsEvent<ExamineVerb> args)
