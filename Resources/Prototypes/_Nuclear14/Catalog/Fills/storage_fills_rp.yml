@@ -4,6 +4,14 @@
   components:
     - type: StorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: Pen
           prob: 0.04
         - id: N14CombatKnife
@@ -391,6 +399,14 @@
   components:
     - type: StorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: CigCartonRed
           prob: 0.01
         - id: CigCartonBlack
@@ -1192,6 +1208,14 @@
   components:
     - type: StorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: Matchbox # Forge-Add
           prob: 0.05
         - id: N14Ethanol
@@ -1744,6 +1768,14 @@
   components:
     - type: StorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: N14Ethanol
           prob: 0.05
         - id: N14FoodBlamcomaccheese
@@ -2174,6 +2206,18 @@
   components:
     - type: StorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
+        - id: N14FactionResearchDisk2500
+          prob: 0.01
+        - id: N14FactionResearchDisk5000
+          prob: 0.003
         - id: GeigerCounter
           prob: 0.02
         - id: N14DirtyGauze10
@@ -2844,6 +2888,14 @@
   components:
     - type: StorageFill
       contents:
+        - id: N14FactionResearchDisk500
+          prob: 0.03
+        - id: N14FactionResearchDisk1000
+          prob: 0.02
+        - id: N14FactionResearchDisk2500
+          prob: 0.01
+        - id: N14FactionResearchDisk5000
+          prob: 0.003
         - id: N14CurrencyCap10
           prob: 0.1
           orGroup: Currency

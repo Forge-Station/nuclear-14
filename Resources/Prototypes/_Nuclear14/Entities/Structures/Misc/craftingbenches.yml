@@ -118,12 +118,29 @@
     node: WorkbenchAmmobench
   - type: Sprite
     state: ammobench
+  # #Misfits Add: ContainerContainer + Storage + UserInterface for blueprint item support
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+      enum.LatheUiKey.Key:
+        type: LatheBoundUserInterface
+  - type: Storage
+    craft: true
+    maxItemSize: Ginormous
+    grid:
+    - 0,0,12,9
+  # #Misfits Add End
   - type: MaterialStorage
     whitelist:
       tags:
       - Sheet
       - RawMaterial
       - Ingot
+      - Scrap
       - Cartridge
   - type: Lathe
     idleState: icon
@@ -249,6 +266,7 @@
       - Sheet
       - RawMaterial
       - Ingot
+      - Scrap
       - RawLeather # move it to the tanning machine
   - type: Lathe
     idleState: icon

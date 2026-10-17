@@ -1,0 +1,87 @@
+- type: entity
+  parent: BaseItem
+  id: N14ResearchArtifactBase
+  abstract: true
+  name: research artifact
+  description: Этот предмет можно будет разобрать на исследовательском столе.
+  components:
+  - type: Item
+    size: Normal
+  - type: StaticPrice
+    price: 1000
+  - type: PointLight
+    radius: 1.4
+    energy: 2
+    color: "#ffd9a3"
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
+    layers:
+    - map: ["base"]
+
+- type: entity
+  parent: N14ResearchArtifactBase
+  id: N14ResearchArtifactDiscard
+  name: исследуемый мусор
+  suffix: research
+  components:
+  - type: StaticPrice
+    price: 250
+  - type: RandomSprite
+    available:
+    - base:
+        gear_large: ""
+        board_1: ""
+        capacitor_1: ""
+        duct_tape: ""
+        fuse_1: ""
+
+- type: entity
+  parent: N14ResearchArtifactBase
+  id: N14ResearchArtifactBallistic
+  name: исследуемый кусок огнестрельного оружия
+  suffix: research
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: RandomSprite
+    available:
+    - base:
+        barrel: ""
+        bolt: ""
+        receiver: ""
+        riflestock: ""
+        scope: ""
+
+- type: entity
+  parent: N14ResearchArtifactBase
+  id: N14ResearchArtifactEnergy
+  name: исследуемый кусок энергетического оружия
+  suffix: research
+  components:
+  - type: StaticPrice
+    price: 1000
+  - type: RandomSprite
+    available:
+    - base:
+        capacitor_2: ""
+        diode_1: ""
+        resistor_1: ""
+        lenses: ""
+        flux: ""
+
+- type: entity
+  parent: N14ResearchArtifactBase
+  id: N14ResearchArtifactArmor
+  name: исследуемый кусок силовой брони
+  suffix: research
+  components:
+  - type: StaticPrice
+    price: 1500
+  - type: RandomSprite
+    available:
+    - base:
+        advancedframe: ""
+        frame: ""
+        iron: ""
+        alloys: ""
+        mould: ""

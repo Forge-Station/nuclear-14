@@ -1,0 +1,39 @@
+# Faction armor lathe recipes: WashingtonBoS - head
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatWBoSBeret
+  result: N14ClothingHeadHatWBoSBeret
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 200
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingHeadHatWBoSBattleHelmet
+  result: N14ClothingHeadHatWBoSBattleHelmet
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 700
+    N14Iron: 300
+    Leather: 200
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingHeadHatWBoSLordHelmet
+  result: N14ClothingHeadHatWBoSLordHelmet
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 1200
+    N14Iron: 400
+    Circuitry: 200
+    Cloth: 400

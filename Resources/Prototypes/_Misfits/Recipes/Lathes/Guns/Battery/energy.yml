@@ -1,0 +1,320 @@
+# Weapon lathe recipes: Energy weapons (laser / plasma)
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (energy): Steel / Glass / Circuitry / ScrapElectronic / Plastic / N14Silver.
+# Tier is metadata only (comment): T1 = crude/simple, T2 = standard, T3 = advanced, T4 = prototype.
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponLaserPistol
+  result: N14WeaponLaserPistol
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 800
+    Glass: 300
+    Circuitry: 200
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponLaserRevolver
+  result: N14WeaponLaserRevolver
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 1000
+    Glass: 300
+    Circuitry: 200
+    ScrapElectronic: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponLaserRifleCrude
+  result: N14WeaponLaserRifleCrude
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 1200
+    Glass: 400
+    Circuitry: 200
+    ScrapElectronic: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponLaserRifleMakeshift
+  result: N14WeaponLaserRifleMakeshift
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 1000
+    Glass: 300
+    Circuitry: 200
+    ScrapElectronic: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponPlasmaRifleCrude
+  result: N14WeaponPlasmaRifleCrude
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 1400
+    Glass: 400
+    Circuitry: 300
+    ScrapElectronic: 100
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponPlasmaPistol
+  result: N14WeaponPlasmaPistol
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 1600
+    Glass: 600
+    Circuitry: 400
+    ScrapElectronic: 200
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponLaserRifle
+  result: N14WeaponLaserRifle
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 1800
+    Glass: 600
+    Circuitry: 300
+    ScrapElectronic: 200
+    Plastic: 200
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponPlasmaRifle
+  result: N14WeaponPlasmaRifle
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 2000
+    Glass: 600
+    Circuitry: 400
+    ScrapElectronic: 200
+    Plastic: 200
+
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponPlasmaDefender
+  result: N14WeaponPlasmaDefender
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 2800
+    Glass: 800
+    Circuitry: 600
+    ScrapElectronic: 300
+    Plastic: 200
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponLaserMagnetoPistol
+  result: N14WeaponLaserMagnetoPistol
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 2400
+    Glass: 800
+    Circuitry: 600
+    ScrapElectronic: 300
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponPlasmaRifleUrban
+  result: N14WeaponPlasmaRifleUrban
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 3200
+    Glass: 1000
+    Circuitry: 600
+    ScrapElectronic: 400
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponLaserPistolRecharger
+  result: N14WeaponLaserPistolRecharger
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 2800
+    Glass: 800
+    Circuitry: 600
+    ScrapElectronic: 400
+    Plastic: 200
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponLaserRifleRecharger
+  result: N14WeaponLaserRifleRecharger
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 3200
+    Glass: 1000
+    Circuitry: 600
+    ScrapElectronic: 400
+    Plastic: 300
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponLaserRifleAuto
+  result: N14WeaponLaserRifleAuto
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 3600
+    Glass: 1000
+    Circuitry: 800
+    ScrapElectronic: 400
+    Plastic: 300
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponLaserRifleWattz2000
+  result: N14WeaponLaserRifleWattz2000
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 3600
+    Glass: 1200
+    Circuitry: 800
+    ScrapElectronic: 400
+
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponPlasmaRifleAuto
+  result: N14WeaponPlasmaRifleAuto
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 16
+  materials:
+    Steel: 4800
+    Glass: 1400
+    Circuitry: 1000
+    ScrapElectronic: 600
+    N14Silver: 300
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponLaserRiflePrototypeAER14
+  result: N14WeaponLaserRiflePrototypeAER14
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 17
+  materials:
+    Steel: 6000
+    Glass: 1600
+    Circuitry: 1200
+    ScrapElectronic: 600
+    N14Silver: 400
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponPlasmaMultiplas
+  result: N14WeaponPlasmaMultiplas
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 17
+  materials:
+    Steel: 6400
+    Glass: 1600
+    Circuitry: 1200
+    ScrapElectronic: 800
+    N14Silver: 400
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponLaserRifleWattz3000
+  result: N14WeaponLaserRifleWattz3000
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 6800
+    Glass: 1800
+    Circuitry: 1200
+    ScrapElectronic: 600
+    N14Silver: 400
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponPlasmaCaster
+  result: N14WeaponPlasmaCaster
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 7200
+    Glass: 1400
+    Circuitry: 1000
+    ScrapElectronic: 800
+    N14Silver: 400
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponLaserGatling
+  result: N14WeaponLaserGatling
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 20
+  materials:
+    Steel: 8000
+    Glass: 1600
+    Circuitry: 1200
+    ScrapElectronic: 800
+    N14Silver: 600
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponLaserRifleYk42b
+  result: N14WeaponLaserRifleYk42b
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 17
+  materials:
+    Steel: 6000
+    Glass: 1600
+    Circuitry: 1200
+    ScrapElectronic: 600
+    N14Silver: 400
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponGaussRifle
+  result: N14WeaponGaussRifle
+  category: N14WeaponEnergy
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 7200
+    Glass: 1600
+    Circuitry: 1200
+    ScrapElectronic: 800
+    N14Silver: 600
