@@ -10,12 +10,12 @@ public sealed class GlimmerEventSystem : StationEventSystem<GlimmerEventComponen
 
     protected override void Ended(Entity<GlimmerEventComponent> rule, ref GameRuleEndedEvent args)
     {
-        base.Ended(uid, component, gameRule, args);
+        base.Ended(rule, ref args); // Forge-Change: у Ended теперь Entity<T> и ByRef-событие
 
-        var glimmerBurned = RobustRandom.Next(component.GlimmerBurnLower, component.GlimmerBurnUpper);
+        var glimmerBurned = RobustRandom.Next(rule.Comp.GlimmerBurnLower, rule.Comp.GlimmerBurnUpper);
         _glimmerSystem.DeltaGlimmerInput(-glimmerBurned);
 
-        var reportEv = new GlimmerEventEndedEvent(component.SophicReport, glimmerBurned);
+        var reportEv = new GlimmerEventEndedEvent(rule.Comp.SophicReport, glimmerBurned);
         RaiseLocalEvent(reportEv);
     }
 }

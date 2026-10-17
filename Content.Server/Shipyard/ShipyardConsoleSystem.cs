@@ -41,7 +41,7 @@ public sealed class ShipyardConsoleSystem : SharedShipyardConsoleSystem
         if (GetBankAccount(ent) is not {} bank)
             return;
 
-        if (bank.Comp.Balance < vessel.Price)
+        if (_cargo.GetBalanceFromAccount(bank.Owner, bank.Comp.PrimaryAccount) < vessel.Price) // Forge-Change
         {
             var popup = Loc.GetString("cargo-console-insufficient-funds", ("cost", vessel.Price));
             Popup.PopupEntity(popup, ent, user);
@@ -59,7 +59,7 @@ public sealed class ShipyardConsoleSystem : SharedShipyardConsoleSystem
 
         _meta.SetEntityName(shuttle, $"{vessel.Name} {_random.Next(1000):000}");
 
-        _cargo.UpdateBankAccount(bank, bank.Comp, -vessel.Price);
+        _cargo.UpdateBankAccount(bank.Owner, -vessel.Price, bank.Comp.PrimaryAccount); // Forge-Change
 
         var message = Loc.GetString("shipyard-console-docking", ("vessel", vessel.Name.ToString()));
         _radio.SendRadioMessage(ent, message, ent.Comp.Channel, ent);
@@ -67,7 +67,7 @@ public sealed class ShipyardConsoleSystem : SharedShipyardConsoleSystem
 
         // TODO: make the ui updating more robust, make pr upstream to have UpdateBankAccount support things that arent ordering consoles
         // TODO: then have shipyard have that component and update the ui when it changes balance
-        UpdateUI(ent, bank.Comp.Balance);
+        UpdateUI(ent, _cargo.GetBalanceFromAccount(bank.Owner, bank.Comp.PrimaryAccount)); // Forge-Change
     }
 
     private void OnOpened(Entity<ShipyardConsoleComponent> ent, ref BoundUIOpenedEvent args)
@@ -78,7 +78,7 @@ public sealed class ShipyardConsoleSystem : SharedShipyardConsoleSystem
     private void UpdateUI(EntityUid uid)
     {
         if (GetBankAccount(uid) is {} bank)
-            UpdateUI(uid, bank.Comp.Balance);
+            UpdateUI(uid, _cargo.GetBalanceFromAccount(bank.Owner, bank.Comp.PrimaryAccount)); // Forge-Change
     }
 
     private void UpdateUI(EntityUid uid, int balance)

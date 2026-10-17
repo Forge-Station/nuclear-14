@@ -57,8 +57,9 @@ public sealed class BloodCultSpellsSystem : EntitySystem
 
     private void OnSpellStartup(Entity<BaseCultSpellComponent> action, ref ComponentStartup args)
     {
-        if (_actions.TryGetActionData(action, out var actionData, false) && actionData is { UseDelay: not null })
-            _actions.StartUseDelay(action);
+        // Forge-Change: данные действия теперь лежат в ActionComponent на самой сущности.
+        if (TryComp(action, out ActionComponent? actionData) && actionData.UseDelay != null)
+            _actions.StartUseDelay((action.Owner, actionData));
     }
 
     private void OnCultTargetEvent(Entity<BaseCultSpellComponent> spell, ref EntityTargetActionEvent args)
@@ -81,7 +82,7 @@ public sealed class BloodCultSpellsSystem : EntitySystem
         if (TryComp(args.Performer, out BloodCultSpellsHolderComponent? spellsHolder))
             spellsHolder.SelectedSpells.Remove(spell);
 
-        _actions.RemoveAction(args.Performer, spell);
+        _actions.RemoveAction(args.Performer, spell.Owner); // Forge-Change
     }
 
     private void OnComponentStartup(Entity<BloodCultSpellsHolderComponent> cultist, ref ComponentStartup args) =>
@@ -169,7 +170,7 @@ public sealed class BloodCultSpellsSystem : EntitySystem
         if (ev.Handled)
             return;
 
-        _empSystem.EmpPulse(_transform.GetMapCoordinates(ev.Performer), ev.Range, ev.EnergyConsumption, ev.Duration);
+        _empSystem.EmpPulse(_transform.GetMapCoordinates(ev.Performer), ev.Range, ev.EnergyConsumption, TimeSpan.FromSeconds(ev.Duration)); // Forge-Change
         ev.Handled = true;
     }
 
@@ -184,7 +185,7 @@ public sealed class BloodCultSpellsSystem : EntitySystem
             if (!_hands.TryPickupAnyHand(ev.Performer, entity) && !ev.Force)
             {
                 _popup.PopupEntity(Loc.GetString("cult-magic-no-empty-hand"), ev.Performer, ev.Performer);
-                _actions.SetCooldown(ev.Action, TimeSpan.FromSeconds(1));
+                _actions.SetCooldown(ev.Action.AsNullable(), TimeSpan.FromSeconds(1)); // Forge-Change
                 QueueDel(entity);
                 return;
             }
@@ -261,16 +262,16 @@ public sealed class BloodCultSpellsSystem : EntitySystem
         _ui.TryToggleUi(cultist.Owner, RadialSelectorUiKey.Key, cultist.Owner);
     }
 
+    /// <remarks>
+    /// Forge-Change: у действий больше нет своей иконки - действие само стало сущностью,
+    /// и показывается её спрайт.
+    /// </remarks>
     private SpriteSpecifier? GetActionIcon(EntityUid actionUid)
     {
-        if (TryComp(actionUid, out EntityTargetActionComponent? targetAction))
-            return targetAction.Icon;
-        if (TryComp(actionUid, out WorldTargetActionComponent? worldTargetAction))
-            return worldTargetAction.Icon;
-        if (TryComp(actionUid, out InstantActionComponent? instantActionComponent))
-            return instantActionComponent.Icon;
+        if (MetaData(actionUid).EntityPrototype is not { } proto)
+            return null;
 
-        return null;
+        return new SpriteSpecifier.EntityPrototype(proto.ID);
     }
 
     #endregion

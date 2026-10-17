@@ -113,6 +113,13 @@ public sealed partial class MeleeWeaponComponent : Component
     public Angle WideAnimationRotation = Angle.Zero;
 
     /// <summary>
+    /// Forge-Change: если лёгкая атака промахнулась, бить вместо неё размашистой.
+    /// Нужно форковым трейтам оружия.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool HeavyOnLightMiss;
+
+    /// <summary>
     /// Attack animation direction.
     /// </summary>
     [DataField, AutoNetworkedField]

@@ -601,7 +601,7 @@ public sealed class CrossServerSystem : EntitySystem
             return;
 
         var toRemove = new List<EntityUid>();
-        foreach (var cuffs in _cuffs.GetAllCuffs(cuffable))
+        foreach (var cuffs in _cuffs.GetAllCuffs((target, cuffable))) // Forge-Change
             if (HasComp<CrossRestraintComponent>(cuffs))
                 toRemove.Add(cuffs);
 
@@ -623,7 +623,7 @@ public sealed class CrossServerSystem : EntitySystem
 
     private bool HasCrossRestraints(Entity<CuffableComponent> ent)
     {
-        foreach (var cuffs in _cuffs.GetAllCuffs(ent.Comp))
+        foreach (var cuffs in _cuffs.GetAllCuffs(ent.AsNullable())) // Forge-Change
             if (HasComp<CrossRestraintComponent>(cuffs))
                 return true;
 

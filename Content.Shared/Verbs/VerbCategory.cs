@@ -11,7 +11,10 @@ namespace Content.Shared.Verbs
     {
         public readonly string Text;
 
-        public readonly SpriteSpecifier? Icon;
+        // Forge-Change: было readonly-поле. Форковым категориям нужна иконка из RSI,
+        // а второй конструктор делал вызовы new("...", null) неоднозначными, поэтому
+        // иконку можно задать инициализатором объекта.
+        public SpriteSpecifier? Icon { get; private init; }
 
         /// <summary>
         ///     Columns for the grid layout that shows the verbs in this category. If <see cref="IconsOnly"/> is false,
@@ -90,6 +93,11 @@ namespace Content.Shared.Verbs
         public static readonly VerbCategory SelectFaction = new("verb-categories-select-faction", null);
 
         public static readonly VerbCategory Interaction = new("verb-categories-interaction", null);
+
+        public static readonly VerbCategory BloodSpells = new("verb-categories-blood-cult", null)
+        {
+            Icon = new SpriteSpecifier.Rsi(new ResPath("/Textures/WhiteDream/BloodCult/actions.rsi"), "blood_spells"),
+        };
         // Forge-Change-End
 
         public static readonly VerbCategory Adjust =

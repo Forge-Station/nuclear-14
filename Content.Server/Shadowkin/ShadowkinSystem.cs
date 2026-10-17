@@ -13,12 +13,14 @@ using Content.Shared.Actions;
 using Robust.Shared.Prototypes;
 using Content.Server.Abilities.Psionics;
 using Content.Server.Damage.Systems;
+using Content.Shared.Body;
 
 namespace Content.Server.Shadowkin;
 
 public sealed class ShadowkinSystem : EntitySystem
 {
     [Dependency] private readonly StaminaSystem _stamina = default!;
+    [Dependency] private readonly SharedVisualBodySystem _visualBody = default!; // Forge-Change
     [Dependency] private readonly PsionicAbilitiesSystem _psionicAbilitiesSystem = default!;
     [Dependency] private readonly AlertsSystem _alerts = default!;
     [Dependency] private readonly SharedActionsSystem _actionsSystem = default!;
@@ -41,12 +43,11 @@ public sealed class ShadowkinSystem : EntitySystem
 
     private void OnEyeColorChange(EntityUid uid, ShadowkinComponent component, EyeColorInitEvent args)
     {
-        if (!TryComp<HumanoidProfileComponent>(uid, out var humanoid)
-            || humanoid.EyeColor == component.OldEyeColor)
+        // Forge-Change: цвет глаз переехал в профиль органа-глаза.
+        if (!_visualBody.TryGetEyeColor(uid, out var eyeColor) || eyeColor == component.OldEyeColor)
             return;
 
-        component.OldEyeColor = humanoid.EyeColor;
-        Dirty(uid, humanoid);
+        component.OldEyeColor = eyeColor;
     }
 
     private void OnMindbreak(EntityUid uid, ShadowkinComponent component, ref OnMindbreakEvent args)
@@ -54,11 +55,10 @@ public sealed class ShadowkinSystem : EntitySystem
         if (TryComp<MindbrokenComponent>(uid, out var mindbreak))
             mindbreak.MindbrokenExaminationText = "examine-mindbroken-shadowkin-message";
 
-        if (TryComp<HumanoidProfileComponent>(uid, out var humanoid))
+        if (_visualBody.TryGetEyeColor(uid, out var oldEyeColor)) // Forge-Change
         {
-            component.OldEyeColor = humanoid.EyeColor;
-            humanoid.EyeColor = component.BlackEyeColor;
-            Dirty(uid, humanoid);
+            component.OldEyeColor = oldEyeColor;
+            _visualBody.SetEyeColor(uid, component.BlackEyeColor);
         }
 
         if (TryComp<StaminaComponent>(uid, out var stamina))
@@ -72,11 +72,7 @@ public sealed class ShadowkinSystem : EntitySystem
 
         RemComp<MindbrokenComponent>(uid);
 
-        if (TryComp<HumanoidProfileComponent>(uid, out var humanoid))
-        {
-            humanoid.EyeColor = component.OldEyeColor;
-            Dirty(uid, humanoid);
-        }
+        _visualBody.SetEyeColor(uid, component.OldEyeColor); // Forge-Change
 
         EnsureComp<PsionicComponent>(uid, out _);
         if (_prototypeManager.TryIndex<PsionicPowerPrototype>("ShadowkinPowers", out var shadowkinPowers))

@@ -30,12 +30,12 @@ public sealed partial class ColorFlashEffectSystem : SharedColorFlashEffectSyste
         SubscribeLocalEvent<ColorFlashEffectComponent, AnimationCompletedEvent>(OnEffectAnimationCompleted);
     }
 
-    public override void RaiseEffect(Color color, List<EntityUid> entities, Filter filter)
+    public override void RaiseEffect(Color color, List<EntityUid> entities, Filter filter, float? animationLength = null) // Forge-Change
     {
         if (!_timing.IsFirstTimePredicted)
             return;
 
-        OnColorFlashEffect(new ColorFlashEffectEvent(color, GetNetEntityList(entities)));
+        OnColorFlashEffect(new ColorFlashEffectEvent(color, GetNetEntityList(entities), animationLength));
     }
 
     private void OnEffectAnimationCompleted(EntityUid uid, ColorFlashEffectComponent component, AnimationCompletedEvent args)

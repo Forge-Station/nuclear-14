@@ -11,6 +11,12 @@ namespace Content.Shared.Access.Components;
 [Access(typeof(SharedIdCardConsoleSystem))]
 public sealed partial class IdCardConsoleComponent : Component
 {
+    // Forge-Change-Start: апстрим перевёл обрезку имени на CCVars.MaxNameLength, но форковые
+    // окна (NanoChat) всё ещё ограничивают ввод константой - возвращаем её.
+    public const int MaxFullNameLength = 30;
+    public const int MaxJobTitleLength = 30;
+    // Forge-Change-End
+
     public static string PrivilegedIdCardSlotId = "IdCardConsole-privilegedId";
     public static string TargetIdCardSlotId = "IdCardConsole-targetId";
 

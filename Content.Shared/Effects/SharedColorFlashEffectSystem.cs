@@ -10,5 +10,5 @@ public abstract class SharedColorFlashEffectSystem : EntitySystem
     /// <param name="color"></param>
     /// <param name="entities"></param>
     /// <param name="filter"></param>
-    public abstract void RaiseEffect(Color color, List<EntityUid> entities, Filter filter);
+    public abstract void RaiseEffect(Color color, List<EntityUid> entities, Filter filter, float? animationLength = null); // Forge-Change
 }

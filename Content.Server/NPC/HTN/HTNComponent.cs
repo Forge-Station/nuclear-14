@@ -57,4 +57,11 @@ public sealed partial class HTNComponent : NPCComponent
     /// </summary>
     [DataField]
     public bool Enabled = true;
+
+    /// <summary>
+    /// Forge-Change: сколько времени накопилось на планирование. Форк копит его, чтобы
+    /// размазывать планирование по тикам.
+    /// </summary>
+    [ViewVariables]
+    public float PlanAccumulator;
 }

@@ -34,3 +34,4 @@ verb-categories-interaction = Взаимодействовать
 
 # Forge-Change
 verb-categories-select-faction = Выбрать фракцию
+verb-categories-blood-cult = Кровавые чары

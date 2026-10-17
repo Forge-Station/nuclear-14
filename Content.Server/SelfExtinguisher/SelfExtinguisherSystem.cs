@@ -55,7 +55,7 @@ public sealed partial class SelfExtinguisherSystem : SharedSelfExtinguisherSyste
 
         var curTime = _timing.CurTime;
         if (TryComp<LimitedChargesComponent>(uid, out var charges) &&
-            _charges.IsEmpty(uid, charges))
+            _charges.IsEmpty((uid, charges))) // Forge-Change
         {
             if (!SetPopupCooldown((uid, selfExtinguisher), curTime))
                 return;
@@ -111,15 +111,20 @@ public sealed partial class SelfExtinguisherSystem : SharedSelfExtinguisherSyste
             target, target, PopupType.Medium
         );
 
+        // Forge-Change: заряды действий переехали в SharedChargesSystem.
         if (charges != null)
         {
-            _charges.UseCharge(uid, charges);
-            _actions.RemoveCharges(selfExtinguisher.ActionEntity, 1);
+            _charges.TryUseCharge((uid, charges));
 
-            if (_actions.GetCharges(selfExtinguisher.ActionEntity) == 0)
+            if (selfExtinguisher.ActionEntity is { } action)
             {
-                _actions.SetEnabled(selfExtinguisher.ActionEntity, false);
-                return; // Don't set cooldown when out of charges, they can't use it anymore anyways
+                _charges.AddCharges(action, -1);
+
+                if (_charges.GetCurrentCharges(action) == 0)
+                {
+                    _actions.SetEnabled(action, false);
+                    return; // Don't set cooldown when out of charges, they can't use it anymore anyways
+                }
             }
         }
 

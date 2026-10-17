@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Shared.FixedPoint;
 using Content.Shared.Traits;
 using JetBrains.Annotations;
@@ -127,7 +128,7 @@ public sealed partial class TraitAddImplant : TraitFunction
         ISerializationManager serializationManager)
     {
         var implantSystem = entityManager.System<SharedSubdermalImplantSystem>();
-        implantSystem.AddImplants(uid, Implants);
+        implantSystem.AddImplants(uid, Implants.Select(implant => new EntProtoId(implant))); // Forge-Change
     }
 }
 
@@ -384,12 +385,11 @@ public sealed partial class TraitAddSolutionContainer : TraitFunction
 
         foreach (var (containerKey, solution) in Solutions)
         {
-            var hasSolution = solutionContainer.EnsureSolution(uid, containerKey, out Solution? newSolution);
-
-            if (!hasSolution)
+            // Forge-Change: EnsureSolution теперь отдаёт сущность раствора.
+            if (!solutionContainer.EnsureSolution(uid, containerKey, out var newSolution))
                 return;
 
-            newSolution!.AddSolution(solution.Solution, null);
+            newSolution.Comp.Solution.AddSolution(solution.Solution, null);
         }
     }
 }
@@ -651,7 +651,7 @@ public sealed partial class TraitModifyUnarmed : TraitFunction
             return;
 
         if (SoundHit != null)
-            melee.SoundHit = SoundHit;
+            melee.HitSound = SoundHit; // Forge-Change: поле переименовали
 
         if (Animation != null)
             melee.Animation = Animation.Value;

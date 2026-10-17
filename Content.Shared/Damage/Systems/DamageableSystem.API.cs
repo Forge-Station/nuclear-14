@@ -196,6 +196,13 @@ public sealed partial class DamageableSystem
             if (GetDamageModifierSet(ent) is { } modifierSet)
                 damage = DamageSpecifier.ApplyModifierSet(damage, modifierSet);
 
+            // Forge-Change: дополнительные наборы модификаторов от трейтов брони.
+            foreach (var extraSetId in ent.Comp.DamageModifierSets)
+            {
+                if (ProtoMan.Resolve(extraSetId, out var extraSet))
+                    damage = DamageSpecifier.ApplyModifierSet(damage, extraSet);
+            }
+
             // TODO DAMAGE
             // byref struct event.
             var ev = new DamageModifyEvent(damage, origin, targetPart); // Forge-Change

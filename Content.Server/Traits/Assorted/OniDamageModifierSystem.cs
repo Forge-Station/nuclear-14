@@ -22,9 +22,9 @@ public sealed class OniDamageModifierSystem : EntitySystem
 
         }
 
-        foreach (var (key, value) in component.MeleeModifierReplacers.FlatReduction)
+        foreach (var (key, value) in component.MeleeModifierReplacers.FlatReductions) // Forge-Change
         {
-            oni.MeleeModifiers.FlatReduction[key] = value;
+            oni.MeleeModifiers.FlatReductions[key] = value;
 
         }
     }

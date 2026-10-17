@@ -42,3 +42,4 @@ verb-common-exit = Exit
 # Forge-Change
 verb-categories-select-faction = Select faction
 verb-categories-interaction = Interact
+verb-categories-blood-cult = Blood spells

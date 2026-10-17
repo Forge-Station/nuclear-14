@@ -53,6 +53,7 @@ namespace Content.Server.WhiteDream.BloodCult.Gamerule;
 public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
 {
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly SharedVisualBodySystem _visualBody = default!; // Forge-Change
 
     [Dependency] private readonly ActionsSystem _actions = default!;
     [Dependency] private readonly AntagSelectionSystem _antagSelection = default!;
@@ -424,11 +425,8 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
 
     private void RemoveCultistAppearance(Entity<BloodCultistComponent> cultist)
     {
-        if (TryComp<HumanoidProfileComponent>(cultist, out var appearanceComponent))
-        {
-            appearanceComponent.EyeColor = cultist.Comp.OriginalEyeColor;
-            Dirty(cultist, appearanceComponent);
-        }
+        // Forge-Change: цвет глаз переехал в профиль органа-глаза.
+        _visualBody.SetEyeColor(cultist, cultist.Comp.OriginalEyeColor);
 
         RemComp<PentagramComponent>(cultist);
     }
@@ -464,11 +462,10 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
             case CultStage.RedEyes when prevStage == CultStage.Start:
                 foreach (var cultist in cultRule.Cultists)
                 {
-                    if (!TryComp<HumanoidProfileComponent>(cultist, out var appearanceComponent))
+                    if (!_visualBody.TryGetEyeColor(cultist, out var originalEyeColor)) // Forge-Change
                         continue;
-                    cultist.Comp.OriginalEyeColor = appearanceComponent.EyeColor;
-                    appearanceComponent.EyeColor = cultRule.EyeColor;
-                    Dirty(cultist, appearanceComponent);
+                    cultist.Comp.OriginalEyeColor = originalEyeColor;
+                    _visualBody.SetEyeColor(cultist, cultRule.EyeColor);
                 }
 
                 break;

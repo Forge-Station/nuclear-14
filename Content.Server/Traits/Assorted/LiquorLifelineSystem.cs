@@ -3,12 +3,14 @@ using Content.Server.Body.Systems;
 using Content.Shared.Body.Components;
 using Content.Shared.Body;
 using Content.Shared.Metabolism;
+using Content.Shared.Body.Systems;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Traits.Assorted;
 
 public sealed class LiquorLifelineSystem : EntitySystem
 {
-    [Dependency] private readonly BodySystem _bodySystem = default!;
+    [Dependency] private readonly SharedBodySystem _bodySystem = default!; // Forge-Change
 
     public override void Initialize()
     {
@@ -24,18 +26,14 @@ public sealed class LiquorLifelineSystem : EntitySystem
         if (!_bodySystem.TryGetBodyOrganComponents<MetabolizerComponent>(entity, out var metabolizers, body))
             return;
 
+        // Forge-Change: у метаболизаторов больше нет групп вроде "Alcohol" - реагенты сами
+        // говорят, какой тип метаболизатора их обрабатывает. Поэтому тип просто добавляется
+        // всем органам, которые вообще что-то метаболизируют; сработает он только на тех
+        // реагентах, которые его ждут.
         foreach (var (metabolizer, _) in metabolizers)
         {
-            if (metabolizer.MetabolizerTypes is null
-                || metabolizer.MetabolismGroups is null)
-                continue;
-
-            foreach (var metabolismGroup in metabolizer.MetabolismGroups)
-            {
-                // Add the LiquorLifeline metabolizer type to the liver and equivalent organs.
-                if (metabolismGroup.Id == "Alcohol")
-                    metabolizer.MetabolizerTypes.Add("LiquorLifeline");
-            }
+            metabolizer.MetabolizerTypes ??= new HashSet<ProtoId<MetabolizerTypePrototype>>();
+            metabolizer.MetabolizerTypes.Add("LiquorLifeline");
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Server.Chemistry.EntitySystems;
@@ -30,9 +31,12 @@ public sealed class BloodstreamAdjustSystem : EntitySystem
     /// </summary>
     public bool TryAdjustBloodstream(Entity<BloodstreamAffectedByMassComponent> ent)
     {
+        // Forge-Change: предельный объём крови апстрим считает из эталонного раствора и
+        // множителя, отдельного поля BloodMaxVolume больше нет. Масштабируем множитель -
+        // от него зависят и предел, и восстановление.
         if (!TryComp<BloodstreamComponent>(ent, out var bloodstream)
             || !_solutionContainer.TryGetSolution(ent.Owner, bloodstream.BloodSolutionName, out var bloodSolutionEnt)
-            || bloodstream.BloodMaxVolume == 0
+            || bloodstream.BloodReferenceSolution.Volume == 0
             || !_config.GetCVar(CCVars.HeightAdjustModifiesBloodstream))
             return false;
 
@@ -41,12 +45,17 @@ public sealed class BloodstreamAdjustSystem : EntitySystem
         var factor = Math.Pow(_contests.MassContest(ent, bypassClamp: true, rangeFactor: 4f), ent.Comp.Power);
         factor = Math.Clamp(factor, ent.Comp.Min, ent.Comp.Max);
 
-        var newVolume = bloodstream.BloodMaxVolume * factor;
-        var newBloodLevel = bloodSolution.FillFraction * newVolume;
-        bloodSolution.MaxVolume = newVolume;
-        bloodSolution.SetContents([new ReagentQuantity(bloodstream.BloodReagent, newBloodLevel, null)], false);
+        var fillFraction = bloodSolution.FillFraction;
+        var newVolume = bloodstream.BloodReferenceSolution.Volume * (bloodstream.MaxVolumeModifier * (float) factor);
 
-        _bloodstream.SetBloodMaxVolume(ent.Owner, newVolume, bloodstream);
+        bloodSolution.MaxVolume = newVolume;
+        bloodSolution.SetContents(
+            bloodstream.BloodReferenceSolution.Contents
+                .Select(reagent => new ReagentQuantity(reagent.Reagent, fillFraction * newVolume))
+                .ToList(),
+            false);
+
+        _solutionContainer.UpdateChemicals(bloodSolutionEnt.Value);
 
         return true;
     }

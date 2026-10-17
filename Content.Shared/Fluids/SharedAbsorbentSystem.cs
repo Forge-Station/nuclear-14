@@ -24,7 +24,7 @@ public abstract partial class SharedAbsorbentSystem : EntitySystem
     [Dependency] private SharedPopupSystem _popups = default!;
     [Dependency] protected SharedPuddleSystem Puddle = default!;
     [Dependency] private SharedMeleeWeaponSystem _melee = default!;
-    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] protected SharedTransformSystem Transform = default!; // Forge-Change
     [Dependency] protected SharedSolutionContainerSystem SolutionContainer = default!;
     [Dependency] private UseDelaySystem _useDelay = default!;
     [Dependency] private SharedMapSystem _mapSystem = default!;
@@ -269,7 +269,8 @@ public abstract partial class SharedAbsorbentSystem : EntitySystem
     /// <summary>
     ///     Logic for an absorbing entity interacting with a puddle.
     /// </summary>
-    private bool TryPuddleInteract(Entity<AbsorbentComponent, UseDelayComponent?> absorbEnt,
+    // Forge-Change: нужен серверной уборке следов
+    protected bool TryPuddleInteract(Entity<AbsorbentComponent, UseDelayComponent?> absorbEnt,
         Entity<SolutionComponent> absorberSoln,
         EntityUid user,
         EntityUid target)
@@ -351,8 +352,8 @@ public abstract partial class SharedAbsorbentSystem : EntitySystem
             _useDelay.TryResetDelay((absorbEnt, useDelay));
 
         var userXform = Transform(user);
-        var targetPos = _transform.GetWorldPosition(target);
-        var localPos = Vector2.Transform(targetPos, _transform.GetInvWorldMatrix(userXform));
+        var targetPos = Transform.GetWorldPosition(target);
+        var localPos = Vector2.Transform(targetPos, Transform.GetInvWorldMatrix(userXform));
         localPos = userXform.LocalRotation.RotateVec(localPos);
 
         _melee.DoLunge(user, absorbEnt, Angle.Zero, localPos, null);

@@ -1,4 +1,3 @@
-using Content.Server.Body.Systems;
 using Content.Shared.EntityEffects;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
@@ -25,17 +24,16 @@ public sealed partial class ChemCleanBloodstream : LegacyEntityEffect
 
         var bloodstreamSys = args.EntityManager.System<BloodstreamSystem>();
 
+        // Forge-Change: у FlushChemicals поменялся порядок аргументов, а исключаемый
+        // реагент стал необязательным.
         if (args is EntityEffectReagentArgs reagentArgs)
         {
-            if (reagentArgs.Source == null || reagentArgs.Reagent == null)
-                return;
-
             cleanseRate *= reagentArgs.Scale.Float();
-            bloodstreamSys.FlushChemicals(args.TargetEntity, reagentArgs.Reagent.ID, cleanseRate);
+            bloodstreamSys.FlushChemicals(args.TargetEntity, cleanseRate, reagentArgs.Reagent?.ID);
         }
         else
         {
-            bloodstreamSys.FlushChemicals(args.TargetEntity, "", cleanseRate);
+            bloodstreamSys.FlushChemicals(args.TargetEntity, cleanseRate);
         }
     }
 }

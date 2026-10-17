@@ -35,6 +35,13 @@ public sealed partial class DamageableComponent : Component
     public ProtoId<DamageModifierSetPrototype>? DamageModifierSetId;
 
     /// <summary>
+    /// Forge-Change: дополнительные наборы модификаторов. Апстрим держит только один,
+    /// а форковые трейты брони навешивают их по нескольку.
+    /// </summary>
+    [DataField]
+    public List<ProtoId<DamageModifierSetPrototype>> DamageModifierSets = new();
+
+    /// <summary>
     ///     All the damage information is stored in this <see cref="DamageSpecifier"/>.
     /// </summary>
     /// <remarks>

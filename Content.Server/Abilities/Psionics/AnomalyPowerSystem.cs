@@ -113,7 +113,7 @@ public sealed partial class AnomalyPowerSystem : EntitySystem
 
         if (args.Settings.OverchargeRecoil is not null
             && TryComp<DamageableComponent>(uid, out var damageable))
-            _damageable.TryChangeDamage(uid, args.Settings.OverchargeRecoil / component.CurrentDampening, true, true, damageable, uid);
+            _damageable.TryChangeDamage((uid, damageable), args.Settings.OverchargeRecoil / component.CurrentDampening, true, true, uid); // Forge-Change
 
         if (args.Settings.OverchargeCooldown > 0)
             foreach (var action in component.Actions)

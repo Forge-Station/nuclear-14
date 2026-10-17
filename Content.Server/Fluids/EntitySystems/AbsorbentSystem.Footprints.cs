@@ -20,7 +20,7 @@ public sealed partial class AbsorbentSystem
 
         // Take up to [MaxCleanedFootprints] footprints closest to the target
         var cleaned = entities.AsEnumerable()
-            .Select(uid => (uid, dst: Transform(uid).Coordinates.TryDistance(EntityManager, _transform, targetCoords, out var dst) ? dst : 0f))
+            .Select(uid => (uid, dst: Transform(uid).Coordinates.TryDistance(EntityManager, Transform, targetCoords, out var dst) ? dst : 0f)) // Forge-Change
             .Where(ent => ent.dst > 0f)
             .OrderBy(ent => ent.dst)
             .Select(ent => (ent.uid, comp: footprintQuery.GetComponent(ent.uid)));
@@ -29,7 +29,8 @@ public sealed partial class AbsorbentSystem
         var processed = 0;
         foreach (var (uid, footprintComp) in cleaned)
         {
-            if (TryPuddleInteract(user, used.Owner, uid, used.Comp, useDelay: null, absorbentSoln))
+            // Forge-Change: у TryPuddleInteract другой порядок и набор аргументов.
+            if (TryPuddleInteract((used.Owner, used.Comp, null), absorbentSoln, user, uid))
                 processed++;
 
             if (processed >= used.Comp.MaxCleanedFootprints)

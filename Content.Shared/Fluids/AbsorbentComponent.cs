@@ -60,4 +60,18 @@ public sealed partial class AbsorbentComponent : Component
     /// </summary>
     [DataField]
     public bool UseAbsorberSolution = true;
+
+    // Forge-Change-Start: уборка следов - форковая возможность.
+    /// <summary>
+    /// В каком радиусе тряпка подбирает следы.
+    /// </summary>
+    [DataField]
+    public float FootprintCleaningRange = 0.2f;
+
+    /// <summary>
+    /// Сколько следов в радиусе <see cref="FootprintCleaningRange"/> стирается за раз.
+    /// </summary>
+    [DataField]
+    public int MaxCleanedFootprints = 5;
+    // Forge-Change-End
 }

@@ -130,7 +130,7 @@ public sealed class RevivifyPowerSystem : EntitySystem
             return;
 
         if (args.HealingAmount is not null)
-            _damageable.TryChangeDamage(args.Target.Value, args.HealingAmount * args.ModifiedAmplification, true, false, damageableComponent, uid);
+            _damageable.TryChangeDamage((args.Target.Value, damageableComponent), args.HealingAmount * args.ModifiedAmplification, true, false, uid); // Forge-Change
 
         if (!args.DoRevive
             || _rotting.IsRotten(args.Target.Value)
@@ -156,7 +156,7 @@ public sealed class RevivifyPowerSystem : EntitySystem
             return;
 
         if (args.HealingAmount is not null)
-            _damageable.TryChangeDamage(args.Target, args.HealingAmount * args.ModifiedAmplification, true, false, damageableComponent, uid);
+            _damageable.TryChangeDamage((args.Target, damageableComponent), args.HealingAmount * args.ModifiedAmplification, true, false, uid); // Forge-Change
 
         if (!args.DoRevive
             || _rotting.IsRotten(args.Target)
