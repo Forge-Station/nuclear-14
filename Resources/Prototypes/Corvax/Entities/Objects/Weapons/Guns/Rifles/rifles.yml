@@ -125,7 +125,6 @@
         whitelist:
           tags:
             - Magazine545Rifle
-            - MagazineDrum545Rifle # Forge-change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge545Rifle
