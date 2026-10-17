@@ -24,6 +24,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Content.Server._NC.Sponsor; // Forge-Change
+using System.Diagnostics.CodeAnalysis;
+using Content.Shared.Mind;
 
 namespace Content.Server.Players.PlayTimeTracking;
 
@@ -107,7 +109,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
 
     public IEnumerable<string> GetTimedRoles(EntityUid mindId)
     {
-        var ev = new MindGetAllRolesEvent(new List<RoleInfo>());
+        var ev = new MindGetAllRoleInfoEvent(new List<RoleInfo>());
         RaiseLocalEvent(mindId, ref ev);
 
         foreach (var role in ev.Roles)
@@ -131,13 +133,13 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
 
     private void OnRoleRemove(RoleRemovedEvent ev)
     {
-        if (_minds.TryGetSession(ev.Mind, out var session))
+        if (TryGetMindSession(ev.MindId, out var session))
             _tracking.QueueRefreshTrackers(session);
     }
 
     private void OnRoleAdd(RoleAddedEvent ev)
     {
-        if (_minds.TryGetSession(ev.Mind, out var session))
+        if (TryGetMindSession(ev.MindId, out var session))
             _tracking.QueueRefreshTrackers(session);
     }
 
@@ -321,5 +323,17 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
     public void PlayerRolesChanged(ICommonSession player)
     {
         _tracking.QueueRefreshTrackers(player);
+    }
+
+    /// <summary>
+    /// Сессия игрока по сущности разума: MindSystem.TryGetSession у апстрима больше нет.
+    /// </summary>
+    private bool TryGetMindSession(EntityUid mindId, [NotNullWhen(true)] out ICommonSession? session)
+    {
+        session = null;
+
+        return TryComp<MindComponent>(mindId, out var mind)
+               && mind.UserId is { } userId
+               && _playerManager.TryGetSessionById(userId, out session);
     }
 }

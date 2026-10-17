@@ -98,8 +98,8 @@ public sealed class BatteryDrinkerSystem : EntitySystem
         var drinkerBattery = container.ContainedEntities.First();
         var amountToDrink = drinkerComp.DrinkMultiplier * 1000;
 
-        amountToDrink = MathF.Min(amountToDrink, sourceBattery.CurrentCharge);
-        amountToDrink = MathF.Min(amountToDrink, drinkerBatteryComponent!.MaxCharge - drinkerBatteryComponent.CurrentCharge);
+        amountToDrink = MathF.Min(amountToDrink, _battery.GetCharge((sourceBattery.Owner, sourceBattery)));
+        amountToDrink = MathF.Min(amountToDrink, drinkerBatteryComponent!.MaxCharge - _battery.GetCharge((drinkerBatteryComponent.Owner, drinkerBatteryComponent)));
 
         if (sourceComp.MaxAmount > 0)
             amountToDrink = MathF.Min(amountToDrink, (float) sourceComp.MaxAmount);
@@ -111,10 +111,10 @@ public sealed class BatteryDrinkerSystem : EntitySystem
         }
 
         if (_battery.TryUseCharge(source, amountToDrink))
-            _battery.SetCharge(drinkerBattery, drinkerBatteryComponent.CurrentCharge + amountToDrink, drinkerBatteryComponent);
+            _battery.SetCharge(drinkerBattery, _battery.GetCharge((drinkerBatteryComponent.Owner, drinkerBatteryComponent)) + amountToDrink, drinkerBatteryComponent);
         else
         {
-            _battery.SetCharge(drinkerBattery, sourceBattery.CurrentCharge + drinkerBatteryComponent.CurrentCharge, drinkerBatteryComponent);
+            _battery.SetCharge(drinkerBattery, _battery.GetCharge((sourceBattery.Owner, sourceBattery)) + _battery.GetCharge((drinkerBatteryComponent.Owner, drinkerBatteryComponent)), drinkerBatteryComponent);
             _battery.SetCharge(source, 0);
         }
 

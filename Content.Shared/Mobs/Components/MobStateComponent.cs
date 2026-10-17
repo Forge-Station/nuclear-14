@@ -15,6 +15,84 @@ namespace Content.Shared.Mobs.Components;
 [Access(typeof(MobStateSystem), typeof(MobThresholdSystem))]
 public sealed partial class MobStateComponent : Component
 {
+    // Forge-Change-Start: мягкий крит - форковые настройки того, что
+    // мобу можно в критическом, мягко-критическом и мёртвом состоянии.
+    /// <summary>
+    ///     Whether this mob will be allowed to issue movement commands when in the Critical MobState.
+    /// </summary>
+    [DataField]
+    public bool AllowMovementWhileCrit;
+
+    /// <summary>
+    ///     Whether this mob will be allowed to issue movement commands when in the Soft-Crit MobState.
+    /// </summary>
+    [DataField]
+    public bool AllowMovementWhileSoftCrit;
+
+    /// <summary>
+    ///     Whether this mob will be allowed to issue movement commands when in the Dead MobState.
+    ///     This is provided for completeness sake, and *probably* shouldn't be used by default.
+    /// </summary>
+    [DataField]
+    public bool AllowMovementWhileDead;
+
+    /// <summary>
+    ///     Whether this mob will be allowed to talk while in the Critical MobState.
+    /// </summary>
+    [DataField]
+    public bool AllowTalkingWhileCrit = true;
+
+    /// <summary>
+    ///     Whether this mob will be allowed to talk while in the SoftCritical MobState.
+    /// </summary>
+    [DataField]
+    public bool AllowTalkingWhileSoftCrit = true;
+
+    /// <summary>
+    ///     Whether this mob will be allowed to talk while in the Dead MobState.
+    ///     This is provided for completeness sake, and *probably* shouldn't be used by default.
+    /// </summary>
+    [DataField]
+    public bool AllowTalkingWhileDead;
+
+    /// <summary>
+    ///     Whether this mob is forced to be downed when entering the Critical MobState.
+    /// </summary>
+    [DataField]
+    public bool DownWhenCrit = true;
+
+    /// <summary>
+    ///     Whether this mob is forced to be downed when entering the SoftCritical MobState.
+    /// </summary>
+    [DataField]
+    public bool DownWhenSoftCrit = true;
+
+    /// <summary>
+    ///     Whether this mob is forced to be downed when entering the Dead MobState.
+    /// </summary>
+    [DataField]
+    public bool DownWhenDead = true;
+
+    /// <summary>
+    ///     Whether this mob is allowed to perform hand interactions while in the Critical MobState.
+    /// </summary>
+    [DataField]
+    public bool AllowHandInteractWhileCrit;
+
+    /// <summary>
+    ///     Whether this mob is allowed to perform hand interactions while in the SoftCritical MobState.
+    /// </summary>
+    [DataField]
+    public bool AllowHandInteractWhileSoftCrit;
+
+    /// <summary>
+    ///     Whether this mob is allowed to perform hand interactions while in the Dead MobState.
+    ///     This is provided for completeness sake, and *probably* shouldn't be used by default.
+    /// </summary>
+    [DataField]
+    public bool AllowHandInteractWhileDead;
+    // Forge-Change-End
+
     /// <summary>
     /// The current mob state the entity is in.
     /// </summary>

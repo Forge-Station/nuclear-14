@@ -24,11 +24,13 @@ using Content.Shared.Power.Components;
 using Content.Shared.PowerCell;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Temperature.Components;
+using Content.Server.Power.EntitySystems;
 
 namespace Content.Server.Silicon.Charge;
 
 public sealed class SiliconChargeSystem : EntitySystem
 {
+    [Dependency] private readonly BatterySystem _batterySystem = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly FlammableSystem _flammable = default!;
@@ -128,7 +130,7 @@ public sealed class SiliconChargeSystem : EntitySystem
             _powerCell.TryUseCharge(silicon, frameTime * drainRate);
 
             // Figure out the current state of the Silicon.
-            var chargePercent = (short) MathF.Round(batteryComp.CurrentCharge / batteryComp.MaxCharge * 10f);
+            var chargePercent = (short) MathF.Round(_batterySystem.GetCharge((batteryComp.Owner, batteryComp)) / batteryComp.MaxCharge * 10f);
 
             UpdateChargeState(silicon, chargePercent, siliconComp);
         }

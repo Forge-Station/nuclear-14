@@ -37,6 +37,13 @@ public sealed class ContentPlayerData
     /// </summary>
     public bool Stealthed { get; set; }
 
+    /// <summary>
+    /// Forge-Change: в вайтлисте ли игрок. Хранится здесь, чтобы не спрашивать базу
+    /// асинхронно каждый раз (Nyanotrasen).
+    /// </summary>
+    [ViewVariables]
+    public bool Whitelisted { get; set; }
+
     public ContentPlayerData(NetUserId userId, string name)
     {
         UserId = userId;

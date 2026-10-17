@@ -443,6 +443,7 @@ public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IP
         public bool IsDirty;
         public bool NeedRefreshTackers;
         public bool NeedSendTimers;
+        public bool NeedRefreshWhitelist; // Forge-Change: статус вайтлиста
 
         // Active tracking info
         public readonly HashSet<string> ActiveTrackers = new();

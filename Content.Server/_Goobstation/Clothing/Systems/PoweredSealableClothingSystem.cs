@@ -13,6 +13,7 @@ namespace Content.Server._Goobstation.Clothing.Systems;
 
 public sealed partial class PoweredSealableClothingSystem : SharedPoweredSealableClothingSystem
 {
+    [Dependency] private readonly BatterySystem _batterySystem = default!;
     [Dependency] private readonly AlertsSystem _alertsSystem = default!;
     [Dependency] private readonly PowerCellSystem _powerCellSystem = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
@@ -95,7 +96,7 @@ public sealed partial class PoweredSealableClothingSystem : SharedPoweredSealabl
             return;
         }
 
-        var severity = ContentHelpers.RoundToLevels(MathF.Max(0f, battery.CurrentCharge), battery.MaxCharge, 6);
+        var severity = ContentHelpers.RoundToLevels(MathF.Max(0f, _batterySystem.GetCharge((battery.Owner, battery))), battery.MaxCharge, 6);
         _alertsSystem.ShowAlert(controlComp.WearerEntity.Value, comp.SuitPowerAlert, (short) severity);
     }
 

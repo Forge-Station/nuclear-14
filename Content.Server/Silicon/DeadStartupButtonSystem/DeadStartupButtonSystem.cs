@@ -13,11 +13,13 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
 using Content.Shared.Damage.Components;
 using Content.Shared.PowerCell;
+using Content.Server.Power.EntitySystems;
 
 namespace Content.Server.Silicon.DeadStartupButtonSystem;
 
 public sealed class DeadStartupButtonSystem : SharedDeadStartupButtonSystem
 {
+    [Dependency] private readonly BatterySystem _batterySystem = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly MobThresholdSystem _mobThreshold = default!;
@@ -62,11 +64,11 @@ public sealed class DeadStartupButtonSystem : SharedDeadStartupButtonSystem
         if (!TryComp<MobStateComponent>(uid, out var mobStateComponent)
             || !_mobState.IsDead(uid, mobStateComponent)
             || !_siliconChargeSystem.TryGetSiliconBattery(uid, out var bateria)
-            || bateria.CurrentCharge <= 0)
+            || _batterySystem.GetCharge((bateria.Owner, bateria)) <= 0)
             return;
 
         _lightning.ShootRandomLightnings(uid, 2, 4);
-        _powerCell.TryUseCharge(uid, bateria.CurrentCharge);
+        _powerCell.TryUseCharge(uid, _batterySystem.GetCharge((bateria.Owner, bateria)));
 
     }
 

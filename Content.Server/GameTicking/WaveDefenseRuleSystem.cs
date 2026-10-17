@@ -78,7 +78,7 @@ public sealed class WaveDefenseRuleSystem : GameRuleSystem<WaveDefenseRuleCompon
         var query = EntityQueryEnumerator<WaveDefenseRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out var uid, out var waves, out var gameRule))
         {
-            if (!GameTicker.IsGameRuleAdded(uid, gameRule))
+            if (!GameTicker.IsGameRuleAdded((uid, gameRule)))
                 return;
             EnsureComp<WaveDefenderComponent>(ev.Mob);
             Defenders.Add(ev.Profile.Name);
@@ -90,7 +90,7 @@ public sealed class WaveDefenseRuleSystem : GameRuleSystem<WaveDefenseRuleCompon
         var query = EntityQueryEnumerator<WaveDefenseRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out var uid, out var nukeops, out var gameRule))
         {
-            if (!GameTicker.IsGameRuleAdded(uid, gameRule))
+            if (!GameTicker.IsGameRuleAdded((uid, gameRule)))
                 return;
 
             foreach (var player in ev.Players)
@@ -109,7 +109,7 @@ public sealed class WaveDefenseRuleSystem : GameRuleSystem<WaveDefenseRuleCompon
         var query = EntityQueryEnumerator<WaveDefenseRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out var uid, out var rules, out var gameRule))
         {
-            if (!GameTicker.IsGameRuleAdded(uid, gameRule))
+            if (!GameTicker.IsGameRuleAdded((uid, gameRule)))
                 return;
             ev.AddLine(Loc.GetString("wave-defence-end-text", ("number", WaveNumber), ("kills", KillCount),
                 ("score", HighScore)));
@@ -128,7 +128,7 @@ public sealed class WaveDefenseRuleSystem : GameRuleSystem<WaveDefenseRuleCompon
         var query = EntityQueryEnumerator<WaveDefenseRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out var uid, out var rules, out var gameRule))
         {
-            if (!GameTicker.IsGameRuleAdded(uid, gameRule))
+            if (!GameTicker.IsGameRuleAdded((uid, gameRule)))
                 return;
             _timerCancel.Cancel();
             _timerCancel = new CancellationTokenSource();
@@ -202,7 +202,7 @@ public sealed class WaveDefenseRuleSystem : GameRuleSystem<WaveDefenseRuleCompon
         var query = EntityQueryEnumerator<WaveDefenseRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out var uid, out var rules, out var gameRule))
         {
-            if (!GameTicker.IsGameRuleAdded(uid, gameRule))
+            if (!GameTicker.IsGameRuleAdded((uid, gameRule)))
                 continue;
             difficulty = rules.DifficultyMod;
         }
@@ -234,7 +234,7 @@ public sealed class WaveDefenseRuleSystem : GameRuleSystem<WaveDefenseRuleCompon
         var query = EntityQueryEnumerator<WaveDefenseRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out var uid, out var rules, out var gameRule))
         {
-            if (!GameTicker.IsGameRuleAdded(uid, gameRule))
+            if (!GameTicker.IsGameRuleAdded((uid, gameRule)))
                 return;
             if (args.NewMobState == MobState.Dead)
             {
@@ -255,7 +255,7 @@ public sealed class WaveDefenseRuleSystem : GameRuleSystem<WaveDefenseRuleCompon
         var query = EntityQueryEnumerator<WaveDefenseRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out var uid, out var nukeops, out var gameRule))
         {
-            if (!GameTicker.IsGameRuleAdded(uid, gameRule))
+            if (!GameTicker.IsGameRuleAdded((uid, gameRule)))
                 return;
             var defenders = EntityQuery<WaveDefenderComponent, MobStateComponent>(true);
             var defendersAlive = defenders.Any(ent => ent.Item2.CurrentState == MobState.Alive && ent.Item1.Running);
