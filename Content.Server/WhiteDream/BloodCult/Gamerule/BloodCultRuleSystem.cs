@@ -41,6 +41,8 @@ using Content.Shared.Antag.Components;
 using Content.Shared.Body;
 using Content.Shared.GameTicking;
 using Content.Shared.Roles;
+using Content.Shared.Antag;
+using Content.Shared.Pinpointer;
 
 
 namespace Content.Server.WhiteDream.BloodCult.Gamerule;

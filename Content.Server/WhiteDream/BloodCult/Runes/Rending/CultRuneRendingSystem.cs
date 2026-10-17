@@ -10,6 +10,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
+using Content.Shared.Pinpointer;
 
 namespace Content.Server.WhiteDream.BloodCult.Runes.Rending;
 
