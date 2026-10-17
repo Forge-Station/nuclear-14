@@ -3,6 +3,10 @@ using System.Numerics;
 using Content.Shared._Forge.Weapons.Ranged.Components;
 using Content.Shared.Damage;
 using Content.Shared.FixedPoint;
+using Content.Shared.Hands.Components;
+using Content.Shared.Interaction.Events;
+using Content.Shared.Wieldable;
+using Content.Shared.Wieldable.Components;
 using Content.Shared.Movement.Components;
 using Robust.Shared.GameObjects;
 
@@ -10,6 +14,48 @@ namespace Content.IntegrationTests.Tests.Interaction;
 
 public sealed class GunConditionTest : InteractionTest
 {
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task UnjamTakesPriorityOverWielding(bool wielded)
+    {
+        await SpawnTarget("N14WeaponShotgun");
+        await Pickup();
+        var condition = Comp<GunConditionComponent>();
+        var grip = Comp<WieldableComponent>();
+        await Server.WaitPost(() =>
+        {
+            HandSys.AddHand(SPlayer, "second", HandLocation.Left);
+            if (wielded)
+                Assert.That(SEntMan.System<WieldableSystem>().TryWield(STarget!.Value, grip, SPlayer), Is.True);
+            condition.Jammed = true;
+            condition.UnjamTime = 2f;
+            SEntMan.Dirty(STarget!.Value, condition);
+        });
+        await RunTicks(5);
+
+        // Клиент не должен предсказывать смену хвата вместо устранения клина.
+        await Client.WaitPost(() =>
+        {
+            var clientGrip = CEntMan.GetComponent<WieldableComponent>(CTarget!.Value);
+            Assert.That(clientGrip.Wielded, Is.EqualTo(wielded));
+            var ev = new UseInHandEvent(CPlayer);
+            CEntMan.EventBus.RaiseLocalEvent(CTarget.Value, ev);
+            Assert.That(ev.Handled, Is.True);
+            Assert.That(clientGrip.Wielded, Is.EqualTo(wielded));
+        });
+
+        await Server.WaitPost(() => InteractSys.UseInHandInteraction(SPlayer, STarget!.Value, checkUseDelay: false));
+        Assert.That(SEntMan.HasComponent<GunUnjammingComponent>(SPlayer), Is.True);
+        Assert.That(grip.Wielded, Is.EqualTo(wielded));
+        await AwaitDoAfters();
+        Assert.That(condition.Jammed, Is.False);
+        Assert.That(grip.Wielded, Is.EqualTo(wielded));
+
+        // После устранения клина обычное переключение хвата снова доступно.
+        await Server.WaitPost(() => InteractSys.UseInHandInteraction(SPlayer, STarget!.Value, checkUseDelay: false));
+        Assert.That(grip.Wielded, Is.EqualTo(!wielded));
+    }
+
     [TestCase(false, false)]
     [TestCase(true, false)]
     [TestCase(false, true)]

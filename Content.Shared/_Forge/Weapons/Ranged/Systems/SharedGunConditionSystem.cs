@@ -1,9 +1,11 @@
 using Content.Shared._Forge.Weapons.Ranged.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.Examine;
+using Content.Shared.Interaction.Events;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Weapons.Ranged.Systems;
+using Content.Shared.Wieldable;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared._Forge.Weapons.Ranged.Systems;
@@ -17,6 +19,8 @@ public abstract class SharedGunConditionSystem : EntitySystem
         SubscribeLocalEvent<GunUnjammingComponent, ComponentStartup>(OnUnjammingStartup);
         SubscribeLocalEvent<GunUnjammingComponent, ComponentShutdown>(OnUnjammingShutdown);
         SubscribeLocalEvent<GunUnjammingComponent, RefreshMovementSpeedModifiersEvent>(OnUnjammingSpeed);
+        SubscribeLocalEvent<GunConditionComponent, UseInHandEvent>(OnUseInHand,
+            before: new[] { typeof(WieldableSystem), typeof(SharedGunSystem) });
         SubscribeLocalEvent<GunConditionComponent, AttemptShootEvent>(OnAttemptShoot);
         SubscribeLocalEvent<GunConditionComponent, ExaminedEvent>(OnExamined);
     }
@@ -38,6 +42,20 @@ public abstract class SharedGunConditionSystem : EntitySystem
             return;
 
         args.ModifySpeed(1f, Math.Min(1f, speed.BaseWalkSpeed / speed.BaseSprintSpeed), bypassImmunity: true);
+    }
+
+    private void OnUseInHand(Entity<GunConditionComponent> ent, ref UseInHandEvent args)
+    {
+        if (args.Handled || !ent.Comp.Jammed || IsBroken(ent.Comp))
+            return;
+
+        // Блокируем смену хвата также на клиенте, пока сервер устраняет клин.
+        args.Handled = true;
+        StartUnjam(ent, args.User);
+    }
+
+    protected virtual void StartUnjam(Entity<GunConditionComponent> ent, EntityUid user)
+    {
     }
 
     private void OnAttemptShoot(Entity<GunConditionComponent> ent, ref AttemptShootEvent args)

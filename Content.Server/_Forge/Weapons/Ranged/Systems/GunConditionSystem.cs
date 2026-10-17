@@ -5,7 +5,6 @@ using Content.Shared.Damage;
 using Content.Shared.DoAfter;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
-using Content.Shared.Interaction.Events;
 using Content.Shared.Item;
 using Content.Shared.Popups;
 using Content.Shared.Tools.Systems;
@@ -37,7 +36,6 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
         SubscribeLocalEvent<GunConditionRepairToolComponent, ExaminedEvent>(OnRepairToolExamined);
         SubscribeLocalEvent<GunConditionComponent, DamageChangedEvent>(OnDamageChanged);
         SubscribeLocalEvent<GunConditionComponent, GunShotEvent>(OnGunShot);
-        SubscribeLocalEvent<GunConditionComponent, UseInHandEvent>(OnUseInHand, before: new[] { typeof(SharedGunSystem) });
         SubscribeLocalEvent<GunConditionComponent, InteractUsingEvent>(OnInteractUsing);
         SubscribeLocalEvent<GunConditionComponent, GunConditionRepairDoAfterEvent>(OnRepairFinished);
         SubscribeLocalEvent<GunConditionComponent, GunConditionUnjamDoAfterEvent>(OnUnjamFinished);
@@ -139,15 +137,6 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
             SetBoltForJammed(ent.Owner, true);
 
         Dirty(ent);
-    }
-
-    private void OnUseInHand(Entity<GunConditionComponent> ent, ref UseInHandEvent args)
-    {
-        if (args.Handled || !ent.Comp.Jammed || IsBroken(ent.Comp))
-            return;
-
-        args.Handled = true;
-        StartUnjam(ent, args.User);
     }
 
     private void OnInteractUsing(Entity<GunConditionComponent> ent, ref InteractUsingEvent args)
@@ -264,7 +253,7 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
         Dirty(toolUid, tool);
     }
 
-    private void StartUnjam(Entity<GunConditionComponent> ent, EntityUid user)
+    protected override void StartUnjam(Entity<GunConditionComponent> ent, EntityUid user)
     {
         var doAfter = new DoAfterArgs(EntityManager, user, ent.Comp.UnjamTime, new GunConditionUnjamDoAfterEvent(), ent, target: ent)
         {
