@@ -13,3 +13,12 @@ Entries:
   id: 2
   time: '2026-10-16T20:47:17.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/552
+- author: akino-tech
+  changes:
+    - type: Tweak
+      message: >-
+        Вся довоенная еда теперь содержит радиоактивные частицы и наносит
+        радиационный урон при переваривании восприимчивым к нему персонажам.
+  id: 3
+  time: '2026-10-17T10:38:53.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/547
