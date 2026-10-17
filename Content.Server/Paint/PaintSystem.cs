@@ -96,7 +96,7 @@ public sealed class PaintSystem : SharedPaintSystem
 
     public void Paint(Entity<PaintComponent> entity, EntityUid target, EntityUid user)
     {
-        if (!_openable.IsOpen(entity))
+        if (_openable.IsClosed(entity))
         {
             _popup.PopupEntity(Loc.GetString("paint-closed", ("used", entity)), user, user, PopupType.Medium);
             return;
@@ -109,8 +109,8 @@ public sealed class PaintSystem : SharedPaintSystem
         }
 
         if (_whitelist.IsWhitelistFail(entity.Comp.Whitelist, target)
-            || _whitelist.IsBlacklistPass(entity.Comp.Blacklist, target)
-            || HasComp<HumanoidAppearanceComponent>(target) || HasComp<SubFloorHideComponent>(target))
+            || _whitelist.IsWhitelistPass(entity.Comp.Blacklist, target)
+            || HasComp<HumanoidProfileComponent>(target) || HasComp<SubFloorHideComponent>(target))
         {
             _popup.PopupEntity(Loc.GetString("paint-failure", ("target", target)), user, user, PopupType.Medium);
             return;
@@ -134,9 +134,9 @@ public sealed class PaintSystem : SharedPaintSystem
                     if (!_inventory.TryGetSlotEntity(target, slot.Name, out var slotEnt)
                         || HasComp<PaintedVisualsComponent>(slotEnt.Value)
                         || _whitelist.IsWhitelistFail(entity.Comp.Whitelist, slotEnt.Value)
-                        || _whitelist.IsBlacklistPass(entity.Comp.Blacklist, slotEnt.Value)
+                        || _whitelist.IsWhitelistPass(entity.Comp.Blacklist, slotEnt.Value)
                         || HasComp<RandomSpriteComponent>(slotEnt.Value)
-                        || HasComp<HumanoidAppearanceComponent>(slotEnt.Value))
+                        || HasComp<HumanoidProfileComponent>(slotEnt.Value))
                         continue;
 
                     EnsureComp<PaintedVisualsComponent>(slotEnt.Value, out var slotToPaint);
@@ -160,7 +160,7 @@ public sealed class PaintSystem : SharedPaintSystem
     public void Paint(EntityWhitelist? whitelist, EntityWhitelist? blacklist, EntityUid target, Color color)
     {
         if (_whitelist.IsWhitelistFail(whitelist, target)
-            || _whitelist.IsBlacklistPass(blacklist, target)
+            || _whitelist.IsWhitelistPass(blacklist, target)
             || !HasComp<MetaDataComponent>(target)) // TODO: FIND THE STUPID RACE CONDITION THAT IS MAKING ME CHECK FOR THIS.
             return;
 
@@ -177,7 +177,7 @@ public sealed class PaintSystem : SharedPaintSystem
             {
                 if (!_inventory.TryGetSlotEntity(target, slot.Name, out var slotEnt)
                     || _whitelist.IsWhitelistFail(whitelist, slotEnt.Value)
-                    || _whitelist.IsBlacklistPass(blacklist, slotEnt.Value))
+                    || _whitelist.IsWhitelistPass(blacklist, slotEnt.Value))
                     continue;
 
                 EnsureComp<PaintedVisualsComponent>(slotEnt.Value, out var slotToPaint);
@@ -194,7 +194,7 @@ public sealed class PaintSystem : SharedPaintSystem
 
     private bool CanPaint(Entity<PaintComponent> reagent, EntityUid target)
     {
-        if (HasComp<HumanoidAppearanceComponent>(target)
+        if (HasComp<HumanoidProfileComponent>(target)
             || HasComp<SubFloorHideComponent>(target)
             || !_solutionContainer.TryGetSolution(reagent.Owner, reagent.Comp.Solution, out _, out var solution))
             return false;

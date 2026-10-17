@@ -72,7 +72,7 @@ public sealed class SnakeOverlay : Overlay
             // Color.White is drawing without modifying color. For clothed tails, we should use White. For skin, we should use the color of the marking.
             // TODO: Better way to cache this
             Color? col = null;
-            if (_entManager.TryGetComponent<HumanoidAppearanceComponent>(uid, out var humanoid))
+            if (_entManager.TryGetComponent<HumanoidProfileComponent>(uid, out var humanoid))
                 if (humanoid.MarkingSet.TryGetCategory(MarkingCategories.Tail, out var tailMarkings))
                     col = tailMarkings.First().MarkingColors.First();
 

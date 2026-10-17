@@ -15,7 +15,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!string.IsNullOrWhiteSpace(config.GhostRoleCharacterName))
             _contractMeta.SetEntityName(mob, config.GhostRoleCharacterName);
 
-        if (!TryComp(mob, out HumanoidAppearanceComponent? humanoid))
+        if (!TryComp(mob, out HumanoidProfileComponent? humanoid))
             return;
 
         var dirty = false;

@@ -80,7 +80,7 @@ public sealed class ThiefUndeterminedBackpackSystem : EntitySystem
             var set = _proto.Index(component.PossibleSets[i]);
 
             if (set.Requirements.Count != 0 &&
-                TryComp<HumanoidAppearanceComponent>(user, out var appearance) &&
+                TryComp<HumanoidProfileComponent>(user, out var appearance) &&
                 appearance.LastProfileLoaded != null &&
                 !_characterRequirements.CheckRequirementsValid(
                     set.Requirements, new JobPrototype() /* not gonna bother with jobs */,

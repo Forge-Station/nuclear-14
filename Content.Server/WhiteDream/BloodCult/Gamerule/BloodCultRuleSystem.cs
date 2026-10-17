@@ -44,6 +44,7 @@ using Content.Shared.Roles;
 using Content.Shared.Antag;
 using Content.Shared.Pinpointer;
 using Content.Shared.GameTicking.Rules;
+using Content.Shared.Cloning.Events;
 
 
 namespace Content.Server.WhiteDream.BloodCult.Gamerule;
@@ -123,7 +124,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     private void OnNarsieSummon(BloodCultNarsieSummoned ev)
     {
         var rulesQuery = QueryActiveRules();
-        while (rulesQuery.MoveNext(out _, out var cult, out _))
+        while (rulesQuery.MoveNext(out var cult, out _, out _))
         {
             cult.WinCondition = CultWinCondition.Win;
             _roundEnd.EndRound();
@@ -149,7 +150,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
         _language.AddLanguage(cultist, cultist.Comp.CultLanguageId);
 
         var query = QueryActiveRules();
-        while (query.MoveNext(out _, out var cult, out _))
+        while (query.MoveNext(out var cult, out _, out _))
         {
             cult.Cultists.Add(cultist);
             UpdateCultStage(cult);
@@ -159,7 +160,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     private void OnCultistComponentRemoved(Entity<BloodCultistComponent> cultist, ref ComponentRemove args)
     {
         var query = QueryActiveRules();
-        while (query.MoveNext(out _, out var cult, out _))
+        while (query.MoveNext(out var cult, out _, out _))
             cult.Cultists.Remove(cultist);
 
         CheckWinCondition();
@@ -193,7 +194,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     {
         args.Append(Loc.GetString("blood-cult-role-briefing-short"));
         var rulesQuery = QueryActiveRules();
-        while (rulesQuery.MoveNext(out _, out var rule, out _))
+        while (rulesQuery.MoveNext(out var rule, out _, out _))
         {
             if (!rule.EmergencyMarkersMode)
                 continue;
@@ -252,7 +253,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     public EntityUid? GetTarget()
     {
         var query = QueryActiveRules();
-        while (query.MoveNext(out _, out var bloodCultRule, out _))
+        while (query.MoveNext(out var bloodCultRule, out _, out _))
             if (bloodCultRule.OfferingTarget.HasValue)
                 return bloodCultRule.OfferingTarget.Value;
 
@@ -262,7 +263,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     public bool IsTarget(EntityUid entityUid)
     {
         var query = QueryActiveRules();
-        while (query.MoveNext(out _, out var rule, out _))
+        while (query.MoveNext(out var rule, out _, out _))
             return entityUid == rule.OfferingTarget;
 
         return false;
@@ -271,7 +272,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     public int GetTotalCultists()
     {
         var query = QueryActiveRules();
-        while (query.MoveNext(out _, out var rule, out _))
+        while (query.MoveNext(out var rule, out _, out _))
             return rule.Cultists.Count + rule.Constructs.Count;
 
         return 0;
@@ -293,7 +294,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     public bool CanDrawRendingRune(EntityUid user)
     {
         var ruleQuery = QueryActiveRules();
-        while (ruleQuery.MoveNext(out _, out var rule, out _))
+        while (ruleQuery.MoveNext(out var rule, out _, out _))
             if (rule is { EmergencyMarkersMode: true, EmergencyMarkersCount: > 0 })
             {
                 rule.EmergencyMarkersCount--;
@@ -318,7 +319,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     public void SetRandomCultTarget(BloodCultRuleComponent rule)
     {
         var querry = EntityManager
-            .EntityQueryEnumerator<MindContainerComponent, HumanoidAppearanceComponent, ActorComponent>();
+            .EntityQueryEnumerator<MindContainerComponent, HumanoidProfileComponent, ActorComponent>();
 
         var potentialTargets = new List<EntityUid>();
 
@@ -332,7 +333,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     public bool TryConsumeNearestMarker(EntityUid user)
     {
         var ruleQuery = QueryActiveRules();
-        while (ruleQuery.MoveNext(out _, out var rule, out _))
+        while (ruleQuery.MoveNext(out var rule, out _, out _))
             if (rule is { EmergencyMarkersMode: true, EmergencyMarkersCount: > 0 })
             {
                 rule.EmergencyMarkersCount--;
@@ -360,7 +361,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     private void CheckWinCondition()
     {
         var query = QueryActiveRules();
-        while (query.MoveNext(out _, out var cult, out _))
+        while (query.MoveNext(out var cult, out _, out _))
         {
             var aliveCultists = cult.Cultists.Count(cultist => !_mobState.IsDead(cultist));
             if (aliveCultists != 0)
@@ -422,7 +423,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
 
     private void RemoveCultistAppearance(Entity<BloodCultistComponent> cultist)
     {
-        if (TryComp<HumanoidAppearanceComponent>(cultist, out var appearanceComponent))
+        if (TryComp<HumanoidProfileComponent>(cultist, out var appearanceComponent))
         {
             appearanceComponent.EyeColor = cultist.Comp.OriginalEyeColor;
             Dirty(cultist, appearanceComponent);
@@ -462,7 +463,7 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
             case CultStage.RedEyes when prevStage == CultStage.Start:
                 foreach (var cultist in cultRule.Cultists)
                 {
-                    if (!TryComp<HumanoidAppearanceComponent>(cultist, out var appearanceComponent))
+                    if (!TryComp<HumanoidProfileComponent>(cultist, out var appearanceComponent))
                         continue;
                     cultist.Comp.OriginalEyeColor = appearanceComponent.EyeColor;
                     appearanceComponent.EyeColor = cultRule.EyeColor;

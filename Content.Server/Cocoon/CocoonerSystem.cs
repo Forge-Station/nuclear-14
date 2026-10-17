@@ -163,7 +163,7 @@ namespace Content.Server.Cocoon
             if (args.Handled || args.Cancelled || args.Args.Target == null)
                 return;
 
-            var spawnProto = HasComp<HumanoidAppearanceComponent>(args.Args.Target) ? "CocoonedHumanoid" : "CocoonSmall";
+            var spawnProto = HasComp<HumanoidProfileComponent>(args.Args.Target) ? "CocoonedHumanoid" : "CocoonSmall";
             Transform(args.Args.Target.Value).AttachToGridOrMap();
             var cocoon = Spawn(spawnProto, Transform(args.Args.Target.Value).Coordinates);
 

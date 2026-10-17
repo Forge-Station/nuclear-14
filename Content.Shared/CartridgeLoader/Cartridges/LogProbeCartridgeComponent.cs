@@ -1,3 +1,4 @@
+using Content.Shared.DeltaV.CartridgeLoader.Cartridges;
 using Content.Shared.Paper;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
@@ -22,6 +23,12 @@ public sealed partial class LogProbeCartridgeComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public List<PulledAccessLog> PulledAccessLogs = new();
+
+    /// <summary>
+    /// DeltaV: данные NanoChat со считанной карты, если её считывали.
+    /// </summary>
+    [DataField]
+    public NanoChatData? ScannedNanoChatData;
 
     /// <summary>
     /// The sound to make when we scan something with access

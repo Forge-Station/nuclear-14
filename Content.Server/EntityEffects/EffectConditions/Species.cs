@@ -22,7 +22,7 @@ public sealed partial class Species : EntityEffectCondition
 
     public override bool Condition(EntityEffectBaseArgs args)
     {
-        if (!args.EntityManager.TryGetComponent(args.TargetEntity, out HumanoidAppearanceComponent? humanoid))
+        if (!args.EntityManager.TryGetComponent(args.TargetEntity, out HumanoidProfileComponent? humanoid))
             return !ShouldHave;
 
         var isSpecies = SpeciesList.Contains(humanoid.Species);

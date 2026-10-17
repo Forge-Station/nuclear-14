@@ -11,6 +11,7 @@ using Robust.Shared.Timing;
 using System.Text;
 using Robust.Shared.Audio;
 using Content.Shared.CartridgeLoader.Cartridges;
+using Content.Shared.DeltaV.NanoChat;
 
 namespace Content.Shared.CartridgeLoader.Cartridges;
 
@@ -42,6 +43,13 @@ public sealed partial class LogProbeCartridgeSystem : EntitySystem
     {
         if (args.Args.Handled || !args.Args.CanReach || args.Args.Target is not { } target)
             return;
+
+        // DeltaV: карту NanoChat считываем отдельно - у неё нет журнала доступа.
+        if (TryComp(target, out NanoChatCardComponent? nanoChatCard))
+        {
+            ScanNanoChatCard(ent, ref args, target, nanoChatCard);
+            return;
+        }
 
         if (!TryComp(target, out AccessReaderComponent? accessReaderComponent))
             return;
@@ -121,7 +129,9 @@ public sealed partial class LogProbeCartridgeSystem : EntitySystem
 
     private void UpdateUiState(Entity<LogProbeCartridgeComponent> ent, EntityUid loaderUid)
     {
-        var state = new LogProbeUiState(ent.Comp.EntityName, ent.Comp.PulledAccessLogs);
+        var state = new LogProbeUiState(ent.Comp.EntityName,
+            ent.Comp.PulledAccessLogs,
+            ent.Comp.ScannedNanoChatData); // DeltaV - NanoChat support
         _cartridge.UpdateCartridgeUiState(loaderUid, state);
     }
 }

@@ -20,7 +20,7 @@ namespace Content.Client.Cocoon
             if (!TryComp<SpriteComponent>(uid, out var cocoonSprite))
                 return;
 
-            if (TryComp<HumanoidAppearanceComponent>(args.Entity, out var humanoidAppearance)) // If humanoid, use height and width
+            if (TryComp<HumanoidProfileComponent>(args.Entity, out var humanoidAppearance)) // If humanoid, use height and width
                 cocoonSprite.Scale = new Vector2(humanoidAppearance.Width, humanoidAppearance.Height);
             else if (!TryComp<SpriteComponent>(args.Entity, out var entSprite))
                 return;

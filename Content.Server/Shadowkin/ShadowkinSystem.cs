@@ -41,7 +41,7 @@ public sealed class ShadowkinSystem : EntitySystem
 
     private void OnEyeColorChange(EntityUid uid, ShadowkinComponent component, EyeColorInitEvent args)
     {
-        if (!TryComp<HumanoidAppearanceComponent>(uid, out var humanoid)
+        if (!TryComp<HumanoidProfileComponent>(uid, out var humanoid)
             || humanoid.EyeColor == component.OldEyeColor)
             return;
 
@@ -54,7 +54,7 @@ public sealed class ShadowkinSystem : EntitySystem
         if (TryComp<MindbrokenComponent>(uid, out var mindbreak))
             mindbreak.MindbrokenExaminationText = "examine-mindbroken-shadowkin-message";
 
-        if (TryComp<HumanoidAppearanceComponent>(uid, out var humanoid))
+        if (TryComp<HumanoidProfileComponent>(uid, out var humanoid))
         {
             component.OldEyeColor = humanoid.EyeColor;
             humanoid.EyeColor = component.BlackEyeColor;
@@ -72,7 +72,7 @@ public sealed class ShadowkinSystem : EntitySystem
 
         RemComp<MindbrokenComponent>(uid);
 
-        if (TryComp<HumanoidAppearanceComponent>(uid, out var humanoid))
+        if (TryComp<HumanoidProfileComponent>(uid, out var humanoid))
         {
             humanoid.EyeColor = component.OldEyeColor;
             Dirty(uid, humanoid);

@@ -80,7 +80,7 @@ public sealed partial class ShadowkinSystem : EntitySystem
         var uid = _playerMan.LocalEntity;
         if (uid == null
             || !TryComp<ShadowkinComponent>(uid, out var comp)
-            || !TryComp<HumanoidAppearanceComponent>(uid, out var humanoid))
+            || !TryComp<HumanoidProfileComponent>(uid, out var humanoid))
             return;
 
         // 1/3 = 0.333...

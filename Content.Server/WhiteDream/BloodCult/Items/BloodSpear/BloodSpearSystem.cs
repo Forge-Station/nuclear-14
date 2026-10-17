@@ -41,7 +41,7 @@ public sealed class BloodSpearSystem : EntitySystem
 
     private void OnEmbed(Entity<BloodSpearComponent> spear, ref EmbedEvent args)
     {
-        if (!HasComp<HumanoidAppearanceComponent>(args.Embedded))
+        if (!HasComp<HumanoidProfileComponent>(args.Embedded))
             return;
 
         _stun.TryUpdateParalyzeDuration(args.Embedded, spear.Comp.ParalyzeTime);

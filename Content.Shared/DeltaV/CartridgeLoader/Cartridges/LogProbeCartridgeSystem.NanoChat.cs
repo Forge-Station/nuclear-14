@@ -5,7 +5,10 @@ using Content.Shared.DeltaV.NanoChat;
 using Content.Shared.CartridgeLoader.Cartridges;
 using Content.Shared.Interaction;
 
-namespace Content.Server.CartridgeLoader.Cartridges;
+// Апстрим перенёс LogProbeCartridgeSystem в Content.Shared, так что
+// форковая часть про NanoChat переехала следом - partial обязан быть
+// в той же сборке.
+namespace Content.Shared.CartridgeLoader.Cartridges;
 
 public sealed partial class LogProbeCartridgeSystem
 {
@@ -60,15 +63,12 @@ public sealed partial class LogProbeCartridgeSystem
     }
 
     private void ScanNanoChatCard(Entity<LogProbeCartridgeComponent> ent,
-        AfterInteractEvent args,
+        ref CartridgeRelayedEvent<AfterInteractEvent> args,
         EntityUid target,
         NanoChatCardComponent card)
     {
-        _audioSystem.PlayEntity(ent.Comp.SoundScan,
-            args.User,
-            target,
-            AudioHelpers.WithVariation(0.25f, _random));
-        _popupSystem.PopupCursor(Loc.GetString("log-probe-scan-nanochat", ("card", target)), args.User);
+        _audio.PlayPredicted(ent.Comp.SoundScan, target, args.Args.User);
+        _popup.PopupCursor(Loc.GetString("log-probe-scan-nanochat", ("card", target)), args.Args.User);
 
         ent.Comp.PulledAccessLogs.Clear();
 
@@ -79,6 +79,7 @@ public sealed partial class LogProbeCartridgeSystem
             GetNetEntity(target)
         );
 
+        Dirty(ent);
         UpdateUiState(ent, args.Loader);
     }
 }
