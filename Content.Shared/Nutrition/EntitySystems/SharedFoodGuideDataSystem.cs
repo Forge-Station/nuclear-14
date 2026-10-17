@@ -17,7 +17,6 @@ public abstract class SharedFoodGuideDataSystem : EntitySystem
 [Serializable, NetSerializable]
 public sealed class FoodGuideRegistryChangedEvent : EntityEventArgs
 {
-    [DataField]
     public List<FoodGuideEntry> Changeset;
 
     public FoodGuideRegistryChangedEvent(List<FoodGuideEntry> changeset)
@@ -123,9 +122,9 @@ public sealed partial class FoodRecipeData : FoodSourceData
 
     public override int OutputCount => 1;
 
-    public FoodRecipeData(MicrowaveMealRecipePrototype proto)
+    public FoodRecipeData(MicrowaveMealRecipePrototype proto, string name)
     {
-        Identitier = proto.Name;
+        Identitier = name;
         Recipe = proto.ID;
         Result = proto.Result;
     }

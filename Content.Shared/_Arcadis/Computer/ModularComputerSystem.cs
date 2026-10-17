@@ -49,7 +49,7 @@ public sealed class ModularComputerSystem : EntitySystem
     private void OnExamined(EntityUid uid, ModularComputerComponent component, ExaminedEvent args)
     {
         if (!TryComp(uid, out ItemSlotsComponent? slots)
-            || !_itemSlots.TryGetSlot(uid, component.DiskSlot, out var diskSlot, slots))
+            || !_itemSlots.TryGetSlot((uid, slots), component.DiskSlot, out var diskSlot))
             return;
 
         if (component.RequiresPower && _power.IsPowered(uid) == false)
@@ -73,7 +73,7 @@ public sealed class ModularComputerSystem : EntitySystem
     {
         // go figure it out yourself
         if (!TryComp(uid, out ItemSlotsComponent? slots)
-            || !_itemSlots.TryGetSlot(uid, component.DiskSlot, out var diskSlot, slots))
+            || !_itemSlots.TryGetSlot((uid, slots), component.DiskSlot, out var diskSlot))
             return;
 
         if (component.RequiresPower && _power.IsPowered(uid) == false)
@@ -105,7 +105,7 @@ public sealed class ModularComputerSystem : EntitySystem
     {
         if (args.Container.ID != component.DiskSlot
             || !TryComp(uid, out ItemSlotsComponent? slots)
-            || !_itemSlots.TryGetSlot(uid, component.DiskSlot, out var diskSlot, slots)
+            || !_itemSlots.TryGetSlot((uid, slots), component.DiskSlot, out var diskSlot)
             || diskSlot.Item is null
             || !TryComp(diskSlot.Item, out ComputerDiskComponent? diskComp))
             return;

@@ -38,7 +38,7 @@ public sealed partial class RadiationHealingSystem : EntitySystem
 
     private float GetHealableDamage(Entity<DamageableComponent> damage)
     {
-        var dict = _damageable.GetAllDamage(damage).DamageDict;
+        var dict = _damageable.GetAllDamage(damage.Owner).DamageDict;
         float amount = 0f;
         foreach (var type in HealableTypes)
         {

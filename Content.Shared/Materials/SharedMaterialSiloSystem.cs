@@ -87,7 +87,7 @@ public abstract class SharedMaterialSiloSystem : EntitySystem
                 if (!_materialStorage.TryChangeMaterialAmount(ent, material, materialAmount, siloStorage))
                     continue;
 
-                utilizerStorage.Storage[material] -= materialAmount;
+                _materialStorage.TryChangeMaterialAmount(utilizerUid, material, -materialAmount, utilizerStorage);
 
                 var ev = new MaterialAmountChangedEvent();
                 RaiseLocalEvent(utilizerUid, ref ev);

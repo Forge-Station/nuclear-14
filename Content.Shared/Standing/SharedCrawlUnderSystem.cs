@@ -74,7 +74,7 @@ public abstract class SharedCrawlUnderSystem : EntitySystem
 
         ent.Comp.IsCrawlingUnder = value;
         Dirty(ent);
-        _speed.RefreshMovementSpeedModifiers(ent);
+        _speed.RefreshMovementSpeedModifiers(ent.Owner);
     }
 
     private void OnRefreshMovementSpeed(Entity<CrawlUnderComponent> ent, ref RefreshMovementSpeedModifiersEvent args)

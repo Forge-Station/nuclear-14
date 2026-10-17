@@ -17,6 +17,13 @@ public sealed partial class NpcFactionMemberComponent : Component
     /// <summary>
     /// Cached friendly factions.
     /// </summary>
+    /// <summary>
+    /// Forge-Change: сущности, которых фракция считает дружественными
+    /// персонально, помимо дружественных фракций.
+    /// </summary>
+    [ViewVariables]
+    public HashSet<EntityUid> ExceptionalFriendlies = new();
+
     [ViewVariables]
     public readonly HashSet<ProtoId<NpcFactionPrototype>> FriendlyFactions = new();
 

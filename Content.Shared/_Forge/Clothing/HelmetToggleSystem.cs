@@ -5,12 +5,14 @@ using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
+using Content.Shared.Clothing.EntitySystems;
 
 namespace Content.Shared._N14.Clothing;
 
 public sealed class HelmetToggleSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _actions = default!;
+    [Dependency] private readonly ClothingSystem _clothing = default!;
 
     public override void Initialize()
     {
@@ -50,11 +52,11 @@ public sealed class HelmetToggleSystem : EntitySystem
 
     private void RaiseToggleEvent(EntityUid uid, HelmetToggleComponent comp, EntityUid wearer)
     {
-        // ClothingSystem уже слушает ItemMaskToggledEvent и вызывает SetEquippedPrefix.
-        // Когда IsToggled = true → prefix = AltPrefix → ищет стейт "{AltPrefix}-equipped-HELMET".
-        // Когда IsToggled = false → prefix = null → ищет стандартный equipped-HELMET.
-        var ev = new ItemMaskToggledEvent(wearer, comp.AltPrefix, comp.IsToggled, false);
-        RaiseLocalEvent(uid, ref ev);
+        // Апстрим больше не выставляет префикс по событию: это делает тот, кто
+        // переключает вещь, как в MaskSystem.ToggleMask.
+        // IsToggled = true  -> ищется стейт "{AltPrefix}-equipped-HELMET".
+        // IsToggled = false -> ищется стандартный equipped-HELMET.
+        _clothing.SetEquippedPrefix(uid, comp.IsToggled ? comp.AltPrefix : null);
     }
 }
 

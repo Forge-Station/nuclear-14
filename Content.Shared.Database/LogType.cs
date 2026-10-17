@@ -488,4 +488,9 @@ public enum LogType
     /// Silicon law changes.
     /// </summary>
     SiliconLaw = 105,
+
+    /// <summary>
+    /// Forge-Change: псионика (из Nyanotrasen).
+    /// </summary>
+    Psionics = 421,
 }

@@ -43,11 +43,28 @@ public sealed partial class CharacterItemGroupItem
         switch (Type)
         {
             case "trait":
-                return profile.TraitPreferences.TryFirstOrDefault(
-                    p => protoMan.Index<TraitPrototype>((string) p).ID == ID, out value);
+                // ProtoId - структура, через TryFirstOrDefault её не вывести.
+                foreach (var trait in profile.TraitPreferences)
+                {
+                    if (protoMan.Index(trait).ID != ID)
+                        continue;
+
+                    value = trait;
+                    return true;
+                }
+
+                return false;
             case "loadout":
-                return profile.LoadoutPreferences.TryFirstOrDefault(
-                    p => protoMan.Index<LoadoutPrototype>(((Loadout) p).LoadoutName).ID == ID, out value);
+                foreach (var loadout in profile.LoadoutPreferences)
+                {
+                    if (protoMan.Index<LoadoutPrototype>(loadout.LoadoutName).ID != ID)
+                        continue;
+
+                    value = loadout;
+                    return true;
+                }
+
+                return false;
             default:
                 DebugTools.Assert($"Invalid CharacterItemGroupItem Type: {Type}");
                 return false;

@@ -44,7 +44,7 @@ public abstract class SharedSingerSystem : EntitySystem
 
     private void OnShutdown(Entity<SingerComponent> ent, ref ComponentShutdown args)
     {
-        _actionsSystem.RemoveAction(ent, ent.Comp.MidiAction);
+        _actionsSystem.RemoveAction(ent.Owner, ent.Comp.MidiAction);
     }
 
     private void OnZombified(ref EntityZombifiedEvent args)

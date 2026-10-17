@@ -4,6 +4,7 @@ using Content.Shared.Humanoid;
 using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
+using Content.Shared.Damage.Prototypes;
 
 
 namespace Content.Shared._NC.Trade;
@@ -80,7 +81,7 @@ public sealed partial class NcGhostRolePerkPrototype : IPrototype
     public float ArmorIncomingDamageMultiplier { get; private set; } = 1f;
 
     [DataField("incomingFlatReductions")]
-    public Dictionary<string, float> IncomingFlatReductions { get; private set; } = new();
+    public Dictionary<ProtoId<DamageTypePrototype>, float> IncomingFlatReductions { get; private set; } = new();
 
     [IdDataField] public string ID { get; private set; } = default!;
 }

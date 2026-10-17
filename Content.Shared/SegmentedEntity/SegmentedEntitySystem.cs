@@ -15,11 +15,13 @@ using Robust.Shared.Prototypes;
 using System.Numerics;
 using Robust.Shared.Network;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Sprite;
 
 namespace Content.Shared.SegmentedEntity;
 
 public sealed partial class LamiaSystem : EntitySystem
 {
+    [Dependency] private readonly SharedScaleVisualsSystem _scale = default!;
     [Dependency] private readonly TagSystem _tagSystem = default!;
     [Dependency] private readonly DamageableSystem _damageableSystem = default!;
     [Dependency] private readonly SharedJointSystem _jointSystem = default!;
@@ -68,9 +70,10 @@ public sealed partial class LamiaSystem : EntitySystem
             EnsureComp<PhysicsComponent>(segmentUid);
             EnsureComp<PhysicsComponent>(attachedUid); // Hello I hate tests
 
-            // This is currently HERE and not somewhere more sane like OnInit because HumanoidAppearanceComponent is for whatever
-            // ungodly reason not initialized when ComponentStartup is called. Kill me.
-            var humanoidFactor = TryComp<HumanoidAppearanceComponent>(segment.segment.Lamia, out var humanoid) ? (humanoid.Height + humanoid.Width) / 2 : 1;
+            // Рост и ширина больше не лежат на компоненте гуманоида: апстрим оставил
+            // там только профиль, а применённый масштаб спрайта знает ScaleVisuals.
+            var spriteScale = _scale.GetSpriteScale(segment.segment.Lamia);
+            var humanoidFactor = (spriteScale.X + spriteScale.Y) / 2;
 
             var ev = new SegmentSpawnedEvent(segment.lamia);
             RaiseLocalEvent(segmentUid, ev, false);

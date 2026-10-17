@@ -92,7 +92,7 @@ public sealed class FoodGuideDataSystem : SharedFoodGuideDataSystem
         // Recipes
         foreach (var recipe in _protoMan.EnumeratePrototypes<FoodRecipePrototype>())
         {
-            _sources.GetOrNew(recipe.Result).Add(new FoodRecipeData(recipe));
+            _sources.GetOrNew(recipe.Result).Add(new FoodRecipeData(recipe, _prototype.Index(recipe.Result).Name));
         }
 
         // Entity-spawning reactions

@@ -8,6 +8,12 @@ namespace Content.Shared.Warps;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class WarpPointComponent : Component
 {
+    /// <summary>
+    /// Forge-Change: идентификатор, по которому варпер ищет точку.
+    /// </summary>
+    [DataField]
+    public string ID { get; set; } = string.Empty;
+
     [DataField]
     public LocId? Location;
 

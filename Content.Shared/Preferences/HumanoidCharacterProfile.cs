@@ -27,6 +27,7 @@ using YamlDotNet.RepresentationModel;
 // Corvax-Change-Start
 using Content.Shared._NC.Barks;
 using Content.Shared._NC.TTS;
+using Content.Shared.Clothing.Loadouts.Systems;
 // Corvax-Change-End
 
 namespace Content.Shared.Preferences
@@ -65,6 +66,28 @@ namespace Content.Shared.Preferences
         /// </summary>
         [DataField]
         private HashSet<ProtoId<TraitPrototype>> _traitPreferences = new();
+
+        /// <summary>
+        /// Forge-Change: форковые наборы снаряжения. Апстримные RoleLoadout живут
+        /// рядом в <see cref="Loadouts"/> - это разные системы с одним смыслом.
+        /// </summary>
+        [DataField]
+        private HashSet<LoadoutPreference> _loadoutPreferences = new();
+
+        /// <summary>
+        /// <see cref="_loadoutPreferences"/>
+        /// </summary>
+        public IReadOnlySet<LoadoutPreference> LoadoutPreferences => _loadoutPreferences;
+
+        /// <summary>
+        /// Forge-Change: рост и ширина персонажа, множители к базовым у вида.
+        /// </summary>
+        [DataField]
+        public float Height { get; private set; }
+
+        /// <inheritdoc cref="Height"/>
+        [DataField]
+        public float Width { get; private set; }
 
         /// <summary>
         /// <see cref="_loadouts"/>
@@ -159,7 +182,10 @@ namespace Content.Shared.Preferences
             HashSet<ProtoId<TraitPrototype>> traitPreferences,
             Dictionary<string, RoleLoadout> loadouts,
             string? ttsVoice = null, // Corvax-TTS
-            string? barkVoice = null) // Corvax-Fallout-Barks
+            string? barkVoice = null, // Corvax-Fallout-Barks
+            HashSet<LoadoutPreference>? loadoutPreferences = null, // Forge-Change
+            float height = 0f, // Forge-Change
+            float width = 0f) // Forge-Change
         {
             Name = name;
             FlavorText = flavortext;
@@ -177,6 +203,9 @@ namespace Content.Shared.Preferences
             _antagPreferences = antagPreferences;
             _traitPreferences = traitPreferences;
             _loadouts = loadouts;
+            _loadoutPreferences = loadoutPreferences ?? new(); // Forge-Change
+            Height = height; // Forge-Change
+            Width = width; // Forge-Change
 
             var hasHighPrority = false;
             foreach (var (key, value) in _jobPriorities)
@@ -210,7 +239,10 @@ namespace Content.Shared.Preferences
                 new HashSet<ProtoId<TraitPrototype>>(other.TraitPreferences),
                 new Dictionary<string, RoleLoadout>(other.Loadouts),
                 other.TtsVoice, // Corvax-TTS
-                other.BarkVoice) // Corvax-Fallout-Barks
+                other.BarkVoice, // Corvax-Fallout-Barks
+                new HashSet<LoadoutPreference>(other.LoadoutPreferences), // Forge-Change
+                other.Height, // Forge-Change
+                other.Width) // Forge-Change
         {
         }
 
@@ -407,6 +439,15 @@ namespace Content.Shared.Preferences
                 new HumanoidCharacterProfile().WithSpecies(species)
             );
         }
+
+        // Forge-Change-Start
+        public HumanoidCharacterProfile WithHeight(float height) => new(this) { Height = height };
+
+        public HumanoidCharacterProfile WithWidth(float width) => new(this) { Width = width };
+
+        public HumanoidCharacterProfile WithLoadoutPreferences(IEnumerable<LoadoutPreference> preferences) =>
+            new(this) { _loadoutPreferences = new(preferences) };
+        // Forge-Change-End
 
         public HumanoidCharacterProfile WithName(string name)
         {

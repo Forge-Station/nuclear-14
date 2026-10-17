@@ -21,6 +21,12 @@ public sealed partial class JobPrototype : IPrototype
     public ProtoId<PlayTimeTrackerPrototype> PlayTimeTracker = string.Empty;
 
     /// <summary>
+    ///     Forge-Change: выдавать ли этой должности набор снаряжения при спавне.
+    /// </summary>
+    [DataField]
+    public bool SpawnLoadout = true;
+
+    /// <summary>
     /// Who is the supervisor for this job.
     /// </summary>
     [DataField]

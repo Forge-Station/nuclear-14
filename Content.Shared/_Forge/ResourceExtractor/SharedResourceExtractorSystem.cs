@@ -63,13 +63,12 @@ public abstract class SharedResourceExtractorSystem : EntitySystem
         if (refillable.MaxRefill is { } maxRefill)
             amount = FixedPoint2.Min(amount, maxRefill);
 
-        var transferred = _solutionTransfer.Transfer(
-            args.User,
+        var transferred = _solutionTransfer.Transfer(new SolutionTransferData(args.User,
             args.Used,
             sourceSolution.Value,
             uid,
             targetSolution.Value,
-            amount);
+            amount));
 
         if (transferred > 0)
         {

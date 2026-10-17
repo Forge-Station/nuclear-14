@@ -38,3 +38,7 @@ verb-common-close-ui = Close UI
 verb-common-open-ui = Open UI
 verb-common-enter = Enter
 verb-common-exit = Exit
+
+# Forge-Change
+verb-categories-select-faction = Select faction
+verb-categories-interaction = Interact

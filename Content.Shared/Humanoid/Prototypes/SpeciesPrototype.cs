@@ -125,6 +125,18 @@ public sealed partial class SpeciesPrototype : IPrototype
     /// </summary>
     [DataField]
     public int MaxAge = 120;
+
+    /// <summary>
+    ///     Forge-Change: средний рост вида в сантиметрах, для подписей в интерфейсе.
+    /// </summary>
+    [DataField]
+    public float AverageHeight = 176.1f;
+
+    /// <summary>
+    ///     Forge-Change: средняя ширина плеч вида в сантиметрах.
+    /// </summary>
+    [DataField]
+    public float AverageWidth = 40f;
 }
 
 public enum SpeciesNaming : byte

@@ -8,7 +8,7 @@ namespace Content.Shared.Construction.Steps
         public override bool EntityValid(EntityUid uid, IEntityManager entityManager, IComponentFactory compFactory)
         {
             var tagSystem = entityManager.EntitySysManager.GetEntitySystem<TagSystem>();
-            return !string.IsNullOrEmpty(Tag) && tagSystem.HasTag(uid, Tag); // Corvax-Change
+            return Tag != null && tagSystem.HasTag(uid, Tag.Value); // Corvax-Change
         }
     }
 }

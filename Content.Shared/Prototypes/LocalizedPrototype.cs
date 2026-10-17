@@ -3,10 +3,11 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Prototypes;
 
-public abstract class LocalizedPrototype : IPrototype
+[ImplicitDataDefinitionForInheritors]
+public abstract partial class LocalizedPrototype : IPrototype
 {
     [IdDataField]
-    public string ID { get; } = default!;
+    public string ID { get; private set; } = default!;
 
     public const string LocFormat = "{0}-{1}-{2}";
 

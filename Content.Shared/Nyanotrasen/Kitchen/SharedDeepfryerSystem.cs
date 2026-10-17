@@ -5,6 +5,7 @@ using Robust.Shared.Physics.Systems;
 using Content.Shared.Nyanotrasen.Kitchen.Components;
 using Content.Shared.Item;
 using Content.Shared.Body.Components;
+using Content.Shared.Body;
 
 namespace Content.Shared.Nyanotrasen.Kitchen;
 

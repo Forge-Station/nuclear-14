@@ -11,6 +11,7 @@ using Content.Shared.Throwing;
 using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.WhiteDream.BloodCult.BloodCultist;
 using Robust.Shared.Network;
+using Content.Shared.Ghost.Components;
 
 namespace Content.Shared.WhiteDream.BloodCult.Items;
 
@@ -44,7 +45,7 @@ public sealed class CultItemSystem : EntitySystem
     {
         if (CanUse(args.User) ||
             // Allow non-cultists to remove embedded cultist weapons and getting knocked down afterwards on pickup
-            (TryComp<EmbeddableProjectileComponent>(item.Owner, out var embeddable) && embeddable.Target != null))
+            (TryComp<EmbeddableProjectileComponent>(item.Owner, out var embeddable) && embeddable.EmbeddedIntoUid != null))
             return;
 
         args.Handled = true;
@@ -71,11 +72,11 @@ public sealed class CultItemSystem : EntitySystem
 
     private void OnMeleeAttempt(Entity<CultItemComponent> item, ref AttemptMeleeEvent args)
     {
-        if (CanUse(args.PlayerUid))
+        if (CanUse(args.User))
             return;
 
         args.Cancelled = true;
-        KnockdownAndDropItem(item, args.PlayerUid, Loc.GetString("cult-item-component-attack-fail"));
+        KnockdownAndDropItem(item, args.User, Loc.GetString("cult-item-component-attack-fail"));
     }
 
     private void OnBeforeBlocking(Entity<CultItemComponent> item, ref BeforeBlockingEvent args)

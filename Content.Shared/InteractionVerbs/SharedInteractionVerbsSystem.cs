@@ -20,6 +20,7 @@ using Robust.Shared.Utility;
 using static Content.Shared.InteractionVerbs.InteractionPopupPrototype.Prefix;
 using static Content.Shared.InteractionVerbs.InteractionVerbPrototype.ContestType;
 using static Content.Shared.InteractionVerbs.InteractionVerbPrototype.EffectTargetSpecifier;
+using Content.Shared.Ghost.Components;
 
 namespace Content.Shared.InteractionVerbs;
 
@@ -148,18 +149,28 @@ public abstract class SharedInteractionVerbsSystem : EntitySystem
             return true;
         }
 
-        var doAfter = new DoAfterArgs(proto.DoAfter)
-        {
-            User = args.User,
-            Target = args.Target,
-            EventTarget = EntityUid.Invalid, // Raised broadcast
-            Broadcast = true,
-            BreakOnHandChange = proto.RequiresHands,
-            NeedHand = proto.RequiresHands,
-            RequireCanInteract = proto.RequiresCanAccess,
-            Delay = delay,
-            Event = new InteractionVerbDoAfterEvent(proto.ID, args)
-        };
+        var doAfter = proto.DoAfter is { } template
+            ? new DoAfterArgs(template)
+            : new DoAfterArgs(EntityManager,
+                args.User,
+                delay,
+                new InteractionVerbDoAfterEvent(proto.ID, args),
+                null)
+            {
+                BreakOnDamage = true,
+                BreakOnMove = true,
+                BreakOnWeightlessMove = true,
+            };
+
+        doAfter.User = args.User;
+        doAfter.Target = args.Target;
+        doAfter.EventTarget = EntityUid.Invalid; // Raised broadcast
+        doAfter.Broadcast = true;
+        doAfter.BreakOnHandChange = proto.RequiresHands;
+        doAfter.NeedHand = proto.RequiresHands;
+        doAfter.RequireCanInteract = proto.RequiresCanAccess;
+        doAfter.Delay = delay;
+        doAfter.Event = new InteractionVerbDoAfterEvent(proto.ID, args);
 
         var isSuccess = _doAfters.TryStartDoAfter(doAfter);
         if (isSuccess)

@@ -1,5 +1,7 @@
 using Content.Shared.Damage;
 using Robust.Shared.GameStates;
+using Content.Shared.Damage.Prototypes;
+using Robust.Shared.Prototypes;
 
 
 namespace Content.Shared._NC.Trade;
@@ -18,7 +20,7 @@ public sealed partial class NcContractGhostRolePerksComponent : Component
     public float IncomingDamageMultiplier = 1f;
 
     [DataField("incomingFlatReductions")]
-    public Dictionary<string, float> IncomingFlatReductions = new();
+    public Dictionary<ProtoId<DamageTypePrototype>, float> IncomingFlatReductions = new();
 
     [DataField("meleeDamageMultiplier"), AutoNetworkedField,]
     public float MeleeDamageMultiplier = 1f;

@@ -25,11 +25,11 @@ public sealed partial class ComponentTogglerSystem : EntitySystem
         if (!TryComp<ComponentTogglerComponent>(uid, out var comp))
             return;
 
-        var ent = (uid, Comp: comp);
+        Entity<ComponentTogglerComponent> ent = (uid, comp);
 
         if (activate)
         {
-            var target = ent.Comp.Parent ? Transform(ent).ParentUid : ent.Owner;
+            var target = ent.Comp.Parent ? Transform(ent.Owner).ParentUid : ent.Owner;
 
             if (TerminatingOrDeleted(target))
                 return;

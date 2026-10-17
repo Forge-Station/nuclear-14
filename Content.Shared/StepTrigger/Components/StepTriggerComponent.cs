@@ -1,6 +1,7 @@
 using Content.Shared.StepTrigger.Systems;
 using Content.Shared.Whitelist;
 using Robust.Shared.GameStates;
+using Content.Shared.StepTrigger.Prototypes;
 
 namespace Content.Shared.StepTrigger.Components;
 
@@ -24,6 +25,13 @@ public sealed partial class StepTriggerComponent : Component
     /// <summary>
     ///     Whether or not this component will currently try to trigger for entities.
     /// </summary>
+    /// <summary>
+    /// Forge-Change: группы триггеров. Если задано, иммунитет проверяется
+    /// по совпадению группы в StepTriggerImmunityComponent.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public StepTriggerGroup? TriggerGroups;
+
     [DataField, AutoNetworkedField]
     public bool Active = true;
 

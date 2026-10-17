@@ -31,7 +31,7 @@ public sealed class SharedShadowShacklesAuraSystem : EntitySystem
         if (uid == component.Target || HasComp<BloodCultistComponent>(component.Target) || !HasComp<CuffableComponent>(component.Target))
             return;
 
-        if (_cuffable.TryCuffing(args.User, component.Target, component.Shackles, distanceThreshold:component.DistanceThreshold))
+        if (_cuffable.TryCuffing(args.User, component.Target, component.Shackles))
             RaiseLocalEvent(uid, new SpeakOnAuraUseEvent(args.User));
     }
 

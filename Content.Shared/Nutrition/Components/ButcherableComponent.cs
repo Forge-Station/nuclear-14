@@ -24,4 +24,10 @@ public sealed partial class ButcherableComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public float ButcherDelay = 8.0f;
+
+    /// <summary>
+    ///     Forge-Change: чем это разделывают.
+    /// </summary>
+    [DataField("butcheringType"), AutoNetworkedField]
+    public ButcheringType Type = ButcheringType.Knife;
 }

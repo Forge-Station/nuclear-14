@@ -50,7 +50,7 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
                 continue;
 
             perks.NextPassiveHealing = curTime + TimeSpan.FromSeconds(Math.Max(0.1f, perks.PassiveHealingInterval));
-            _damageable.TryChangeDamage(uid, perks.PassiveHealing, true, false, damage);
+            _damageable.TryChangeDamage((uid, damage), perks.PassiveHealing, true, false);
         }
     }
 
@@ -64,7 +64,7 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
         Entity<NcContractGhostRolePerksComponent> ent,
         ref RefreshMovementSpeedModifiersEvent args
     ) =>
-        args.ModifySpeed(ent.Comp.WalkSpeedMultiplier, ent.Comp.SprintSpeedMultiplier, true);
+        args.ModifySpeed(ent.Comp.WalkSpeedMultiplier, ent.Comp.SprintSpeedMultiplier);
 
     private void OnIncomingDamage(
         Entity<NcContractGhostRolePerksComponent> ent,
@@ -75,7 +75,7 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
         {
             args.Damage = DamageSpecifier.ApplyModifierSet(
                 args.Damage,
-                new() { FlatReduction = ent.Comp.IncomingFlatReductions, });
+                new() { FlatReductions = ent.Comp.IncomingFlatReductions, });
         }
 
         if (!MathHelper.CloseTo(ent.Comp.IncomingDamageMultiplier, 1f))

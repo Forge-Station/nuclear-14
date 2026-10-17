@@ -31,3 +31,6 @@ verb-common-open = Открыть
 verb-common-close-ui = Закрыть UI
 verb-common-open-ui = Открыть UI
 verb-categories-interaction = Взаимодействовать
+
+# Forge-Change
+verb-categories-select-faction = Выбрать фракцию

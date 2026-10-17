@@ -1,11 +1,13 @@
 using Content.Shared.Interaction;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Hands.Components;
+using Content.Shared.Hands.EntitySystems;
 
 namespace Content.Shared.OfferItem;
 
 public abstract partial class SharedOfferItemSystem : EntitySystem
 {
+    [Dependency] protected readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
     public override void Initialize()
@@ -63,7 +65,7 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
     /// </summary>
     protected void UnOffer(EntityUid uid, OfferItemComponent component)
     {
-        if (!TryComp<HandsComponent>(uid, out var hands) || hands.ActiveHand == null)
+        if (!TryComp<HandsComponent>(uid, out var hands) || hands.ActiveHandId == null)
             return;
 
 
@@ -120,7 +122,7 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
         if (offerItem == null && !TryComp(component.Target, out offerItem))
             return;
 
-        if (!TryComp<HandsComponent>(uid, out var hands) || hands.ActiveHand == null ||
+        if (!TryComp<HandsComponent>(uid, out var hands) || hands.ActiveHandId == null ||
             component.Target == null)
             return;
 

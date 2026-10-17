@@ -1,5 +1,7 @@
 using Content.Shared.Examine;
 using Robust.Shared.Utility;
+using Content.Shared.Tag;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Construction.Steps
 {
@@ -8,6 +10,12 @@ namespace Content.Shared.Construction.Steps
         [DataField] public LocId Name { get; private set; } = string.Empty;
 
         [DataField] public SpriteSpecifier? Icon { get; private set; }
+
+        /// <summary>
+        ///     Forge-Change: шаг принимает любой предмет с этим тегом.
+        /// </summary>
+        [DataField("tag")]
+        public ProtoId<TagPrototype>? Tag { get; private set; }
 
         public override void DoExamine(ExaminedEvent examinedEvent)
         {

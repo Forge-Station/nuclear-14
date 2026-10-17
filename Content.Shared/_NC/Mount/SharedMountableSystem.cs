@@ -83,8 +83,8 @@ public sealed class SharedMountSystem : EntitySystem
             _mover.SetRelay(args.Buckle.Owner, ent.Owner);
         }
 
-        if (_standing.IsDown(ent))
-            _standing.Stand(ent);
+        if (_standing.IsDown(ent.Owner))
+            _standing.Stand(ent.Owner);
 
         RemComp<ActiveNPCComponent>(ent);
         if (!TryComp<MovementSpeedModifierComponent>(ent, out var move))

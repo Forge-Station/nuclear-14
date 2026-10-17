@@ -44,7 +44,7 @@ public sealed class RepulseSystem : EntitySystem
         var impulse = direction * repulsor.Comp.ForceMultiplier;
 
         _physics.ApplyLinearImpulse(user, impulse);
-        _stunSystem.TryStun(user, repulsor.Comp.StunDuration, true);
+        _stunSystem.TryUpdateStunDuration(user, repulsor.Comp.StunDuration);
         _stunSystem.TryKnockdown(user, repulsor.Comp.KnockdownDuration, true, drop: true);
     }
 }

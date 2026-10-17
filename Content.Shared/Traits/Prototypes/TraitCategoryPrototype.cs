@@ -12,6 +12,20 @@ public sealed partial class TraitCategoryPrototype : IPrototype
     [IdDataField]
     public string ID { get; set; } = default!;
 
+    public const string Default = "Default";
+
+    /// <summary>
+    ///     Name of the trait category displayed in the UI.
+    /// </summary>
+    [DataField]
+    public LocId Name { get; private set; } = string.Empty;
+
+    /// <summary>
+    ///     The maximum number of trait points that can be spent in this category.
+    /// </summary>
+    [DataField]
+    public int? MaxTraitPoints;
+
     [DataField]
     public bool Root;
 

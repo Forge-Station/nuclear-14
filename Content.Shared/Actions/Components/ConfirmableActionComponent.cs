@@ -2,6 +2,7 @@ using Content.Shared.Actions;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
+using Content.Shared.Popups;
 
 namespace Content.Shared.Actions.Components;
 
@@ -21,6 +22,12 @@ public sealed partial class ConfirmableActionComponent : Component
     /// </summary>
     [DataField(required: true)]
     public LocId Popup = string.Empty;
+
+    /// <summary>
+    /// Forge-Change: каким шрифтом показывать подтверждение.
+    /// </summary>
+    [DataField]
+    public PopupType PopupFontType = PopupType.LargeCaution;
 
     /// <summary>
     /// If not null, this is when the action can be confirmed at.

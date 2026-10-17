@@ -4,6 +4,7 @@ using Content.Shared.Input;
 using Content.Shared.Hands.Components;
 using Robust.Shared.Input.Binding;
 using Robust.Shared.Player;
+using Content.Shared.Hands.EntitySystems;
 
 namespace Content.Shared.OfferItem;
 
@@ -38,10 +39,10 @@ public abstract partial class SharedOfferItemSystem
         if (!TryComp<OfferItemComponent>(uid, out var offerItem))
             return;
 
-        if (!TryComp<HandsComponent>(uid, out var hands) || hands.ActiveHand == null)
+        if (!TryComp<HandsComponent>(uid, out var hands) || hands.ActiveHandId == null)
             return;
 
-        offerItem.Item = hands.ActiveHand.HeldEntity;
+        offerItem.Item = _hands.GetActiveItem((uid, hands));
 
         if (offerItem.IsInOfferMode == false)
         {
@@ -54,7 +55,7 @@ public abstract partial class SharedOfferItemSystem
             if (offerItem.Hand == null || offerItem.Target == null)
             {
                 offerItem.IsInOfferMode = true;
-                offerItem.Hand = hands.ActiveHand.Name;
+                offerItem.Hand = hands.ActiveHandId;
 
                 Dirty(uid, offerItem);
                 return;

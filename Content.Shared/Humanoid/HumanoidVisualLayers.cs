@@ -8,6 +8,7 @@ namespace Content.Shared.Humanoid
     {
         Special, // for the cat ears
         Tail,
+        Wings, // Forge-Change
         TailOverlay, // markings that go ontop of tails
         Hair,
         FacialHair,

@@ -10,5 +10,12 @@ namespace Content.Shared.Construction.Components
     {
         [DataField]
         public EntProtoId? Prototype;
+
+
+        /// <summary>
+        ///     Forge-Change: программа модульного компьютера на этой плате.
+        /// </summary>
+        [DataField]
+        public EntProtoId? ModularComputerProgramPrototype;
     }
 }

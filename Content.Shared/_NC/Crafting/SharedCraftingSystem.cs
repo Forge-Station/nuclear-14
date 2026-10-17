@@ -27,10 +27,12 @@ using Robust.Shared.Serialization;
 // using Content.Shared.Nuclear14.Special.Components; // Corvax-Change
 using Content.Shared.Roles.Jobs; // Corvax-Change
 using Content.Shared.Mind.Components; // Corvax-Change
+using Content.Shared.Stacks;
 
 namespace Content.Shared.Crafting;
 public sealed class SharedCraftingSystem : EntitySystem
 {
+    [Dependency] private readonly SharedStackSystem _stack = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
@@ -38,7 +40,6 @@ public sealed class SharedCraftingSystem : EntitySystem
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly TagSystem _tagSystem = default!;
     [Dependency] private readonly SharedJobSystem _jobs = default!; // Corvax-Change
 
     private List<LightCraftingPrototype> _lightPrototypes = default!;
@@ -335,7 +336,7 @@ public sealed class SharedCraftingSystem : EntitySystem
             if (!TryComp<MindContainerComponent>(user, out var mindContainer))
                 return false;
 
-            if (!_jobs.MindTryGetJob(mindContainer.Mind, out _, out var jobPrototype))
+            if (!_jobs.MindTryGetJob(mindContainer.Mind, out var jobPrototype))
                 return false;
 
             if (!_jobs.TryGetDepartment(jobPrototype.ID, out var departmentPrototype))
@@ -445,7 +446,7 @@ public sealed class SharedCraftingSystem : EntitySystem
         {
             var itemId = kvp.Key;
 
-            bool isBlueprint = _proto.Index(itemId).HasComponent<STBlueprintComponent>();
+            bool isBlueprint = _proto.Index(itemId).TryGetComponent<STBlueprintComponent>(out _);
 
             var itemDetails = kvp.Value;
 
@@ -570,10 +571,7 @@ public sealed class SharedCraftingSystem : EntitySystem
     private void ReduceStackCount(EntityUid entity, int amount)
     {
         if (TryComp<Stacks.StackComponent>(entity, out var stack))
-        {
-            stack.Count -= amount;
-            Dirty(entity, stack);
-        }
+            _stack.ReduceCount((entity, stack), amount);
     }
 
     private void DropItemAtUserPosition(EntityUid user, EntityUid item)

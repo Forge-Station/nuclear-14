@@ -23,12 +23,12 @@ public abstract class SharedGunConditionSystem : EntitySystem
 
     private void OnUnjammingStartup(Entity<GunUnjammingComponent> ent, ref ComponentStartup args)
     {
-        _movement.RefreshMovementSpeedModifiers(ent);
+        _movement.RefreshMovementSpeedModifiers(ent.Owner);
     }
 
     private void OnUnjammingShutdown(Entity<GunUnjammingComponent> ent, ref ComponentShutdown args)
     {
-        _movement.RefreshMovementSpeedModifiers(ent);
+        _movement.RefreshMovementSpeedModifiers(ent.Owner);
     }
 
     private void OnUnjammingSpeed(Entity<GunUnjammingComponent> ent, ref RefreshMovementSpeedModifiersEvent args)
@@ -37,7 +37,7 @@ public abstract class SharedGunConditionSystem : EntitySystem
             !TryComp<MovementSpeedModifierComponent>(ent, out var speed) || speed.BaseSprintSpeed <= 0f)
             return;
 
-        args.ModifySpeed(1f, Math.Min(1f, speed.BaseWalkSpeed / speed.BaseSprintSpeed), bypassImmunity: true);
+        args.ModifySpeed(1f, Math.Min(1f, speed.BaseWalkSpeed / speed.BaseSprintSpeed));
     }
 
     private void OnAttemptShoot(Entity<GunConditionComponent> ent, ref AttemptShootEvent args)

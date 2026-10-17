@@ -1,7 +1,8 @@
 namespace Content.Shared._NC.Trade;
 
 
-public sealed class ContractServerData
+[DataDefinition]
+public sealed partial class ContractServerData
 {
     [DataField("match")]
     public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;

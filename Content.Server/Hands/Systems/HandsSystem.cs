@@ -168,6 +168,14 @@ namespace Content.Server.Hands.Systems
 
             // Let other systems change the thrown entity (useful for virtual items)
             // or the throw strength.
+            // Forge-Change-Start
+            var itemEv = new BeforeGettingThrownEvent(throwEnt.Value, direction, throwSpeed, player);
+            RaiseLocalEvent(throwEnt.Value, ref itemEv);
+
+            if (itemEv.Cancelled)
+                return true;
+            // Forge-Change-End
+
             var ev = new BeforeThrowEvent(throwEnt.Value, direction, throwSpeed, player);
             RaiseLocalEvent(player, ref ev);
 

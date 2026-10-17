@@ -13,7 +13,6 @@ public enum RadialSelectorUiKey : byte
 public sealed class RadialSelectorState(List<RadialSelectorEntry> entries, bool openCentered = false)
     : BoundUserInterfaceState
 {
-    [DataField(required: true)]
     public List<RadialSelectorEntry> Entries = entries;
 
     public bool OpenCentered { get; } = openCentered;

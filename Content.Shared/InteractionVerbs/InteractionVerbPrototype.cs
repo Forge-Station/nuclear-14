@@ -107,18 +107,12 @@ public sealed partial class InteractionVerbPrototype : IPrototype, IInheritingPr
     ///     Arguments of the do-after shown if <see cref="Delay"/> is greater than zero.
     ///     The user, target, needHand, event, and other required parameters are set up automatically when the do-after is created.
     /// </summary>
+    /// <remarks>
+    ///     Апстрим закрыл конструктор без аргументов, поэтому значения по умолчанию
+    ///     задаёт система, а не инициализатор поля: без YAML здесь остаётся null.
+    /// </remarks>
     [DataField]
-    public DoAfterArgs DoAfter = new()
-    {
-        User = EntityUid.Invalid,
-        NetUser = NetEntity.Invalid,
-        BreakOnDamage = true,
-        BreakOnMove = true,
-        BreakOnWeightlessMove = true,
-        RequireCanInteract = false,
-        // Never used, but must be present because the field is non-nullable and will error during serialization if not set.
-        Event = new InteractionVerbDoAfterEvent(default, default!)
-    };
+    public DoAfterArgs? DoAfter;
 
     [DataField]
     public RangeSpecifier Range = new();

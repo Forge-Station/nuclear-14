@@ -5,11 +5,13 @@ using Content.Shared.Doors.Components;
 using Content.Shared.Hands.EntitySystems;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Content.Shared.Access.Systems;
 
 namespace Content.Shared._NC.RandomAccessKey;
 
 public sealed class RandomAccessKeySystem : EntitySystem
 {
+    [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
@@ -34,14 +36,9 @@ public sealed class RandomAccessKeySystem : EntitySystem
 
         var randomKey = _random.Next(1000, 9999);
         var prototypeId = $"{RandomAccessPrefix}{randomKey}";
-        var prototype = new AccessLevelPrototype
-        {
-            ID = prototypeId,
-            Name = $"Ключ #{randomKey}"
-        };
         var accessReader = EnsureComp<AccessReaderComponent>(ent.Owner);
 
-        accessReader.AccessLists.Add(new HashSet<ProtoId<AccessLevelPrototype>> { prototype.ID });
+        _accessReader.TryAddAccess((ent.Owner, accessReader), prototypeId);
 
         var userCord = _transform.GetMapCoordinates(args.UserUid.Value);
         var doorKey = Spawn(Key, userCord);
@@ -49,7 +46,7 @@ public sealed class RandomAccessKeySystem : EntitySystem
 
         _meta.SetEntityName(doorKey, $"Ключ #{randomKey}");
         accessKey.Tags.Clear();
-        accessKey.Tags.Add(prototype.ID);
+        accessKey.Tags.Add(prototypeId);
         Dirty(doorKey, accessKey);
         _hands.PickupOrDrop(args.UserUid, doorKey);
         door.CanPry = false;

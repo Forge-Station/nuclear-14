@@ -31,7 +31,7 @@ public sealed partial class BodySystem
         SubscribeLocalEvent<BodyComponent, BlindnessChangedEvent>(RefRelayBodyEvent);
         SubscribeLocalEvent<BodyComponent, CloningEvent>(RefRelayBodyEvent);
 
-        SubscribeLocalEvent<BodyComponent, ToggleEyesActionEvent>(RelayBodyEvent);
+        SubscribeLocalEvent<BodyComponent, Content.Shared.Eye.Blinding.Systems.ToggleEyesActionEvent>(RelayBodyEvent);
         SubscribeLocalEvent<BodyComponent, CanSeeAttemptEvent>(RelayBodyEvent);
     }
 

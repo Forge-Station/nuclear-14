@@ -71,6 +71,36 @@ public sealed class ItemSlotsComponentState(Dictionary<string, ItemSlot> slots, 
 [Serializable, NetSerializable]
 public sealed partial class ItemSlot
 {
+    public ItemSlot() { }
+
+    /// <summary>
+    ///     Forge-Change: копия слота, чтобы делать слоты по шаблону.
+    /// </summary>
+    public ItemSlot(ItemSlot other)
+    {
+        Whitelist = other.Whitelist;
+        Blacklist = other.Blacklist;
+        InsertSound = other.InsertSound;
+        EjectSound = other.EjectSound;
+        Name = other.Name;
+        StartingItem = other.StartingItem;
+        Locked = other.Locked;
+        DisableEject = other.DisableEject;
+        InsertOnInteract = other.InsertOnInteract;
+        EjectOnInteract = other.EjectOnInteract;
+        EjectOnUse = other.EjectOnUse;
+        InsertVerbText = other.InsertVerbText;
+        EjectVerbText = other.EjectVerbText;
+        EjectOnDeconstruct = other.EjectOnDeconstruct;
+        EjectOnBreak = other.EjectOnBreak;
+        WhitelistFailPopup = other.WhitelistFailPopup;
+        LockedFailPopup = other.LockedFailPopup;
+        InsertSuccessPopup = other.InsertSuccessPopup;
+        Swap = other.Swap;
+        Priority = other.Priority;
+        Local = other.Local;
+    }
+
     [DataField]
     [Access(typeof(ItemSlotsSystem), Other = AccessPermissions.ReadWriteExecute)]
     public EntityWhitelist? Whitelist;

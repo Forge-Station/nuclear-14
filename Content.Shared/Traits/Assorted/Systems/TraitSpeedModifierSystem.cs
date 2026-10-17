@@ -18,7 +18,7 @@ public sealed class TraitSpeedModifierSystem : EntitySystem
 
     private void OnRefreshMovementSpeed(EntityUid uid, TraitSpeedModifierComponent component, RefreshMovementSpeedModifiersEvent args)
     {
-        args.ModifySpeed(component.WalkModifier, component.SprintModifier, bypassImmunity: true);
+        args.ModifySpeed(component.WalkModifier, component.SprintModifier);
     }
 
     private void OnStartup(EntityUid uid, TraitSpeedModifierComponent component, ComponentStartup args)
@@ -26,6 +26,6 @@ public sealed class TraitSpeedModifierSystem : EntitySystem
         if (!TryComp<MovementSpeedModifierComponent>(uid, out var move))
             return;
 
-        _movement.RefreshMovementSpeedModifiers(uid, move);
+        _movement.RefreshMovementSpeedModifiers(uid);
     }
 }
