@@ -27,6 +27,26 @@ public static class ClientPackaging
 
         if (!skipBuild)
         {
+            // Forge-Secrets-Start
+            if (UseSecrets)
+            {
+                logger.Info("Secrets found, building secret client project...");
+                await ProcessHelpers.RunCheck(new ProcessStartInfo
+                {
+                    FileName = "dotnet",
+                    ArgumentList =
+                    {
+                        "build",
+                        SecretsClientProject,
+                        "-c", configuration,
+                        "--nologo",
+                        "/v:m",
+                        "/p:FullRelease=true",
+                        "/m"
+                    }
+                });
+            }
+            // Forge-Secrets-End
             await ProcessHelpers.RunCheck(new ProcessStartInfo
             {
                 FileName = "dotnet",
