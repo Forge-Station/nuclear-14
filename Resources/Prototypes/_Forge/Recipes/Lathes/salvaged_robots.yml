@@ -1,0 +1,176 @@
+# Рецепты деталей, специализированных модулей и улучшений роботов.
+- type: latheRecipe
+  id: N14MrHandyBody
+  result: N14MrHandyBody
+  category: N14RobotParts
+  completetime: 3
+  materials:
+    ScrapSteel: 500
+    ScrapElectronic: 200
+
+- type: latheRecipe
+  id: N14MrHandyManipulator
+  result: N14MrHandyManipulator
+  category: N14RobotParts
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapCopper: 200
+
+- type: latheRecipe
+  id: N14MrHandyThruster
+  result: N14MrHandyThruster
+  category: N14RobotParts
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 300
+
+- type: latheRecipe
+  id: N14EyebotBody
+  result: N14EyebotBody
+  category: N14RobotParts
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 300
+
+- type: latheRecipe
+  id: N14EyebotAntenna
+  result: N14EyebotAntenna
+  category: N14RobotParts
+  completetime: 3
+  materials:
+    ScrapElectronic: 300
+    ScrapCopper: 200
+
+- type: latheRecipe
+  id: N14EyebotThruster
+  result: N14EyebotThruster
+  category: N14RobotParts
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 300
+
+- type: latheRecipe
+  id: N14BorgModuleMrHandyMedical
+  result: N14BorgModuleMrHandyMedical
+  category: N14RobotModules
+  completetime: 3
+  materials:
+    ScrapSteel: 200
+    ScrapElectronic: 200
+    ScrapGold: 100
+
+- type: latheRecipe
+  id: N14BorgModuleMrHandySurgery
+  result: N14BorgModuleMrHandySurgery
+  category: N14RobotModules
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 200
+    ScrapGold: 100
+
+- type: latheRecipe
+  id: N14BorgModuleMrHandyDefibrillator
+  result: N14BorgModuleMrHandyDefibrillator
+  category: N14RobotModules
+  completetime: 3
+  materials:
+    ScrapSteel: 200
+    ScrapElectronic: 300
+    ScrapGold: 100
+
+- type: latheRecipe
+  id: N14BorgModuleEyebotCombat
+  result: N14BorgModuleEyebotCombat
+  category: N14RobotModules
+  completetime: 3
+  materials:
+    ScrapSteel: 500
+    ScrapElectronic: 700
+    ScrapGold: 200
+    ScrapCopper: 200
+    ScrapLead: 400
+
+- type: latheRecipe
+  id: N14BorgModuleMrHandyLaser
+  result: N14BorgModuleMrHandyLaser
+  category: N14RobotModules
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 400
+    ScrapGold: 200
+    ScrapLead: 300
+
+- type: latheRecipe
+  id: N14BorgModuleMrHandyPlasma
+  result: N14BorgModuleMrHandyPlasma
+  category: N14RobotModules
+  completetime: 3
+  materials:
+    ScrapSteel: 400
+    ScrapElectronic: 500
+    ScrapGold: 200
+    ScrapLead: 600
+
+- type: latheRecipe
+  id: N14BorgUpgradeNightVision
+  result: N14BorgUpgradeNightVision
+  category: N14RobotUpgrades
+  completetime: 3
+  materials:
+    ScrapElectronic: 2000
+    ScrapCopper: 2000
+    ScrapGold: 100
+
+- type: latheRecipe
+  id: N14BorgUpgradeArmorLight
+  result: N14BorgUpgradeArmorLight
+  category: N14RobotUpgrades
+  completetime: 3
+  materials:
+    ScrapSteel: 200
+    ScrapBrass: 100
+    ScrapLead: 200
+
+- type: latheRecipe
+  id: N14BorgUpgradeArmor
+  result: N14BorgUpgradeArmor
+  category: N14RobotUpgrades
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapBrass: 100
+    ScrapLead: 400
+
+- type: latheRecipe
+  id: N14BorgUpgradeArmorHeavy
+  result: N14BorgUpgradeArmorHeavy
+  category: N14RobotUpgrades
+  completetime: 3
+  materials:
+    ScrapSteel: 400
+    ScrapBrass: 100
+    ScrapLead: 600
+
+- type: latheRecipe
+  id: N14BorgUpgradeUniversalHud
+  result: N14BorgUpgradeUniversalHud
+  category: N14RobotUpgrades
+  completetime: 3
+  materials:
+    ScrapElectronic: 200
+    ScrapGold: 100
+
+- type: latheRecipe
+  id: N14BorgUpgradeFlashProtection
+  result: N14BorgUpgradeFlashProtection
+  category: N14RobotUpgrades
+  completetime: 3
+  materials:
+    ScrapSteel: 100
+    ScrapElectronic: 100

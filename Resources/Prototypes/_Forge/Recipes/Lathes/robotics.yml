@@ -2,70 +2,70 @@
 - type: latheRecipe
   id: N14JunktronEndoskeleton
   result: N14JunktronEndoskeleton
-  category: Robotics
+  category: N14RobotParts
   completetime: 3
   materials:
-    ScrapSteel: 300
-    ScrapElectronic: 100
+    ScrapSteel: 900
+    ScrapElectronic: 300
 
 - type: latheRecipe
   id: N14OpticalSensor
   result: N14OpticalSensor
-  category: Robotics
+  category: N14RobotParts
   completetime: 2
   materials:
-    ScrapElectronic: 25
+    ScrapElectronic: 100
 
 - type: latheRecipe
   id: N14JunktronMMI
   result: N14JunktronMMI
-  category: Robotics
+  category: N14RobotParts
   completetime: 3
   materials:
-    ScrapElectronic: 150
-    ScrapGold: 50
+    ScrapElectronic: 200
+    ScrapGold: 100
     ScrapSteel: 100
 
 - type: latheRecipe
   id: N14JunktronPositronicBrain
   result: N14JunktronPositronicBrain
-  category: Robotics
+  category: N14RobotParts
   completetime: 3
   materials:
     ScrapElectronic: 300
-    ScrapGold: 50
+    ScrapGold: 100
 
 - type: latheRecipe
   id: N14LawCard
   result: N14LawCard
-  category: Robotics
+  category: N14RobotParts
   completetime: 2
   materials:
-    ScrapElectronic: 50
+    ScrapElectronic: 100
 
 - type: latheRecipe
   id: N14BorgModuleJunkTools
   result: N14BorgModuleJunkTools
-  category: Robotics
+  category: N14RobotModules
   completetime: 3
   materials:
-    ScrapSteel: 250
-    ScrapElectronic: 150
+    ScrapSteel: 300
+    ScrapElectronic: 200
 
 - type: latheRecipe
   id: N14BorgModuleJunkGardening
   result: N14BorgModuleJunkGardening
-  category: Robotics
+  category: N14RobotModules
   completetime: 3
   materials:
-    ScrapSteel: 150
-    ScrapElectronic: 150
+    ScrapSteel: 200
+    ScrapElectronic: 200
     ScrapBrass: 100
 
 - type: latheRecipe
   id: N14BorgModuleJunkBureaucracy
   result: N14BorgModuleJunkBureaucracy
-  category: Robotics
+  category: N14RobotModules
   completetime: 3
   materials:
     ScrapElectronic: 200
@@ -74,17 +74,18 @@
 - type: latheRecipe
   id: N14BorgModuleJunkCombat
   result: N14BorgModuleJunkCombat
-  category: Robotics
+  category: N14RobotModules
   completetime: 4
   materials:
-    ScrapSteel: 300
-    ScrapElectronic: 300
-    ScrapGold: 100
+    ScrapSteel: 600
+    ScrapElectronic: 600
+    ScrapGold: 200
+    ScrapLead: 500
 
 - type: latheRecipe
   id: N14BorgModuleJunkManipulator
   result: N14BorgModuleJunkManipulator
-  category: Robotics
+  category: N14RobotModules
   completetime: 3
   materials:
     ScrapSteel: 200
@@ -93,7 +94,7 @@
 - type: latheRecipe
   id: N14BorgModuleJunkMining
   result: N14BorgModuleJunkMining
-  category: Robotics
+  category: N14RobotModules
   completetime: 3
   materials:
     ScrapSteel: 300
@@ -103,63 +104,63 @@
 - type: latheRecipe
   id: N14BorgModuleJunkMusique
   result: N14BorgModuleJunkMusique
-  category: Robotics
+  category: N14RobotModules
   completetime: 3
   materials:
     ScrapSteel: 200
-    ScrapElectronic: 150
+    ScrapElectronic: 200
     ScrapBrass: 100
 
 - type: latheRecipe
   id: N14JunktronTorso
   result: N14JunktronTorso
-  category: Robotics
+  category: N14RobotParts
   completetime: 2
   materials:
-    ScrapSteel: 150
-    ScrapElectronic: 50
+    ScrapSteel: 500
+    ScrapElectronic: 200
 
 - type: latheRecipe
   id: N14JunktronHead
   result: N14JunktronHead
-  category: Robotics
+  category: N14RobotParts
   completetime: 2
   materials:
-    ScrapElectronic: 100
-    ScrapGold: 25
+    ScrapElectronic: 300
+    ScrapGold: 100
 
 - type: latheRecipe
   id: N14JunktronLeftArm
   result: N14JunktronLeftArm
-  category: Robotics
+  category: N14RobotParts
   completetime: 2
   materials:
-    ScrapSteel: 100
-    ScrapCopper: 50
+    ScrapSteel: 300
+    ScrapCopper: 200
 
 - type: latheRecipe
   id: N14JunktronRightArm
   result: N14JunktronRightArm
-  category: Robotics
+  category: N14RobotParts
   completetime: 2
   materials:
-    ScrapSteel: 100
-    ScrapBrass: 50
+    ScrapSteel: 300
+    ScrapBrass: 200
 
 - type: latheRecipe
   id: N14JunktronLeftLeg
   result: N14JunktronLeftLeg
-  category: Robotics
+  category: N14RobotParts
   completetime: 2
   materials:
-    ScrapSteel: 100
-    ScrapLead: 50
+    ScrapSteel: 300
+    ScrapLead: 200
 
 - type: latheRecipe
   id: N14JunktronRightLeg
   result: N14JunktronRightLeg
-  category: Robotics
+  category: N14RobotParts
   completetime: 2
   materials:
-    ScrapSteel: 100
-    ScrapLead: 50
+    ScrapSteel: 300
+    ScrapLead: 200
