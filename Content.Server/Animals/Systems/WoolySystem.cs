@@ -1,10 +1,11 @@
 using Content.Server.Animals.Components;
-using Content.Server.Chemistry.Containers.EntitySystems;
+using Content.Server.Chemistry.EntitySystems;
 using Content.Server.Nutrition;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Robust.Shared.Timing;
+using Content.Server.Chemistry.EntitySystems;
 
 namespace Content.Server.Animals.Systems;
 
@@ -14,7 +15,7 @@ namespace Content.Server.Animals.Systems;
 /// </summary>
 public sealed class WoolySystem : EntitySystem
 {
-    [Dependency] private readonly HungerSystem _hunger = default!;
+    [Dependency] private readonly SatiationSystem _satiation = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly SolutionContainerSystem _solutionContainer = default!;
@@ -23,7 +24,7 @@ public sealed class WoolySystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<WoolyComponent, BeforeFullyEatenEvent>(OnBeforeFullyEaten);
+        SubscribeLocalEvent<WoolyComponent, IngestibleEvent>(OnIngestibleAttempt);
     }
 
     public override void Update(float frameTime)
@@ -43,13 +44,16 @@ public sealed class WoolySystem : EntitySystem
                 continue;
 
             // Actually there is food digestion so no problem with instant reagent generation "OnFeed"
-            if (EntityManager.TryGetComponent(uid, out HungerComponent? hunger))
+            // Голод стал сытостью: без SatiationComponent животное производит
+            // шерсть бесконечно, как и раньше без HungerComponent.
+            if (HasComp<SatiationComponent>(uid))
             {
                 // Is there enough nutrition to produce reagent?
-                if (_hunger.GetHungerThreshold(hunger) < HungerThreshold.Okay)
+                if (_satiation.GetValueOrNull(uid, SatiationSystem.Hunger) is not { } hunger
+                    || hunger < wooly.HungerUsage)
                     continue;
 
-                _hunger.ModifyHunger(uid, -wooly.HungerUsage, hunger);
+                _satiation.ModifyValue(uid, SatiationSystem.Hunger, -wooly.HungerUsage);
             }
 
             if (!_solutionContainer.ResolveSolution(uid, wooly.SolutionName, ref wooly.Solution))
@@ -59,9 +63,10 @@ public sealed class WoolySystem : EntitySystem
         }
     }
 
-    private void OnBeforeFullyEaten(Entity<WoolyComponent> ent, ref BeforeFullyEatenEvent args)
+    private void OnIngestibleAttempt(Entity<WoolyComponent> ent, ref IngestibleEvent args)
     {
-        // don't want moths to delete goats after eating them
-        args.Cancel();
+        // Апстрим убрал отменяемое "перед съедением", поэтому козу просто
+        // нельзя съесть - моли её больше не удалят.
+        args.Cancelled = true;
     }
 }

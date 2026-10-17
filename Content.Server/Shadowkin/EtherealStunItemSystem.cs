@@ -4,6 +4,7 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Shadowkin;
 using Content.Shared.Abilities.Psionics;
 using Content.Shared.Stacks;
+using Content.Server.Damage.Systems;
 
 namespace Content.Server.Shadowkin;
 

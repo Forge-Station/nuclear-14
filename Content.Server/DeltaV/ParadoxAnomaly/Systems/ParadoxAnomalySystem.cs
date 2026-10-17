@@ -34,7 +34,7 @@ public sealed class ParadoxAnomalySystem : EntitySystem
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
     [Dependency] private readonly PsionicsSystem _psionics = default!;
-    [Dependency] private readonly SharedHumanoidAppearanceSystem _humanoid = default!;
+    [Dependency] private readonly HumanoidProfileSystem _humanoid = default!;
     [Dependency] private readonly SharedMindSystem _mind = default!;
     [Dependency] private readonly SharedRoleSystem _role = default!;
     [Dependency] private readonly StationSystem _station = default!;
@@ -69,7 +69,7 @@ public sealed class ParadoxAnomalySystem : EntitySystem
 
         // Get a list of potential candidates
         var candidates = new List<(EntityUid, EntityUid, SpeciesPrototype, HumanoidCharacterProfile)>();
-        var query = EntityQueryEnumerator<MindContainerComponent, HumanoidAppearanceComponent>();
+        var query = EntityQueryEnumerator<MindContainerComponent, HumanoidProfileComponent>();
         while (query.MoveNext(out var uid, out var mindContainer, out var humanoid))
         {
             if (humanoid.LastProfileLoaded is not {} profile)

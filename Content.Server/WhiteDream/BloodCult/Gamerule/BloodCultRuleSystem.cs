@@ -43,6 +43,7 @@ using Content.Shared.GameTicking;
 using Content.Shared.Roles;
 using Content.Shared.Antag;
 using Content.Shared.Pinpointer;
+using Content.Shared.GameTicking.Rules;
 
 
 namespace Content.Server.WhiteDream.BloodCult.Gamerule;
@@ -96,19 +97,17 @@ public sealed class BloodCultRuleSystem : GameRuleSystem<BloodCultRuleComponent>
     }
 
     protected override void AppendRoundEndText(
-        EntityUid uid,
-        BloodCultRuleComponent component,
-        GameRuleComponent gameRule,
+        Entity<BloodCultRuleComponent> rule,
         ref RoundEndTextAppendEvent args
     )
     {
-        base.AppendRoundEndText(uid, component, gameRule, ref args);
-        var winText = Loc.GetString($"blood-cult-condition-{component.WinCondition.ToString().ToLower()}");
+        base.AppendRoundEndText(rule, ref args);
+        var winText = Loc.GetString($"blood-cult-condition-{rule.Comp.WinCondition.ToString().ToLower()}");
         args.AddLine(winText);
 
         args.AddLine(Loc.GetString("blood-cultists-list-start"));
 
-        var sessionData = _antagSelection.GetAntagIdentifiers(uid);
+        var sessionData = _antagSelection.GetAntagIdentifiers(rule.Owner);
         foreach (var (_, data, name) in sessionData)
         {
             var lising = Loc.GetString("blood-cultists-list-name", ("name", name), ("user", data.UserName));

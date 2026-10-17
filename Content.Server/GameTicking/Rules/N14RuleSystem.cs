@@ -2,6 +2,7 @@ using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Mind;
 using Content.Server.Objectives;
 using Content.Shared.GameTicking;
+using Content.Shared.GameTicking.Rules;
 
 namespace Content.Server.GameTicking.Rules;
 

@@ -4,6 +4,7 @@ using Content.Server.LifeDrainer;
 using Content.Server.NPC.Pathfinding;
 using Content.Server.NPC.Systems;
 using NpcFactionSystem = Content.Shared.NPC.Systems.NpcFactionSystem;
+using Robust.Shared.IoC;
 
 
 namespace Content.Server.NPC.HTN.PrimitiveTasks.Operators;
@@ -30,13 +31,13 @@ public sealed partial class PickDrainTargetOperator : HTNOperator
     [DataField]
     public string PathfindKey = NPCBlackboard.PathfindKey;
 
-    public override void Initialize(IEntitySystemManager sysMan)
+    public override void Initialize(IDependencyCollection deps)
     {
-        base.Initialize(sysMan);
+        base.Initialize(deps);
 
-        _drainer = sysMan.GetEntitySystem<LifeDrainerSystem>();
-        _faction = sysMan.GetEntitySystem<NpcFactionSystem>();
-        _pathfinding = sysMan.GetEntitySystem<PathfindingSystem>();
+        _drainer = deps.Resolve<IEntityManager>().System<LifeDrainerSystem>();
+        _faction = deps.Resolve<IEntityManager>().System<NpcFactionSystem>();
+        _pathfinding = deps.Resolve<IEntityManager>().System<PathfindingSystem>();
 
         _drainerQuery = _entMan.GetEntityQuery<LifeDrainerComponent>();
         _xformQuery = _entMan.GetEntityQuery<TransformComponent>();

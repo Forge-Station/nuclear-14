@@ -1,66 +1,84 @@
-# Что осталось после апстрима b20a6845 -> a8c25ad2
+# Что осталось по апстрим-мерджу
 
-Состояние: мердж закоммичен, конфликтов 0. `Content.Shared` собирается, кроме
-файлов, ждущих портов. `Content.Server` и `Content.Client` собрать нельзя, пока
-не соберётся `Content.Shared`, поэтому их хвосты пока не измерены.
+Состояние на коммит `1e192750ec`.
 
-## Три порта (критический путь)
+## Сборка
 
-### 1. Shitmed -> Nubody
-Апстрим влил Nubody (#42419): удалены `Content.Shared/Body/Part`, `Body/Organ`,
-`SharedBodySystem.{Body,Parts,Organs}`, `BodyPartComponent`. Вместо них граф органов
-(`OrganComponent`, `ParentOrganComponent`/`ChildOrganComponent`, `OrganRelationSystem`,
-`VisualBodyComponent`). `BodySystem.Compatibility.cs` даёт только один obsolete-хелпер.
+| проект | было после мерджа | сейчас |
+| --- | --- | --- |
+| Content.Shared | 351 (и это была занижённая цифра) | **0** |
+| Content.Server | 337 (собрать было нельзя вообще) | 87 |
+| Content.Client | не собирался | не проверялся |
 
-| | файлов |
-|---|---|
-| `Content.Shared/_Shitmed` | 117 |
-| `Content.Server/_Shitmed` | 14 |
-| `Content.Client/_Shitmed` | 19 |
-| ядровые файлы с хуками Shitmed вне `_Shitmed` | 11 |
+Content.Shared собирается. Content.Server теперь собирается настолько, что его ошибки
+наконец видны и перебираются по одной - осталось 87, по 1-4 на файл.
 
-Ошибок в `Content.Shared` от этого порта: 68.
-Дополнительно: `Actions/EntityWorldTargetActionComponent.cs` удалён (старый Actions-API),
-его надо воссоздать на модульных действиях апстрима — им пользуются
-`Resources/Prototypes/_Shitmed/Body/Actions/organactions.yml`.
+## Порядок дальше
 
-### 2. Humanoid
-`HumanoidAppearanceComponent` -> `HumanoidProfileComponent`,
-`SharedHumanoidAppearanceSystem` -> `HumanoidProfileSystem`, `SkinColor.cs` удалён,
-enum `HumanoidSkinColor` заменён на `SkinColorationPrototype` + Strategy.
+1. Добить хвост Content.Server (87 ошибок): переименованные апстримом типы и события,
+   по одному-два на файл.
+2. Собрать Content.Client впервые и разобрать его хвост.
+3. Прототипы: 328 ссылок на несуществующего родителя, см.
+   [DANGLING_PARENTS.md](DANGLING_PARENTS.md). Из 59 потерянных родителей 30 - телесные
+   прототипы, их надо переносить на органы Nubody (шаг 6 в
+   [NUBODY_PORT_DESIGN.md](NUBODY_PORT_DESIGN.md)), остальные либо вернуть из версии до
+   мерджа, либо перенаправить на апстримные имена.
+4. Прогнать `Content.YAMLLinter` - он видит не только родителей, но и любые
+   несуществующие ProtoId и поля компонентов. До сборки Server и Client он не запускается.
 
-Затронуто 38 файлов. Ошибок в `Content.Shared`: 2 (`HeightAdjustSystem`,
-`DeltaV/Harpy/HarpyVisualsSystem`), остальное — в Server/Client.
-Сюда же относится UI лобби, для которого взята апстрим-версия: список фич на
-возврат — в `LOST_FORK_FEATURES.md`.
+## Долги, принятые осознанно
 
-### 3. Эффекты и химия
-Апстрим перевёл эффекты на событийную модель: эффект объявляет только данные, а
-применяет его `EntityEffectSystem<TComp, TEffect>`; событие несёт лишь
-`(Effect, Scale, User)`. Рантайм-контекст реагента (какой реагент сработал, исходный
-раствор, метаболизированное количество) больше не передаётся - реагент и количество
-стали DataField самого эффекта.
+Это не ошибки компиляции, а места, где поведение сознательно сведено к апстримному или
+урезано. Каждое помечено в коде.
 
-- 30 форк-эффектов ещё на старом API `EntityEffect.Effect(EntityEffectBaseArgs)`
-- 33 файла используют `EntityEffectReagentArgs` - им нужен редизайн
-- 43 файла переопределяют переименованный `ReagentEffectGuidebookText`
+### Персонаж и профиль
+- `Preference.Sponsor{OOCColor,LOOCColor,GhostSkin}` и `Profile.{TtsVoice,BarkVoice}`
+  вернулись в код, но миграции EF под них нет - в базе этих колонок не будет.
+- Трейты: прототип один, а систем две. На `TraitPrototype` рядом живут форковые
+  `Points`/`Requirements`/`Functions` и апстримные `Name`/`Cost`/`Components`/`Specials`.
+  YAML уже смешанный: 63 форковых трейта с `points` против 9 апстримных с `cost`, а
+  `Traits/categories.yml` - апстримный. Выбрать одну систему и перевести данные.
+- В `Content.Client/Lobby/UI` два редактора трейтов: форковый и апстримный
+  (`Roles/TraitPreferenceSelector`). Один лишний.
 
-Сделано: `LegacyEntityEffect` (`Content.Shared/_Forge/Compat/`) адаптирует старую форму
-к новому конвейеру для эффектов, которым хватает базовых аргументов - на него переведены
-7 файлов. Для реагентных он не подходит принципиально.
+### Химия и эффекты
+- 16 форковых эффектов работают через `LegacyEntityEffect`. Количество
+  сметаболизированного реагента апстрим из рантайма убрал, поэтому эффект с
+  `scaled: true` масштабируется только от `Scale` события. Эффекты, которым нужен сам
+  реагент, надо переписывать на апстримную модель (реагент и количество - DataField).
+- `NightVisionComponent.OverlayColor` апстримный шейдер игнорирует (`COLOR` берётся из
+  текстуры экрана), так что перенесённые цвета ночного зрения пока ни на что не влияют.
 
-## Чем это измерять
-- `dotnet build Content.Shared/Content.Shared.csproj -c Debug` - текущие ошибки
-- `scratchpad/upstream-audit/PORT_CHECKLIST.md` - файлы по каждому удалённому API
-- `LOST_FORK_FEATURES.md` - что выброшено и что вернуть портом
-- `fork-side-224/` и `fork_changes_224.patch` - форк-версии разобранных вручную файлов
-- `LOST_fork_changes.patch` (53 МБ) - форк-изменения в 4725 авторазрешённых файлах
+### Тело
+- `SharedBodySystem.Nubody.cs` выражает слоты Shitmed через контейнер и связи Nubody.
+  Имена слотов остались ключами для прототипов, но ничего не адресуют. Прототипы тел
+  (~180 записей: 83 `type: Organ`, 94 `type: BodyPart`) на органы Nubody ещё не
+  переведены - это и есть 30 телесных родителей из DANGLING_PARENTS.
+- `SharedBodySystem.BodyCapacity.cs` и `HeartSystem.cs` целиком закомментированы (были
+  такими и до мерджа): целостность органов не работает.
 
-## Долги помимо портов
-- Миграция EF: в `Preference` добавлены `SponsorOOCColor/LOOCColor/GhostSkin`,
-  в `Profile` - `TtsVoice` (переименован из `Voice`) и `BarkVoice`
-- ru-RU FTL админ-вкладок перенаправить на апстримные ключи
-  (`admin-ui-atmos-*`, `administration-ui-round-tab-*-round`, `player-tab-player-count`)
-- Жажда: `ThirstComponent` ещё пишется, но `ThirstSystem` удалён апстримом в пользу
-  `SatiationSystem` - нужна миграция
-- `Content.YAMLLinter` по прототипам ещё не прогонялся
+### Прочее
+- Герметичная одежда (Goobstation) спрашивает про пристёгнутые части через помощники,
+  которые знают только одну пристёгнутую вещь - у апстрима `ToggleableClothingComponent`
+  держит одну, форк расширял до нескольких.
+- Сегменты ламии масштабируются по применённому масштабу спрайта, а не по росту и ширине
+  из профиля персонажа.
+- Форковая «ходьба по умолчанию» восстановлена с исправленной инверсией: раньше поле
+  называлось `DefaultSprinting`, а значило обратное, из-за чего мобы без разума ходили
+  шагом. Проверить, что игроки не заметят разницы.
+- Жажда у апстрима переехала в `SatiationSystem`; форковые потребители ещё нет.
+- Ключи ru-RU FTL, которые мердж перенаправил на апстримные имена, не перепроверялись.
+
+## Чем проверять
+
+```bash
+python -I scratchpad/tools/dangling_parents.py          # прототипы без родителя
+python -I scratchpad/tools/upstream_deleted.py > u.txt  # что апстрим удалил, а мы оставили
+python -I scratchpad/tools/stale_moved.py u.txt         # из этого - настоящие дубли
+python -I scratchpad/tools/dup_components.py            # компоненты с одинаковым именем класса
+python -I scratchpad/tools/add_usings.py <build.log>    # using для переехавших типов
+python -I scratchpad/tools/fix_moved_ns.py <build.log>  # переехавшие пространства имён
+```
+
+Эти проверки стоит прогонять после каждого следующего апстрим-мерджа: каждая из них
+нашла в этом мердже реальные потери, которых не видно ни в конфликтах, ни в сборке.

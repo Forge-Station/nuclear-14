@@ -26,7 +26,7 @@ namespace Content.Server._N14.Support
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly SharedAudioSystem _audio = default!;
         [Dependency] private readonly SharedTransformSystem _transform = default!;
-        [Dependency] private readonly IMapManager _mapManager = default!;
+        [Dependency] private readonly SharedMapSystem _mapSystem = default!;
         [Dependency] private readonly SharedRoofSystem _roof = default!;
 
         public override void Initialize()
@@ -69,7 +69,7 @@ namespace Content.Server._N14.Support
                     if (comp.Target.MapId == MapId.Nullspace)
                         comp.Target = _transform.GetMapCoordinates(uid);
 
-                    if (_mapManager.TryFindGridAt(comp.Target, out var gridUid, out var grid))
+                    if (_mapSystem.TryFindGridAt(comp.Target, out var gridUid, out var grid))
                     {
                         var tile = grid.WorldToTile(comp.Target.Position);
                         RoofComponent? roof = null;
@@ -103,7 +103,7 @@ namespace Content.Server._N14.Support
                     continue;
                 }
 
-                if (_mapManager.TryFindGridAt(comp.Target, out var gridUid1, out var grid1))
+                if (_mapSystem.TryFindGridAt(comp.Target, out var gridUid1, out var grid1))
                 {
                     var tile = grid1.WorldToTile(comp.Target.Position);
                     RoofComponent? roof2 = null;

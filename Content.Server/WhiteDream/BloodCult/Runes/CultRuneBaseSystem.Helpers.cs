@@ -1,4 +1,4 @@
-﻿using Content.Shared.Humanoid;
+using Content.Shared.Humanoid;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.WhiteDream.BloodCult.BloodCultist;
@@ -27,14 +27,14 @@ public sealed partial class CultRuneBaseSystem
     /// <param name="rune">The rune itself.</param>
     /// <param name="range">Radius for a lookup.</param>
     /// <param name="exlude">Filter to exlude from return.</param>
-    public HashSet<Entity<HumanoidAppearanceComponent>> GetTargetsNearRune(
+    public HashSet<Entity<HumanoidProfileComponent>> GetTargetsNearRune(
         EntityUid rune,
         float range,
-        Predicate<Entity<HumanoidAppearanceComponent>>? exlude = null
+        Predicate<Entity<HumanoidProfileComponent>>? exlude = null
     )
     {
         var runeTransform = Transform(rune);
-        var possibleTargets = _lookup.GetEntitiesInRange<HumanoidAppearanceComponent>(runeTransform.Coordinates, range);
+        var possibleTargets = _lookup.GetEntitiesInRange<HumanoidProfileComponent>(runeTransform.Coordinates, range);
         if (exlude != null)
             possibleTargets.RemoveWhere(exlude);
 

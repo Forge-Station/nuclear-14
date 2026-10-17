@@ -4,7 +4,7 @@ using Content.Server.Botany;
 using Content.Server.Chat;
 using Content.Server.Chat.Managers;
 using Content.Server.Chat.Systems;
-using Content.Server.Chemistry.Containers.EntitySystems;
+using Content.Server.Chemistry.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
 using Content.Server.Research.Systems;
 using Content.Shared.Abilities.Psionics;
@@ -25,6 +25,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Server.Chemistry.EntitySystems;
 
 namespace Content.Server.Research.Oracle;
 

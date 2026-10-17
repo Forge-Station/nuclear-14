@@ -14,7 +14,7 @@ public sealed partial class GhoulifySystem : EntitySystem
 {
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedHumanoidAppearanceSystem _humanoid = default!;
+    [Dependency] private readonly HumanoidProfileSystem _humanoid = default!;
     [Dependency] private readonly PolymorphSystem _polymorph = default!;
 
     public override void Initialize()
@@ -94,7 +94,7 @@ public sealed partial class GhoulifySystem : EntitySystem
 
     private void Ghoulify(EntityUid uid, GhoulifyComponent comp)
     {
-        if (!TryComp<HumanoidAppearanceComponent>(uid, out var humanoid))
+        if (!TryComp<HumanoidProfileComponent>(uid, out var humanoid))
             return;
         if (humanoid.Species == "Ghoul" || humanoid.Species == "GhoulGlowing")
             return;
@@ -145,7 +145,7 @@ public sealed partial class GhoulifySystem : EntitySystem
 
     private void Glowify(EntityUid uid)
     {
-        if (!TryComp<HumanoidAppearanceComponent>(uid, out var humanoid))
+        if (!TryComp<HumanoidProfileComponent>(uid, out var humanoid))
             return;
         if (humanoid.Species == "GhoulGlowing")
             return;

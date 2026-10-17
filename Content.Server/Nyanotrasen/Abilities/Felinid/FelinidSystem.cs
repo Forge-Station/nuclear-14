@@ -10,7 +10,7 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Server.Body.Components;
-using Content.Server.Chemistry.Containers.EntitySystems;
+using Content.Server.Chemistry.EntitySystems;
 using Content.Server.Medical;
 using Content.Server.Nutrition.EntitySystems;
 using Content.Server.Nutrition.Components;

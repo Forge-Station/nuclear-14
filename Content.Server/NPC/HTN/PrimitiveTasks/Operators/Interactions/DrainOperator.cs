@@ -1,4 +1,5 @@
 using Content.Server.LifeDrainer;
+using Robust.Shared.IoC;
 
 namespace Content.Server.NPC.HTN.PrimitiveTasks.Operators.Interactions;
 
@@ -12,11 +13,11 @@ public sealed partial class DrainOperator : HTNOperator
     [DataField(required: true)]
     public string DrainKey = string.Empty;
 
-    public override void Initialize(IEntitySystemManager sysManager)
+    public override void Initialize(IDependencyCollection deps)
     {
-        base.Initialize(sysManager);
+        base.Initialize(deps);
 
-        _drainer = sysManager.GetEntitySystem<LifeDrainerSystem>();
+        _drainer = deps.Resolve<IEntityManager>().System<LifeDrainerSystem>();
         _drainerQuery = _entMan.GetEntityQuery<LifeDrainerComponent>();
     }
 

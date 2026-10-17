@@ -1,6 +1,6 @@
-﻿using Content.Server.Administration.Commands;
+using Content.Server.Administration.Commands;
 using Content.Server.Ghost.Roles.Components;
-using Content.Server.Ghost.Roles.Events;
+using Content.Shared.Ghost;
 using Content.Server.Preferences.Managers;
 using Content.Server.Station.Systems;
 using Content.Shared.Mind.Components;

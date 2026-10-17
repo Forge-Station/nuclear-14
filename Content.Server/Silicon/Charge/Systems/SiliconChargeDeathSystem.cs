@@ -12,7 +12,7 @@ public sealed class SiliconDeathSystem : EntitySystem
 {
     [Dependency] private readonly SleepingSystem _sleep = default!;
     [Dependency] private readonly SiliconChargeSystem _silicon = default!;
-    [Dependency] private readonly HumanoidAppearanceSystem _humanoidAppearanceSystem = default!;
+    [Dependency] private readonly HumanoidProfileSystem _humanoidAppearanceSystem = default!;
 
     public override void Initialize()
     {
@@ -49,7 +49,7 @@ public sealed class SiliconDeathSystem : EntitySystem
         EntityManager.EnsureComponent<SleepingComponent>(uid);
         EntityManager.EnsureComponent<ForcedSleepingComponent>(uid);
 
-        if (TryComp<HumanoidAppearanceComponent>(uid, out var humanoidAppearanceComponent))
+        if (TryComp<HumanoidProfileComponent>(uid, out var humanoidAppearanceComponent))
         {
             var layers = HumanoidVisualLayersExtension.Sublayers(HumanoidVisualLayers.HeadSide);
             _humanoidAppearanceSystem.SetLayersVisibility(uid, layers, false, true, humanoidAppearanceComponent);

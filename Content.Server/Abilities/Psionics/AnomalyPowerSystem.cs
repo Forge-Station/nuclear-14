@@ -13,10 +13,11 @@ using Content.Server.Emp;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Throwing;
-using Content.Server.Chemistry.Containers.EntitySystems;
+using Content.Server.Chemistry.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
+using Content.Server.Chemistry.EntitySystems;
 
 namespace Content.Server.Abilities.Psionics;
 

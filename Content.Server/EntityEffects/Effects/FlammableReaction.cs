@@ -16,12 +16,8 @@ namespace Content.Server.EntityEffects.Effects
         [DataField]
         public float MultiplierOnExisting = 1f;
 
-        public override bool ShouldLog => true;
-
         protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
             => Loc.GetString("reagent-effect-guidebook-flammable-reaction", ("chance", Probability));
-
-        public override LogImpact LogImpact => LogImpact.Medium;
 
         public override void Effect(EntityEffectBaseArgs args)
         {

@@ -50,11 +50,8 @@ public sealed partial class ExplosionReactionEffect : LegacyEntityEffect
     [JsonIgnore]
     public float IntensityPerUnit = 1;
 
-    public override bool ShouldLog => true;
-
     protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
         => Loc.GetString("reagent-effect-guidebook-explosion-reaction-effect", ("chance", Probability));
-    public override LogImpact LogImpact => LogImpact.High;
 
     public override void Effect(EntityEffectBaseArgs args)
     {

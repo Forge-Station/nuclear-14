@@ -7,6 +7,7 @@ using Content.Shared._Forge.Warfront.Components;
 using Content.Shared.GameTicking.Components;
 using Robust.Shared.Maths;
 using Content.Shared.GameTicking;
+using Content.Shared.GameTicking.Rules;
 
 namespace Content.Server._Forge.Warfront.GameRule;
 
@@ -81,13 +82,10 @@ public sealed class WarfrontRuleSystem : GameRuleSystem<WarfrontRuleComponent>
         _roundEnd.EndRound(restartDelay);
     }
 
-    protected override void AppendRoundEndText(EntityUid uid,
-        WarfrontRuleComponent component,
-        GameRuleComponent gameRule,
-        ref RoundEndTextAppendEvent args)
+    protected override void AppendRoundEndText(Entity<WarfrontRuleComponent> rule, ref RoundEndTextAppendEvent args)
     {
-        args.AddLine(component.Winner != null
-            ? Loc.GetString("warfront-round-end-winner", ("faction", GetFactionName(component.Winner.Value)))
+        args.AddLine(rule.Comp.Winner != null
+            ? Loc.GetString("warfront-round-end-winner", ("faction", GetFactionName(rule.Comp.Winner.Value)))
             : Loc.GetString("warfront-round-end-no-winner"));
     }
 

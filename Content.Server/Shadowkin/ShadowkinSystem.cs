@@ -12,6 +12,7 @@ using Content.Shared.Rounding;
 using Content.Shared.Actions;
 using Robust.Shared.Prototypes;
 using Content.Server.Abilities.Psionics;
+using Content.Server.Damage.Systems;
 
 namespace Content.Server.Shadowkin;
 
