@@ -6,6 +6,15 @@
   name: job-name-ncr-mp-investegator
   description: job-description-ncr-mp-investegator
   playTimeTracker: NCRMPinvestigator
+  #Forge-Change-Start
+  ranks:
+    - rank: NCRJuniorLieutenant
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRMPinvestigator
+          min: 144000 # 2400 minutes
+    - rank: NCRSergeant
+  #Forge-Change-End
   requirements:
     - !type:CharacterWhitelistRequirement
     - !type:CharacterSpeciesRequirement

@@ -6,6 +6,25 @@
   name: job-name-ncr-sgt
   description: job-description-ncr-sgt
   playTimeTracker: NCRNCO
+  #Forge-Change-Start
+  ranks:
+    - rank: NCRSergeantMajor
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRNCO
+          min: 216000 # 3600 minutes
+    - rank: NCRMasterSergeant
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRNCO
+          min: 144000 # 2400 minutes
+    - rank: NCRSeniorSergeant
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRNCO
+          min: 72000 # 1200 minutes
+    - rank: NCRSergeant
+  #Forge-Change-End
   requirements:
     - !type:CharacterSpeciesRequirement
       species:
