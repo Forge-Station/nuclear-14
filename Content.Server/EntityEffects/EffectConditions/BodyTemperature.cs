@@ -20,7 +20,7 @@ public sealed partial class Temperature : EntityEffectCondition
     {
         if (args.EntityManager.TryGetComponent(args.TargetEntity, out TemperatureComponent? temp))
         {
-            if (temp.CurrentTemperature > Min && temp.CurrentTemperature < Max)
+            if (temp.Temperature > Min && temp.Temperature < Max)
                 return true;
         }
 

@@ -44,14 +44,14 @@ public sealed class PseudoItemSystem : SharedPseudoItemSystem
         if (!CheckItemFits((uid, component), (args.Using.Value, targetStorage)))
             return;
 
-        if (args.Hands?.ActiveHandEntity == null)
+        if (args.Hands?.ActiveHandId == null)
             return;
 
         AlternativeVerb verb = new()
         {
             Act = () =>
             {
-                StartInsertDoAfter(args.User, uid, args.Hands.ActiveHandEntity.Value, component);
+                StartInsertDoAfter(args.User, uid, args.Hands.ActiveHandId.Value, component);
             },
             Text = Loc.GetString("action-name-insert-other", ("target", Identity.Entity(args.Target, EntityManager))),
             Priority = 2

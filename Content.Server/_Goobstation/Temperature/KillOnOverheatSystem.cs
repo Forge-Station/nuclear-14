@@ -22,7 +22,7 @@ public sealed class KillOnOverheatSystem : EntitySystem
         while (query.MoveNext(out var uid, out var comp, out var temp, out var mob))
         {
             if (mob.CurrentState == MobState.Dead
-                || temp.CurrentTemperature < comp.OverheatThreshold
+                || temp.Temperature < comp.OverheatThreshold
                 || HasComp<GodmodeComponent>(uid))
                 continue;
 

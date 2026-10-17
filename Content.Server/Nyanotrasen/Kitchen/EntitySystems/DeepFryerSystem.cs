@@ -218,7 +218,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
         if (TryComp<TemperatureComponent>(item, out var tempComp))
         {
             // Push the temperature towards what it should be but no higher.
-            var delta = (component.PoweredTemperature - tempComp.CurrentTemperature) * _temperature.GetHeatCapacity(item, tempComp);
+            var delta = (component.PoweredTemperature - tempComp.Temperature) * _temperature.GetHeatCapacity(item, tempComp);
 
             if (delta > 0f)
                 _temperature.ChangeHeat(item, delta, false, tempComp);
@@ -574,7 +574,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
         if (!TryComp<HandsComponent>(user, out var handsComponent))
             return false;
 
-        heldItem = handsComponent.ActiveHandEntity;
+        heldItem = handsComponent.ActiveHandId;
 
         if (heldItem == null ||
             !TryComp<SolutionTransferComponent>(heldItem, out var solutionTransferComponent) ||

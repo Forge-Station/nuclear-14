@@ -83,10 +83,10 @@ public sealed partial class DeepFryerSystem
         var user = EntityManager.GetEntity(args.Entity);
 
         if (!TryComp<HandsComponent>(user, out var handsComponent) ||
-            handsComponent.ActiveHandEntity == null)
+            handsComponent.ActiveHandId == null)
             return;
 
-        if (handsComponent.ActiveHandEntity != null)
-            TryInsertItem(uid, component, user, handsComponent.ActiveHandEntity.Value);
+        if (handsComponent.ActiveHandId != null)
+            TryInsertItem(uid, component, user, handsComponent.ActiveHandId.Value);
     }
 }
