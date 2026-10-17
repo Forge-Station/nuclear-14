@@ -16,7 +16,7 @@ namespace Content.Server.Database.Migrations.Postgres
 {
     [DbContext(typeof(PostgresServerDbContext))]
     [Migration("20241018043329_RoleWhitelist")]
-    partial class RoleWhitelist
+    partial class ForkRoleWhitelist
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

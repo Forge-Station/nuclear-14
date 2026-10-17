@@ -6,6 +6,7 @@ using Content.Shared.Lathe;
 using Content.Shared.Materials;
 using Robust.Server.GameStates;
 using Robust.Shared.Timing;
+using Content.Shared.Station.Components;
 
 namespace Content.Server.Materials;
 

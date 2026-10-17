@@ -2,14 +2,17 @@ using Content.Shared.StatusEffect;
 using Content.Shared.Abilities.Psionics;
 using Content.Shared.Damage;
 using Content.Shared.Revenant.Components;
-using Content.Server.Guardian;
-using Content.Server.Bible.Components;
+using Content.Shared.Guardian;
+using Content.Shared.Bible.Components;
 using Content.Server.Popups;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Content.Shared.Actions.Events;
 using Robust.Shared.Audio.Systems;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Bible.Components;
+using Content.Shared.Guardian;
+using Content.Shared.Guardian.Components;
 
 namespace Content.Server.Abilities.Psionics
 {

@@ -1,3 +1,4 @@
+using Content.Shared.FixedPoint;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.EntityEffects;
@@ -10,16 +11,32 @@ namespace Content.Shared.EntityEffects;
 /// the old shape - a single <see cref="Effect"/> call with
 /// <see cref="EntityEffectBaseArgs"/> - working on top of the new pipeline.
 ///
-/// It can only supply the base arguments. Effects that relied on the runtime reagent
-/// context (<c>EntityEffectReagentArgs</c>: which reagent fired, the source solution,
-/// the metabolised quantity) cannot use this and need porting to upstream's model, where
-/// the reagent and quantity are DataFields on the effect and only Scale comes from the event.
+/// Upstream's event carries only the scale, so the arguments handed to the effect carry
+/// the scale and nothing else: which reagent fired, the source solution and the
+/// metabolised quantity are no longer known at the moment the effect runs - upstream
+/// expresses them as DataFields on the effect itself. Quantity is therefore passed as 1,
+/// which means a fork effect with <c>scaled: true</c> now scales by the event's scale
+/// alone instead of by the metabolised amount. Effects that need the real reagent still
+/// have to be ported to upstream's model.
 /// </summary>
 public abstract partial class LegacyEntityEffect : EntityEffect
 {
     public override void RaiseEvent(EntityUid target, IEntityEffectRaiser raiser, float scale, EntityUid? user)
     {
-        Effect(new EntityEffectBaseArgs(target, IoCManager.Resolve<IEntityManager>()));
+        var entMan = IoCManager.Resolve<IEntityManager>();
+
+        // Передаём именно реагентные аргументы: форковые эффекты проверяют их тип,
+        // чтобы учесть масштаб. Из рантайма апстрим оставил только Scale, поэтому
+        // Quantity здесь всегда 1 - см. замечание о количестве выше.
+        Effect(new EntityEffectReagentArgs(
+            target,
+            entMan,
+            organEntity: null,
+            source: null,
+            quantity: FixedPoint2.New(1),
+            reagent: null,
+            method: null,
+            scale: FixedPoint2.New(scale)));
     }
 
     /// <summary>

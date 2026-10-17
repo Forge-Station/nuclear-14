@@ -1,5 +1,6 @@
 ﻿using Content.Server.Nutrition.Components;
 using Content.Shared.Clothing;
+using Content.Shared.Nutrition.Components;
 
 namespace Content.Server.Nutrition.EntitySystems;
 

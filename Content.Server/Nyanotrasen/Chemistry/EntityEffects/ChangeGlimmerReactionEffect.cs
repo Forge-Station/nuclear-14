@@ -6,7 +6,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.Chemistry.ReactionEffects;
 
 [DataDefinition]
-public sealed partial class ChangeGlimmerReactionEffect : EntityEffect
+public sealed partial class ChangeGlimmerReactionEffect : LegacyEntityEffect
 {
     protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
         => Loc.GetString("reagent-effect-guidebook-change-glimmer-reaction-effect", ("chance", Probability),

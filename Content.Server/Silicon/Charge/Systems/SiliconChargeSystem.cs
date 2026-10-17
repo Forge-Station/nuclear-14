@@ -13,13 +13,15 @@ using Content.Server.Body.Components;
 using Robust.Shared.Containers;
 using Content.Shared.Mind.Components;
 using System.Diagnostics.CodeAnalysis;
-using Content.Server.PowerCell;
+using Content.Shared.PowerCell;
 using Robust.Shared.Timing;
 using Robust.Shared.Configuration;
 using Robust.Shared.Utility;
 using Content.Shared.CCVar;
 using Content.Shared.PowerCell.Components;
 using Content.Shared.Alert;
+using Content.Shared.Power.Components;
+using Content.Shared.PowerCell;
 
 namespace Content.Server.Silicon.Charge;
 

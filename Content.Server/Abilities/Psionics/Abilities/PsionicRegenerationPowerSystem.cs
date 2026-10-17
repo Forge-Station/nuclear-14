@@ -14,6 +14,7 @@ using static Content.Shared.Examine.ExamineSystemShared;
 using Robust.Shared.Timing;
 using Content.Shared.Actions.Events;
 using Robust.Server.Audio;
+using Content.Shared.Body.Systems;
 
 namespace Content.Server.Abilities.Psionics
 {

@@ -9,6 +9,7 @@ using Robust.Server.Player;
 using Robust.Shared.Configuration;
 using Robust.Shared.Network;
 using Robust.Shared.Timing;
+using Content.Shared.GameTicking;
 
 namespace Content.Server.Ghost;
 

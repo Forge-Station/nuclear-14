@@ -27,6 +27,7 @@ using Content.Shared.Language.Components;
 using Content.Shared.Nutrition.Components;
 using Robust.Shared.Enums;
 using Content.Shared.Damage.Components;
+using Content.Shared.Body.Components;
 
 namespace Content.Server.Cloning;
 

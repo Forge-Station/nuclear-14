@@ -28,6 +28,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
 using Content.Shared.Antag.Components;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.Antag;
 

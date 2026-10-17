@@ -10,7 +10,7 @@ namespace Content.Server.EntityEffects.Effects;
 /// Default metabolism for drink reagents. Attempts to find a ThirstComponent on the target,
 /// and to update it's thirst values.
 /// </summary>
-public sealed partial class SatiateThirst : EntityEffect
+public sealed partial class SatiateThirst : LegacyEntityEffect
 {
     private const float DefaultHydrationFactor = 3.0f;
 

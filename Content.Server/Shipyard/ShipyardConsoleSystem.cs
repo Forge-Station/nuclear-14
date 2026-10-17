@@ -6,6 +6,8 @@ using Content.Shared.Shipyard;
 using Content.Shared.Shipyard.Prototypes;
 using Content.Shared.Whitelist;
 using Robust.Shared.Random;
+using Content.Shared.Cargo.Components;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.Shipyard;
 

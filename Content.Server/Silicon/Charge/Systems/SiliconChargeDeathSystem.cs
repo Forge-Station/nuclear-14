@@ -4,6 +4,7 @@ using Content.Shared.Bed.Sleep;
 using Content.Server.Silicon.Charge;
 using Content.Server.Humanoid;
 using Content.Shared.Humanoid;
+using Content.Shared.Power.Components;
 
 namespace Content.Server.Silicon.Death;
 

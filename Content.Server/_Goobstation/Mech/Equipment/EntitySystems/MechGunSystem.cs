@@ -7,6 +7,7 @@ using Content.Shared.Mech.Equipment.Components;
 using Content.Shared.Throwing;
 using Content.Shared.Weapons.Ranged.Components;
 using Robust.Shared.Random;
+using Content.Shared.Power.Components;
 
 namespace Content.Server.Mech.Equipment.EntitySystems;
 public sealed class MechGunSystem : EntitySystem

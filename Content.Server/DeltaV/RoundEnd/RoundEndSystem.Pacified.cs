@@ -1,5 +1,5 @@
 using Content.Server.Explosion.Components;
-using Content.Server.Flash.Components;
+using Content.Shared.Flash.Components;
 using Content.Server.GameTicking;
 using Content.Server.Popups;
 using Content.Server.Store.Components;
@@ -13,6 +13,7 @@ using Content.Shared.Flash.Components;
 using Content.Shared.Store.Components;
 using Robust.Server.Player;
 using Robust.Shared.Configuration;
+using Content.Shared.GameTicking;
 
 namespace Content.Server.DeltaV.RoundEnd;
 

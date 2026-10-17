@@ -6,6 +6,7 @@ using Content.Shared.VendingMachines;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Shared.VendingMachines.Components;
 
 namespace Content.Server.Advertise.EntitySystems;
 

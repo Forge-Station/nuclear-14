@@ -8,7 +8,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.Chemistry.ReagentEffects;
 
 [UsedImplicitly]
-public sealed partial class PurifyEvil : EntityEffect
+public sealed partial class PurifyEvil : LegacyEntityEffect
 {
     [DataField]
     public float Amplitude = 10.0f;

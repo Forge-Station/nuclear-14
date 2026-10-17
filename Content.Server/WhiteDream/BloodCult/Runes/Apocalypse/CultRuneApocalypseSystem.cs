@@ -8,6 +8,7 @@ using Content.Shared.WhiteDream.BloodCult.Runes;
 using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
+using Content.Shared.GameTicking;
 
 namespace Content.Server.WhiteDream.BloodCult.Runes.Apocalypse;
 

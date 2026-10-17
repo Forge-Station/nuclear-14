@@ -9,10 +9,11 @@ using Robust.Shared.Utility;
 using Content.Server.Silicon.Charge;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Popups;
-using Content.Server.PowerCell;
+using Content.Shared.PowerCell;
 using Content.Shared.Popups;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
+using Content.Shared.Power.Components;
 
 namespace Content.Server.Power;
 

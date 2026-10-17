@@ -1,6 +1,6 @@
 using Content.Server.DoAfter;
 using Content.Server.Popups;
-using Content.Server.PowerCell;
+using Content.Shared.PowerCell;
 using Content.Shared.Damage;
 using Content.Shared.DoAfter;
 using Content.Shared.Drugs;
@@ -15,6 +15,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Content.Shared.Damage.Components;
+using Content.Shared.PowerCell;
 
 namespace Content.Server.Medical;
 /// <summary>

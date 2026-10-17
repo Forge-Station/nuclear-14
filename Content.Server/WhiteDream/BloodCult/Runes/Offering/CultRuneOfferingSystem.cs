@@ -1,5 +1,5 @@
 using System.Linq;
-using Content.Server.Bible.Components;
+using Content.Shared.Bible.Components;
 using Content.Server.Body.Systems;
 using Content.Server.Cuffs;
 using Content.Server.Mind;
@@ -13,6 +13,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.StatusEffect;
 using Content.Shared.WhiteDream.BloodCult.BloodCultist;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Body;
 
 namespace Content.Server.WhiteDream.BloodCult.Runes.Offering;
 

@@ -9,6 +9,8 @@ using Content.Shared.Emag.Systems;
 using Robust.Shared.Timing;
 using Content.Server.Station.Components;
 using Content.Server.Station.Systems;
+using Content.Shared.GameTicking;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.StationEvents.Events;
 

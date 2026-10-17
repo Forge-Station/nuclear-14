@@ -12,7 +12,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteServerDbContext))]
     [Migration("20241018043307_RoleWhitelist")]
-    partial class RoleWhitelist
+    partial class ForkRoleWhitelist
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

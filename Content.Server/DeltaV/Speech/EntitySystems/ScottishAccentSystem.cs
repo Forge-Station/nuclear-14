@@ -3,6 +3,8 @@ using Content.Server.Speech;
 using Content.Server.Speech.EntitySystems;
 using System.Text.RegularExpressions;
 using System.Linq;
+using Content.Shared.Speech.EntitySystems;
+using Content.Shared.Speech;
 
 namespace Content.Server.DeltaV.Speech.EntitySystems;
 

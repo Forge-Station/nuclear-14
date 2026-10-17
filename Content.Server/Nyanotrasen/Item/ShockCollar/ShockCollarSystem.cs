@@ -4,6 +4,7 @@ using Content.Server.Explosion.EntitySystems; // Why is trigger under explosions
 using Content.Server.Electrocution;
 using Robust.Shared.Containers;
 using Content.Shared.Timing.Systems;
+using Content.Shared.Trigger;
 
 namespace Content.Server.ShockCollar;
 

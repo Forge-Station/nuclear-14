@@ -4,7 +4,7 @@ using Content.Server.Cargo.Systems;
 using Content.Server.Chat.Systems;
 using Content.Server.Damage.Components;
 using Content.Server.Destructible.Thresholds.Behaviors;
-using Content.Server.Destructible.Thresholds.Triggers;
+using Content.Shared.Destructible.Thresholds.Triggers;
 using Content.Server.Destructible.Thresholds;
 using Content.Server.Destructible;
 using Content.Server.Mind;
@@ -45,6 +45,7 @@ using Content.Shared.Mail;
 using Timer = Robust.Shared.Timing.Timer;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.Mail.Systems
 {

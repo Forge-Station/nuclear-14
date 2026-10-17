@@ -6,6 +6,7 @@ using Robust.Server.Audio;
 using Robust.Shared.Audio;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
+using Content.Shared.Chat;
 
 namespace Content.Server._NC.Speech.Synthesis.System;
 

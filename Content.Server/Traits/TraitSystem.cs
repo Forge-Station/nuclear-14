@@ -22,6 +22,7 @@ using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Utility;
 using Timer = Robust.Shared.Timing.Timer;
 using Content.Server._NC.Sponsor; // Forge-Change
+using Content.Shared.GameTicking;
 
 namespace Content.Server.Traits;
 

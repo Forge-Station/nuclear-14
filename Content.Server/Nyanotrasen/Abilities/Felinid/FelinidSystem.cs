@@ -22,6 +22,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Prototypes;
+using Content.Shared.Medical;
 
 namespace Content.Server.Abilities.Felinid;
 

@@ -9,6 +9,9 @@ using Robust.Shared.Configuration;
 using Robust.Shared.EntitySerialization;
 using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Utility;
+using Content.Shared.Shuttles.Components;
+using Content.Shared.Station.Components;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.Shipyard;
 

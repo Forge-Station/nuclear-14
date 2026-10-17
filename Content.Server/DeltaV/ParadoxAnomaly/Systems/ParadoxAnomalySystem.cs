@@ -1,6 +1,6 @@
 using Content.Server.Clothing.Systems;
 using Content.Server.DeltaV.ParadoxAnomaly.Components;
-using Content.Server.DetailExaminable;
+using Content.Shared.DetailExaminable;
 using Content.Server.GenericAntag;
 using Content.Server.Ghost.Roles;
 using Content.Server.Ghost.Roles.Components;
@@ -18,6 +18,7 @@ using Content.Shared.Roles.Jobs;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using System.Diagnostics.CodeAnalysis;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.DeltaV.ParadoxAnomaly.Systems;
 

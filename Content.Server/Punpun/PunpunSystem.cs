@@ -5,6 +5,7 @@ using Content.Shared.Inventory;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Robust.Server.GameObjects;
+using Content.Shared.GameTicking;
 
 namespace Content.Server.Punpun;
 

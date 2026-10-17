@@ -38,6 +38,9 @@ using Robust.Shared.Random;
 using Robust.Shared.Utility;
 using Content.Shared.NPC.Systems;
 using Content.Shared.Antag.Components;
+using Content.Shared.Body;
+using Content.Shared.GameTicking;
+using Content.Shared.Roles;
 
 
 namespace Content.Server.WhiteDream.BloodCult.Gamerule;

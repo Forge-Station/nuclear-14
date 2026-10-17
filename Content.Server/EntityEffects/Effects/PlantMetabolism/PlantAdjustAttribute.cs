@@ -1,8 +1,9 @@
-using Content.Server.Botany.Components;
+using Content.Shared.Botany.Components;
 using Content.Shared.EntityEffects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using System.Diagnostics.CodeAnalysis;
+using Content.Shared.Botany.Components;
 
 namespace Content.Server.EntityEffects.Effects.PlantMetabolism;
 

@@ -1,6 +1,6 @@
 using Content.Server.Lightning;
 using Content.Server.Popups;
-using Content.Server.PowerCell;
+using Content.Shared.PowerCell;
 using Content.Server.Silicon.Charge;
 using Content.Shared.Silicon.DeadStartupButton;
 using Content.Shared.Audio;
@@ -12,6 +12,7 @@ using Content.Shared.Mobs.Systems;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
 using Content.Shared.Damage.Components;
+using Content.Shared.PowerCell;
 
 namespace Content.Server.Silicon.DeadStartupButtonSystem;
 

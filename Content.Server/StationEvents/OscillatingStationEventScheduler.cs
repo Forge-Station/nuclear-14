@@ -9,6 +9,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Shared.GameTicking;
 
 namespace Content.Server.StationEvents;
 

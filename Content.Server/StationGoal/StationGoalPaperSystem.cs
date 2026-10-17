@@ -10,6 +10,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Content.Shared.Dataset;
 using Content.Shared.Fax.Components;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.StationGoal;
 

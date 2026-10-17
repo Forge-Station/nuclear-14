@@ -4,6 +4,7 @@ using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Shared.Electrocution;
 using Robust.Shared.Random;
+using Content.Shared.Power.Components;
 
 namespace Content.Server.Power.Systems;
 

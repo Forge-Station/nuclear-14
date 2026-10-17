@@ -22,6 +22,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Serialization.Manager;
+using Content.Shared.GameTicking;
 
 namespace Content.Server.Clothing.Systems;
 

@@ -10,6 +10,8 @@ using Content.Shared.Psionics.Glimmer;
 using Content.Shared.Abilities.Psionics;
 using Content.Shared.NPC.Components;
 using Robust.Shared.Map;
+using Content.Shared.GameTicking;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.StationEvents.Events;
 

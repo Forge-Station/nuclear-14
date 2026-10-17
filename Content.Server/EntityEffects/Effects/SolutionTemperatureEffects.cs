@@ -8,7 +8,7 @@ namespace Content.Server.EntityEffects.Effects;
 ///     Sets the temperature of the solution involved with the reaction to a new value.
 /// </summary>
 [DataDefinition]
-public sealed partial class SetSolutionTemperatureEffect : EntityEffect
+public sealed partial class SetSolutionTemperatureEffect : LegacyEntityEffect
 {
     /// <summary>
     ///     The temperature to set the solution to.
@@ -41,7 +41,7 @@ public sealed partial class SetSolutionTemperatureEffect : EntityEffect
 ///     Adjusts the temperature of the solution involved in the reaction.
 /// </summary>
 [DataDefinition]
-public sealed partial class AdjustSolutionTemperatureEffect : EntityEffect
+public sealed partial class AdjustSolutionTemperatureEffect : LegacyEntityEffect
 {
     /// <summary>
     ///     The change in temperature.
@@ -89,7 +89,7 @@ public sealed partial class AdjustSolutionTemperatureEffect : EntityEffect
 /// <summary>
 ///     Adjusts the thermal energy of the solution involved in the reaction.
 /// </summary>
-public sealed partial class AdjustSolutionThermalEnergyEffect : EntityEffect
+public sealed partial class AdjustSolutionThermalEnergyEffect : LegacyEntityEffect
 {
     /// <summary>
     ///     The change in energy.

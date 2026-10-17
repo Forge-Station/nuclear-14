@@ -9,7 +9,7 @@ namespace Content.Server.EntityEffects.Effects;
 /// Basically smoke and foam reactions.
 /// </summary>
 [UsedImplicitly]
-public sealed partial class ChemCleanBloodstream : EntityEffect
+public sealed partial class ChemCleanBloodstream : LegacyEntityEffect
 {
     [DataField]
     public float CleanseRate = 3.0f;

@@ -2,6 +2,7 @@ using Content.Server._Goobstation.Interaction.Components;
 using Content.Server.Popups;
 using Content.Server.Station.Systems;
 using Content.Shared._Goobstation.Interaction;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server._Goobstation.Interaction.Systems;
 

@@ -16,7 +16,7 @@ namespace Content.Server.Database.Migrations.Postgres
 {
     [DbContext(typeof(PostgresServerDbContext))]
     [Migration("20240505230501_Loadouts")]
-    partial class Loadouts
+    partial class ForkLoadouts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

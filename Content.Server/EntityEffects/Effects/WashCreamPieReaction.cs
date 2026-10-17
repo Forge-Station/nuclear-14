@@ -8,7 +8,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.EntityEffects.Effects;
 
 [UsedImplicitly]
-public sealed partial class WashCreamPieReaction : EntityEffect
+public sealed partial class WashCreamPieReaction : LegacyEntityEffect
 {
     protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
         => Loc.GetString("reagent-effect-guidebook-wash-cream-pie-reaction", ("chance", Probability));

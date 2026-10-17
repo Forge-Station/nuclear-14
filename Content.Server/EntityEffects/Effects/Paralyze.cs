@@ -4,7 +4,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server.EntityEffects.Effects;
 
-public sealed partial class Paralyze : EntityEffect
+public sealed partial class Paralyze : LegacyEntityEffect
 {
     [DataField] public double ParalyzeTime = 2;
 

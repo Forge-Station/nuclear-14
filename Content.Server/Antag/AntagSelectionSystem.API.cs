@@ -11,6 +11,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Enums;
 using Robust.Shared.Player;
 using Content.Shared.Antag.Components;
+using Content.Shared.Antag;
 
 namespace Content.Server.Antag;
 

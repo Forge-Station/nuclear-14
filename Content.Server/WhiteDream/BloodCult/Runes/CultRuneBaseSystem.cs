@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Numerics;
-using Content.Server.Bible.Components;
+using Content.Shared.Bible.Components;
 using Content.Server.Chat.Systems;
 using Content.Server.Chemistry.Components;
 using Content.Server.DoAfter;

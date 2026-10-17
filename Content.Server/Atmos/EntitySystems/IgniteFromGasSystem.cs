@@ -10,6 +10,7 @@ using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Atmos.Components;
 
 namespace Content.Server.Atmos.EntitySystems;
 

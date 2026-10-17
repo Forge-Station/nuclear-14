@@ -59,6 +59,7 @@ using Robust.Shared.Timing;
 using Robust.Shared.Physics.Components;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Cargo;
 
 namespace Content.Server.Nyanotrasen.Kitchen.EntitySystems;
 

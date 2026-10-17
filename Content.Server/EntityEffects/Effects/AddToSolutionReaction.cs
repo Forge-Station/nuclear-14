@@ -6,7 +6,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.EntityEffects.Effects
 {
     [UsedImplicitly]
-    public sealed partial class AddToSolutionReaction : EntityEffect
+    public sealed partial class AddToSolutionReaction : LegacyEntityEffect
     {
         [DataField("solution")]
         private string _solution = "reagents";

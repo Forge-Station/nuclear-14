@@ -9,7 +9,7 @@ namespace Content.Server.EntityEffects.Effects;
 ///     Adds a moodlet to an entity.
 /// </summary>
 [UsedImplicitly]
-public sealed partial class ChemAddMoodlet : EntityEffect
+public sealed partial class ChemAddMoodlet : LegacyEntityEffect
 {
     protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
     {

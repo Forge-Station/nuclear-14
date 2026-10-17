@@ -10,7 +10,7 @@ namespace Content.Server.Chemistry.ReagentEffects
     /// Rerolls psionics once.
     /// </summary>
     [UsedImplicitly]
-    public sealed partial class ChemRerollPsionic : EntityEffect
+    public sealed partial class ChemRerollPsionic : LegacyEntityEffect
     {
         protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
             => Loc.GetString("reagent-effect-guidebook-chem-reroll-psionic", ("chance", Probability));

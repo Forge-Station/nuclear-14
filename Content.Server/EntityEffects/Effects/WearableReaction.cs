@@ -9,7 +9,7 @@ namespace Content.Server.EntityEffects.Effects.Effects;
 /// A reaction effect that spawns a PrototypeID in the entity's Slot, and attempts to consume the reagent if EntityEffectReagentArgs.
 /// Used to implement the water droplet effect for arachnids.
 /// </summary>
-public sealed partial class WearableReaction : EntityEffect
+public sealed partial class WearableReaction : LegacyEntityEffect
 {
     /// <summary>
     /// Minimum quantity of reagent required to trigger this effect.

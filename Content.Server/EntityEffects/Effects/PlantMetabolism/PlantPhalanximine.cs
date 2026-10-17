@@ -1,4 +1,4 @@
-using Content.Server.Botany.Components;
+using Content.Shared.Botany.Components;
 using Content.Shared.EntityEffects;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;

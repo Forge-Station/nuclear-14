@@ -7,7 +7,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.EntityEffects.Effects
 {
     [UsedImplicitly]
-    public sealed partial class ExtinguishReaction : EntityEffect
+    public sealed partial class ExtinguishReaction : LegacyEntityEffect
     {
         /// <summary>
         ///     Amount of firestacks reduced.

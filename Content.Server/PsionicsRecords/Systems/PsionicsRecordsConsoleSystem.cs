@@ -2,7 +2,7 @@ using Content.Server.Popups;
 using Content.Server.Radio.EntitySystems;
 using Content.Server.Station.Systems;
 using Content.Server.StationRecords;
-using Content.Server.StationRecords.Systems;
+using Content.Shared.StationRecords.Systems;
 using Content.Shared.Access.Systems;
 using Content.Shared.PsionicsRecords;
 using Content.Shared.PsionicsRecords.Components;
@@ -13,6 +13,7 @@ using Robust.Server.GameObjects;
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Psionics.Components;
+using Content.Shared.Station.Systems;
 
 /// <summary>
 /// EVERYTHING HERE IS A MODIFIED VERSION OF CRIMINAL RECORDS

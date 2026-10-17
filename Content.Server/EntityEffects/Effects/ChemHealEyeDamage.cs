@@ -9,7 +9,7 @@ namespace Content.Server.EntityEffects.Effects;
 /// Heal or apply eye damage
 /// </summary>
 [UsedImplicitly]
-public sealed partial class ChemHealEyeDamage : EntityEffect
+public sealed partial class ChemHealEyeDamage : LegacyEntityEffect
 {
     /// <summary>
     /// How much eye damage to add.

@@ -6,6 +6,7 @@ using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Contests;
 using Content.Shared.HeightAdjust;
 using Robust.Shared.Configuration;
+using Content.Shared.Body.Systems;
 
 namespace Content.Server.HeightAdjust;
 

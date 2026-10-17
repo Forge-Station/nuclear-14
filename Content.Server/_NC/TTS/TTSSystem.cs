@@ -14,6 +14,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Content.Shared.Chat;
 
 
 namespace Content.Server._NC.TTS;

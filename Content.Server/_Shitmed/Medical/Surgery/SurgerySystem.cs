@@ -25,6 +25,7 @@ using Robust.Shared.Utility;
 using System.Linq;
 using Content.Shared.Verbs;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Body;
 
 namespace Content.Server._Shitmed.Medical.Surgery;
 

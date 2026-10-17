@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 namespace Content.Server.EntityEffects.Effects;
 
 [DataDefinition]
-public sealed partial class ExplosionReactionEffect : EntityEffect
+public sealed partial class ExplosionReactionEffect : LegacyEntityEffect
 {
     /// <summary>
     ///     The type of explosion. Determines damage types and tile break chance scaling.

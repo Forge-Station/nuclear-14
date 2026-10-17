@@ -12,7 +12,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteServerDbContext))]
     [Migration("20240505230431_Loadouts")]
-    partial class Loadouts
+    partial class ForkLoadouts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

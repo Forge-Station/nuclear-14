@@ -20,6 +20,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.Chemistry.Reagent;
 using Robust.Server.Audio;
+using Content.Shared.Body.Components;
 
 namespace Content.Server.Chemistry.EntitySystems;
 

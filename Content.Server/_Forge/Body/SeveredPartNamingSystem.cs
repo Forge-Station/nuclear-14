@@ -1,6 +1,7 @@
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Part;
 using Content.Shared._Shitmed.Body.Events;
+using Content.Shared.Body;
 
 namespace Content.Server._Forge.Body;
 

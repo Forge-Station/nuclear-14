@@ -5,7 +5,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server.EntityEffects.Effects;
 
-public sealed partial class ModifyBleedAmount : EntityEffect
+public sealed partial class ModifyBleedAmount : LegacyEntityEffect
 {
     [DataField]
     public bool Scaled = false;

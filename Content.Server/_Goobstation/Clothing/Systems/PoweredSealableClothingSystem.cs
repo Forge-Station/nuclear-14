@@ -1,5 +1,5 @@
 using Content.Server.Power.EntitySystems;
-using Content.Server.PowerCell;
+using Content.Shared.PowerCell;
 using Content.Shared._Goobstation.Clothing.Components;
 using Content.Shared._Goobstation.Clothing.Systems;
 using Content.Shared.Alert;

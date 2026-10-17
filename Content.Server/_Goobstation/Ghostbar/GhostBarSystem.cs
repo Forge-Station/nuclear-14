@@ -20,6 +20,9 @@ using Content.Server.Traits; // Einstein Engines
 using Content.Shared.Mindshield.Components;
 using Content.Shared.Players;
 using Content.Shared.Roles.Jobs; // Einstein Engines - use JobComponent
+using Content.Shared.GameTicking;
+using Content.Shared.GameTicking.Events;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server._Goobstation.Ghostbar;
 

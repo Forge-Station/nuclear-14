@@ -8,7 +8,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.EntityEffects.Effects
 {
     [UsedImplicitly]
-    public sealed partial class FlammableReaction : EntityEffect
+    public sealed partial class FlammableReaction : LegacyEntityEffect
     {
         [DataField]
         public float Multiplier = 0.05f;

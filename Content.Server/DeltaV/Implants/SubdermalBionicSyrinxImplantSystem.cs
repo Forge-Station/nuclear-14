@@ -1,6 +1,7 @@
 using Content.Server.VoiceMask;
 using Content.Shared.Implants;
 using Content.Shared.Tag;
+using Content.Shared.VoiceMask;
 
 namespace Content.Server.Implants;
 

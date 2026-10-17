@@ -9,6 +9,7 @@ using Content.Server.Psionics.Glimmer;
 using Content.Shared.Construction.EntitySystems;
 using Content.Shared.Psionics.Glimmer;
 using Robust.Shared.Map.Components;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.StationEvents.Events;
 
