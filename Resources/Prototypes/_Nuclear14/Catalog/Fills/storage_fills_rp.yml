@@ -2174,18 +2174,18 @@
   components:
     - type: StorageFill
       contents:
-        - id: GeigerCounter
-          prob: 0.02
-        - id: N14DirtyGauze10
-          prob: 0.055
+        # - id: GeigerCounter
+        #   prob: 0.02
+        # - id: N14DirtyGauze10
+        #   prob: 0.055
         - id: Bloodpack
           prob: 0.055
-        - id: N14Ethanol
-          prob: 0.055
-        - id: Syringe
-          prob: 0.05
-          amount: 1
-          maxAmount: 3
+        # - id: N14Ethanol
+        #   prob: 0.055
+        # - id: Syringe
+        #   prob: 0.05
+        #   amount: 1
+        #   maxAmount: 3
         - id: N14ChemicalSyringeAntidote
           prob: 0.095
         - id: N14Stimpak
@@ -2196,22 +2196,21 @@
           prob: 0.05
         - id: N14Traumapack
           prob: 0.05
-        - id: N14BaseBallBat
-          prob: 0.04
-          orGroup: Weapon
-        #Forge-change
-        # - id: FireAxe
+        # - id: N14BaseBallBat
         #   prob: 0.04
         #   orGroup: Weapon
-        - id: N14WastelandSpear
+        - id: N14FireAxe
           prob: 0.04
           orGroup: Weapon
-        - id: Bola
-          prob: 0.05
-          orGroup: Weapon
-        - id: N14Hatchet
-          prob: 0.04
-          orGroup: Weapon
+        # - id: N14WastelandSpear
+        #   prob: 0.04
+        #   orGroup: Weapon
+        # - id: Bola
+        #   prob: 0.05
+        #   orGroup: Weapon
+        # - id: N14Hatchet
+        #   prob: 0.04
+        #   orGroup: Weapon
         - id: N14SledgeHammer
           prob: 0.05
           orGroup: Weapon
@@ -2236,9 +2235,9 @@
         - id: N14WeaponPistol12mm
           prob: 0.1
           orGroup: Weapon
-        - id: N14WeaponRevolver9mm
-          prob: 0.04
-          orGroup: Weapon
+        # - id: N14WeaponRevolver9mm
+        #   prob: 0.04
+        #   orGroup: Weapon
         - id: N14WeaponRifle556Carbine
           prob: 0.07
           orGroup: Weapon
@@ -2248,18 +2247,18 @@
         - id: N14WeaponRifle762Marksman
           prob: 0.07
           orGroup: Weapon
-        - id: N14WeaponShotgunDoubleBarrel
-          prob: 0.05
-          orGroup: Weapon
+        # - id: N14WeaponShotgunDoubleBarrel
+        #   prob: 0.05
+        #   orGroup: Weapon
         - id: N14WeaponShotgun
           prob: 0.07
           orGroup: Weapon
         - id: N14WeaponShotgunAuto
           prob: 0.05
           orGroup: Weapon
-        - id: N14WeaponShotgunCaravan
-          prob: 0.07
-          orGroup: Weapon
+        # - id: N14WeaponShotgunCaravan
+        #   prob: 0.07
+        #   orGroup: Weapon
         - id: N14WeaponShotgunLever
           prob: 0.07
           orGroup: Weapon
@@ -2269,12 +2268,12 @@
         - id: N14WeaponSMG12mm
           prob: 0.09
           orGroup: Weapon
-        - id: N14WeaponSMG12mmPipe
-          prob: 0.07
-          orGroup: Weapon
-        - id: N14WeaponSMG10mmPipe
-          prob: 0.07
-          orGroup: Weapon
+        # - id: N14WeaponSMG12mmPipe
+        #   prob: 0.07
+        #   orGroup: Weapon
+        # - id: N14WeaponSMG10mmPipe
+        #   prob: 0.07
+        #   orGroup: Weapon
         - id: N14WeaponSniperHunting
           prob: 0.07
           orGroup: Weapon
@@ -2328,6 +2327,84 @@
           orGroup: Weapon
         - id: N14WeaponLaserdotDesertEagle44
           prob: 0.025
+          orGroup: Weapon
+        - id: N14WeaponLaserRCW
+          prob: 0.05
+          orGroup: Weapon
+        - id: N14WeaponSMGP90
+          prob: 0.05
+          orGroup: Weapon
+        - id: N14WeaponRevolverThatGun
+          prob: 0.025
+          orGroup: Weapon
+        - id: N14WeaponSMGAmerican180
+          prob: 0.02
+          orGroup: Weapon
+        - id: N14WeaponPistol10mm
+          prob: 0.05
+          orGroup: Weapon
+        - id: N14WeaponPistolWebley
+          prob: 0.025
+          orGroup: Weapon
+        - id: N14WeaponRevolver44TribalUpgradedExtra
+          prob: 0.025
+          orGroup: Weapon
+        - id: N14WeaponRevolver45-70HandcannonUpgraded
+          prob: 0.025
+          orGroup: Weapon
+        - id: N14WeaponSMG9mm
+          prob: 0.2
+          orGroup: Weapon
+        - id: N14WeaponSMG12mmAdvanced
+          prob: 0.025
+          orGroup: Weapon
+        - id: N14WeaponShotgunBlowback
+          prob: 0.05
+          orGroup: Weapon
+        - id: N14WeaponShotgunRiot
+          prob: 0.05
+          orGroup: Weapon
+        - id: N14WeaponRifle308SniperRifle
+          prob: 0.1
+          orGroup: Weapon
+        - id: N14WeaponRifle556EM2
+          prob: 0.1
+          orGroup: Weapon
+        - id: N14WeaponRifle556Service
+          prob: 0.2
+          orGroup: Weapon
+        - id: N14WeaponRifle762Fal
+          prob: 0.15
+          orGroup: Weapon
+        - id: N14WeaponRifle762SKS
+          prob: 0.2
+          orGroup: Weapon
+        - id: N14WeaponRifleAk112
+          prob: 0.025
+          orGroup: Weapon
+        - id: N14WeaponRifleL86
+          prob: 0.025
+          orGroup: Weapon
+        - id: N14WeaponSniper308Ross
+          prob: 0.3
+          orGroup: Weapon
+        - id: N14WeaponSniper45-70BrushGun
+          prob: 0.05
+          orGroup: Weapon
+        - id: N14WeaponSniperEnfield
+          prob: 0.1
+          orGroup: Weapon
+        - id: N14WeaponLMG
+          prob: 0.025
+          orGroup: Weapon
+        - id: N14WeaponLaserMagnetoPistol
+          prob: 0.1
+          orGroup: Weapon
+        - id: N14WeaponLaserPistolRecharger
+          prob: 0.2
+          orGroup: Weapon
+        - id: N14WeaponLaserRifleRecharger
+          prob: 0.1
           orGroup: Weapon
         - id: Magazine556Rifle
           prob: 0.1
@@ -2407,9 +2484,9 @@
         - id: MagazineBox308
           prob: 0.07
           orGroup: Ammunition
-        - id: MagazineBoxAntiMateriel
-          prob: 0.05
-          orGroup: Ammunition
+        # - id: MagazineBoxAntiMateriel
+        #   prob: 0.05
+        #   orGroup: Ammunition
         - id: MagazineBox22
           prob: 0.07
           orGroup: Ammunition
@@ -2434,19 +2511,19 @@
         - id: MagazineBox556
           prob: 0.07
           orGroup: Ammunition
-        - id: ClothingBeltUtility
+        # - id: ClothingBeltUtility
+        #   prob: 0.05
+        #   orGroup: Clothing
+        # - id: N14ClothingBeltUtilityFilled
+        #   prob: 0.05
+        #   orGroup: Clothing
+        # - id: N14ClothingBeltCleanerFilled
+        #   prob: 0.05
+        #   orGroup: Clothing
+        - id: N14ClothingBeltMedicalFilled
           prob: 0.05
           orGroup: Clothing
-        - id: N14ClothingBeltUtilityFilled
-          prob: 0.05
-          orGroup: Clothing
-        - id: N14ClothingBeltCleanerFilled
-          prob: 0.05
-          orGroup: Clothing
-        - id: ClothingBeltMedical
-          prob: 0.05
-          orGroup: Clothing
-        - id: ClothingBeltAssault
+        - id: N14ClothingBeltAssaultFilled
           prob: 0.05
           orGroup: Clothing
         - id: N14ClothingBeltMedicalFilled
@@ -2458,9 +2535,9 @@
         - id: N14ClothingBootsCombat
           prob: 0.05
           orGroup: Clothing
-        - id: N14ClothingBootsLeather
-          prob: 0.05
-          orGroup: Clothing
+        # - id: N14ClothingBootsLeather
+        #   prob: 0.05
+        #   orGroup: Clothing
         - id: N14ClothingBootsCombatMK2
           prob: 0.02
           orGroup: Clothing
@@ -2473,32 +2550,38 @@
         - id: N14ClothingHeadHatCombatHelmetMK2
           prob: 0.02
           orGroup: Clothing
-        - id: N14ClothingEyesGlassesWelding
-          prob: 0.07
-          orGroup: Clothing
-        - id: N14ClothingHandsGlovesLeather
-          prob: 0.07
-          orGroup: Clothing
-        - id: N14ClothingHandsGlovesDriver
-          prob: 0.07
-          orGroup: Clothing
+        # - id: N14ClothingEyesGlassesWelding
+        #   prob: 0.07
+        #   orGroup: Clothing
+        # - id: N14ClothingHandsGlovesLeather
+        #   prob: 0.07
+        #   orGroup: Clothing
+        # - id: N14ClothingHandsGlovesDriver
+        #   prob: 0.07
+        #   orGroup: Clothing
         - id: N14ClothingHandsGlovesCombat
           prob: 0.05
           orGroup: Clothing
-        - id: N14ClothingHandsGlovesNitrile
-          prob: 0.07
+        - id: N14ClothingOuterCombatArmor
+          prob: 0.03
           orGroup: Clothing
-        - id: N14ClothingHeadHatArmyBeret
-          prob: 0.07
+        - id: N14ClothingOuterCombatArmorMK2
+          prob: 0.025
           orGroup: Clothing
-        - id: N14ClothingMaskRedMask
-          prob: 0.07
-          orGroup: Clothing
-        - id: N14ClothingMaskDesertMask
-          prob: 0.07
-          orGroup: Clothing
+        # - id: N14ClothingHandsGlovesNitrile
+        #   prob: 0.07
+        #   orGroup: Clothing
+        # - id: N14ClothingHeadHatArmyBeret
+        #   prob: 0.07
+        #   orGroup: Clothing
+        # - id: N14ClothingMaskRedMask
+        #   prob: 0.07
+        #   orGroup: Clothing
+        # - id: N14ClothingMaskDesertMask
+        #   prob: 0.07
+        #   orGroup: Clothing
         - id: N14ClothingOuterHeavySteelArmor
-          prob: 0.02
+          prob: 0.07
           orGroup: Clothing
         # Forge-Change-Start
         - id: N14WeaponSMG10mmChinese
@@ -2523,14 +2606,32 @@
         - id: N14ClothingOuterPowerArmorT45
           prob: 0.01
           orGroup: Clothing
-        - id: N14ClothingBootsCowboy
-          prob: 0.07
-          orGroup: Clothing
-        - id: N14ClothingBootsFire
-          prob: 0.07
-          orGroup: Clothing
+        # - id: N14ClothingBootsCowboy # Forge-Change-Start
+        #   prob: 0.07
+        #   orGroup: Clothing
+        # - id: N14ClothingBootsFire
+        #   prob: 0.07
+        #   orGroup: Clothing # Forge-Change-End
         - id: N14ClothingOuterZealotDuster
-          prob: 0.001
+          prob: 0.05
+          orGroup: Clothing
+        - id: N14ClothingOuterCombatRaider
+          prob: 0.05
+          orGroup: Clothing
+        - id: N14ClothingOuterPoliceCombat
+          prob: 0.05
+          orGroup: Clothing
+        - id: N14ClothingOuterPoliceVest
+          prob: 0.05
+          orGroup: Clothing
+        - id: N14ClothingOuterVaultSecVest
+          prob: 0.05
+          orGroup: Clothing
+        - id: N14ClothingOuterCoatCombatDuster
+          prob: 0.05
+          orGroup: Clothing
+        - id: N14ClothingOuterFirefighterSuit
+          prob: 0.05
           orGroup: Clothing
         - id: N14EmptySlot
           prob: 0.75

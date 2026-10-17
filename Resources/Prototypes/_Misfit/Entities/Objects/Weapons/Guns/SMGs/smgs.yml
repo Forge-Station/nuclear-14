@@ -1,0 +1,122 @@
+- type: entity
+  name: пистолет-пулемёт с глушителем .22
+  parent: N14WeaponSMGBase
+  id: N14WeaponSMG22Silenced
+  suffix: .22
+  description: Довоенный пистолет-пулемет .22 со встроенным глушителем и большим барабанным магазином. Полный барабан патронов калибра .22 расходуется быстрее, чем вы ожидаете.
+  components:
+  - type: Clothing
+    sprite: _Misfit/Objects/Weapons/Guns/SMGs/american180.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Item
+    size: Large
+    shape:
+    - 0,0,2,1
+    - 0,1,0,1
+  - type: Sprite
+    sprite: _Misfit/Objects/Weapons/Guns/SMGs/american180.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: Gun
+    fireRate: 12
+    minAngle: 4
+    maxAngle: 16
+    angleIncrease: 2
+    angleDecay: 14
+    selectedMode: Fullauto
+    availableModes:
+    - Fullauto
+    soundGunshot:
+      collection: N14Pistol22lrGunshot
+  - type: GunWieldBonus
+    minAngle: -3
+    maxAngle: -12
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: N14MagazineAmerican180Drum
+        insertSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magin.ogg
+        ejectSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magout.ogg
+        whitelist:
+          tags:
+            - N14MagazineAmerican180Drum
+      gun_chamber:
+        name: Chamber
+        startingItem: N14CartridgePistol22
+        priority: 1
+        whitelist:
+          tags:
+            - N14CartridgePistol22
+  - type: GunCondition
+    wearPerShot: 0.1
+  - type: StaticPrice
+    price: 250
+
+- type: entity
+  name: FN P90c
+  parent: N14WeaponSMG9mm
+  id: N14WeaponSMGP90
+  suffix: 9mm
+  description: FN P90c — это оружие для индивидуальной самообороны, также классифицируемое как пистолет-пулемёт; оно разработано и производится бельгийской компанией FN Herstal.
+  components:
+  - type: Clothing
+    sprite: _Misfit/Objects/Weapons/Guns/SMGs/p90.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Item
+    size: Large
+    shape:
+    - 0,0,2,1
+    - 0,1,0,1
+  - type: Sprite
+    sprite: _Misfit/Objects/Weapons/Guns/SMGs/p90.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: Gun
+    fireRate: 9.5
+    soundGunshot:
+      collection: N14Pistol9mmGunshot
+    selectedMode: Fullauto
+    availableModes:
+    - Fullauto
+    minAngle: 4
+    maxAngle: 20
+    angleIncrease: 2
+    angleDecay: 16
+  - type: ChamberMagazineAmmoProvider
+    soundRack:
+      path: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_cock.ogg
+  - type: GunWieldBonus
+    minAngle: -3
+    maxAngle: -15
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: N14MagazineSMG9mmP90
+        insertSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magin.ogg
+        ejectSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magout.ogg
+        whitelist:
+          tags:
+            - N14MagazineSMG9mmP90
+      gun_chamber:
+        name: Chamber
+        startingItem: N14CartridgePistol9
+        priority: 1
+        whitelist:
+          tags:
+            - N14CartridgePistol9
+  - type: StaticPrice
+    price: 200
