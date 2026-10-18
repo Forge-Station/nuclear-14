@@ -53,3 +53,10 @@ Entries:
   id: 5
   time: '2026-10-17T12:31:20.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/541
+- author: yanus42
+  changes:
+    - type: Add
+      message: Звания для ролей.
+  id: 6
+  time: '2026-10-18T14:22:54.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/511
