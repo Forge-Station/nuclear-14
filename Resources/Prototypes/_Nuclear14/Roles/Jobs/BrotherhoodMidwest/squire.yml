@@ -6,6 +6,15 @@
   name: job-name-bos-mid-squire
   description: job-description-bos-mid-squire
   playTimeTracker: BoSMidSquire
+  #Forge-Change-Start
+  ranks:
+    - rank: BoSMidSeniorSquire
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: BoSMidSquire
+          min: 72000 # 1200 minutes
+    - rank: BoSMidSquire
+  #Forge-Change-End
   requirements:
   # Forge-Change-Start
   - !type:CharacterOverallTimeRequirement
