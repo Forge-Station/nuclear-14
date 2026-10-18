@@ -4,7 +4,6 @@
   id: N14WeaponRifleM7SpearScope
   description: Prototype of a next-generation rifle that never made it into service with the US Army. Only a few units were delivered for special operations testing just days before the Great War began. Finding one in the wasteland is a real jackpot. It uses a unique caliber, so finding ammunition for it is an even greater stroke of luck.
   suffix: DO NOT SPAWN
-  categories: [HideSpawnMenu]
   components:
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Guns/Rifles/m7spearscope.rsi
@@ -59,7 +58,6 @@
   id: N14WeaponRifleM7Spear
   description: Prototype of a next-generation rifle that never made it into service with the US Army. Only a few units were delivered for special operations testing just days before the Great War began. Finding one in the wasteland is a real jackpot. It uses a unique caliber, so finding ammunition for it is an even greater stroke of luck.
   suffix: DO NOT SPAWN
-  categories: [HideSpawnMenu]
   components:
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Guns/Rifles/m7spear.rsi
@@ -82,6 +80,65 @@
     fireRate: 4.1
     soundGunshot:
       collection: N14PistolSpyGunshot
+
+- type: entity
+  name: крупнокалиберная самозарядная винтовка
+  parent: N14WeaponRifleBase
+  id: N14WeaponRifle50Battle
+  description: Анти-материальный M1 Garand с клипсовым питанием, рассчитанный под калибр 50 MG. Проклятая конструкция из недалёкого будущего.
+  suffix: DO NOT SPAWN
+  components:
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/antigarant.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/antigarant.rsi
+    layers:
+      - state: base
+        map: ["enum.GunVisualLayers.Base"]
+      - state: mag-0
+        map: ["enum.GunVisualLayers.Mag"]
+  - type: ChamberMagazineAmmoProvider
+    autoEject: true
+  - type: GunWieldBonus
+    minAngle: -23
+    maxAngle: -56
+  - type: Gun
+    minAngle: 22
+    maxAngle: 64
+    angleIncrease: 4
+    angleDecay: 16
+    fireRate: 2
+    soundGunshot:
+      collection: N14AntiMaterielGunshot
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: ClipMagazine50Rifle
+        insertSound: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/ltrifle_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+            - N14Clip50Rifle
+      gun_chamber:
+        name: Chamber
+        startingItem: N14Cartridge50
+        priority: 1
+        whitelist:
+          tags:
+            - N14Cartridge50
+  - type: FollowDistance
+    backStrength: 3
+  - type: StaticPrice
+    price: 1500
 
 - type: entity
   name: Ak-112
@@ -297,4 +354,4 @@
           tags:
             - N14Cartridge545Rifle
   - type: StaticPrice
-    price: 100 
+    price: 100
