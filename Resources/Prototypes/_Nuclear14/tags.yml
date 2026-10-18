@@ -255,6 +255,9 @@
   id: N14Cartridge762Rifle
 
 - type: Tag
+  id: N14Cartridge50
+
+- type: Tag
   id: N14Cartridge50HEIAP
 
 - type: Tag
@@ -349,9 +352,6 @@
 
 - type: Tag
   id: N14Clip308Rifle
-
-- type: Tag
-  id: N14Clip50Rifle
 
 - type: Tag
   id: N14Magazine50AMR
