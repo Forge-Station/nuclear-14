@@ -27,7 +27,7 @@
           WastelandBartender: [ 2, 2 ]
           TownMayor: [ 1, 1 ]
           TownSheriff: [ 1, 1 ]
-          TownDeputy: [ 4, 4 ]
+          TownDeputy: [ 2, 2 ]
           TownDoctor: [ 2, 2 ]
           TownMechanic: [ 1, 1 ]
           TownShopkeeper: [ 1, 1 ]
