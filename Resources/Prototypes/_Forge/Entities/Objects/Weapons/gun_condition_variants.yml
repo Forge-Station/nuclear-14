@@ -184,7 +184,7 @@
     damagedThreshold: 40    # повреждённое
     criticalThreshold: 15   # критическое
     # Износ и ремонт
-    wearPerShot: 0.08       # потеря прочности за выстрел
+    wearPerShot: 0.08     # потеря прочности за выстрел
     repairAmount: 45        # восстановление за ремонт
     unjamTime: 0.8          # время устранения клина (DoAfter), сек
     # Заклинивание
@@ -222,7 +222,7 @@
     jamCurve: 0           # кривая роста (1 = линейно, >1 = резче к концу)
 
 # Анти-Материальная Винтовка - Отдельный высокий износ, из-за высокого калибра и большой пробиваемости.
-- type: entity 
+- type: entity
   id: ForgeGunConditionProfileAMR
   abstract: true
   components:
@@ -249,7 +249,7 @@
     jamCurve: 1.3           # кривая роста (1 = линейно, >1 = резче к концу)
 
 # Версия для самодельной и однозарядной АМР, из-за кустарного производства.
-- type: entity 
+- type: entity
   id: ForgeGunConditionProfileAMRPipe
   abstract: true
   components:

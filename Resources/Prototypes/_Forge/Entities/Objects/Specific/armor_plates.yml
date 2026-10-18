@@ -4,7 +4,7 @@
   parent: BaseItem
   id: N14ComponentArmorPlateMK1
   name: бронепластина МК1
-  description: Усиленная бронепластина первого поколения.
+  description: Усиленная бронепластина первого поколения, используется в качестве компонента создания более защищённого бронежилета.
   components:
   - type: Sprite
     sprite: Corvax/Objects/Specific/modification_kit.rsi
@@ -18,7 +18,7 @@
   parent: BaseItem
   id: N14ComponentArmorPlateMK2
   name: бронепластина МК2
-  description: Усиленная бронепластина второго поколения.
+  description: Усиленная бронепластина второго поколения, используется в качестве компонента создания более защищённого бронежилета.
   components:
   - type: Sprite
     sprite: Corvax/Objects/Specific/modification_kit.rsi
@@ -32,7 +32,7 @@
   parent: BaseItem
   id: N14ComponentArmorPlateMK3
   name: бронепластина МК3
-  description: Усиленная бронепластина третьего поколения.
+  description: Усиленная бронепластина третьего поколения, используется в качестве компонента создания более защищённого бронежилета.
   components:
   - type: Sprite
     sprite: Corvax/Objects/Specific/modification_kit.rsi
@@ -46,7 +46,7 @@
   parent: BaseItem
   id: N14ComponentHelmetMK2
   name: подкладка шлема МК2
-  description: Защитный элемент шлема второго поколения.
+  description: Защитный элемент шлема второго поколения, используется в качестве компонента создания более защищённого шлема.
   components:
   - type: Sprite
     sprite: Corvax/Objects/Specific/modification_kit.rsi

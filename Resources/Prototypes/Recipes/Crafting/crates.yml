@@ -48,7 +48,8 @@
   graph: BaseBigBox
   startNode: start
   targetNode: basebigbox
-  category: construction-category-storage
+  category: construction-category-misc # Forge-Change
+  hide: false # Forge-Change
   description: A big box for storing things or hiding in.
   icon: { sprite: Structures/Storage/closet.rsi, state: cardboard }
   objectType: Structure
@@ -59,7 +60,8 @@
   graph: BoxCardboard
   startNode: start
   targetNode: boxcardboard
-  category: construction-category-storage
+  category: construction-category-misc # Forge-Change
+  hide: false # Forge-Change
   description: A small box for storing things.
   icon: { sprite: Objects/Storage/boxes.rsi, state: box }
   objectType: Item

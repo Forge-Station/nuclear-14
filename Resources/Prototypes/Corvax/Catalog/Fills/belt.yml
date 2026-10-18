@@ -7,5 +7,7 @@
     contents:
     - id: HydroponicsToolMiniHoe
     - id: HydroponicsToolSpade
-    - id: N14FertilizerChemistryBottle 
+    - id: N14FertilizerChemistryBottle
+      amount: 2
+    - id: N14ExtractFungusRadChemistryBottle
       amount: 2
