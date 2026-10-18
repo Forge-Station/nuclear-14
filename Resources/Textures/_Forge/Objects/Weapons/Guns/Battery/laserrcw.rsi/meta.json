@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-NC-SA-3.0",
-  "copyright": "Original made by PatoGrone, remade by Salniy for Corvax Forge",
+  "copyright": "Made by Bane1115 for Corvax Forge",
   "size": {
     "x": 32,
     "y": 32
@@ -14,10 +14,7 @@
       "name": "base"
     },
     {
-      "name": "bolt-open"
-    },
-    {
-      "name": "mag-0"
+      "name": "mag-unshaded-1"
     },
     {
       "name": "inhand-left",

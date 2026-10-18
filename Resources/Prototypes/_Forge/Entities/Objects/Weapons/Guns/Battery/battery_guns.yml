@@ -5,23 +5,27 @@
   description: Энергетическое лазерное оружие с высокой скорострельностью, по силуэту напоминающее пистолет-пулемет. Предназначено для ведения боя на ближних дистанциях. Отличается низкой точностью и высоким энергопотреблением, однако способно вести продолжительный непрерывный огонь.
   components:
   - type: Sprite
-    sprite: _Misfit/Objects/Weapons/Guns/Battery/laserrcw.rsi
+    sprite: _Forge/Objects/Weapons/Guns/Battery/laserrcw.rsi
     layers:
     - state: base
       map: ["enum.GunVisualLayers.Base"]
-    - state: mag-unshaded-0
-      map: ["enum.GunVisualLayers.MagUnshaded"]
+    - state: mag-unshaded-1
+      map: ["magGlow"]
       shader: unshaded
+      visible: false
   - type: Clothing
-    sprite: _Misfit/Objects/Weapons/Guns/Battery/laserrcw.rsi
+    sprite: _Forge/Objects/Weapons/Guns/Battery/laserrcw.rsi
     quickEquip: false
     slots:
     - Back
     - suitStorage
-  - type: MagazineVisuals
-    magState: mag
-    steps: 2
-    zeroVisible: true
+  - type: GenericVisualizer # Forge-Change: show mag glow only when a cell is inserted
+    visuals:
+      enum.AmmoVisuals.MagLoaded:
+        True:
+          magGlow: { state: mag-unshaded-1, visible: true }
+        False:
+          magGlow: { state: mag-unshaded-1, visible: false }
   - type: ItemSlots
     slots:
       gun_magazine:
