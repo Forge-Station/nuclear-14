@@ -26,6 +26,8 @@
     Head: N14MobGhoulHead
     Hair: MobHumanoidAnyMarking
     FacialHair: MobHumanoidAnyMarking
+    UndergarmentTop: MobHumanoidAnyMarking
+    UndergarmentBottom: MobHumanoidAnyMarking
     Chest: N14MobGhoulTorso
     Eyes: MobHumanoidEyes
     LArm: N14MobGhoulLArm
@@ -42,6 +44,12 @@
   onlyWhitelisted: true # Forge-Change ещё удалил ненужные слоты
   points:
     Snout:
+      points: 1
+      required: false
+    UndergarmentTop:
+      points: 1
+      required: false
+    UndergarmentBottom:
       points: 1
       required: false
     Chest:
