@@ -2565,9 +2565,6 @@
         - id: N14ClothingOuterCombatArmor
           prob: 0.03
           orGroup: Clothing
-        - id: N14ClothingOuterCombatArmorMK2
-          prob: 0.025
-          orGroup: Clothing
         # - id: N14ClothingHandsGlovesNitrile
         #   prob: 0.07
         #   orGroup: Clothing
