@@ -24,7 +24,7 @@
     - state: mag-0
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
-    fireRate: 12
+    fireRate: 10
     minAngle: 4
     maxAngle: 16
     angleIncrease: 2
@@ -41,12 +41,12 @@
     slots:
       gun_magazine:
         name: Magazine
-        startingItem: N14MagazineAmerican180Drum
+        startingItem: N14MagazineAmerican120Drum
         insertSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magin.ogg
         ejectSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magout.ogg
         whitelist:
           tags:
-            - N14MagazineAmerican180Drum
+            - N14MagazineAmerican120Drum
       gun_chamber:
         name: Chamber
         startingItem: N14CartridgePistol22

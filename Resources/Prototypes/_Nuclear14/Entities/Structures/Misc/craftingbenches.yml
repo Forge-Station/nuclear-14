@@ -144,7 +144,7 @@
     - N14MagazinePistol9mm
     - N14MagazineSMG9mm
     - N14MagazineSMG9mmP90 # Forge-Add
-    - N14MagazineAmerican180Drum # Forge-Add
+    - N14MagazineAmerican120Drum # Forge-Add
     - MagazineBox9mm
     - SpeedLoader10
     - N14MagazinePistol10mm
@@ -504,7 +504,7 @@
     # - N14JetInhaler
     # - N14TurboInhaler
     # - N14HydraInhaler
-    # - N14StimpakEmpty 
+    # - N14StimpakEmpty
     # - N14ChemicalSyringeAntidoteEmpty
     # - N14PsychoSyringe
     # - N14RadAwayPhialEmpty # Forge-add-end
