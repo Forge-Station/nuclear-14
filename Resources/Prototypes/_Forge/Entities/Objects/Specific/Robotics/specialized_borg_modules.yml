@@ -371,15 +371,16 @@
     fireOnDropChance: 0
     soundGunshot:
       path: /Audio/Effects/Lightning/lightningshock.ogg
-  - type: Battery
-    maxCharge: 100
-    startingCharge: 100
-  - type: BatterySelfRecharger
-    autoRecharge: true
-    autoRechargeRate: 5
-  - type: ProjectileBatteryAmmoProvider
+  - type: BasicEntityAmmoProvider
     proto: N14EyebotContactArc
-    fireCost: 100
+    capacity: 1
+    count: 1
+  - type: RechargeBasicEntityAmmo
+    rechargeCooldown: 20
+    rechargeSound:
+      path: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+      params:
+        volume: -25
 
 - type: entity
   id: N14EyebotContactArc
