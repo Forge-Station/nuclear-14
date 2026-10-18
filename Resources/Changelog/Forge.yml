@@ -60,3 +60,10 @@ Entries:
   id: 6
   time: '2026-10-18T14:22:54.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/511
+- author: Patrioy
+  changes:
+    - type: Fix
+      message: Обновил Уэндовер, Юму, Джуно
+  id: 7
+  time: '2026-10-18T14:26:20.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/557
