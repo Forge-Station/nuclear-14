@@ -103,7 +103,7 @@
 - type: Tag
   id: YaoguaiHide
 
-- type: Tag 
+- type: Tag
   id: NightstalkerPelt
 
 - type: Tag # Forge-add
@@ -195,7 +195,7 @@
 
 - type: Tag
   id: N14Welder
-  
+
 - type: Tag # forge-add
   id: N14HealingPowder
 
@@ -319,7 +319,7 @@
   id: N14LMGMagazine556Rifle
 
 # Forge-Add-Start
-- type: Tag 
+- type: Tag
   id: Magazine556Rifle30
 # Forge-Add-End
 

@@ -1,0 +1,62 @@
+- type: entity
+  name: лазер RCW
+  parent: N14BaseWeaponPowerCell
+  id: N14WeaponLaserRCW
+  description: Энергетическое лазерное оружие с высокой скорострельностью, по силуэту напоминающее пистолет-пулемет. Предназначено для ведения боя на ближних дистанциях. Отличается низкой точностью и высоким энергопотреблением, однако способно вести продолжительный непрерывный огонь.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Weapons/Guns/Battery/laserrcw.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-unshaded-1
+      map: ["magGlow"]
+      shader: unshaded
+      visible: false
+  - type: Clothing
+    sprite: _Forge/Objects/Weapons/Guns/Battery/laserrcw.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: GenericVisualizer # Forge-Change: show mag glow only when a cell is inserted
+    visuals:
+      enum.AmmoVisuals.MagLoaded:
+        True:
+          magGlow: { state: mag-unshaded-1, visible: true }
+        False:
+          magGlow: { state: mag-unshaded-1, visible: false }
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Power Cell
+        startingItem: N14PowerCellSmall
+        insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/batrifle_magout.ogg
+        whitelist:
+          tags:
+            - N14PowerCellSmall
+  - type: Item
+    size: Large
+    shape:
+    - 0,0,2,1
+    - 0,1,0,1
+  - type: Wieldable
+  - type: GunWieldBonus
+    minAngle: -7
+    maxAngle: -20
+  - type: Gun
+    fireRate: 5
+    minAngle: 8
+    maxAngle: 25
+    angleIncrease: 4
+    angleDecay: 14
+    selectedMode: Fullauto
+    availableModes:
+    - Fullauto
+    soundGunshot:
+      collection: N14LaserAutoRifleGunshot
+  - type: FollowDistance
+    backStrength: 5
+  - type: StaticPrice
+    price: 300
