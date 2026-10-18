@@ -15,6 +15,12 @@ namespace Content.Shared.Kitchen
         [ViewVariables]
         [IdDataField]
         public string ID { get; private set; } = default!;
+        /// Forge-Change-Start
+
+        /// <summary>Category used to organize recipes; older recipes default to Other.</summary>
+        [DataField("group")]
+        public string Group { get; private set; } = "Other";
+        /// Forge-Change-End
 
         [DataField("name")]
         private string _name = string.Empty;

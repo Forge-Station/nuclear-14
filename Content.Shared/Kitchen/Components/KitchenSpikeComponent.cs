@@ -17,6 +17,9 @@ public sealed partial class KitchenSpikeComponent : Component
 
     public List<string>? PrototypesToSpawn;
 
+    /// Forge-Change
+    public bool HumanoidVictim;
+
     // TODO: Spiking alive mobs? (Replace with uid) (deal damage to their limbs on spiking, kill on first butcher attempt?)
     public string MeatSource1p = "?";
     public string MeatSource0 = "?";
@@ -35,6 +38,8 @@ public sealed partial class KitchenSpikeComponent : Component
     public enum KitchenSpikeStatus : byte
     {
         Empty,
-        Bloody
+        Bloody,
+        /// Forge-Change
+        BloodyHumanoid
     }
 }

@@ -54,6 +54,8 @@ namespace Content.Server.Paper
             {
                 paperComp.Content = Loc.GetString(paperComp.Content);
             }
+
+            _paperLanguage.EnsureSegments(uid, paperComp); // Forge-Change
         }
 
         private void OnInit(EntityUid uid, PaperComponent paperComp, ComponentInit args)
@@ -163,9 +165,9 @@ namespace Content.Server.Paper
 
             if (args.Text.Length <= paperComp.ContentSize)
             {
-                // Forge-Change: already-written text cannot be replaced, only appended
-                var content = AppendPaperContent(paperComp.Content, args.Text);
-                if (content.Length <= paperComp.ContentSize)
+                // Forge-Change: keep unknown stretches; rewrite known text in the chosen language
+                if (_paperLanguage.TryApplyWriting(uid, paperComp, args, out var content)
+                    && content.Length <= paperComp.ContentSize)
                 {
                     paperComp.Content = content;
 
@@ -179,9 +181,6 @@ namespace Content.Server.Paper
                         $"{ToPrettyString(args.Actor):player} has written on {ToPrettyString(uid):entity} the following text: {args.Text}");
 
                     _audio.PlayPvs(paperComp.Sound, uid);
-
-                    if (TryComp<PaperLanguageComponent>(uid, out var paperLang)) // Forge-Change
-                        _paperLanguage.RecordWriting((uid, paperLang), args);
                 }
             }
 
@@ -189,22 +188,7 @@ namespace Content.Server.Paper
             UpdateUserInterface(uid, paperComp);
         }
 
-        // Forge-Change-Start: keep existing words; new input is added at the end
-        private static string AppendPaperContent(string existing, string added)
-        {
-            if (string.IsNullOrEmpty(existing))
-                return added;
-
-            if (string.IsNullOrWhiteSpace(added))
-                return existing;
-
-            if (added.StartsWith(existing, StringComparison.Ordinal))
-                return added;
-
-            var separator = existing.EndsWith('\n') ? string.Empty : "\n";
-            return existing + separator + added;
-        }
-
+        // Forge-Change-Start
         private bool CanWriteLanguage(EntityUid actor, string? language)
         {
             if (string.IsNullOrEmpty(language))

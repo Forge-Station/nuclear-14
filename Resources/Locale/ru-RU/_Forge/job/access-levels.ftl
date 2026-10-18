@@ -1,0 +1,12 @@
+id-card-access-level-legion = Ворота Легиона
+id-card-access-level-legion-centurion = Помещения центуриона Легиона
+id-card-access-level-legion-dean = Помещения деканов Легиона
+id-card-access-level-legion-recruit = Зона рекрутов Легиона
+id-card-access-level-legion-veteran = Зона ветеранов Легиона
+id-card-access-level-legion-warrior = Зона воинов Легиона
+id-card-access-level-legion-venator = Помещения венатора Легиона
+id-card-access-level-west = Ворота Западного Братства Стали
+id-card-access-level-west-elder-commander = Офис Западного Братства Стали
+id-card-access-level-west-paladin = Скафандры Западного Братства Стали
+id-card-access-level-west-knight = Оружейная Западного Братства Стали
+id-card-access-level-west-scribe = Лаборатории Западного Братства Стали

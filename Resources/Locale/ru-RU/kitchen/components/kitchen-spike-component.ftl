@@ -16,4 +16,5 @@ comp-kitchen-spike-suicide-self = Вы бросаетесь на мясной к
 comp-kitchen-spike-knife-needed = Вам нужен нож для этого.
 comp-kitchen-spike-remove-meat = Вы срезаете немного мяса с { $victim }.
 comp-kitchen-spike-remove-meat-last = Вы срезаете последний кусок мяса с { $victim }!
-comp-kitchen-spike-meat-name = мясо { $victim }
+# Forge-Change
+comp-kitchen-spike-meat-name = { $name } ({ $victim })

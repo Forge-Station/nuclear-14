@@ -1,0 +1,26 @@
+# American 180 35-round .22lr drum
+- type: entity
+  id: N14MagazineAmerican120Drum
+  name: магазин барабанный (.22lr)
+  parent: BaseItem
+  components:
+  - type: Tag
+    tags:
+      - N14MagazineAmerican120Drum
+  - type: BallisticAmmoProvider
+    mayTransfer: true
+    whitelist:
+      tags:
+        - N14CartridgePistol22
+    capacity: 120
+    proto: N14CartridgePistol22
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
+  - type: Appearance
+  - type: Sprite
+    netsync: false
+    sprite: _Misfit/Objects/Weapons/Guns/Ammunition/Magazines/22lrdrum.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]

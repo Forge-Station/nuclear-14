@@ -1,0 +1,37 @@
+#MARK: Костная мука -> чудо-клей (с нагревом)
+- type: reaction
+  id: N14BoneMealWonderglue
+  minTemp: 373.15 # 100 градусов Цельсия
+  reactants:
+    BoneMeal:
+      amount: 2
+    Water:
+      amount: 1
+  products:
+    Wonderglue: 1
+
+- type: reaction
+  id: N14BoneMealDirtyWonderglue
+  minTemp: 373.15 # 100 градусов Цельсия
+  reactants:
+    BoneMeal:
+      amount: 2
+    WaterDirty:
+      amount: 1
+  products:
+    Wonderglue: 1
+
+#MARK: Чудо-клей -> изолента
+- type: reaction
+  id: N14WonderglueDuctTape
+  impact: Low
+  quantized: true
+  conserveEnergy: false
+  reactants:
+    Wonderglue:
+      amount: 5
+    Fiber:
+      amount: 5
+  effects:
+  - !type:CreateEntityReactionEffect
+    entity: N14JunkDuctTape

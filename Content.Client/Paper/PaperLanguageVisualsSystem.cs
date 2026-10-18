@@ -96,33 +96,52 @@ public sealed class PaperLanguageVisualsSystem : EntitySystem
         return result;
     }
 
+    /// <summary>
+    /// Unknown stretches stay locked. Trailing text in known languages goes into the editor and can be rewritten.
+    /// </summary>
+    public void GetWriteSplit(EntityUid paper, string fallbackContent, out string lockedMarkup, out string editorText)
+    {
+        lockedMarkup = string.Empty;
+        editorText = fallbackContent;
+
+        if (!TryComp<PaperLanguageComponent>(paper, out var paperLang))
+            return;
+
+        var segments = PaperLanguageFormatting.GetEffectiveSegments(paperLang, fallbackContent);
+        if (segments.Count == 0)
+            return;
+
+        var lockedCount = PaperLanguageFormatting.GetLockedPrefixCount(segments, CanReadPaperLanguage);
+        editorText = PaperLanguageFormatting.JoinRange(segments, lockedCount, segments.Count - lockedCount);
+
+        if (lockedCount <= 0)
+            return;
+
+        lockedMarkup = FormatSegmentRange(segments, 0, lockedCount, obfuscatedOnly: false)
+                       ?? PaperLanguageFormatting.JoinRange(segments, 0, lockedCount);
+    }
+
     private string? FormatSegments(PaperLanguageComponent paperLang, string fallbackContent)
     {
-        IReadOnlyList<PaperLanguageSegment> segments;
-        if (paperLang.Segments.Count > 0)
-        {
-            segments = paperLang.Segments;
-        }
-        else if (string.IsNullOrWhiteSpace(fallbackContent))
-        {
+        var segments = PaperLanguageFormatting.GetEffectiveSegments(paperLang, fallbackContent);
+        if (segments.Count == 0)
             return null;
-        }
-        else
-        {
-            segments =
-            [
-                new PaperLanguageSegment
-                {
-                    Text = fallbackContent,
-                    Language = paperLang.Language
-                }
-            ];
-        }
 
+        return FormatSegmentRange(segments, 0, segments.Count, obfuscatedOnly: true);
+    }
+
+    private string? FormatSegmentRange(
+        IReadOnlyList<PaperLanguageSegment> segments,
+        int start,
+        int count,
+        bool obfuscatedOnly)
+    {
         var builder = new StringBuilder();
         var changed = false;
-        foreach (var segment in segments)
+        var end = Math.Min(segments.Count, start + count);
+        for (var i = start; i < end; i++)
         {
+            var segment = segments[i];
             if (builder.Length > 0 && builder[^1] != '\n')
                 builder.Append('\n');
 
@@ -145,7 +164,13 @@ public sealed class PaperLanguageVisualsSystem : EntitySystem
             changed = true;
         }
 
-        return changed ? builder.ToString() : null;
+        if (builder.Length == 0)
+            return null;
+
+        if (obfuscatedOnly && !changed)
+            return null;
+
+        return builder.ToString();
     }
 
     private bool CanReadPaperLanguage(ProtoId<LanguagePrototype> language)

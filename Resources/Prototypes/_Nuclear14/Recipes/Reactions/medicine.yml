@@ -161,7 +161,7 @@
     Water:
       amount: 5
     Ash:
-      amount: 5
+      amount: 2 #Forge-change
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Ointment1

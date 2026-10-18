@@ -92,9 +92,9 @@
     angle: 60
     damage:
       types:
-        Blunt: 34
+        Blunt: 10 # Forge-Change
   - type: StaminaDamageOnHit
-    damage: 10
+    damage: 5 # Forge-Change
   - type: StaticPrice
     price: 10
 

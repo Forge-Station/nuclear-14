@@ -6,14 +6,25 @@
   name: job-name-bos-mid-scribe
   description: job-description-bos-mid-scribe
   playTimeTracker: BoSMidScribe
+  #Forge-Change-Start
+  ranks:
+    - rank: BoSMidScribe
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: BoSMidScribe
+          min: 72000 # 1200 minutes
+    - rank: BoSMidJuniorScribe
+  #Forge-Change-End
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodMidwest
-      min: 18000 # 5 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodMidwest
+    min: 18000 # 5 hours
+  # Forge-Change-End
   startingGear: BoSMidScribeGear
   alwaysUseSpawner: true
   icon: "JobIconBosMScriptor" # Forge-Change

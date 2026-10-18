@@ -23,6 +23,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Player; // Nuclear-14
 using Robust.Shared.Prototypes;
 using Content.Shared.IdentityManagement;
+using Content.Shared.Silicons.Borgs.Components; // Forge-Change
 using Robust.Shared.Configuration; // Forge-Change
 
 namespace Content.Server.Radio.EntitySystems;
@@ -242,7 +243,9 @@ public sealed class RadioDeviceSystem : EntitySystem
         var name = Loc.GetString("speech-name-relay", ("speaker", args.Channel.LocalizedName),
             ("originalName", nameEv.Sender));
 
-        if (_cfg.GetCVar(CorvaxVars.TTSEnabled))
+        // Borgs relay radio speech with their own synthetic voice. Do not overwrite it
+        // with the sender's voice, as that would also change their subsequent speech.
+        if (_cfg.GetCVar(CorvaxVars.TTSEnabled) && !HasComp<BorgChassisComponent>(uid)) // Forge-Change
         {
             var radTtsComp = Comp<TTSComponent>(uid);
             var userTtsComp = Comp<TTSComponent>(args.MessageSource);

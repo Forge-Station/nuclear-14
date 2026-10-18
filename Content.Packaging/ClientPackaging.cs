@@ -10,6 +10,14 @@ namespace Content.Packaging;
 
 public static class ClientPackaging
 {
+
+    // Forge-Secrets-Start
+    private static readonly string SecretsClientProject =
+        Path.Combine("FalloutSecrets", "Content.Secrets.Client", "Content.Secrets.Client.csproj");
+
+    public static bool UseSecrets => File.Exists(SecretsClientProject);
+    // Forge-Secrets-End
+    
     /// <summary>
     /// Be advised this can be called from server packaging during a HybridACZ build.
     /// </summary>
@@ -19,6 +27,26 @@ public static class ClientPackaging
 
         if (!skipBuild)
         {
+            // Forge-Secrets-Start
+            if (UseSecrets)
+            {
+                logger.Info("Secrets found, building secret client project...");
+                await ProcessHelpers.RunCheck(new ProcessStartInfo
+                {
+                    FileName = "dotnet",
+                    ArgumentList =
+                    {
+                        "build",
+                        SecretsClientProject,
+                        "-c", configuration,
+                        "--nologo",
+                        "/v:m",
+                        "/p:FullRelease=true",
+                        "/m"
+                    }
+                });
+            }
+            // Forge-Secrets-End
             await ProcessHelpers.RunCheck(new ProcessStartInfo
             {
                 FileName = "dotnet",
@@ -65,11 +93,20 @@ public static class ClientPackaging
 
         var inputPass = graph.Input;
 
+        // Forge-Secrets-Start
+        var clientAssemblies = new List<string> { "Content.Client", "Content.Shared", "Content.Shared.Database" };
+        if (UseSecrets)
+        {
+            clientAssemblies.Add("Content.Secrets.Shared");
+            clientAssemblies.Add("Content.Secrets.Client");
+        }
+        // Forge-Secrets-End
+
         await RobustSharedPackaging.WriteContentAssemblies(
             inputPass,
             contentDir,
             "Content.Client",
-            new[] { "Content.Client", "Content.Shared", "Content.Shared.Database" },
+            clientAssemblies,
             cancel: cancel);
 
         await RobustClientPackaging.WriteClientResources(contentDir, pass, cancel);

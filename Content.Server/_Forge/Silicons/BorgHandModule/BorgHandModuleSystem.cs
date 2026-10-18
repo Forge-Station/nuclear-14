@@ -24,7 +24,8 @@ public sealed class BorgHandModuleSystem : EntitySystem
         for (var i = 0; i < ent.Comp.Hands; i++)
         {
             var handId = $"{ent.Owner}-hand{i}";
-            _hands.AddHand(args.Chassis, handId, HandLocation.Middle, hands);
+            var location = i % 2 == 0 ? HandLocation.Left : HandLocation.Right;
+            _hands.AddHand(args.Chassis, handId, location, hands);
             ent.Comp.AddedHands.Add(handId);
         }
     }

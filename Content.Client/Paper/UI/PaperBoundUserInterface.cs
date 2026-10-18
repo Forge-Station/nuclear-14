@@ -50,10 +50,22 @@ public sealed class PaperBoundUserInterface : BoundUserInterface
         _mode = paperState.Mode;
         var visuals = EntMan.System<PaperLanguageVisualsSystem>();
 
-        if (visuals.TryFormatForReader(Owner, paperState, out var formatted))
-            paperState = formatted;
+        if (_mode == PaperAction.Write)
+        {
+            visuals.GetWriteSplit(Owner, paperState.Text, out var lockedMarkup, out var editorText);
+            var labelState = string.IsNullOrEmpty(lockedMarkup)
+                ? new PaperBoundUserInterfaceState(string.Empty, paperState.StampedBy, paperState.Mode)
+                : new PaperBoundUserInterfaceState(lockedMarkup, paperState.StampedBy, paperState.Mode);
+            _window?.Populate(labelState, editorText, hasLocked: !string.IsNullOrEmpty(lockedMarkup));
+        }
+        else
+        {
+            if (visuals.TryFormatForReader(Owner, paperState, out var formatted))
+                paperState = formatted;
 
-        _window?.Populate(paperState);
+            _window?.Populate(paperState);
+        }
+
         RefreshLanguageOptions();
     }
 

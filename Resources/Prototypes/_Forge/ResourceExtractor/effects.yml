@@ -1,0 +1,14 @@
+# Телеграф появления подземного существа. Анимация повторяется до завершения задержки.
+- type: entity
+  id: N14ResourceExtractorBurrowEffect
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: _Forge/Effects/resource_extractor_burrow.rsi
+    state: burrow
+    drawdepth: Effects
+  - type: EmitSoundOnSpawn
+    sound:
+      path: /Audio/Effects/break_stone.ogg
+      params:
+        volume: -6

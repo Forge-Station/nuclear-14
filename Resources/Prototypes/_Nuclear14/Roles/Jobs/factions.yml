@@ -96,6 +96,7 @@
   - WastelandMusician
   - WastelandScavenger
   - Followers # Forge-Change
+  - Junkbot # Forge-Change
 
 - type: department
   id: Townsfolk

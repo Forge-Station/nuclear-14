@@ -188,7 +188,7 @@ reagent-desc-antidote = Мощный антитоксин, изготовлен�
 reagent-name-healing-poultice = целебная припарка
 reagent-desc-healing-poultice = Порошок, сделанный из большой смеси растений.
 reagent-name-bitterdrink = горький напиток
-reagent-desc-bitterdrink = Смесь измельченных растений с водой, нейтрализующая яд и радиацию в организме.
+reagent-desc-bitterdrink = Смесь измельченных растений с водой.
 reagent-name-smelling-salts = нюхательная соль
 reagent-desc-smelling-salts = Зернистая смесь камней с невероятно сильным запахом.
 reagent-name-mourning-poultice = траурная припарка
@@ -298,6 +298,8 @@ reagent-name-fertilizer = удобрение
 reagent-desc-fertilizer = Чудесное удобрение для ваших растений.
 reagent-name-dung = навоз
 reagent-desc-dung = Навоз животных. Созревает для превращения в компост.
+reagent-name-bone-meal = костная мука
+reagent-desc-bone-meal = Перемолотые кости животных. Хорошее удобрение.
 reagent-name-sulfur = сера
 reagent-desc-sulfur = Молотая сера в порошкообразном виде. Вам стоит надеть противогаз при работе с ним.
 # Other

@@ -1,0 +1,69 @@
+Entries:
+- author: Sh1ntra
+  changes:
+    - type: Add
+      message: Added fun :D
+  id: 1
+  time: '2026-10-16T20:10:51.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/551
+- author: Sh1ntra
+  changes:
+    - type: Add
+      message: Автоотправка ченжлогов дискорд вебхуком
+  id: 2
+  time: '2026-10-16T20:47:17.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/552
+- author: akino-tech
+  changes:
+    - type: Tweak
+      message: >-
+        Вся довоенная еда теперь содержит радиоактивные частицы и наносит
+        радиационный урон при переваривании восприимчивым к нему персонажам.
+  id: 3
+  time: '2026-10-17T10:38:53.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/547
+- author: akino-tech
+  changes:
+    - type: Fix
+      message: Исправлено устранение клина по Z у оружия с переключением хвата.
+  id: 4
+  time: '2026-10-17T11:07:42.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/555
+- author: akino-tech
+  changes:
+    - type: Add
+      message: >-
+        Добавлено руководство по готовке с примерами рецептов и списком
+        продуктов.
+    - type: Fix
+      message: >-
+        Исправлены советы по выживанию, очистке воды и применению
+        противорадиационных препаратов.
+    - type: Tweak
+      message: Обновлены введение справочника и сведения о фракциях и ролях.
+    - type: Fix
+      message: >-
+        Добавлены недостающие переводы подчинения Вашингтонского Братства и
+        уровней доступа Легиона и Западного Братства; исправлено название общего
+        доступа Легиона.
+    - type: Fix
+      message: >-
+        Уточнены подписи подчинения и названия зон доступа Fallout, исправлены
+        ссылки на переводы подчинения отдельных ролей.
+  id: 5
+  time: '2026-10-17T12:31:20.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/541
+- author: yanus42
+  changes:
+    - type: Add
+      message: Звания для ролей.
+  id: 6
+  time: '2026-10-18T14:22:54.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/511
+- author: Patrioy
+  changes:
+    - type: Fix
+      message: Обновил Уэндовер, Юму, Джуно
+  id: 7
+  time: '2026-10-18T14:26:20.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/557

@@ -32,7 +32,7 @@ public sealed class PaperLanguageSystem : EntitySystem
 
         var names = new List<string>();
         var seen = new HashSet<string>();
-        foreach (var segment in GetEffectiveSegments(component, paper?.Content))
+        foreach (var segment in PaperLanguageFormatting.GetEffectiveSegments(component, paper?.Content))
         {
             if (!seen.Add(segment.Language.Id))
                 continue;
@@ -54,75 +54,82 @@ public sealed class PaperLanguageSystem : EntitySystem
             ("languages", string.Join(", ", names))));
     }
 
-    public void RecordWriting(Entity<PaperLanguageComponent> paper, PaperInputTextMessage args)
+    public void EnsureSegments(EntityUid uid, PaperComponent paper)
+    {
+        var paperLang = EnsureComp<PaperLanguageComponent>(uid);
+        if (paperLang.Segments.Count > 0 || string.IsNullOrWhiteSpace(paper.Content))
+            return;
+
+        paperLang.Segments.Add(new PaperLanguageSegment
+        {
+            Text = paper.Content,
+            Language = paperLang.Language
+        });
+        Dirty(uid, paperLang);
+    }
+
+    /// <summary>
+    /// Keeps stretches the writer cannot read, then writes or rewrites the rest in the chosen language.
+    /// </summary>
+    public bool TryApplyWriting(EntityUid uid, PaperComponent paperComp, PaperInputTextMessage args, out string content)
+    {
+        content = paperComp.Content;
+        var paperLang = EnsureComp<PaperLanguageComponent>(uid);
+        EnsureSegments(uid, paperComp);
+
+        if (!TryResolveWriteLanguage(args, paperLang, out var language))
+            return false;
+
+        var lockedCount = PaperLanguageFormatting.GetLockedPrefixCount(
+            paperLang.Segments,
+            lang => CanUnderstandPaper(args.Actor, lang));
+
+        var prefix = PaperLanguageFormatting.JoinRange(paperLang.Segments, 0, lockedCount);
+        content = PaperLanguageFormatting.Combine(prefix, args.Text);
+        if (content.Length > paperComp.ContentSize)
+            return false;
+
+        while (paperLang.Segments.Count > lockedCount)
+            paperLang.Segments.RemoveAt(paperLang.Segments.Count - 1);
+
+        if (!string.IsNullOrWhiteSpace(args.Text))
+        {
+            paperLang.Segments.Add(new PaperLanguageSegment
+            {
+                Text = args.Text,
+                Language = language
+            });
+        }
+
+        paperLang.Language = language;
+        Dirty(uid, paperLang);
+        return true;
+    }
+
+    private bool TryResolveWriteLanguage(
+        PaperInputTextMessage args,
+        PaperLanguageComponent paperLang,
+        out ProtoId<LanguagePrototype> language)
     {
         var languageId = args.Language;
         if (string.IsNullOrEmpty(languageId))
-            languageId = paper.Comp.Language;
+            languageId = paperLang.Language;
 
-        ProtoId<LanguagePrototype> language = languageId;
+        language = languageId;
         if (language == SharedLanguageSystem.UniversalPrototype || _language.GetLanguagePrototype(language) == null)
-            return;
+            return false;
 
-        var canWrite = HasComp<GhostComponent>(args.Actor)
-                       || TryComp<UniversalLanguageSpeakerComponent>(args.Actor, out var uni) && uni.Enabled
-                       || _language.CanSpeak(args.Actor, language);
-        if (!canWrite)
-            return;
-
-        TryComp<PaperComponent>(paper.Owner, out var paperComp);
-        var currentContent = paperComp?.Content ?? string.Empty;
-        var fragment = PaperLanguageFormatting.GetAppendedFragment(
-            PaperLanguageFormatting.Join(paper.Comp.Segments),
-            args.Text);
-
-        if (paper.Comp.Segments.Count == 0)
-        {
-            var prior = currentContent;
-            if (!string.IsNullOrEmpty(fragment) && currentContent.EndsWith(fragment, StringComparison.Ordinal))
-                prior = currentContent[..^fragment.Length].TrimEnd('\r', '\n');
-
-            if (!string.IsNullOrEmpty(prior) && prior != fragment)
-                paper.Comp.Segments.Add(new PaperLanguageSegment { Text = prior, Language = paper.Comp.Language });
-        }
-
-        if (string.IsNullOrWhiteSpace(fragment))
-        {
-            paper.Comp.Language = language;
-            Dirty(paper);
-            return;
-        }
-
-        if (paper.Comp.Segments.Count > 0 && paper.Comp.Segments[^1].Language == language)
-        {
-            var last = paper.Comp.Segments[^1];
-            var separator = last.Text.Length == 0 || last.Text.EndsWith('\n') ? string.Empty : "\n";
-            last.Text += separator + fragment;
-        }
-        else
-        {
-            paper.Comp.Segments.Add(new PaperLanguageSegment { Text = fragment, Language = language });
-        }
-
-        paper.Comp.Language = language;
-        Dirty(paper);
+        return HasComp<GhostComponent>(args.Actor)
+               || TryComp<UniversalLanguageSpeakerComponent>(args.Actor, out var uni) && uni.Enabled
+               || _language.CanSpeak(args.Actor, language);
     }
 
-    private static List<PaperLanguageSegment> GetEffectiveSegments(PaperLanguageComponent component, string? fallbackContent)
+    private bool CanUnderstandPaper(EntityUid user, ProtoId<LanguagePrototype> language)
     {
-        if (component.Segments.Count > 0)
-            return component.Segments;
+        if (HasComp<GhostComponent>(user)
+            || TryComp<UniversalLanguageSpeakerComponent>(user, out var uni) && uni.Enabled)
+            return true;
 
-        if (string.IsNullOrWhiteSpace(fallbackContent))
-            return [];
-
-        return
-        [
-            new PaperLanguageSegment
-            {
-                Text = fallbackContent,
-                Language = component.Language
-            }
-        ];
+        return _language.CanUnderstand(user, language);
     }
 }

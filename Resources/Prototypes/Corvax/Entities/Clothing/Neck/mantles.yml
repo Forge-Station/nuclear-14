@@ -85,3 +85,14 @@
     sprite: Corvax/Clothing/Neck/westernoldponcho.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Neck/westernoldponcho.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCapeStranger
+  name: stranger cape
+  description: A tattered cape once worn by a drifter from the wastes.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/strangercape.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/strangercape.rsi

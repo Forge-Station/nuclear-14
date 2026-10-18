@@ -1,8 +1,17 @@
 - type: entity
   parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterLegionnaireRecruitArmorBlueprint
+  name: чертёж легкой брони легионера
+  suffix: Craft, Legion
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterLegionnaireRecruitArmorRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
   id: N14ClothingOuterLegionnaireBaseArmorBlueprint
   name: blueprint legionnaire armor
-  suffix: Craft
+  suffix: Craft, Legion
   components:
     - type: STBlueprint
       blueprint: N14ClothingOuterLegionnaireBaseArmorRecipe
@@ -11,7 +20,43 @@
   parent: N14BaseBlueprintPaper
   id: N14ClothingOuterLegionnaireVeteranArmorBlueprint
   name: blueprint legionnaire veteran armor
-  suffix: Craft
+  suffix: Craft, Legion
   components:
     - type: STBlueprint
       blueprint: N14ClothingOuterLegionnaireVeteranArmorRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterDeanLegionnairePrimeArmorBlueprint
+  name: чертёж укреплённой легионерской брони
+  suffix: Craft, Legion
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterDeanLegionnairePrimeArmorRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterLegionnaireHeavyArmorBlueprint
+  name: чертёж тяжёлой легионерской брони
+  suffix: Craft, Legion
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterLegionnaireHeavyArmorRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingHeadHatBaseballHelmetBlueprint
+  name: чертёж бейсбольного шлема
+  suffix: Craft, Legion
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingHeadHatBaseballHelmetRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingHeadHatLightBaseballHelmetBlueprint
+  name: чертёж лёгкого бейсбольного шлема
+  suffix: Craft, Legion
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingHeadHatLightBaseballHelmetRecipe

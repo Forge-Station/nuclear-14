@@ -9,6 +9,12 @@ public sealed partial class CCVars
 
     public static readonly CVarDef<string> UIHoverSound =
         CVarDef.Create("interface.hover_sound", "/Audio/UserInterface/hover.ogg", CVar.REPLICATED);
+    /// Forge-Change-Start
+
+    /// <summary>Use the New Vegas theme in the lobby and character setup.</summary>
+    public static readonly CVarDef<bool> LobbyNewVegasTheme =
+        CVarDef.Create("ui.lobby_new_vegas_theme", true, CVar.CLIENTONLY | CVar.ARCHIVE);
+    /// Forge-Change-End
 
     public static readonly CVarDef<string> UILayout =
         CVarDef.Create("ui.layout", "Separated", CVar.CLIENTONLY | CVar.ARCHIVE);

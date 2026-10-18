@@ -230,7 +230,7 @@ namespace Content.Client.Paper.UI
         ///     Initialize the paper contents, i.e. the text typed by the
         ///     user and any stamps that have peen put on the page.
         /// </summary>
-        public void Populate(SharedPaperComponent.PaperBoundUserInterfaceState state)
+        public void Populate(SharedPaperComponent.PaperBoundUserInterfaceState state, string? editorText = null, bool hasLocked = false)
         {
             bool isEditing = state.Mode == SharedPaperComponent.PaperAction.Write;
             bool wasEditing = InputContainer.Visible;
@@ -240,12 +240,10 @@ namespace Content.Client.Paper.UI
             var msg = new FormattedMessage();
             msg.AddMarkupPermissive(state.Text);
 
-            // Forge-Change: do not copy existing words into the editor (append-only).
-            var appending = isEditing && state.Text.Length > 0;
-            if (appending)
+            // Forge-Change: unknown stretches stay locked above; known text is edited below.
+            var showLocked = isEditing && hasLocked && state.Text.Length > 0;
+            if (showLocked)
             {
-                // One line between locked text and the editor — not the old stamp padding,
-                // which left a half-page gap before the highlighted input.
                 msg.AddMarkupPermissive("\r\n");
             }
             else if (!isEditing)
@@ -258,18 +256,21 @@ namespace Content.Client.Paper.UI
 
             WrittenTextLabel.SetMessage(msg, _allowedTags, DefaultTextColor);
 
-            // Forge-Change-Start: existing text stays locked; the editor is only for new writing
+            // Forge-Change-Start
             if (isEditing)
             {
-                WrittenTextLabel.Visible = appending;
+                WrittenTextLabel.Visible = showLocked;
                 BlankPaperIndicator.Visible = false;
-                // Keep the highlighted input snug under existing text instead of filling the page.
-                InputContainer.VerticalExpand = !appending;
-                InputContainer.VerticalAlignment = appending ? VAlignment.Top : VAlignment.Stretch;
-                if (!wasEditing)
+                InputContainer.VerticalExpand = !showLocked;
+                InputContainer.VerticalAlignment = showLocked ? VAlignment.Top : VAlignment.Stretch;
+                var seed = editorText ?? string.Empty;
+                var shouldCopyText = Input.TextLength == 0 && seed.Length > 0;
+                if (!wasEditing || shouldCopyText)
                 {
                     Input.TextRope = Rope.Leaf.Empty;
                     Input.CursorPosition = new TextEdit.CursorPos();
+                    if (seed.Length > 0)
+                        Input.InsertAtCursor(seed);
                 }
             }
             else

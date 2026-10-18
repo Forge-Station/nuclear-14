@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "license": "CC-BY-NC-SA-3.0",
+  "copyright": "made by Baron & NaiN",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "hide_radstag"
+    },
+    {
+      "name": "hide_pigrat"
+    },
+    {
+      "name": "hide_molerat"
+    },
+    {
+      "name": "hide_radhog"
+    }
+  ]
+}

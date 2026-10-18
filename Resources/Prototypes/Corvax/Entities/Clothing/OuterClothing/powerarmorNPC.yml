@@ -5,6 +5,12 @@
   name: рейдерская силовая броня
   description: Устрашающая, прочная, шипастая. Всё, что нужно Рейдеру от комплекта силовой брони.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/raider.rsi
   - type: Clothing
@@ -40,6 +46,12 @@
   name: китайская силовая броня
   description: Модель Т-51, на обратной стороне виднеется потёртая надпись "made in chine".
   components:
+    - type: ToolRefinable
+      qualityNeeded: Prying
+      refineTime: 10
+      refineFuel: 0
+      refineResult:
+      - id: N14ComponentArmorPlateMK3
     - type: Armor
       modifiers:
         coefficients:

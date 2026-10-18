@@ -1,0 +1,27 @@
+- type: construction
+  id: ForgeSinewCuff
+  name: петля из сухожилий
+  description: Петля из сухожилий для связывания рук. Рвётся при снятии.
+  graph: ForgeSinewCuff
+  startNode: start
+  targetNode: cuff
+  category: construction-category-materials
+  icon:
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: sinewcuff
+  objectType: Item
+  hide: false
+
+- type: constructionGraph
+  id: ForgeSinewCuff
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: cuff
+      steps:
+      - material: ForgeAnimalSinew
+        amount: 2
+        doAfter: 5
+  - node: cuff
+    entity: ForgeAnimalSinewCuff

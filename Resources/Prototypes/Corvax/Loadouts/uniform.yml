@@ -16,7 +16,7 @@
     - !type:CharacterDepartmentRequirement
         departments:
           - Wastelander
-          - Tribe  
+          - Tribe
 - type: loadout
   id: N14LoadoutNClothingUniformJumpsuittribalpantsnecklace
   category: Uniform
@@ -34,7 +34,7 @@
     - !type:CharacterDepartmentRequirement
         departments:
           - Wastelander
-          - Tribe  
+          - Tribe
 
 - type: loadout
   id: N14LoadoutNClothingUniformJumpsuittribalpantsf
@@ -53,7 +53,7 @@
     - !type:CharacterDepartmentRequirement
         departments:
           - Wastelander
-          - Tribe  
+          - Tribe
 
 - type: loadout
   id: N14LoadoutClothingUniformJumpsuitdrylanderTribal
@@ -72,7 +72,7 @@
     - !type:CharacterDepartmentRequirement
         departments:
           - Wastelander
-          - Tribe  
+          - Tribe
 
 - type: loadout
   id: N14LoadoutUniformJumpsuitTownGuardLight
@@ -103,3 +103,39 @@
       - TownSheriff
   items:
     - N14ClothingUniformJumpsuitTownGuard
+
+- type: loadout
+  id: M14ClothingUniformKhansUniformShorts
+  category: Uniform
+  cost: 2
+  exclusive: true
+  items:
+    - M14ClothingUniformKhansUniformShorts
+  requirements:
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: M14ClothingUniformKhansUniform
+  category: Uniform
+  cost: 2
+  exclusive: true
+  items:
+    - M14ClothingUniformKhansUniform
+  requirements:
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander

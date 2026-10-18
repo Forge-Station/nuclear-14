@@ -28,6 +28,7 @@ using static Content.Shared.Humanoid.SharedHumanoidAppearanceSystem;
 using CharacterSetupGui = Content.Client.Lobby.UI.CharacterSetupGui;
 using HumanoidProfileEditor = Content.Client.Lobby.UI.HumanoidProfileEditor;
 
+
 namespace Content.Client.Lobby;
 
 public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState>, IOnStateExited<LobbyState>
@@ -195,6 +196,8 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
     {
         if (_characterSetup != null && _profileEditor != null)
         {
+            /// Forge-Change
+            _characterSetup.ApplyTheme();
             _characterSetup.Visible = true;
             _profileEditor.Visible = true;
             return (_characterSetup, _profileEditor);

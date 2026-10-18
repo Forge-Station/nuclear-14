@@ -6,14 +6,30 @@
   name: job-name-ncr-soldier
   description: job-description-ncr-soldier
   playTimeTracker: NCRSoldier
+  #Forge-Change-Start
+  ranks:
+    - rank: NCRCorporal
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRSoldier
+          min: 144000 # 2400 minutes
+    - rank: NCRPrivateFirstClass
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRSoldier
+          min: 72000 # 1200 minutes
+    - rank: NCRPrivate
+  #Forge-Change-End
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: NCR
-      min: 10800 # 3 hours Corvax-Change
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 10800 # 3 hours Corvax-Change
+  # Forge-Change-End
   startingGear: NCRSoldierGear
   icon: "JobIconNcrSoldier" # Forge-Change
   supervisors: job-supervisors-ncr

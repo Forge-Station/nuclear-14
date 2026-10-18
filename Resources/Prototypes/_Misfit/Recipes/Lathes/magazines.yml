@@ -1,0 +1,19 @@
+- type: latheRecipe
+  id: N14MagazineSMG9mmP90
+  result: N14MagazineSMG9mmP90
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 50
+    Steel: 250
+    N14Gunpowder: 100
+
+- type: latheRecipe
+  id: N14MagazineAmerican120Drum
+  result: N14MagazineAmerican120Drum
+  category: N14AmmoMagazine
+  completetime: 8
+  materials:
+    Lead: 120
+    Steel: 420
+    N14Gunpowder: 120

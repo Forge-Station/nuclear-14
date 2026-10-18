@@ -73,6 +73,7 @@
     staticRecipes: # Guns or melee weapons related only.
     # Guns
     - BowImprovised
+    - WeaponFlareGun # Forge-add
     # Ammo
     - ArrowRegular # Forge-add
     # Melee
@@ -155,10 +156,13 @@
     - Magazine762Rifle
     - Magazine762AmmoShort
     - Magazine762AmmoBelt
+    - Magazine762PKMBox # Forge-add
     - MagazineBox762
     - SpeedLoader9
     - N14MagazinePistol9mm
     - N14MagazineSMG9mm
+    - N14MagazineSMG9mmP90 # Forge-Add
+    - N14MagazineAmerican120Drum # Forge-Add
     - MagazineBox9mm
     - SpeedLoader10
     - N14MagazinePistol10mm
@@ -169,6 +173,7 @@
     - N14TopMagazineSMG12mm
     - MagazineBox12
     # - N14ShellShotgun12
+    - ShellShotgunFlare # Forge-add
     - N14MagazineShotgun12
     - MagazineBox12gauge
     # - N14ShellShotgun20
@@ -329,12 +334,22 @@
     - N14MiningDrill
     - N14HandheldRadio
     #Misc
+    - N14TapeRecorder
+    - N14CassetteTape
     - N14FlashlightLantern
     - N14GlowstickRed
     - N14CleanGauze1
     - DoorElectronics
     - MagazineBoxNail # Forge-Change
     - DrumMagazineNailGun # Forge-Change
+    #Электроника # Forge-Add
+    - HotplateMachineCircuitboard
+    - MicrowaveMachineCircuitboard
+    - ReagentGrinderMachineCircuitboard
+    - CellRechargerCircuitboard
+    - PowerCageRechargerCircuitboard
+    - N14PowerCellMedium
+    - N14PowerCellHigh
 
 - type: entity
   parent: BaseStructure
@@ -460,21 +475,28 @@
     - OreBag # Forge-add
     - ClothingHeadHatWelding # Forge-add
     - Binoculars # Forge-add
+    - FireExtinguisher # Forge-add
     # Kitchen
     - N14DrinkNukaColaEmpty # Forge-add
     - N14JunkTincan # Forge-add
     - N14ButchersCleaver
     - N14KitchenKnife
-    - N14DrinkMug
+    - N14RollingPin
     - N14DrinkMugMetal
+    - N14Spoon
+    - N14Fork
     - N14DrinkGlass
     - N14DrinkShotGlass
     - N14DrinkGlassCoupeShaped
+    - N14DrinkShaker
+    - N14BarSpoon
+    - N14DrinkJigger
     - N14FoodPlate
     - N14FoodPlateSmall
     - N14FoodPlatePlastic
     - N14FoodPlateSmallPlastic
     - N14FoodPlateTin
+    - N14FoodBowlBig
     - N14FoodKebabSkewer
     - N14JunkCookpot
     - N14JunkCoffeepot
@@ -492,6 +514,7 @@
     # - N14WeaponSprayNozzle # Forge-Change
     # - N14ClothingBackpackWaterTank # Forge-Change
     # Chemistry
+    - Medkit
     - ChemBag # Forge-add
     - N14DoctorSyringe # Forge-add
     - N14InjectionSyringe # Forge-add
@@ -510,7 +533,7 @@
     # - N14JetInhaler
     # - N14TurboInhaler
     # - N14HydraInhaler
-    # - N14StimpakEmpty 
+    # - N14StimpakEmpty
     # - N14ChemicalSyringeAntidoteEmpty
     # - N14PsychoSyringe
     # - N14RadAwayPhialEmpty # Forge-add-end
@@ -616,6 +639,9 @@
     # Other
     - Charcoal
     - CharcoalToCoal
+  - type: MaterialStorageMagnetPickup
+    magnetEnabled: True
+    range: 1.25
 
 - type: entity
   parent: N14WorkbenchBase

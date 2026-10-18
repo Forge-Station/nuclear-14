@@ -57,6 +57,12 @@
   parent: N14ClothingOuterBase
   id: N14ClothingOuterBOSInquisitorBlackCoat
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/InquisitorBlackCoat.rsi
   - type: Clothing

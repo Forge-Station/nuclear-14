@@ -1,0 +1,105 @@
+- type: entity
+  parent: BaseMachine
+  id: N14BaseResourceExtractor
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: _Forge/Structures/Machines/resource_extractor.rsi
+    layers:
+    - state: off
+      map: [ "enum.ResourceExtractorVisuals.Running" ]
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.ResourceExtractorVisuals.Running:
+        enum.ResourceExtractorVisuals.Running:
+          True: { state: cycle }
+          False: { state: off }
+  - type: AmbientSound
+    range: 5
+    volume: 0
+    sound:
+      path: /Audio/Ambience/Objects/engine_hum.ogg
+    enabled: false
+  - type: ChemicalFuelGeneratorAdapter
+    solution: tank
+    reagents:
+      WeldingFuel: 1
+  - type: SolutionContainerManager
+    solutions:
+      tank:
+        maxVol: 250
+  - type: RefillableSolution
+    solution: tank
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+  - type: UserInterface
+    interfaces:
+      enum.ResourceExtractorUiKey.Key:
+        type: ResourceExtractorBoundUserInterface
+        interactionRange: 1.5
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+        interactionRange: 1.5
+
+# Экстрактор руды.
+- type: entity
+  parent: N14BaseResourceExtractor
+  id: N14ResourceExtractorOre
+  name: ore extractor
+  description: A fuel-powered industrial machine that slowly extracts ore into its output hopper.
+  suffix: Mapping
+  components:
+  - type: ResourceExtractor
+    production: N14ResourceExtractorOreProduction
+    extractionDuration: 60
+    # Расход топлива в секунду. Объем бака определяется в maxVol (пример выше).
+    fuelConsumptionRate: 0.5
+  - type: Storage
+    clickInsert: false
+    grid:
+    - 0,0,7,3
+    maxItemSize: Normal
+    storageOpenSound: /Audio/Effects/closetopen.ogg
+    storageCloseSound: /Audio/Effects/closetclose.ogg
+
+# Медицинский экстрактор. (для примера)
+- type: entity
+  parent: N14BaseResourceExtractor
+  id: N14ResourceExtractorMedical
+  name: medical resource extractor
+  description: A fuel-powered industrial machine configured to recover sealed medical supplies.
+  suffix: Mapping
+  components:
+  - type: ResourceExtractor
+    production: N14ResourceExtractorMedicalProduction
+    extractionDuration: 30
+    fuelConsumptionRate: 0.9
+  - type: Storage
+    clickInsert: false
+    grid:
+    - 0,0,5,2
+    maxItemSize: Normal
+    storageOpenSound: /Audio/Effects/closetopen.ogg
+    storageCloseSound: /Audio/Effects/closetclose.ogg
+
+# Экстрактор бутылочных крышек, если кому-то понадобится маник из гаррис мод дарк рп. (для примера)
+- type: entity
+  parent: N14BaseResourceExtractor
+  id: N14ResourceExtractorCaps
+  name: caps resource extractor
+  description: A fuel-powered industrial machine configured to recover pre-water bottlecaps.
+  suffix: Mapping
+  components:
+  - type: ResourceExtractor
+    production: N14ResourceExtractorCapsProduction
+    extractionDuration: 100
+    fuelConsumptionRate: 1
+  - type: Storage
+    clickInsert: false
+    grid:
+    - 0,0,10,2
+    maxItemSize: Normal
+    storageOpenSound: /Audio/Effects/closetopen.ogg
+    storageCloseSound: /Audio/Effects/closetclose.ogg

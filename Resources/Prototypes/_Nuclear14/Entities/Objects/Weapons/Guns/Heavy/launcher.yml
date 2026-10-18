@@ -89,3 +89,8 @@
     backStrength: 6
   - type: StaticPrice
     price: 175
+  - type: MeleeWeapon
+    attackRate: 1.3333
+    damage:
+      types:
+        Blunt: 14 # Forge-Change

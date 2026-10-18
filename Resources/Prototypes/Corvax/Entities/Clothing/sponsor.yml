@@ -144,6 +144,12 @@
   id: N14ClothingOuterLegionPaladinKiller
   categories: [ HideSpawnMenu ]
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Appearance
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/PowerArmor/paladinKiller.rsi

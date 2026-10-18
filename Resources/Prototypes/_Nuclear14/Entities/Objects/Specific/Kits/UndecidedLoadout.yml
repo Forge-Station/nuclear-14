@@ -74,7 +74,7 @@
   - type: UndecidedLoadoutBackpack
     possibleSets:
     - NCRA_SurgeonSet
-    # - NCRA_DoctorSet
+    # - NCRA_DoctorSet # Forge-Change
     - NCRA_ComMedSet
 
 - type: entity
@@ -89,7 +89,7 @@
     possibleSets:
     - NCRA_GunnerSet
     - NCRA_GrenadierSet
-    - NCRA_SniperSet   
+    - NCRA_SniperSet
 
 - type: entity
   id: NCRSGTloadoutkits
@@ -171,6 +171,7 @@
     possibleSets:
     - MBoS_IniLas_Set
     - MBoS_IniBal_Set
+    - MBoS_IniStTr_Set
 
 - type: entity
   id: BoSWashingtonInitSet
@@ -198,6 +199,10 @@
     possibleSets:
     - MBoS_KniLas_Set
     - MBoS_KniBal_Set
+    - MBoS_KniStTr_Set
+    - MBoS_KniSnip_Set
+
+#forge-add
 
 - type: entity
   id: BoSWashingtonKnightSet
@@ -416,7 +421,7 @@
   content:
   - KitNCR_MedSurgeon
 
-# - type: UndecidedLoadoutBackpackSet # Forge-Change
+# - type: UndecidedLoadoutBackpackSet
 #   id: NCRA_DoctorSet
 #   name: undecided-loadout-category-med-doc-name
 #   description: undecided-loadout-category-med-doc-description
@@ -424,7 +429,7 @@
 #     sprite: _Nuclear14/Objects/Misc/kits.rsi
 #     state: medic
 #   content:
-#   - KitNCR_MedDoctor 
+#   - KitNCR_MedDoctor
 
 - type: UndecidedLoadoutBackpackSet
   id: NCRA_ComMedSet
@@ -685,6 +690,16 @@
   content:
   - KitMBoS_IniBal
 
+- type: UndecidedLoadoutBackpackSet
+  id: MBoS_IniStTr_Set
+  name: undecided-loadout-category-mbos-init-sttr-name
+  description: undecided-loadout-category-mbos-init-sttr-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitMBoS_IniStTr
+
 # MBoS Knight
 - type: UndecidedLoadoutBackpackSet
   id: MBoS_KniLas_Set
@@ -705,6 +720,26 @@
     state: rifleman
   content:
   - KitMBoS_KniBal
+
+- type: UndecidedLoadoutBackpackSet
+  id: MBoS_KniStTr_Set
+  name: undecided-loadout-category-mbos-kni-sttr-name
+  description: undecided-loadout-category-mbos-kni-sttr-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitMBoS_KniStTr
+
+- type: UndecidedLoadoutBackpackSet
+  id: MBoS_KniSnip_Set
+  name: undecided-loadout-category-mbos-kni-snip-name
+  description: undecided-loadout-category-mbos-kni-snip-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitMBoS_KniSnip
 
 # MBoS Scribes
 - type: UndecidedLoadoutBackpackSet

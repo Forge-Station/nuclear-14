@@ -6,14 +6,25 @@
   name: job-name-ncr-medic
   description: job-description-ncr-medic
   playTimeTracker: NCRDoctor
+  #Forge-Change-Start
+  ranks:
+    - rank: NCRSergeant
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRDoctor
+          min: 144000 # 2400 minutes
+    - rank: NCRCorporal
+  #Forge-Change-End
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: NCR
-      min: 10800 # 3 hours Corvax-Change
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 10800 # 3 hours Corvax-Change
+  # Forge-Change-End
   startingGear: NCRMedicGear
   icon: "JobIconNcrMedic" # Forge-Change
   supervisors: job-supervisors-ncr

@@ -1,0 +1,17 @@
+- type: latheRecipe
+  id: N14CassetteTape
+  result: N14CassetteTape
+  category: N14Tools
+  completetime: 2
+  materials:
+    Steel: 50
+    Plastic: 150
+
+- type: latheRecipe
+  id: N14TapeRecorder
+  result: N14TapeRecorder
+  category: N14Tools
+  completetime: 3
+  materials:
+    Steel: 250
+    Plastic: 250

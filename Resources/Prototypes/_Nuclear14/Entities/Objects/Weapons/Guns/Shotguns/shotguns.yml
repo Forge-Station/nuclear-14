@@ -40,7 +40,7 @@
     attackRate: 1.3333
     damage:
       types:
-        Blunt: 8.0
+        Blunt: 18.0 # Forge-Change
     bluntStaminaDamageFactor: 1.25
     swapKeys: true
     disableHeavy: true
@@ -244,7 +244,7 @@
     attackRate: 1.4
     damage:
       types:
-        Blunt: 10
+        Blunt: 18 # Forge-Change
     bluntStaminaDamageFactor: 1.3333
     swapKeys: true
     disableHeavy: true
@@ -399,7 +399,7 @@
     attackRate: 1.4
     damage:
       types:
-        Blunt: 10
+        Blunt: 18
     bluntStaminaDamageFactor: 1.3333
     swapKeys: true
     disableHeavy: true
@@ -590,7 +590,7 @@
     disableHeavy: true
     damage:
       types:
-        Blunt: 12
+        Blunt: 18 # Forge-Change
     animation: WeaponArcThrust
     wideAnimationRotation: -135
     soundHit:
@@ -647,8 +647,8 @@
     range: 1.75
     damage:
       types:
-        Piercing: 6
-        Slash: 5
+        Piercing: 10 # Forge-Change
+        Slash: 15 # Forge-Change
     animation: WeaponArcThrust
     wideAnimationRotation: -135
     soundHit:

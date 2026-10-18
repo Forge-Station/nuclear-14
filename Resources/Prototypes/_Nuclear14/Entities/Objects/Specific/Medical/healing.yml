@@ -153,15 +153,15 @@
     - tube2
     - tube3
     - tube4
-  - type: Healing
+  - type: Healing #Forge-change
     damageContainers:
       - Biological
     damage:
       types:
-        Blunt: -5
-        Heat: -5
-        Cold: -5
-        Shock: -5
+        #Blunt: -5
+        Heat: -10
+        Cold: -10
+        Shock: -10
         Caustic: -5
     healingBeginSound:
       path: "/Audio/Items/Medical/ointment_begin.ogg"
@@ -242,9 +242,18 @@
     - aloe3
   - type: Sprite
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical_new.rsi
+    scale: 0.8, 0.8
     layers:
     - state: aloe3
       map: ["base"]
+  - type: Healing #Forge-add
+    damageContainers:
+      - Biological
+    damage:
+      types:
+        Heat: -7
+        Cold: -7
+        Shock: -7
 
 - type: entity
   id: N14AloeSalve1

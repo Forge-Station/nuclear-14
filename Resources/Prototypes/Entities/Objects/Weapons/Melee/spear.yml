@@ -189,6 +189,23 @@
   id: SpearBone
   description: A spear made of bones.
   components:
+  # Forge-Change-Start
+  - type: MeleeWeapon
+    damage:
+      types:
+        Piercing: 26
+        Slash: 8
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Piercing: 12
+        Slash: 4
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Piercing: 44
+        Slash: 16
+  # Forge-Change-End
   - type: Sprite
     sprite: Objects/Weapons/Melee/bone_spear.rsi
   - type: Construction

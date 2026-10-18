@@ -1,0 +1,39 @@
+- type: entity
+  id: N14MilitarySentrybotRocket
+  name: missile
+  parent: N14ProjectileMissile
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Projectile
+    damage:
+      types:
+        Blunt: 45
+        Heat: 25
+  - type: Explosive
+    explosionType: Default
+    maxIntensity: 30
+    intensitySlope: 6
+    totalIntensity: 90
+    maxTileBreak: 0
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Explosives/explosives.rsi
+    layers:
+    - state: bullet
+  - type: N14RocketTrail
+    interval: 0.08
+    offset: 0.7
+
+- type: entity
+  id: N14SmokePuff
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    sprite: Effects/chemsmoke.rsi
+    state: chemsmoke
+    scale: 0.32, 0.32
+  - type: TimedDespawn
+    lifetime: 0.7
+  - type: Tag
+    tags:
+    - HideContextMenu

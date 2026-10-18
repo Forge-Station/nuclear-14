@@ -389,6 +389,16 @@
     N14Gunpowder: 200
 
 - type: latheRecipe
+  id: Magazine762PKMBox
+  result: Magazine762PKMBox
+  category: N14AmmoMagazine
+  completetime: 5
+  materials: # Forge-Change
+    Lead: 200
+    Steel: 500
+    N14Gunpowder: 200
+
+- type: latheRecipe
   id: MagazineBox762
   result: MagazineBox762
   category: N14AmmoBox

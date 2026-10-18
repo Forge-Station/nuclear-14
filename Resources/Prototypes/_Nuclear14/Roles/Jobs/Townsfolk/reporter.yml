@@ -7,13 +7,15 @@
   description: job-description-townreporter
   playTimeTracker: WastelandReporter
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: Townsfolk
-      min: 7200 # 2 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: Townsfolk
+    min: 7200 # 2 hours
+  # Forge-Change-End
   startingGear: WastelandReporterGear
   icon: "JobIconTownReporter" # Forge-Change
   supervisors: job-supervisors-townsfolk
