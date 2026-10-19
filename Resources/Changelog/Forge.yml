@@ -84,3 +84,26 @@ Entries:
   id: 8
   time: '2026-10-19T14:04:11.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/521
+- author: Patrioy
+  changes:
+    - type: Tweak
+      message: Новые наборы для деканов
+    - type: Tweak
+      message: Поменял наборы ветерана легиона
+    - type: Tweak
+      message: Увеличил объем энергобатареи до 30 снарядов.
+    - type: Tweak
+      message: Понёрфил 22ЛР ПП
+    - type: Tweak
+      message: Добавил в полевой набор Писаря Лазер RCW. (О нет, Бафф БС)
+    - type: Tweak
+      message: Бейсбольные шлема легионеров теперь защищают 15% вместо 20%
+    - type: Tweak
+      message: >-
+        Обновил торгомат и его содержимое добавив туда 22ЛР ппшку и изменил
+        позиции товаров.
+    - type: Fix
+      message: Исправил гайдбуки
+  id: 9
+  time: '2026-10-19T17:56:10.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/560
