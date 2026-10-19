@@ -386,7 +386,7 @@
   description: A flat forged metal plate for V2 armor.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV2.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: Plate
@@ -402,7 +402,7 @@
   description: A quenched flat forged metal plate for V2 armor.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV2.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: Plate
@@ -419,7 +419,7 @@
   description: A tempered flat forged metal plate for V2 armor.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV2.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: Plate
@@ -437,7 +437,7 @@
   description: A wide vertical plate welded together from flat plates. Forged into a torso piece on an anvil.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/torsoplateV2.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/torsoplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: TorsoPlate
@@ -450,7 +450,7 @@
   description: A narrow vertical metal plate, to be forged into an arm piece.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/armplateV2.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/armplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: ArmPlate
@@ -463,7 +463,7 @@
   description: A wide horizontal metal plate, to be forged into a leg piece.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/legplateV2.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/legplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: LegPlate
@@ -476,7 +476,7 @@
   description: A torso plate forged in a furnace. Ready for the anvil.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplateV2.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: TorsoPlate
@@ -497,7 +497,7 @@
   description: An arm plate forged in a furnace.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedarmplateV2.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedarmplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: ArmPlate
@@ -511,7 +511,7 @@
   description: A leg plate forged in a furnace.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedlegplateV2.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedlegplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: LegPlate
@@ -526,7 +526,7 @@
   description: A flat forged metal plate for V3 armor.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV3.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: Plate
@@ -542,7 +542,7 @@
   description: A quenched flat forged metal plate for V3 armor.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV3.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: Plate
@@ -559,7 +559,7 @@
   description: A tempered flat forged metal plate for V3 armor.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV3.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: Plate
@@ -577,7 +577,7 @@
   description: A wide vertical plate welded together from flat plates. Forged into a torso piece on an anvil.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/torsoplateV3.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/torsoplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: TorsoPlate
@@ -590,7 +590,7 @@
   description: A narrow vertical metal plate, to be forged into an arm piece.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/armplateV3.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/armplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: ArmPlate
@@ -603,7 +603,7 @@
   description: A wide horizontal metal plate, to be forged into a leg piece.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/legplateV3.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/legplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: LegPlate
@@ -616,7 +616,7 @@
   description: A torso plate forged in a furnace. Ready for the anvil.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplateV3.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: TorsoPlate
@@ -637,7 +637,7 @@
   description: An arm plate forged in a furnace.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedarmplateV3.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedarmplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: ArmPlate
@@ -651,7 +651,7 @@
   description: A leg plate forged in a furnace.
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedlegplateV3.rsi
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedlegplate.rsi
     state: plate
   - type: N14ForgePlate
     plateType: LegPlate

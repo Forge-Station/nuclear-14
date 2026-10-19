@@ -13,7 +13,7 @@
   id: N14ForgedTorsoplateV2
   name: materials-n14-forged-torsoplate-v2
   unit: materials-unit-n14-plate
-  icon: { sprite: /Textures/Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplateV2.rsi, state: plate }
+  icon: { sprite: /Textures/Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplate.rsi, state: plate }
   color: "#8B7D6B"
   price: 0.05
 
@@ -21,7 +21,7 @@
   id: N14ForgedTorsoplateV3
   name: materials-n14-forged-torsoplate-v3
   unit: materials-unit-n14-plate
-  icon: { sprite: /Textures/Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplateV3.rsi, state: plate }
+  icon: { sprite: /Textures/Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplate.rsi, state: plate }
   color: "#8B7D6B"
   price: 0.05
 
