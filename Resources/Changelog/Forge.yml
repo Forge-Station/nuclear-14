@@ -67,3 +67,20 @@ Entries:
   id: 7
   time: '2026-10-18T14:26:20.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/557
+- author: akino-tech
+  changes:
+    - type: Add
+      message: В пип-бой добавлены радиоприёмник с выбором двух станций и ВолтЧат.
+    - type: Add
+      message: >-
+        В плеер пип-боя добавлены ползунок громкости и все песни музыкального
+        автомата.
+    - type: Tweak
+      message: >-
+        Обновлены интерфейс и иконки пип-боя, добавлен выбор зелёного и
+        янтарного цвета.
+    - type: Remove
+      message: Из пип-боя убраны новости станции и кнопка рингтона в новом интерфейсе.
+  id: 8
+  time: '2026-10-19T14:04:11.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/521
