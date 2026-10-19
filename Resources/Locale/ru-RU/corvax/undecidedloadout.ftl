@@ -55,6 +55,18 @@ undecided-loadout-category-dean-berserker-description =
     2 болы, 2 целебные парки, 1 гидра, 2 порошка берсерка,
     1 рулон бинтов, 1 боевая аптечка полная, 1 рацион легионеров
 
+undecided-loadout-category-dean-demoman-name = Набор декана-подрывника
+undecided-loadout-category-dean-demoman-description =
+    Ящик со всем необходимым для того чтобы разнести укрепления в щепки.
+    Содержит: 1 гранатомет, 1 пистолет .45, 2 пистолетных магазина .45,
+    2 целебные парки, 1 порошок берсерка,
+    1 рулон бинтов, 1 рацион легионеров, 1 мачете-гладий
+
+undecided-loadout-category-dean-heavy-sniper-name = Набор декана-снайпера
+undecided-loadout-category-dean-heavy-sniper-description =
+    Ящик со всем необходимым для того чтобы превратить очередную силовую в консерву.
+    Содержит: 1 самодельная винтовка .50, 1 пистолет .45, 2 пистолетных магазина .45,
+    2 целебные парки, 1 рулон бинтов 1 рацион легионеров
 
 undecided-loadout-category-veteran-firearm-name = Огнестрельный набор легионера-ветерана
 undecided-loadout-category-veteran-firearm-description =
@@ -75,8 +87,7 @@ undecided-loadout-category-veteran-berserker-description =
 undecided-loadout-category-veteran-suppressor-name = Набор легионера-ветерана подавителя
 undecided-loadout-category-veteran-suppressor-description =
     Ящик со всем необходимым для того чтобы подавлять противника огнем.
-    Содержит: 1 гвездомет, 1 магазин гвоздей,
-    1 коробку гвоздей, 1 индустриальный кастет,
+    Содержит: 1 П90, 3 магазина к нему, 1 индустриальный кастет,
     1 целебная парка, 1 гидра, 1 рулон бинтов,
     1 рацион легионеров
 

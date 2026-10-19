@@ -1,4 +1,4 @@
-<!-- Forge-Change-Start -->
+
 <Document>
 # Все материалы
 
@@ -71,4 +71,4 @@
 Топливо для Мистера Помощника можно найти, исследуя Пустошь, и это удобный источник топлива для сварочных аппаратов и генераторов.
 <GuideEntityEmbed Entity="N14FuelTankHandy"/>
 </Document>
-<!-- Forge-Change-End -->
+

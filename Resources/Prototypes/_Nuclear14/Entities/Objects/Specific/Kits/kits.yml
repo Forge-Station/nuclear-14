@@ -1199,7 +1199,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponLaserPistol
+      - id: N14WeaponLaserRCW
       - id: N14PowerCellSmall
         amount: 2
       - id: N14CleanGauze10
