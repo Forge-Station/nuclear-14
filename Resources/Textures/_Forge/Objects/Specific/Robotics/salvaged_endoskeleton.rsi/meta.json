@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-NC-SA-3.0",
-  "copyright": "robo_suit taken from tgstation at https://github.com/tgstation/tgstation/commit/cf45322c7ee16f9d7e43d5260daf24ceb77c1b25",
+  "copyright": "robo_suit taken from tgstation at https://github.com/tgstation/tgstation/commit/cf45322c7ee16f9d7e43d5260daf24ceb77c1b25. junkbot_* made by yanus42. mrhandy_* and eyebot_* source sprites taken from Mojave-Sun at https://github.com/Mojave-Sun/mojave-sun-13/blob/3c9fc470595d3106ca57e858239e8f0822630137/mojave/icons/mob/ms13robots.dmi. robo_suit and eyebot_* are CC-BY-SA-3.0.",
   "size": {
     "x": 32,
     "y": 32
