@@ -508,15 +508,12 @@
   category: Neck
   cost: 0
   exclusive: true
-  sponsorLevel: 2
+  sponsorLevel: 3
   requirements:
   - !type:CharacterLogicOrRequirement
     requirements:
     - !type:CharacterJobRequirement
       jobs:
       - CaesarLegionCenturion
-    - !type:CharacterDepartmentRequirement
-      departments:
-      - CaesarLegion
   items:
   - N14ClothingNeckThragg
