@@ -34,6 +34,7 @@
     - Fullauto
     soundGunshot:
       collection: N14Pistol22lrGunshot
+  - type: GunRequiresWield
   - type: GunWieldBonus
     minAngle: -3
     maxAngle: -12

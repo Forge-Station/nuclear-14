@@ -90,12 +90,12 @@
   id: CaravanBuy2_SMGs
   name: "Пистолеты-пулеметы"
   entries:
+  - proto: N14WeaponSMG12mmPipe
+    price: 125
   - proto: N14WeaponSMG9mm
     price: 130
   - proto: N14WeaponSMG45
     price: 150
-  - proto: N14WeaponSMG12mmPipe
-    price: 125
   - proto: N14WeaponSMG10mmPipe
     price: 170
   - proto: N14WeaponSMG9mmCanadian
@@ -104,10 +104,12 @@
     price: 250
   - proto: N14WeaponSMG12mm
     price: 220
-  - proto: N14WeaponSMG9mminfiltrator
-    price: 250
+  - Proto: N14WeaponSMG22Silenced
+    price: 230
   - proto: N14WeaponSMG12mmAdvancedCanadian
     price: 230
+  - proto: N14WeaponSMG9mminfiltrator
+    price: 250
   - proto: N14WeaponSMG10mmSuppressed
     price: 300
   - proto: N14WeaponSMGNAil
