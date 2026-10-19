@@ -333,7 +333,7 @@ undecided-loadout-category-mbos-scribe-medic-description =
 undecided-loadout-category-mbos-scribe-field-name = Полевой набор писаря
 undecided-loadout-category-mbos-scribe-field-description =
     Тайник с вещами писаря Среднезападного Братства.
-    Содержит: 1 AEP-7, 2 энергоячейки, 1 пара боевых перчаток,
+    Содержит: 1 лазер RCW, 2 энергоячейки, 1 пара боевых перчаток,
     1 полевой халат, 1 разгрузка Братства, 1 набор мазей,
     1 рулон бинтов и сухпаёк типа K.
 

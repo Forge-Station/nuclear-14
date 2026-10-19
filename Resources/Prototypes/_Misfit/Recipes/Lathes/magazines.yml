@@ -9,8 +9,8 @@
     N14Gunpowder: 100
 
 - type: latheRecipe
-  id: N14MagazineAmerican120Drum
-  result: N14MagazineAmerican120Drum
+  id: N14MagazineAmerican100Drum
+  result: N14MagazineAmerican100Drum
   category: N14AmmoMagazine
   completetime: 8
   materials:

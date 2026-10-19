@@ -24,9 +24,9 @@
     - state: mag-0
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
-    fireRate: 10
-    minAngle: 4
-    maxAngle: 16
+    fireRate: 7
+    minAngle: 10
+    maxAngle: 25
     angleIncrease: 2
     angleDecay: 14
     selectedMode: Fullauto
@@ -34,6 +34,7 @@
     - Fullauto
     soundGunshot:
       collection: N14Pistol22lrGunshot
+  - type: GunRequiresWield
   - type: GunWieldBonus
     minAngle: -3
     maxAngle: -12
@@ -41,12 +42,12 @@
     slots:
       gun_magazine:
         name: Magazine
-        startingItem: N14MagazineAmerican120Drum
+        startingItem: N14MagazineAmerican100Drum
         insertSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magin.ogg
         ejectSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magout.ogg
         whitelist:
           tags:
-            - N14MagazineAmerican120Drum
+            - N14MagazineAmerican100Drum
       gun_chamber:
         name: Chamber
         startingItem: N14CartridgePistol22
