@@ -107,3 +107,14 @@ Entries:
   id: 9
   time: '2026-10-19T17:56:10.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/560
+- author: yanus42
+  changes:
+    - type: Add
+      message: >-
+        Бронепластины, модификации, и новые типы боргов. (Когда-то янус начнет
+        писать чейнджлог вместо патра, он про, я верю в него).
+    - type: Tweak
+      message: Магнит для верстака хламоборгов.
+  id: 10
+  time: '2026-10-20T15:07:28.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/548
