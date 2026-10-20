@@ -517,3 +517,20 @@
       - CaesarLegionCenturion
   items:
   - N14ClothingNeckThragg
+
+- type: loadout
+  id: LoadoutBoSMidwestScripterBattle
+  category: Outer
+  cost: 0 # Forge-Change
+  customName: false
+  customDescription: false
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe # Forge-Change
+  items:
+    - N14ClothingOuterMidWestBoSScripterBattleArmor
+    - N14ClothingHandsMidWestBoSScripterGlovesCombat
+    - N14ClothingBootsMidWestBoSScripterBattleBoots

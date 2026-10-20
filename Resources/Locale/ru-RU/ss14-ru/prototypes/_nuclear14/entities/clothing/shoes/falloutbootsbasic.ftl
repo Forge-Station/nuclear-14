@@ -18,3 +18,6 @@ ent-N14ClothingBootsLeather = кожаные ботинки
 
 ent-N14ClothingBootsMountie = кожаные сапоги для верховой езды
     .desc = Пара стильных кожаных сапог.
+
+ent-N14ClothingBootsMidWestBoSScripterBattleBoots = боевые ботинки скриптера
+    .desc = Удобные и прочные – то, что нужно для долгих странствий по Пустоши.
