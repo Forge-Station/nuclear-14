@@ -118,3 +118,22 @@ Entries:
   id: 10
   time: '2026-10-20T15:07:28.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/548
+- author: Patrioy
+  changes:
+    - type: Fix
+      message: >-
+        Мои любимые игроки напомнили о брене. Я исправил так называемый недочет
+        в том что он плохо замедлял.
+    - type: Tweak
+      message: Бафф минигана ещё один.
+    - type: Fix
+      message: Убрал клин у лазера RCW
+    - type: Tweak
+      message: >-
+        пальто скриптеров кроме полевого, больше не на 30 колющих... (О НЕТ,
+        НЕРФ БС)
+    - type: Add
+      message: Боевая броня скриптера в спонсорские предметы.
+  id: 11
+  time: '2026-10-20T15:22:02.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/561
