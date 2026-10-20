@@ -1,0 +1,17 @@
+- type: construction
+  id: N14NewspaperDeskConstruction
+  name: newspaper desk
+  description: A desk for composing and printing bulletins.
+  graph: N14NewspaperDeskGraph
+  startNode: start
+  targetNode: complete
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Furniture/Tables/schooldesk.rsi
+    state: desk_1
+  conditions:
+  - !type:TileNotBlocked
