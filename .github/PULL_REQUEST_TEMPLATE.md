@@ -1,34 +1,35 @@
 <!--
-This is a semi-strict format, you can add/remove sections as needed but the order/format should be kept the same
-Remove these comments before submitting
+Формат довольно строгий: секции можно добавлять и убирать по необходимости, но порядок и оформление нужно сохранить.
+Перед отправкой удалите эти комментарии.
 -->
 
-## About the PR
-<!-- What did you change? -->
+## Описание PR
+<!-- Что вы изменили? -->
 
-## Why / Balance
-<!-- Discuss how this would affect game balance or explain why it was changed. Link any relevant discussions or issues. -->
+## Почему / Баланс
+<!-- Как это повлияет на баланс или почему это изменено. Приложите ссылки на обсуждения и issues. -->
 
-## Technical details
-<!-- Summary of code changes for easier review. -->
+## Технические детали
+<!-- Кратко об изменениях в коде, чтобы ревью было проще. -->
 
-## Media
-<!-- Attach media if the PR makes ingame changes (clothing, items, features, etc). 
-Small fixes/refactors are exempt. Media may be used in SS14 progress reports with credit. -->
+## Медиа
+<!-- Приложите скриншоты или видео, если PR меняет игру (одежда, предметы, механики и т.д.).
+Для мелких исправлений и рефакторинга медиа не обязательны. Материалы могут использоваться в отчётах о прогрессе SS14 с указанием автора. -->
 
-# Changelog
+# Список изменений
 
 <!--
-You can add an author after the `:cl:` to change the name that appears in the changelog (ex: `:cl: Death`)
-Leaving it blank will default to your GitHub display name
-This includes all available types for the changelog
+После `:cl:` можно указать автора, чтобы в списке изменений было его имя (например: `:cl: Death`).
+Если автора не указать, подставится отображаемое имя с GitHub.
+Ниже перечислены все доступные типы записей.
+Слова `:cl:`, `add`, `remove`, `tweak` и `fix` не переводите: их читает бот списка изменений.
 -->
 
 :cl:
-- add: Added fun :D
+- add: Добавили веселье :D
 <!--
-- add: Added fun!
-- remove: Removed fun!
-- tweak: Changed fun!
-- fix: Fixed fun!
+- add: Добавили веселье!
+- remove: Убрали веселье!
+- tweak: Изменили веселье!
+- fix: Починили веселье!
 -->
