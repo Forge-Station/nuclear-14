@@ -101,6 +101,78 @@
     - Trash
     - BorgGenericTorso
 
+- type: entity
+  id: N14MrHandyBody
+  parent: BaseItem
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/mrhandy_parts.rsi
+    state: body
+  - type: Item
+    size: Small
+  - type: Tag
+    tags: [N14MrHandyBody]
+
+- type: entity
+  id: N14MrHandyManipulator
+  parent: BaseItem
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/mrhandy_parts.rsi
+    state: manipulator
+  - type: Item
+    size: Small
+  - type: Tag
+    tags: [N14MrHandyManipulator]
+
+- type: entity
+  id: N14MrHandyThruster
+  parent: BaseItem
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/mrhandy_parts.rsi
+    state: thruster
+  - type: Item
+    size: Small
+  - type: Tag
+    tags: [N14MrHandyThruster]
+
+- type: entity
+  id: N14EyebotBody
+  parent: BaseItem
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/eyebot_parts.rsi
+    state: body
+  - type: Item
+    size: Small
+  - type: Tag
+    tags: [N14EyebotBody]
+
+- type: entity
+  id: N14EyebotAntenna
+  parent: BaseItem
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/eyebot_parts.rsi
+    state: antenna
+  - type: Item
+    size: Small
+  - type: Tag
+    tags: [N14EyebotAntenna]
+
+- type: entity
+  id: N14EyebotThruster
+  parent: BaseItem
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/eyebot_parts.rsi
+    state: thruster
+  - type: Item
+    size: Small
+  - type: Tag
+    tags: [N14EyebotThruster]
+
 # Оптический сенсор. Замена вспышке. Не слепит :(
 - type: entity
   id: N14OpticalSensor
@@ -121,14 +193,12 @@
 - type: entity
   id: N14JunktronEndoskeleton
   parent: CyborgEndoskeleton
-  name: makeshift endoskeleton
-  description: A crude frame that junktron robots are built on.
   components:
   - type: Sprite
-    sprite: _Forge/Objects/Specific/Robotics/junkbot_endoskeleton.rsi
+    sprite: _Forge/Objects/Specific/Robotics/salvaged_endoskeleton.rsi
     state: robo_suit
   - type: ItemMapper
-    sprite: _Forge/Objects/Specific/Robotics/junkbot_endoskeleton.rsi
+    sprite: _Forge/Objects/Specific/Robotics/salvaged_endoskeleton.rsi
     mapLayers:
       junkbot_l_arm+o:
         whitelist:
@@ -154,6 +224,43 @@
         whitelist:
           tags:
           - BorgGenericTorso
+      mrhandy_body+o:
+        minCount: 1
+        whitelist:
+          tags: [N14MrHandyBody]
+      mrhandy_manipulator1+o:
+        minCount: 1
+        whitelist:
+          tags: [N14MrHandyManipulator]
+      mrhandy_manipulator2+o:
+        minCount: 2
+        whitelist:
+          tags: [N14MrHandyManipulator]
+      mrhandy_manipulator3+o:
+        minCount: 3
+        whitelist:
+          tags: [N14MrHandyManipulator]
+      mrhandy_thruster+o:
+        minCount: 1
+        whitelist:
+          tags: [N14MrHandyThruster]
+      eyebot_body+o:
+        minCount: 1
+        whitelist:
+          tags: [N14EyebotBody]
+      eyebot_antenna+o:
+        minCount: 1
+        whitelist:
+          tags: [N14EyebotAntenna]
+      eyebot_thruster+o:
+        minCount: 1
+        whitelist:
+          tags: [N14EyebotThruster]
+  - type: PartAssembly
+    parts:
+      generic: [BorgGenericLArm, BorgGenericRArm, BorgGenericLLeg, BorgGenericRLeg, BorgGenericHead, BorgGenericTorso]
+      mrhandy: [N14MrHandyBody, N14MrHandyManipulator, N14MrHandyManipulator, N14MrHandyManipulator, N14MrHandyThruster]
+      eyebot: [N14EyebotBody, N14EyebotAntenna, N14EyebotThruster]
   - type: Construction
     graph: N14JunktronCyborg
     node: start

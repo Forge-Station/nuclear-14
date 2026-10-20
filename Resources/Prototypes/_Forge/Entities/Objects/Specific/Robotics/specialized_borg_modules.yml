@@ -1,0 +1,419 @@
+# Специализированные модули и встроенные инструменты Мистера Помощника и хламоглаза.
+- type: entity
+  abstract: true
+  id: N14BaseSpecializedBorgModule
+  parent: [BaseBorgModule, BaseProviderBorgModule]
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+
+- type: entity
+  id: N14BorgModuleMrHandyMedical
+  parent: N14BaseSpecializedBorgModule
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+      color: "#FFD080"
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-treatment
+  - type: Tag
+    tags: [N14BorgModuleMrHandy]
+  - type: ItemBorgModule
+    items: [N14HandheldHealthAnalyzerUnpowered, N14BorgCleanGauze, N14BorgOintment, N14BorgMedicalSyringe, N14BorgBeaker]
+
+- type: entity
+  id: N14BorgModuleMrHandySurgery
+  parent: N14BaseSpecializedBorgModule
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+      color: "#FFD080"
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-surgery
+  - type: Tag
+    tags: [N14BorgModuleMrHandy]
+  - type: ItemBorgModule
+    items: [N14MrHandyOmnisurgeon, N14HandheldHealthAnalyzerUnpowered]
+
+- type: entity
+  id: N14BorgModuleMrHandyDefibrillator
+  parent: N14BaseSpecializedBorgModule
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+      color: "#FFD080"
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-defib
+  - type: Tag
+    tags: [N14BorgModuleMrHandy]
+  - type: ItemBorgModule
+    items: [N14MrHandyPortafib]
+
+- type: entity
+  id: N14MrHandyPortafib
+  parent: DefibrillatorOneHandedUnpowered
+  categories: [HideSpawnMenu]
+  components:
+  # У родителя без питания остаётся обработчик переключения, требующий PowerCellDraw.
+  - type: RemoveComponents
+    components: [ToggleCellDraw]
+  - type: Sprite
+    sprite: DeltaV/Objects/Medical/portafib.rsi
+  - type: Icon
+    sprite: DeltaV/Objects/Medical/portafib.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: DeltaV/Objects/Medical/portafib.rsi
+
+- type: entity
+  id: N14MrHandyOmnisurgeon
+  parent: OmnimedTool
+  categories: [HideSpawnMenu]
+  components:
+  - type: SurgeryTool
+    startSound:
+      path: /Audio/_Shitmed/Medical/Surgery/saw.ogg
+      params:
+        volume: -20
+  # Возвращаем обычную скорость всем функциям OmnimedTool.
+  - type: Hemostat
+    speed: 1
+  - type: Scalpel
+    speed: 1
+  - type: Drill
+    speed: 1
+  - type: BoneSetter
+    speed: 1
+  - type: Retractor
+    speed: 1
+  - type: Cautery
+    speed: 1
+  - type: BoneGel
+    speed: 1
+  - type: BoneSaw
+    speed: 1
+  - type: Tweezers
+    speed: 1
+  - type: Tending
+    speed: 1
+
+- type: entity
+  id: N14BorgBandage
+  parent: N14Bandage
+  categories: [HideSpawnMenu]
+  components:
+  - type: Stack
+    count: 10
+    lingering: true
+
+- type: entity
+  id: N14BorgOintment
+  parent: N14Ointment10
+  categories: [HideSpawnMenu]
+  components:
+  - type: Stack
+    lingering: true
+
+- type: entity
+  id: N14BorgCleanGauze
+  parent: N14CleanGauze10
+  categories: [HideSpawnMenu]
+  components:
+  - type: Stack
+    lingering: true
+
+- type: entity
+  id: N14BorgBeaker
+  parent: Beaker
+  categories: [HideSpawnMenu]
+  components:
+  # Наполнение мензурки отображается на предмете; для рук борга нет нужных состояний.
+  - type: SolutionContainerVisuals
+    inHandsFillBaseName: null
+
+- type: entity
+  id: N14BorgMedicalSyringe
+  parent: N14DoctorSyringe
+  categories: [HideSpawnMenu]
+  components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Chemistry/syringe.rsi
+  # Руки модуля имеют тип Middle, а у шприца N14 наполнение есть только для Left и Right.
+  - type: SolutionContainerVisuals
+    inHandsFillBaseName: null
+  - type: RemoveComponents
+    components: [TrashOnSolutionEmpty]
+
+- type: entity
+  id: N14BorgMedicalInjector
+  parent: N14ChemicalSyringe
+  categories: [HideSpawnMenu]
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      pen:
+        maxVol: 10
+  - type: RefillableSolution
+    solution: pen
+  - type: Hypospray
+    solutionName: pen
+    transferAmount: 5
+  - type: UseDelay
+    delay: 0.5
+
+- type: entity
+  id: N14BorgModuleEyebotCombat
+  parent: N14BaseSpecializedBorgModule
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+      color: "#6080FF"
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-syndicate
+  - type: Tag
+    tags: [N14BorgModuleEyebot]
+  - type: ItemBorgModule
+    items: [N14EyebotLaserEmitter, N14EyebotShockEmitter]
+
+- type: entity
+  id: N14BorgModuleMrHandyLaser
+  parent: N14BaseSpecializedBorgModule
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+      color: "#FFD080"
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-syndicate
+  - type: Tag
+    tags: [N14BorgModuleMrHandy]
+  - type: ItemBorgModule
+    items: [N14MrHandyLaserEmitter, N14MrHandyCombatSaw]
+
+- type: entity
+  id: N14MrHandyCombatSaw
+  parent: BaseItem
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/saw.rsi
+    state: saw
+    scale: 0.8, 0.8
+  - type: Icon
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/saw.rsi
+    state: saw
+  - type: Item
+    size: Small
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/saw.rsi
+  - type: MeleeWeapon
+    attackRate: 1
+    range: 1.2
+    angle: 60
+    heavyDamageBaseModifier: 1
+    heavyRangeModifier: 1
+    damage:
+      types:
+        Slash: 35
+    soundHit:
+      path: /Audio/Weapons/chainsaw.ogg
+      params:
+        volume: -10
+  - type: Tool
+    qualities: [Sawing]
+
+- type: entity
+  id: N14MrHandyHeavyCombatSaw
+  parent: N14MrHandyCombatSaw
+  components:
+  - type: MeleeWeapon
+    damage:
+      types:
+        Slash: 45
+
+- type: entity
+  id: N14BorgModuleMrHandyPlasma
+  parent: N14BaseSpecializedBorgModule
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+      color: "#FFD080"
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-syndicate
+      color: "#80FF80"
+  - type: Tag
+    tags: [N14BorgModuleMrHandy]
+  - type: ItemBorgModule
+    items: [N14MrHandyPlasmaEmitter, N14MrHandyHeavyCombatSaw]
+
+- type: entity
+  abstract: true
+  id: N14BaseRobotEnergyEmitter
+  parent: BaseItem
+  categories: [HideSpawnMenu]
+  components:
+  - type: Item
+    size: Small
+  - type: Appearance
+  - type: AmmoCounter
+  - type: FollowDistance
+    backStrength: 6
+  - type: Gun
+    minAngle: 9
+    maxAngle: 18
+    angleIncrease: 3
+    angleDecay: 4
+    fireRate: 1
+    selectedMode: SemiAuto
+    availableModes: [SemiAuto]
+    fireOnDropChance: 0
+    # Оружие может попасть в руку борга до первого сетевого обновления темпа стрельбы.
+    resetOnHandSelected: false
+    soundGunshot:
+      collection: N14RechargerRifleGunshot
+  - type: BasicEntityAmmoProvider
+    proto: BulletLaser
+    capacity: 9
+    count: 9
+  - type: RechargeBasicEntityAmmo
+    rechargeCooldown: 2
+    rechargeSound:
+      path: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+
+- type: entity
+  id: N14EyebotLaserEmitter
+  parent: N14BaseRobotEnergyEmitter
+  components:
+  - type: FollowDistance
+    backStrength: 3
+  - type: Item
+    sprite: _Nuclear14/Objects/Weapons/Guns/Battery/recharger_pistol.rsi
+  - type: Gun
+    minAngle: 1
+    maxAngle: 1
+    angleIncrease: 0
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Guns/Battery/recharger_pistol.rsi
+    state: base
+  - type: Icon
+    sprite: _Nuclear14/Objects/Weapons/Guns/Battery/recharger_pistol.rsi
+    state: base
+
+- type: entity
+  id: N14MrHandyLaserEmitter
+  parent: N14EyebotLaserEmitter
+  components:
+  - type: FollowDistance
+    backStrength: 6
+
+- type: entity
+  id: N14MrHandyPlasmaEmitter
+  parent: N14BaseRobotEnergyEmitter
+  components:
+  - type: Item
+    sprite: _Nuclear14/Objects/Weapons/Guns/Battery/plasma_pistol.rsi
+  - type: FollowDistance
+    backStrength: 5
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Guns/Battery/plasma_pistol.rsi
+    state: base
+  - type: Icon
+    sprite: _Nuclear14/Objects/Weapons/Guns/Battery/plasma_pistol.rsi
+    state: base
+  - type: Gun
+    minAngle: 1
+    maxAngle: 1
+    angleIncrease: 0
+    soundGunshot:
+      collection: N14PlasmaPistolGunshot
+  - type: BasicEntityAmmoProvider
+    proto: BulletPlasma
+
+- type: entity
+  id: N14EyebotShockEmitter
+  parent: BaseItem
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Battery/tesla_gun.rsi
+    state: base
+  - type: Icon
+    sprite: Objects/Weapons/Guns/Battery/tesla_gun.rsi
+    state: base
+  - type: Item
+    size: Small
+    sprite: Objects/Weapons/Guns/Battery/tesla_gun.rsi
+  - type: FollowDistance
+    backStrength: 3
+  - type: AmmoCounter
+  - type: Gun
+    fireRate: 0.5
+    projectileSpeed: 25
+    minAngle: 0
+    maxAngle: 0
+    angleIncrease: 0
+    selectedMode: SemiAuto
+    availableModes: [SemiAuto]
+    resetOnHandSelected: false
+    fireOnDropChance: 0
+    soundGunshot:
+      path: /Audio/Effects/Lightning/lightningshock.ogg
+  - type: BasicEntityAmmoProvider
+    proto: N14EyebotContactArc
+    capacity: 1
+    count: 1
+  - type: RechargeBasicEntityAmmo
+    rechargeCooldown: 20
+    rechargeSound:
+      path: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+      params:
+        volume: -25
+
+- type: entity
+  id: N14EyebotContactArc
+  parent: BaseBullet
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: _Forge/Effects/eyebot_contact_arc.rsi
+    layers:
+    - state: arc
+      shader: unshaded
+  - type: StaminaDamageOnCollide
+    damage: 100
+  - type: Projectile
+    damage:
+      types:
+        Shock: 5
+    impactEffect: N14EyebotContactArcImpact
+    soundHit:
+      path: /Audio/Effects/Lightning/lightningshock.ogg
+  # При скорости 25 тайлов/с разряд существует около 1,25 тайла полёта.
+  - type: TimedDespawn
+    lifetime: 0.05
+
+- type: entity
+  id: N14EyebotContactArcImpact
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    sprite: _Forge/Effects/eyebot_contact_arc.rsi
+    layers:
+    - state: arc
+      shader: unshaded
+  - type: TimedDespawn
+    lifetime: 0.2

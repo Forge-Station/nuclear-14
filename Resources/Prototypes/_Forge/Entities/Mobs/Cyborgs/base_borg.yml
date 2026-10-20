@@ -2,7 +2,7 @@
 # НЕ объявлять здесь `- type: BorgChassis` — в связке с CameraFollow роняет превью спавн-меню хз почему мб потом пофиксим. Пока живем с 6-ю модулями у борга
 - type: entity
   abstract: true
-  id: N14BaseBorg
+  id: N14BaseBorgChassis
   parent: [BorgChassisGeneric, BaseFrequencyRadio]
   components:
   - type: ItemToggle
@@ -41,7 +41,8 @@
     - ShowJobIcons
     - ShowMindShieldIcons
   - type: Targeting
-  - type: CameraFollow
+  - type: Inventory
+    templateId: N14Borg
   - type: LanguageKnowledge
     speaks:
     - English
@@ -53,3 +54,10 @@
     - Chinese
     - Latin
     - RobotTalk
+
+- type: entity
+  abstract: true
+  id: N14BaseBorg
+  parent: N14BaseBorgChassis
+  components:
+  - type: CameraFollow

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "by yanus42",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "armor_light"
+    },
+    {
+      "name": "armor_medium"
+    },
+    {
+      "name": "armor_heavy"
+    },
+    {
+      "name": "optics_nightvision"
+    },
+    {
+      "name": "optics_universal"
+    },
+    {
+      "name": "optics_flash"
+    }
+  ]
+}
