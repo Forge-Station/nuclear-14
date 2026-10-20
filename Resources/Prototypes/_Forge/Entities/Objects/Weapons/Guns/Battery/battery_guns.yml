@@ -1,6 +1,6 @@
 - type: entity
   name: лазер RCW
-  parent: N14BaseWeaponPowerCell
+  parent: [ N14BaseWeaponPowerCell, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRCW
   description: Энергетическое лазерное оружие с высокой скорострельностью, по силуэту напоминающее пистолет-пулемет. Предназначено для ведения боя на ближних дистанциях. Отличается низкой точностью и высоким энергопотреблением, однако способно вести продолжительный непрерывный огонь.
   components:
