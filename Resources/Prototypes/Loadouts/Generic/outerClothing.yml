@@ -1,6 +1,6 @@
 - type: loadout
   id: LoadoutOuterCoatBomberjacket
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -11,7 +11,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatHoodieBlack
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterHoodieBlack
@@ -21,7 +21,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatHoodieGrey
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -32,7 +32,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatWinterCoat
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -43,7 +43,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatHyenhSweater
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -54,7 +54,7 @@
 
 - type: loadout
   id: LoadoutOuterWinterCoatLong
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -65,7 +65,7 @@
 
 - type: loadout
   id: LoadoutOuterWinterCoatPlaid
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterWinterCoatPlaid
@@ -75,7 +75,7 @@
 
 - type: loadout
   id: LoadoutOuterVestValet
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterVestValet
@@ -85,7 +85,7 @@
 
 - type: loadout
   id: LoadoutOuterVest
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterVest
@@ -96,7 +96,7 @@
 # Letterman Jackets
 - type: loadout
   id: LoadoutOuterCoatLettermanBlue
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatLettermanBlue
@@ -106,7 +106,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatLettermanRed
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatLettermanRed
@@ -117,7 +117,7 @@
 # MNK
 - type: loadout
   id: LoadoutOuterCoatMNKWhiteHoodie
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -128,7 +128,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatMNKBlackTopCoat
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatMNKBlackTopCoat
@@ -138,7 +138,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatMNKBlackJacket
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatMNKBlackJacket
@@ -149,7 +149,7 @@
 # Contractor Jackets
 - type: loadout
   id: LoadoutOuterCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   guideEntry: NanoTrasen
   items:
@@ -160,7 +160,7 @@
 
 - type: loadout
   id: LoadoutOuterCsCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCsCorporateJacket
@@ -170,7 +170,7 @@
 
 - type: loadout
   id: LoadoutOuterEeCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   guideEntry: EinsteinEngines
   items:
@@ -181,7 +181,7 @@
 
 - type: loadout
   id: LoadoutOuterHiCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   guideEntry: HephaestusIndustries
   items:
@@ -192,7 +192,7 @@
 
 - type: loadout
   id: LoadoutOuterHmCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterHmCorporateJacket
@@ -202,7 +202,7 @@
 
 - type: loadout
   id: LoadoutOuterIdCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterIdCorporateJacket
@@ -212,7 +212,7 @@
 
 - type: loadout
   id: LoadoutOuterBcCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterBcCorporateJacket
@@ -222,7 +222,7 @@
 
 - type: loadout
   id: LoadoutOuterDdCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterDdCorporateJacket
@@ -232,7 +232,7 @@
 
 - type: loadout
   id: LoadoutOuterFaCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterFaCorporateJacket
@@ -242,7 +242,7 @@
 
 - type: loadout
   id: LoadoutOuterGeCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterGeCorporateJacket
@@ -252,7 +252,7 @@
 
 - type: loadout
   id: LoadoutOuterZhCorporateJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   guideEntry: ZengHuPharmaceuticals
   items:
@@ -263,7 +263,7 @@
 
 - type: loadout
   id: LoadoutOuterDenimJacket
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterDenimJacket
@@ -274,7 +274,7 @@
 # Flannel
 - type: loadout
   id: LoadoutOuterFlannelRed
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterFlannelRed
@@ -284,7 +284,7 @@
 
 - type: loadout
   id: LoadoutOuterFlannelGreen
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterFlannelGreen
@@ -294,7 +294,7 @@
 
 - type: loadout
   id: LoadoutOuterFlannelBlue
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterFlannelBlue
@@ -304,7 +304,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatTrench
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatTrench
@@ -314,7 +314,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatJensen
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatJensen
@@ -324,7 +324,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatGentle
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatGentle
@@ -334,7 +334,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatInspector
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatInspector
@@ -344,7 +344,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatOvercoat
-  category: Outer
+  category: OuterClothing
   cost: 2
   items:
     - ClothingOuterCoatOvercoat
@@ -354,7 +354,7 @@
 
 - type: loadout
   id: LoadoutOuterBomberAerostatic
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatBomberAerostatic
@@ -364,7 +364,7 @@
 
 - type: loadout
   id: LoadoutOuterBomberPunkRed
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatBomberPunkRed
@@ -374,7 +374,7 @@
 
 - type: loadout
   id: LoadoutOuterJacketLeather
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatJacketLeather
@@ -384,7 +384,7 @@
 
 - type: loadout
   id: LoadoutOuterJacketBiker
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatJacketBiker
@@ -394,7 +394,7 @@
 
 - type: loadout
   id: LoadoutOuterJacketJamrock
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatJacketJamrock
@@ -404,7 +404,7 @@
 
 - type: loadout
   id: LoadoutOuterJacketLettermanBlue
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatJacketLettermanBlue
@@ -414,7 +414,7 @@
 
 - type: loadout
   id: LoadoutOuterJacketLettermanBrown
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatJacketLettermanBrown
@@ -424,7 +424,7 @@
 
 - type: loadout
   id: LoadoutOuterJacketLettermanMagenta
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatJacketLettermanMagenta
@@ -434,7 +434,7 @@
 
 - type: loadout
   id: LoadoutOuterJacketLettermanRed
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatJacketLettermanRed
@@ -444,7 +444,7 @@
 
 - type: loadout
   id: LoadoutOuterBomberPinkSleeves
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatBomberPinkSleeves
@@ -454,7 +454,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatAcidRaincoat
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatAcidRaincoat
@@ -464,7 +464,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatAcidRaincoatBlue
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatAcidRaincoatBlue
@@ -474,7 +474,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatAcidRaincoatGreen
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatAcidRaincoatGreen
@@ -484,7 +484,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatAcidRaincoatMagenta
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatAcidRaincoatMagenta
@@ -494,7 +494,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatAcidRaincoatYellow
-  category: Outer
+  category: OuterClothing
   cost: 0
   items:
     - ClothingOuterCoatAcidRaincoatYellow
@@ -504,7 +504,7 @@
 
 - type: loadout
   id: LoadoutOuterSuitJacket
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -515,7 +515,7 @@
 
 - type: loadout
   id: LoadoutOuterSuitJacketOpened
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -526,7 +526,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatModern
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -537,7 +537,7 @@
 
 - type: loadout
   id: LoadoutOuterTailcoat
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -548,7 +548,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatVictorian
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatVictorian
@@ -558,7 +558,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatVictorianRed
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterCoatVictorianRed
@@ -568,7 +568,7 @@
 
 - type: loadout
   id: LoadoutOuterCardiganBasic
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -579,7 +579,7 @@
 
 - type: loadout
   id: LoadoutOuterCardiganBasicOpened
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -590,7 +590,7 @@
 
 - type: loadout
   id: LoadoutOuterCardiganArgyle
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -601,7 +601,7 @@
 
 - type: loadout
   id: LoadoutOuterCardiganArgyleOpened
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -612,7 +612,7 @@
 
 - type: loadout
   id: LoadoutOuterCardiganSweater
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -623,7 +623,7 @@
 
 - type: loadout
   id: LoadoutOuterCardiganSweaterOpened
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -634,7 +634,7 @@
 
 - type: loadout
   id: LoadoutOuterCardiganSlim
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -645,7 +645,7 @@
 
 - type: loadout
   id: LoadoutOuterCardiganSlimOpened
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -656,7 +656,7 @@
 
 - type: loadout
   id: LoadoutOuterCowboyDuster
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -667,7 +667,7 @@
 
 - type: loadout
   id: LoadoutOuterBlazerBasic
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -678,7 +678,7 @@
 
 - type: loadout
   id: LoadoutOuterBlazerBasicOpened
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -689,7 +689,7 @@
 
 - type: loadout
   id: LoadoutOuterBlazerLong
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -700,7 +700,7 @@
 
 - type: loadout
   id: LoadoutOuterBlazerLongOpened
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -711,7 +711,7 @@
 
 - type: loadout
   id: LoadoutOuterBlazerFormal
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -722,7 +722,7 @@
 
 - type: loadout
   id: LoadoutOuterBlazerLooseSleeve
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -733,7 +733,7 @@
 
 - type: loadout
   id: LoadoutOuterBlazerFlatCollar
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -744,7 +744,7 @@
 
 - type: loadout
   id: LoadoutOuterBlazerPosh
-  category: Outer
+  category: OuterClothing
   cost: 1
   items:
     - ClothingOuterBlazerPosh
@@ -754,7 +754,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatPeacoat
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -765,7 +765,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatPeacoatOpened
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -776,7 +776,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatAsymmetric
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -787,7 +787,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatAsymmetricOpened
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -798,7 +798,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatSubmariner
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -809,7 +809,7 @@
 
 - type: loadout
   id: LoadoutOuterCoatSubmarinerOpened
-  category: Outer
+  category: OuterClothing
   cost: 0
   customColorTint: true
   items:
@@ -820,7 +820,7 @@
 
 - type: loadout
   id: LoadoutOuterVestColorable
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:
@@ -831,7 +831,7 @@
 
 - type: loadout
   id: LoadoutOuterVestThick
-  category: Outer
+  category: OuterClothing
   cost: 1
   customColorTint: true
   items:

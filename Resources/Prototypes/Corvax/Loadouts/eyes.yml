@@ -1,6 +1,6 @@
 - type: loadout
   id: N14ClothingSnowGoggles
-  category: Accessories
+  category: Eyes
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement

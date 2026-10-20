@@ -85,7 +85,7 @@
 
 - type: loadout
   id: LoadoutNCRN14ClothingOuterRangerWeathered
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -100,7 +100,7 @@
 
 - type: loadout
   id: LoadoutNCRN14ClothingOuterRangerFox
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -115,7 +115,7 @@
 
 - type: loadout
   id: LoadoutNCRN14ClothingOuterRangerPrice
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:

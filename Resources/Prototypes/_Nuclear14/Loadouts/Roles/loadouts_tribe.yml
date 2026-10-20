@@ -19,7 +19,7 @@
 
 - type: loadout
   id: N14TribalSword
-  category: Weapons
+  category: WeaponsMelee
   cost: 4
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -33,7 +33,7 @@
 
 - type: loadout
   id: N14ClothingOuterElderwintercoat
-  category: Outer
+  category: OuterArmor
   cost: 1
   exclusive: true
   requirements:
@@ -47,7 +47,7 @@
 
 - type: loadout
   id: N14ClothingOuterdrylandelder
-  category: Outer
+  category: OuterArmor
   cost: 1
   exclusive: true
   requirements:
@@ -61,10 +61,13 @@
 
 - type: loadout
   id: N14ClothingOuterBandito
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   exclusive: true
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 12000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     - !type:CharacterJobRequirement
@@ -79,10 +82,13 @@
 
 - type: loadout
   id: N14ClothingOuterforager
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   exclusive: true
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 12000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     - !type:CharacterJobRequirement
@@ -92,10 +98,13 @@
 
 - type: loadout
   id: N14ClothingOuterheadtaker
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   exclusive: true
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 12000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     - !type:CharacterJobRequirement
@@ -105,10 +114,13 @@
 
 - type: loadout
   id: N14ClothingOuterhunter
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   exclusive: true
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 12000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     - !type:CharacterJobRequirement
@@ -118,10 +130,13 @@
 
 - type: loadout
   id: N14ClothingOuterponcho
-  category: Outer
-  cost: 1
+  category: OuterArmor
+  cost: 2
   exclusive: true
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 12000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     # Forge-Change-Start
@@ -133,10 +148,13 @@
 
 - type: loadout
   id: N14ClothingOutershaman
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   exclusive: true
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 12000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     - !type:CharacterJobRequirement
@@ -146,7 +164,7 @@
 
 - type: loadout
   id: N14ClothingOuterdrylandersimple
-  category: Outer
+  category: OuterArmor
   cost: 1
   exclusive: true
   requirements:
@@ -283,7 +301,7 @@
 
 - type: loadout
   id: N14TribalHatchet
-  category: Weapons
+  category: WeaponsMelee
   cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -297,7 +315,7 @@
 
 - type: loadout
   id: N14TribalMachete
-  category: Weapons
+  category: WeaponsMelee
   cost: 4
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -311,7 +329,7 @@
 
 - type: loadout
   id: N14TribalClub
-  category: Weapons
+  category: WeaponsMelee
   cost: 4
   requirements:
     - !type:CharacterItemGroupRequirement

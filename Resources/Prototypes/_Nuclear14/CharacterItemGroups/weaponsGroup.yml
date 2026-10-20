@@ -19,6 +19,8 @@
   items:
     - type: loadout
       id: N14SpeedLoader9
+    - type: loadout
+      id: N14PowerCellHigh
 
 - type: characterItemGroup
   id: N14LoadoutMelee
