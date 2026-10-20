@@ -491,6 +491,7 @@
 - type: entity
   parent: N14ClothingOuterTownMediumCoat
   id: N14ClothingOuterMidWestBoSScripterBattleArmor
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/scripterbattlearmor.rsi
@@ -511,6 +512,7 @@
 - type: entity
   parent: N14ClothingHeadHatScavengerHelmet
   id: N14ClothingHeadHatMidWestBoSScripterBattleHood
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Head/Hoods/midwestbattlescripterhood.rsi
@@ -521,6 +523,7 @@
 - type: entity
   parent: N14ClothingBootsCombatFilled
   id: N14ClothingBootsMidWestBoSScripterBattleBoots
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Shoes/Boots/midwestscripterboots.rsi
@@ -531,6 +534,7 @@
 - type: entity
   parent: N14ClothingHandsGlovesCombat
   id: N14ClothingHandsMidWestBoSScripterGlovesCombat
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Hands/Gloves/midwestscripterglovescombat.rsi
