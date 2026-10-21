@@ -229,7 +229,7 @@
 - type: loadout
   id: N14ClothingOuterArmoredKit
   category: OuterArmor
-  cost: 2
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -272,7 +272,7 @@
 - type: loadout
   id: ClothingOuterArmoredWinterCoat
   category: OuterArmor
-  cost: 1
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter

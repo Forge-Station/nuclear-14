@@ -20,7 +20,7 @@
 - type: loadout
   id: N14TribalSword
   category: WeaponsMelee
-  cost: 4
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
@@ -302,7 +302,7 @@
 - type: loadout
   id: N14TribalHatchet
   category: WeaponsMelee
-  cost: 3
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
@@ -316,7 +316,7 @@
 - type: loadout
   id: N14TribalMachete
   category: WeaponsMelee
-  cost: 4
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
@@ -330,7 +330,7 @@
 - type: loadout
   id: N14TribalClub
   category: WeaponsMelee
-  cost: 4
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee

@@ -131,7 +131,7 @@
 - type: loadout
   id: N14KitchenKnife
   category: WeaponsMelee
-  cost: 2
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
@@ -147,7 +147,7 @@
 - type: loadout
   id: N14BrassKnife
   category: WeaponsMelee
-  cost: 3
+  cost: 1
   customColorTint: true
   exclusive: true
   requirements:
@@ -179,3 +179,43 @@
         - Tribe
   items:
     - N14WastelandTribalSpear
+
+- type: loadout
+  id: N14CombatKnife
+  category: WeaponsMelee
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMelee
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14CombatKnife
+
+- type: loadout
+  id: N14ScrapMachete
+  category: WeaponsMelee
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMelee
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ScrapMachete

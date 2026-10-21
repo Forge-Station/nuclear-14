@@ -355,6 +355,9 @@
       departments:
       - CaesarLegion
       - Vault
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -377,6 +380,9 @@
       departments:
       - CaesarLegion
       - Vault
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement
       inverted: true
       jobs:
@@ -412,7 +418,7 @@
 - type: loadout
   id: N14ClothingHandsKnucklesWithClaws
   category: WeaponsMelee
-  cost: 3
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
@@ -432,7 +438,7 @@
 - type: loadout
   id: N14ClothingHandsKnuckles
   category: WeaponsMelee
-  cost: 2
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
