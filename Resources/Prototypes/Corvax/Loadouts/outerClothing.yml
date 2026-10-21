@@ -1,6 +1,6 @@
 - type: loadout
   id: N14ClothingOuterPainspike
-  category: Outer
+  category: OuterArmor
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -20,7 +20,7 @@
 
 - type: loadout
   id: N14ClothingOuterReinforcedLeatherArmor
-  category: Outer
+  category: OuterArmor
   cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -40,7 +40,7 @@
 
 - type: loadout
   id: N14ClothingOuterLightLeatherArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -60,8 +60,8 @@
 
 - type: loadout
   id: N14ClothingOuterTireArmor
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -80,8 +80,8 @@
 
 - type: loadout
   id: N14ClothingOuterVestLeather
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -100,9 +100,12 @@
 
 - type: loadout
   id: N14ClothingOuterInsectArmor
-  category: Outer
-  cost: 4
+  category: OuterArmor
+  cost: 3
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 12000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     - !type:CharacterDepartmentRequirement
@@ -120,7 +123,7 @@
 
 - type: loadout
   id: N14LoadoutOuterTownGuardCoat
-  category: Outer
+  category: OuterClothing
   cost: 0
   exclusive: true
   requirements:
@@ -135,7 +138,7 @@
 
 - type: loadout
   id: N14LoadoutOuterTownGuardLight
-  category: Outer
+  category: OuterArmor
   cost: 3
   exclusive: true
   requirements:
@@ -150,7 +153,7 @@
 
 - type: loadout
   id: N14LoadoutOuterTownGuardRiot
-  category: Outer
+  category: OuterArmor
   cost: 6
   exclusive: true
   requirements:
@@ -165,8 +168,8 @@
 
 - type: loadout
   id: M14ClothingOuterKhanLeatherArmored
-  category: Outer
-  cost: 4
+  category: OuterArmor
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -185,7 +188,7 @@
 
 - type: loadout
   id: M14ClothingOuterKhanLeather
-  category: Outer
+  category: OuterClothing
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -205,8 +208,8 @@
 
 - type: loadout
   id: N14ClothingOuterReinforcedArmorKit
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -225,8 +228,8 @@
 
 - type: loadout
   id: N14ClothingOuterArmoredKit
-  category: Outer
-  cost: 2
+  category: OuterArmor
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -245,9 +248,12 @@
 
 - type: loadout
   id: N14ClothingOuterHeavySteelArmor
-  category: Outer
-  cost: 7
+  category: OuterArmor
+  cost: 5
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 24000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     - !type:CharacterDepartmentRequirement
@@ -265,8 +271,8 @@
 
 - type: loadout
   id: ClothingOuterArmoredWinterCoat
-  category: Outer
-  cost: 1
+  category: OuterArmor
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -285,7 +291,7 @@
 
 - type: loadout
   id: N14ClothingOuterCoatFollowersArmored
-  category: Outer
+  category: OuterArmor
   cost: 4
   requirements:
     - !type:CharacterItemGroupRequirement

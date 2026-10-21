@@ -25,6 +25,13 @@
 - type: loadoutCategory
   id: Items
   root: true
+  subCategories:
+  - ItemsMusic
+  - ItemsSmoking
+  - ItemsTools
+  - ItemsMedical
+  - ItemsFood
+  - ItemsPersonal
 
 #- type: loadoutCategory
 #  id: Jobs
@@ -304,6 +311,9 @@
 - type: loadoutCategory
   id: Outer
   root: true
+  subCategories:
+  - OuterClothing
+  - OuterArmor
 
 - type: loadoutCategory
   id: Shoes

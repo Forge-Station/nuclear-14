@@ -123,7 +123,7 @@
     damageCoefficient: 0.9
 
 - type: entity
-  parent: ClothingOuterWinterCoat
+  parent: [N14ClothingOuterTownMediumCoat, ClothingOuterWinterCoat]
   id: ClothingOuterArmoredWinterCoat
   name: armored winter coat
   description: Roughly stitched together fragments of armor and a sturdy bomber jacket

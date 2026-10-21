@@ -1,8 +1,8 @@
 #Smokes
 - type: loadout
   id: LoadoutItemCig
-  category: Items
-  cost: 0
+  category: ItemsSmoking
+  cost: 1
   items:
     - Cigarette
   requirements:
@@ -11,8 +11,8 @@
 
 - type: loadout
   id: LoadoutItemCigsGreen
-  category: Items
-  cost: 0
+  category: ItemsSmoking
+  cost: 1
   items:
     - CigPackGreen
   requirements:
@@ -21,8 +21,8 @@
 
 - type: loadout
   id: LoadoutItemCigsRed
-  category: Items
-  cost: 0
+  category: ItemsSmoking
+  cost: 1
   items:
     - CigPackRed
   requirements:
@@ -31,8 +31,8 @@
 
 - type: loadout
   id: LoadoutItemCigsBlue
-  category: Items
-  cost: 0
+  category: ItemsSmoking
+  cost: 1
   items:
     - CigPackBlue
   requirements:
@@ -41,8 +41,8 @@
 
 - type: loadout
   id: LoadoutItemCigsBlack
-  category: Items
-  cost: 0
+  category: ItemsSmoking
+  cost: 1
   items:
     - CigPackBlack
   requirements:
@@ -51,7 +51,7 @@
 
 - type: loadout
   id: LoadoutItemCigsMixed
-  category: Items
+  category: ItemsSmoking
   cost: 1
   items:
     - CigPackMixed
@@ -61,8 +61,8 @@
 
 - type: loadout
   id: LoadoutItemCigsSyndicate
-  category: Items
-  cost: 2
+  category: ItemsSmoking
+  cost: 1
   items:
     - CigPackSyndicate
   requirements:
@@ -71,7 +71,7 @@
 
 - type: loadout
   id: LoadoutItemLighter
-  category: Items
+  category: ItemsSmoking
   cost: 1
   customColorTint: true
   items:
@@ -82,7 +82,7 @@
 
 - type: loadout
   id: LoadoutItemLighterCheap
-  category: Items
+  category: ItemsSmoking
   cost: 0
   customColorTint: true
   items:
@@ -93,7 +93,7 @@
 
 - type: loadout
   id: LoadoutItemLighterFlippo
-  category: Items
+  category: ItemsSmoking
   cost: 2
   customColorTint: true
   items:
@@ -104,7 +104,7 @@
 
 - type: loadout
   id: LoadoutItemSmokingPipeFilledTobacco
-  category: Items
+  category: ItemsSmoking
   cost: 0
   items:
     - SmokingPipeFilledTobacco
@@ -114,7 +114,7 @@
 
 - type: loadout
   id: LoadoutItemBlunt
-  category: Items
+  category: ItemsSmoking
   cost: 0
   items:
     - Blunt
@@ -124,7 +124,7 @@
 
 - type: loadout
   id: LoadoutItemJoint
-  category: Items
+  category: ItemsSmoking
   cost: 0
   items:
     - Joint
@@ -135,8 +135,8 @@
 # Instruments
 - type: loadout
   id: LoadoutItemMicrophoneInstrument
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - MicrophoneInstrument
   requirements:
@@ -149,8 +149,8 @@
 
 - type: loadout
   id: LoadoutItemKalimbaInstrument
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - KalimbaInstrument
   requirements:
@@ -163,8 +163,8 @@
 
 - type: loadout
   id: LoadoutItemTrumpetInstrument
-  category: Items
-  cost: 4
+  category: ItemsMusic
+  cost: 1
   items:
     - TrumpetInstrument
   requirements:
@@ -177,8 +177,8 @@
 
 - type: loadout
   id: LoadoutItemElectricGuitar
-  category: Items
-  cost: 5
+  category: ItemsMusic
+  cost: 1
   items:
     - ElectricGuitarInstrument
   requirements:
@@ -191,8 +191,8 @@
 
 - type: loadout
   id: LoadoutItemBassGuitar
-  category: Items
-  cost: 5
+  category: ItemsMusic
+  cost: 1
   items:
     - BassGuitarInstrument
   requirements:
@@ -205,8 +205,8 @@
 
 - type: loadout
   id: LoadoutItemRockGuitar
-  category: Items
-  cost: 5
+  category: ItemsMusic
+  cost: 1
   items:
     - RockGuitarInstrument
   requirements:
@@ -219,8 +219,8 @@
 
 - type: loadout
   id: LoadoutItemAcousticGuitar
-  category: Items
-  cost: 5
+  category: ItemsMusic
+  cost: 1
   items:
     - AcousticGuitarInstrument
   requirements:
@@ -233,8 +233,8 @@
 
 - type: loadout
   id: LoadoutItemViolin
-  category: Items
-  cost: 4
+  category: ItemsMusic
+  cost: 1
   items:
     - ViolinInstrument
   requirements:
@@ -247,7 +247,7 @@
 
 - type: loadout
   id: LoadoutItemHarmonica
-  category: Items
+  category: ItemsMusic
   cost: 1
   items:
     - HarmonicaInstrument
@@ -261,8 +261,8 @@
 
 - type: loadout
   id: LoadoutItemAccordion
-  category: Items
-  cost: 4
+  category: ItemsMusic
+  cost: 1
   items:
     - AccordionInstrument
   requirements:
@@ -275,8 +275,8 @@
 
 - type: loadout
   id: LoadoutItemFlute
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - FluteInstrument
   requirements:
@@ -289,7 +289,7 @@
 
 - type: loadout
   id: LoadoutItemOcarina
-  category: Items
+  category: ItemsMusic
   cost: 1
   items:
     - OcarinaInstrument
@@ -304,7 +304,7 @@
 # Survival Kit
 - type: loadout
   id: LoadoutItemsEmergencyOxygenTank
-  category: Items
+  category: ItemsTools
   cost: 0
   items:
     - EmergencyOxygenTankFilled
@@ -318,7 +318,7 @@
 
 - type: loadout
   id: LoadoutItemsExtendedEmergencyOxygenTank
-  category: Items
+  category: ItemsTools
   cost: 1
   items:
     - ExtendedEmergencyOxygenTankFilled
@@ -332,7 +332,7 @@
 
 - type: loadout
   id: LoadoutItemsDoubleEmergencyOxygenTank
-  category: Items
+  category: ItemsTools
   cost: 2
   items:
     - DoubleEmergencyOxygenTankFilled
@@ -346,14 +346,14 @@
 
 - type: loadout
   id: LoadoutItemClothingMaskBreath
-  category: Items
+  category: ItemsTools
   cost: 0
   items:
     - ClothingMaskBreath
 
 - type: loadout
   id: LoadoutItemsEmergencyCrowbar
-  category: Items
+  category: ItemsTools
   cost: 3
   canBeHeirloom: true
   items:
@@ -361,35 +361,35 @@
 
 - type: loadout
   id: LoadoutItemFireExtinguisher
-  category: Items
+  category: ItemsTools
   cost: 3
   items:
     - FireExtinguisher
 
 - type: loadout
   id: LoadoutItemFlashlightLantern
-  category: Items
+  category: ItemsTools
   cost: 2
   items:
     - FlashlightLantern
 
 - type: loadout
   id: LoadoutItemFlare
-  category: Items
+  category: ItemsTools
   cost: 1
   items:
     - Flare
 
 - type: loadout
   id: LoadoutEmergencyMedipen
-  category: Items
+  category: ItemsMedical
   cost: 1
   items:
     - EmergencyMedipen
 
 - type: loadout
   id: LoadoutSpaceMedipen
-  category: Items
+  category: ItemsMedical
   cost: 1
   items:
     - SpaceMedipen
@@ -397,7 +397,7 @@
 # Paperwork
 - type: loadout
   id: LoadoutItemPapers
-  category: Items
+  category: ItemsPersonal
   cost: 0
   items:
     - Paper
@@ -410,7 +410,7 @@
 
 - type: loadout
   id: LoadoutItemBoxFolderGrey
-  category: Items
+  category: ItemsPersonal
   cost: 0
   items:
     - BoxFolderGrey
@@ -420,7 +420,7 @@
 
 - type: loadout
   id: LoadoutBookRandom
-  category: Items
+  category: ItemsPersonal
   cost: 1
   items:
     - BookRandom
@@ -430,7 +430,7 @@
 
 - type: loadout
   id: LoadoutPen
-  category: Items
+  category: ItemsPersonal
   cost: 0
   items:
     - Pen
@@ -441,7 +441,7 @@
 # Food and drink
 - type: loadout
   id: LoadoutDrinkWaterBottleFull
-  category: Items
+  category: ItemsFood
   cost: 1
   items:
     - DrinkWaterBottleFull
@@ -453,7 +453,7 @@
 
 - type: loadout
   id: LoadoutItemLunchboxGenericFilledRandom
-  category: Items
+  category: ItemsFood
   cost: 3
   items:
     - LunchboxGenericFilledRandom
@@ -465,7 +465,7 @@
 
 - type: loadout
   id: LoadoutItemDrinkMREFlask
-  category: Items
+  category: ItemsFood
   cost: 2
   items:
     - DrinkMREFlask
@@ -478,7 +478,7 @@
 # Survival boxes
 - type: loadout
   id: LoadoutItemBoxSurvival
-  category: Items
+  category: ItemsTools
   cost: 0
   items:
     - BoxSurvival
@@ -498,7 +498,7 @@
 
 - type: loadout
   id: LoadoutItemBoxSurvivalEngineering
-  category: Items
+  category: ItemsTools
   cost: 0
   items:
     - BoxSurvivalEngineering
@@ -511,7 +511,7 @@
 
 - type: loadout
   id: LoadoutItemBoxSurvivalSecurity
-  category: Items
+  category: ItemsTools
   cost: 0
   items:
     - BoxSurvivalSecurity
@@ -528,7 +528,7 @@
 
 - type: loadout
   id: LoadoutItemBoxSurvivalBrigmedic
-  category: Items
+  category: ItemsTools
   cost: 0
   items:
     - BoxSurvivalBrigmedic
@@ -541,7 +541,7 @@
 
 - type: loadout
   id: LoadoutItemBoxSurvivalMedical
-  category: Items
+  category: ItemsTools
   cost: 0
   items:
     - BoxSurvivalMedical
@@ -554,7 +554,7 @@
 
 - type: loadout
   id: LoadoutItemBoxHug
-  category: Items
+  category: ItemsTools
   cost: 0
   items:
     - BoxHug
@@ -568,7 +568,7 @@
 # Medkits
 - type: loadout
   id: LoadoutMedkitFilled
-  category: Items
+  category: ItemsMedical
   cost: 2
   items:
     - MedkitFilled
@@ -578,7 +578,7 @@
 
 - type: loadout
   id: LoadoutMedkitBruteFilled
-  category: Items
+  category: ItemsMedical
   cost: 2
   items:
     - MedkitBruteFilled
@@ -595,7 +595,7 @@
 
 - type: loadout
   id: LoadoutMedkitBurnFilled
-  category: Items
+  category: ItemsMedical
   cost: 2
   items:
     - MedkitBurnFilled
@@ -612,7 +612,7 @@
 
 - type: loadout
   id: LoadoutMedkitToxinFilled
-  category: Items
+  category: ItemsMedical
   cost: 2
   items:
     - MedkitToxinFilled
@@ -629,7 +629,7 @@
 
 - type: loadout
   id: LoadoutMedkitOxygenFilled
-  category: Items
+  category: ItemsMedical
   cost: 2
   items:
     - MedkitOxygenFilled
@@ -646,7 +646,7 @@
 
 - type: loadout
   id: LoadoutMedkitRadiationFilled
-  category: Items
+  category: ItemsMedical
   cost: 2
   items:
     - MedkitRadiationFilled
@@ -663,7 +663,7 @@
 
 - type: loadout
   id: LoadoutMedkitAdvancedFilled
-  category: Items
+  category: ItemsMedical
   cost: 3
   items:
     - MedkitAdvancedFilled
@@ -680,7 +680,7 @@
 
 - type: loadout
   id: LoadoutMedkitCombatFilled
-  category: Items
+  category: ItemsMedical
   cost: 3
   items:
     - MedkitCombatFilled
@@ -695,7 +695,7 @@
 #Misc Items
 - type: loadout
   id: LoadoutItemFlash
-  category: Items
+  category: ItemsTools
   cost: 1
   items:
     - Flash
@@ -709,7 +709,7 @@
 
 - type: loadout
   id: LoadoutItemPAI
-  category: Items
+  category: ItemsTools
   cost: 3
   canBeHeirloom: true
   items:
@@ -717,49 +717,49 @@
 
 - type: loadout
   id: LoadoutItemCrayonBox
-  category: Items
+  category: ItemsPersonal
   cost: 4
   items:
     - CrayonBox
 
 - type: loadout
   id: LoadoutItemBarberScissors
-  category: Items
+  category: ItemsTools
   cost: 4
   items:
     - BarberScissors
 
 - type: loadout
   id: LoadoutSolCommonTranslator
-  category: Items
+  category: ItemsTools
   cost: 3
   items:
     - SolCommonTranslator
 
 - type: loadout
   id: LoadoutHandLabeler
-  category: Items
+  category: ItemsTools
   cost: 3
   items:
     - HandLabeler
 
 - type: loadout
   id: LoadoutItemHandheldStationMap
-  category: Items
+  category: ItemsTools
   cost: 2
   items:
     - HandheldStationMap
 
 - type: loadout
   id: LoadoutItemLantern
-  category: Items
+  category: ItemsTools
   cost: 2
   items:
     - Lantern
 
 - type: loadout
   id: LoadoutItemDrinkShinyFlask
-  category: Items
+  category: ItemsFood
   cost: 1
   customColorTint: true
   canBeHeirloom: true
@@ -768,7 +768,7 @@
 
 - type: loadout
   id: LoadoutItemDrinkLithiumFlask
-  category: Items
+  category: ItemsFood
   cost: 1
   customColorTint: true
   items:
@@ -776,7 +776,7 @@
 
 - type: loadout
   id: LoadoutItemDrinkVacuumFlask
-  category: Items
+  category: ItemsFood
   cost: 1
   customColorTint: true
   items:
@@ -784,7 +784,7 @@
 
 - type: loadout
   id: LoadoutItemCaneBlind
-  category: Items
+  category: ItemsTools
   cost: 0 # It shouldnt cost points to be able to function.
   items:
     - WhiteCane
@@ -792,7 +792,7 @@
 # Pets
 - type: loadout
   id: LoadoutItemPetMouse
-  category: Items
+  category: ItemsPersonal
   cost: 2
   canBeHeirloom: true
   customColorTint: true # Unethical hair dyes!
@@ -806,7 +806,7 @@
 
 - type: loadout
   id: LoadoutItemPetHamster
-  category: Items
+  category: ItemsPersonal
   cost: 2
   canBeHeirloom: true
   customColorTint: true
@@ -820,7 +820,7 @@
 
 - type: loadout
   id: LoadoutItemPetMothroach
-  category: Items
+  category: ItemsPersonal
   cost: 2
   canBeHeirloom: true
   customColorTint: true
@@ -834,7 +834,7 @@
 
 - type: loadout
   id: LoadoutItemPetCockroach
-  category: Items
+  category: ItemsPersonal
   cost: 2
   canBeHeirloom: true
   customColorTint: true
@@ -848,7 +848,7 @@
 
 - type: loadout
   id: LoadoutItemBlackDeck
-  category: Items
+  category: ItemsPersonal
   cost: 3
   canBeHeirloom: false
   items:
@@ -859,7 +859,7 @@
 
 - type: loadout
   id: LoadoutItemNTDeck
-  category: Items
+  category: ItemsPersonal
   cost: 3
   canBeHeirloom: false
   items:

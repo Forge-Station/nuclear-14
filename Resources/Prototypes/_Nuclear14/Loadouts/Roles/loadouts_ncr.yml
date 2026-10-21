@@ -2,7 +2,7 @@
 
 - type: loadout
   id: LoadoutNCRPinRecruit
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -14,7 +14,7 @@
 
 - type: loadout
   id: LoadoutNCRPinPrivateSoldier # Forge-Change
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -26,7 +26,7 @@
 
 - type: loadout
   id: LoadoutNCRPinPrivateNCRWS # Forge-Change
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -38,7 +38,7 @@
 
 - type: loadout
   id: LoadoutNCRPinPrivate1stSoldier # Forge-Change
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -53,7 +53,7 @@
 
 - type: loadout
   id: LoadoutNCRPinPrivate1stNCRWS # Forge-Change
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -68,7 +68,7 @@
 
 - type: loadout
   id: LoadoutNCRPinCorporalSoldier # Forge-Change
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -98,7 +98,7 @@
 
 - type: loadout
   id: LoadoutNCRPinSpecialistSoldier # Forge-Change
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -113,7 +113,7 @@
 
 - type: loadout
   id: LoadoutNCRPinSpecialistSNCRWS # Forge-Change
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -128,7 +128,7 @@
 
 - type: loadout
   id: LoadoutNCRPinSergeant
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -140,7 +140,7 @@
 
 - type: loadout
   id: LoadoutNCRPinSergeant1st
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -155,7 +155,7 @@
 
 - type: loadout
   id: LoadoutNCRPinMasterSergeant
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -170,7 +170,7 @@
 
 - type: loadout
   id: LoadoutNCRPinSergeantMajor
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -185,7 +185,7 @@
 
 - type: loadout
   id: LoadoutNCRPinSecondLieutenant
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -197,7 +197,7 @@
 
 - type: loadout
   id: LoadoutNCRPinFirstlLieutenant
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -212,7 +212,7 @@
 
 - type: loadout
   id: LoadoutNCRPinCaptain
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -227,7 +227,7 @@
 
 - type: loadout
   id: LoadoutNCRPinMajor
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -242,7 +242,7 @@
 
 - type: loadout # Corvax Fallout
   id: LoadoutNCRPowerArmorT45Sierra
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   requirements:
@@ -257,7 +257,7 @@
 
 - type: loadout
   id: LoadoutNCRPinDoctor
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -269,7 +269,7 @@
 
 - type: loadout
   id: LoadoutNCRPinChiefPhysician
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -284,7 +284,7 @@
 
 - type: loadout
   id: LoadoutClothingNeckStethoscope
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -331,7 +331,7 @@
 
 - type: loadout
   id: LoadoutClothingEyesGlassesGoggles
-  category: Roles
+  category: Eyes
   cost: 1
   exclusive: true
   requirements:

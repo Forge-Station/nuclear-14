@@ -94,3 +94,22 @@ loadout-category-Shoes = Shoes
 loadout-category-Species = Species
 loadout-category-Uniform = Uniform
 loadout-category-Weapons = Weapons
+
+loadout-category-Belts = Belts and webbing
+loadout-category-Bags = Bags
+loadout-category-Duffel = Duffel bags
+loadout-category-Satchel = Satchels
+loadout-category-CollectionBags = Collection bags
+loadout-category-WeaponsAmmo = Ammunition
+loadout-category-WeaponsMelee = Melee weapons
+loadout-category-WeaponsFirearms = Firearms
+loadout-category-WeaponsEnergy = Energy weapons
+
+loadout-category-ItemsMusic = Music
+loadout-category-ItemsSmoking = Smoking
+loadout-category-ItemsTools = Tools and survival
+loadout-category-ItemsMedical = Medicine and chems
+loadout-category-ItemsFood = Food and drinks
+loadout-category-ItemsPersonal = Personal items and leisure
+loadout-category-OuterClothing = Clothing
+loadout-category-OuterArmor = Armor
