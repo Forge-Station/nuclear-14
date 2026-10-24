@@ -116,7 +116,6 @@
   - type: Blueprint
     recipes:
     - N14ClothingOuterNCRVestSnow
-    - N14ClothingOuterNCRVestWoods
     - N14ClothingNeckCloakNCRWoods
     - N14ClothingNeckCloakNCR
     - N14ClothingNeckCloakNCRSnow
@@ -128,8 +127,6 @@
     - ClothingBeltNCRPouches
     - ClothingBeltNCR
     - N14ClothingNeckCloakTentHoodNCR
-    - N14ClothingOuterNCRVestpaddedWeb
-    - N14ClothingOuterNCRVestpaddedWebSnow
     - N14ClothingOuterNCRVest
     - N14ClothingHeadHatNCRHelmet
     - N14ClothingHeadHatNCRHelmetSnow
@@ -210,8 +207,6 @@
   components:
   - type: Blueprint
     recipes:
-    - N14ClothingOuterRangerCombatDesert
-    - N14ClothingOuterRangerCombat
     - N14ClothingEyesNCRNVGs
     - N14ClothingHeadsetNCR
 
@@ -363,6 +358,7 @@
   - type: Blueprint
     recipes:
     - N14ClothingOuterLegionnaireReconnaissanceArmor
+    - N14ClothingOuterLegionnaireHeavyArmor
 
 - type: entity
   parent: N14BlueprintBase
@@ -873,6 +869,7 @@
     recipes:
     - N14ClothingOuterPoliceVest
     - N14ClothingOuterTownGuardLight
+    - N14ClothingOuterPoliceCombat
     - N14ClothingOuterReinforcedLeatherArmor
     - N14ClothingOuterLeatherArmor
 
@@ -887,7 +884,6 @@
   - type: Blueprint
     recipes:
     - N14ClothingOuterTownGuardRiot
-    - N14ClothingOuterPoliceCombat
     - N14ClothingOuterSheriffVest
     - N14ClothingOuterMetalArmor
 
@@ -972,6 +968,7 @@
     recipes:
     - N14ClothingOuterLightLeatherArmor
     - N14ClothingOuterReinforcedLeatherArmor
+    - N14ClothingOuterPoliceCombat
 
 - type: entity
   parent: N14BlueprintBase
@@ -984,8 +981,6 @@
   - type: Blueprint
     recipes:
     - N14ClothingOuterVaultTecCombatArmor
-    - N14ClothingOuterPoliceCombat
-
 - type: entity
   parent: N14BlueprintBase
   id: N14BlueprintVaultArmorT4

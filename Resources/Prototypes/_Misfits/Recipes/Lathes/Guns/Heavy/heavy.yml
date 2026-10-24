@@ -12,7 +12,7 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 1600
+    Steel: 3600
     N14Iron: 800
     N14Brass: 400
 

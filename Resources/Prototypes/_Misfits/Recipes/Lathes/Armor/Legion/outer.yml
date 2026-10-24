@@ -242,7 +242,7 @@
   requiresBlueprint: true
   completetime: 18
   materials:
-    Steel: 2400
+    Steel: 3400
     N14Iron: 800
     Leather: 1200
     Cloth: 800
@@ -274,4 +274,18 @@
     Leather: 1100
     Cloth: 800
     Thread: 600
-    N14Iron: 300
+    N14Iron: 900
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireHeavyArmor
+  result: N14ClothingOuterLegionnaireHeavyArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 25
+  materials:
+    Steel: 3200
+    Leather: 1600
+    N14Iron: 1200
+    Cloth: 1000
+    Thread: 800

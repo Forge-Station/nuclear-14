@@ -35,7 +35,7 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 1000
+    Steel: 2000
     Wood: 400
 
 # Tier: T1
@@ -46,7 +46,7 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 1000
+    Steel: 2000
     Wood: 300
 
 # Tier: T1
@@ -57,7 +57,7 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 1000
+    Steel: 2000
     N14Iron: 400
     Wood: 400
 
@@ -69,7 +69,7 @@
   requiresBlueprint: true
   completetime: 8
   materials:
-    Steel: 800
+    Steel: 2000
     Wood: 600
 
 
@@ -81,7 +81,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 1400
+    Steel: 2000
     Glass: 300
     Wood: 400
 
@@ -93,7 +93,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 1600
+    Steel: 2200
     N14Iron: 600
     Wood: 400
 
@@ -105,7 +105,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 1600
+    Steel: 2200
     N14Iron: 600
     Wood: 300
 
@@ -117,7 +117,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 1600
+    Steel: 2200
     N14Iron: 600
     Wood: 400
 
@@ -129,7 +129,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 1800
+    Steel: 2900
     N14Iron: 600
     Wood: 200
 
@@ -141,7 +141,7 @@
   requiresBlueprint: true
   completetime: 11
   materials:
-    Steel: 1800
+    Steel: 2900
     N14Iron: 800
     Wood: 400
 
@@ -153,7 +153,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 1800
+    Steel: 2900
     N14Iron: 600
     Wood: 400
 
@@ -165,7 +165,7 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 1400
+    Steel: 2900
     N14Iron: 400
     Wood: 600
 

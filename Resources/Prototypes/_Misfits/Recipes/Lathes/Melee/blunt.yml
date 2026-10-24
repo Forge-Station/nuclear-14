@@ -12,7 +12,7 @@
   requiresBlueprint: true
   completetime: 11
   materials:
-    Steel: 1400
+    Steel: 2100
     N14Iron: 400
     Wood: 800
 
@@ -36,7 +36,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 800
+    Steel: 2200
     Wood: 1200
     Leather: 200
 
@@ -95,7 +95,7 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 600
+    Steel: 2100
 
 
 # Tier: T2
@@ -106,6 +106,6 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 1000
+    Steel: 2100
     N14Iron: 200
     Wood: 400

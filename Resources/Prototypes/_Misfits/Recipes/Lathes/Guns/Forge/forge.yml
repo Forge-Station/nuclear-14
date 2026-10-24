@@ -52,16 +52,3 @@
     Glass: 400
     N14Iron: 1200
     N14Brass: 600
-
-# Tier: T4
-- type: latheRecipe
-  id: N14WeaponRevolver12-7x55mmRSH12
-  result: N14WeaponRevolver12-7x55mmRSH12
-  category: N14WeaponRevolvers
-  requiresBlueprint: true
-  completetime: 13
-  materials:
-    Steel: 2800
-    N14Iron: 1400
-    N14Brass: 800
-    N14Silver: 300

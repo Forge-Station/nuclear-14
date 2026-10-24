@@ -12,7 +12,7 @@
   requiresBlueprint: true
   completetime: 8
   materials:
-    Steel: 800
+    Steel: 1700
     Glass: 300
     Circuitry: 200
 
@@ -24,7 +24,7 @@
   requiresBlueprint: true
   completetime: 8
   materials:
-    Steel: 1000
+    Steel: 1700
     Glass: 300
     Circuitry: 200
     ScrapElectronic: 100
@@ -37,7 +37,7 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 1200
+    Steel: 2000
     Glass: 400
     Circuitry: 200
     ScrapElectronic: 100
@@ -50,7 +50,7 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 1000
+    Steel: 2100
     Glass: 300
     Circuitry: 200
     ScrapElectronic: 100
@@ -63,7 +63,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 1400
+    Steel: 2100
     Glass: 400
     Circuitry: 300
     ScrapElectronic: 100
@@ -77,7 +77,7 @@
   requiresBlueprint: true
   completetime: 11
   materials:
-    Steel: 1600
+    Steel: 2200
     Glass: 600
     Circuitry: 400
     ScrapElectronic: 200
@@ -90,7 +90,7 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 1800
+    Steel: 2400
     Glass: 600
     Circuitry: 300
     ScrapElectronic: 200
@@ -104,7 +104,7 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 2000
+    Steel: 2600
     Glass: 600
     Circuitry: 400
     ScrapElectronic: 200
@@ -159,7 +159,7 @@
   requiresBlueprint: true
   completetime: 14
   materials:
-    Steel: 2800
+    Steel: 3200
     Glass: 800
     Circuitry: 600
     ScrapElectronic: 400
@@ -173,7 +173,7 @@
   requiresBlueprint: true
   completetime: 14
   materials:
-    Steel: 3200
+    Steel: 3600
     Glass: 1000
     Circuitry: 600
     ScrapElectronic: 400
@@ -190,7 +190,7 @@
     Steel: 3600
     Glass: 1000
     Circuitry: 800
-    ScrapElectronic: 400
+    ScrapElectronic: 600
     Plastic: 300
 
 # Tier: T3
@@ -201,10 +201,10 @@
   requiresBlueprint: true
   completetime: 15
   materials:
-    Steel: 3600
+    Steel: 4600
     Glass: 1200
     Circuitry: 800
-    ScrapElectronic: 400
+    ScrapElectronic: 600
 
 
 # Tier: T4
