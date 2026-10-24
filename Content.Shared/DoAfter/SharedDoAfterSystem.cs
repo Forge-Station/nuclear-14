@@ -4,6 +4,9 @@ using Content.Shared.ActionBlocker;
 using Content.Shared.Damage;
 using Content.Shared.Hands.Components;
 using Content.Shared.Mobs;
+using Content.Shared._Shitmed.Medical.Surgery.Tools;
+using Content.Shared.Chemistry.Components;
+using Content.Shared.Tools.Components;
 using Content.Shared.Tag;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
@@ -198,6 +201,36 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
             Log.Error($"Attempting to start a doAfter with invalid user: {ToPrettyString(args.User)}.");
             id = null;
             return false;
+        }
+
+        // Forge-Change: tool/medical DoAfter speed (2 = twice as fast, 0.5 = twice as slow).
+        if (args.MultiplyDelay
+            && TryComp<Content.Shared._Forge.DoAfter.DoAfterSpeedModifierComponent>(args.User, out var doAfterSpeed))
+        {
+            if (args.Used is { } used)
+            {
+                var isTool = HasComp<ToolComponent>(used) ||
+                             HasComp<Content.Shared.Prying.Components.PryingComponent>(used) ||
+                             HasComp<Content.Shared.Tools.Components.WelderComponent>(used) ||
+                             args.Event.GetType().Name.Contains("Construction");
+
+                if (isTool)
+                    args.Delay /= doAfterSpeed.ToolSpeed;
+                else if (HasComp<Content.Shared.Medical.DefibrillatorComponent>(used) ||
+                         HasComp<Content.Shared.Chemistry.Components.InjectorComponent>(used) ||
+                         _tag.HasTag(used, "Brutepack") ||
+                         _tag.HasTag(used, "Ointment") ||
+                         _tag.HasTag(used, "Bloodpack") ||
+                         _tag.HasTag(used, "Gauze"))
+                    args.Delay /= doAfterSpeed.MedicalSpeed;
+            }
+            else if (args.Event.GetType().Name.Contains("Construction"))
+            {
+                args.Delay /= doAfterSpeed.ToolSpeed;
+            }
+            // Bare-handed tool use (e.g. hand as a crowbar) has no Used item.
+            else if (HasComp<ToolComponent>(args.User))
+                args.Delay /= doAfterSpeed.ToolSpeed;
         }
 
         // Duplicate blocking & cancellation.

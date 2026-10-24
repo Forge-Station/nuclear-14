@@ -73,6 +73,50 @@ public partial class InventorySystem : EntitySystem
         }
     }
 
+    /// <summary>
+    ///     Appends slots to an entity's inventory and creates their containers. Slots with an
+    ///     existing name are skipped, so this is safe to call more than once.
+    /// </summary>
+    public void AddSlots(EntityUid uid, IReadOnlyList<SlotDefinition> slots, InventoryComponent? component = null)
+    {
+        if (!Resolve(uid, ref component))
+            return;
+
+        var oldSlots = component.Slots;
+        var oldContainers = component.Containers;
+
+        var added = new List<SlotDefinition>();
+        foreach (var slot in slots)
+        {
+            if (Array.Exists(oldSlots, s => s.Name == slot.Name))
+                continue;
+
+            added.Add(slot);
+        }
+
+        if (added.Count == 0)
+            return;
+
+        var newSlots = new SlotDefinition[oldSlots.Length + added.Count];
+        Array.Copy(oldSlots, newSlots, oldSlots.Length);
+
+        var newContainers = new ContainerSlot[newSlots.Length];
+        Array.Copy(oldContainers, newContainers, oldContainers.Length);
+
+        for (var i = 0; i < added.Count; i++)
+        {
+            var index = oldSlots.Length + i;
+            newSlots[index] = added[i];
+
+            var container = _containerSystem.EnsureContainer<ContainerSlot>(uid, added[i].Name);
+            container.OccludesLight = false;
+            newContainers[index] = container;
+        }
+
+        component.Slots = newSlots;
+        component.Containers = newContainers;
+    }
+
     private void OnOpenSlotStorage(OpenSlotStorageNetworkMessage ev, EntitySessionEventArgs args)
     {
         if (args.SenderSession.AttachedEntity is not { Valid: true } uid)

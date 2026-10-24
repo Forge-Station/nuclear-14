@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Linq;
+using Content.Shared._Forge.Speech;
 using System.Text;
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
@@ -273,7 +274,11 @@ public sealed partial class ChatSystem : SharedChatSystem
         switch (desiredType)
         {
             case InGameICChatType.Speak:
-                SendEntitySpeak(source, message, range, nameOverride, language, hideLog, ignoreActionBlocker);
+                // Forge-Change: traits can force an entity to only whisper.
+                if (TryComp<SpeechModifierComponent>(source, out var speechModifier) && speechModifier.WhisperOnly)
+                    SendEntityWhisper(source, message, range, null, nameOverride, language, hideLog, ignoreActionBlocker);
+                else
+                    SendEntitySpeak(source, message, range, nameOverride, language, hideLog, ignoreActionBlocker);
                 break;
             case InGameICChatType.Whisper:
                 SendEntityWhisper(source, message, range, null, nameOverride, language, hideLog, ignoreActionBlocker);
@@ -735,7 +740,11 @@ public sealed partial class ChatSystem : SharedChatSystem
     private void SendInVoiceRange(ChatChannel channel, string name, string message, string wrappedMessage, string obfuscated, string obfuscatedWrappedMessage, EntityUid source, ChatTransmitRange range, NetUserId? author = null, LanguagePrototype? languageOverride = null)
     {
         var language = languageOverride ?? _language.GetLanguage(source);
-        foreach (var (session, data) in GetRecipients(source, Transform(source).GridUid == null ? 0.3f : VoiceRange))
+        var voiceRange = (float) VoiceRange;
+        if (TryComp<SpeechModifierComponent>(source, out var speechModifier))
+            voiceRange *= speechModifier.VoiceRangeMultiplier;
+
+        foreach (var (session, data) in GetRecipients(source, Transform(source).GridUid == null ? 0.3f : voiceRange))
         {
             if (session.AttachedEntity != null
                 && Transform(session.AttachedEntity.Value).GridUid != Transform(source).GridUid

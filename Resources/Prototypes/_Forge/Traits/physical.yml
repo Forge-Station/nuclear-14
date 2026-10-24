@@ -1,0 +1,130 @@
+- type: trait
+  id: N14PerkScavenger
+  category: Physical
+  points: -4
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: ExtraPockets
+
+- type: trait
+  id: N14PerkPackMule
+  category: Physical
+  points: -4
+  functions:
+    - !type:TraitReplaceComponent
+      components:
+        - type: Puller
+          needsHands: false
+
+- type: trait
+  id: N14PerkSharpNails
+  category: Physical
+  points: -2
+  functions:
+    - !type:TraitModifyUnarmed
+      soundHit:
+        collection: AlienClaw
+      damage:
+        types:
+          Slash: 5
+
+- type: trait
+  id: N14PerkGourmand
+  category: Physical
+  points: -3
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: MetabolismDamageImmunity
+          reagents:
+            - UncookedAnimalProteins
+            - N14UncookedAnimalProteinsRad
+          damageTypes:
+            - Poison
+            - Radiation
+
+- type: trait
+  id: N14PerkWeakStomach
+  category: Physical
+  points: 3
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: MetabolismModifier
+          vomit:
+            - N14RadParticleFood
+
+- type: trait
+  id: N14PerkLeadBelly
+  category: Physical
+  points: -2
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: MetabolismDamageImmunity
+          reagents:
+            - N14RadParticleFood
+            - WaterDirty
+            - WaterIrradiated
+          damageTypes:
+            - Poison
+            - Radiation
+
+- type: trait
+  id: N14PerkAmbidextrous
+  category: Physical
+  points: -9
+  functions:
+    - !type:TraitAddActions
+      actions:
+        - ActionN14Ambidextrous
+
+- type: trait
+  id: N14PerkHardy
+  category: Physical
+  points: -3
+  requirements:
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14PerkFrail
+  functions:
+    - !type:TraitModifyStamina
+      staminaModifier: 15
+    - !type:TraitAddComponent
+      components:
+        - type: MeleeStaminaCostModifier
+          heavyCostMultiplier: 0.8
+
+- type: trait
+  id: N14PerkFrail
+  category: Physical
+  points: 2
+  requirements:
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14PerkHardy
+  functions:
+    - !type:TraitModifyStamina
+      staminaModifier: -10
+    - !type:TraitAddComponent
+      components:
+        - type: MeleeStaminaCostModifier
+          heavyCostMultiplier: 1.15
+
+- type: trait
+  id: N14PerkRadiationChild
+  category: Physical
+  points: -5
+  requirements:
+    - !type:CharacterSpeciesRequirement
+      inverted: true
+      species:
+        - Ghoul
+        - GhoulGlowing
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: N14RadiationChild

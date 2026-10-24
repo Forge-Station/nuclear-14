@@ -12,7 +12,13 @@ public sealed partial class StaminaDamageResistanceSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<StaminaDamageResistanceComponent, InventoryRelayedEvent<TakeStaminaDamageEvent>>(OnStaminaMeleeHit);
+        SubscribeLocalEvent<StaminaDamageResistanceComponent, TakeStaminaDamageEvent>(OnStaminaDamage);
         SubscribeLocalEvent<StaminaDamageResistanceComponent, ArmorExamineEvent>(OnExamine);
+    }
+
+    private void OnStaminaDamage(Entity<StaminaDamageResistanceComponent> ent, ref TakeStaminaDamageEvent args)
+    {
+        args.Multiplier *= ent.Comp.Coefficient;
     }
 
     private void OnStaminaMeleeHit(Entity<StaminaDamageResistanceComponent> ent, ref InventoryRelayedEvent<TakeStaminaDamageEvent> args)

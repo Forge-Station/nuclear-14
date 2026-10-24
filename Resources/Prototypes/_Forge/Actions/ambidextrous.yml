@@ -1,0 +1,12 @@
+- type: entity
+  id: ActionN14Ambidextrous
+  name: action-name-n14-ambidextrous
+  description: action-description-n14-ambidextrous
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: InstantAction
+    icon:
+      sprite: Objects/Weapons/Guns/Shotguns/flaregun.rsi
+      state: base
+    useDelay: 1
+    event: !type:N14AmbidextrousActionEvent

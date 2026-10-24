@@ -190,6 +190,9 @@ namespace Content.Server.Body.Systems
                     var ev = new TryMetabolizeReagent(reagent, proto, quantity);
                     RaiseLocalEvent(actualEntity, ref ev);
 
+                    // Forge-Change: let listeners scale/neutralize metabolism effects.
+                    scale *= ev.Scale;
+
                     var args = new EntityEffectReagentArgs(actualEntity, EntityManager, ent, solution, mostToRemove, proto, null, scale);
 
                     // do all effects, if conditions apply
