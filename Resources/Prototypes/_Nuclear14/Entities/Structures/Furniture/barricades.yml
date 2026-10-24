@@ -1,5 +1,6 @@
 - type: entity
-  id: N14BarricadeSandbagSingle
+  id: N14BarricadeBase
+  abstract: true
   parent: BaseStructure
   name: sandbags
   description: A sandbag fortification.
@@ -8,7 +9,7 @@
     sprite: _Nuclear14/Structures/Furniture/barricades.rsi
     netsync: false
     state: sandbag_single
-    drawdepth: Mobs # Forge-Change
+    drawdepth: Mobs
   - type: Damageable
     damageModifierSet: Wood
     damageContainer: Inorganic
@@ -34,13 +35,22 @@
         - TableMask
         layer:
         - TableLayer
-  - type: Construction # Forge-Change
+  - type: Construction
     graph: N14BarricadeSandbagSingleGraph
     node: N14BarricadeSandbagSingleNode
 
 - type: entity
+  id: N14BarricadeSandbagSingle
+  parent: N14BarricadeBase
+  components:
+  - type: BallisticCover
+    passRange: 2
+    penetrationChance: 0.2
+    penetrationDamageMultiplier: 0.5
+
+- type: entity
   id: N14BarricadeTanktrap
-  parent: N14BarricadeSandbagSingle
+  parent: N14BarricadeBase
   name: tank trap
   description: A metal fabricated spike for blocking vehicles.
   components:
@@ -85,7 +95,7 @@
     sprite: _Nuclear14/Structures/Furniture/barricades.rsi
     netsync: false
     state: iron_barricadeA
-  - type: Construction # Forge-Change
+  - type: Construction
     graph: N14BarricadeTanktrapRustyGraph
     node: N14BarricadeTanktrapRustyNode
 
@@ -113,7 +123,7 @@
           collection: MetalBreak
       - !type:DoActsBehavior
         acts: ["Destruction"]
-  - type: Sharp # not sure this is needed
+  - type: Sharp
   - type: DamageOtherOnHit
     damage:
       types:
@@ -126,7 +136,7 @@
     damage:
       types:
         Piercing: 5
-    targetPart: Legs # Forge-Change
+    targetPart: Legs
   - type: SpeedModifierContacts
     walkSpeedModifier: 0.5
     sprintSpeedModifier: 0.5
@@ -146,31 +156,35 @@
         density: 100
         mask:
         - ItemMask
-  - type: CollisionWake # not sure this is needed
+  - type: CollisionWake
     enabled: false
   - type: Slippery
     slipSound:
       path: /Audio/Effects/fence_rattle1.ogg
     launchForwardsMultiplier: 0
     paralyzeTime: 0
-  - type: Construction # Forge-Change
+  - type: Construction
     graph: N14BarricadeRazorwireGraph
     node: N14BarricadeRazorwireNode
 
 - type: entity
-  parent: N14BarricadeSandbagSingle
+  parent: N14BarricadeBase
   id: N14BarricadeMetal
   name: metal barricade
   description: A metal fortification.
   suffix: black
   components:
+  - type: BallisticCover
+    passRange: 2
+    penetrationChance: 0.1
+    penetrationDamageMultiplier: 0.5
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/ms13_barricades.rsi
     state: black
   - type: Damageable
     damageModifierSet: Metallic
     damageContainer: Inorganic
-  - type: Fixtures # Forge-Change
+  - type: Fixtures
     fixtures:
       fix1:
         shape:
@@ -181,7 +195,7 @@
         - MachineMask
         layer:
         - TableLayer
-  - type: Destructible # Forge-Change
+  - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
@@ -210,15 +224,16 @@
     state: green
 
 - type: entity
-  parent: N14BarricadeSandbagSingle # Forge-Change
-  id: N14DecorConcreteBarrier
+  parent: N14BarricadeBase
+  id: N14DecorConcreteBarrierBase
+  abstract: true
   name: concrete barrier
   description: an old concrete barrier for stopping traffic.
   components:
   - type: Sprite
     sprite: _Nuclear14/Structures/Decoration/barriers.rsi
     state: concrete_barrier
-  - type: Fixtures # Forge-Change
+  - type: Fixtures
     fixtures:
       fix1:
         shape:
@@ -229,6 +244,15 @@
         - MachineMask
         layer:
         - TableLayer
+
+- type: entity
+  id: N14DecorConcreteBarrier
+  parent: N14DecorConcreteBarrierBase
+  components:
+  - type: BallisticCover
+    passRange: 2
+    penetrationChance: 0
+    penetrationDamageMultiplier: 0.5
 
 - type: entity
   parent: N14DecorConcreteBarrier
