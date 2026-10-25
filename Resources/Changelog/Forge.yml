@@ -137,3 +137,13 @@ Entries:
   id: 11
   time: '2026-10-20T15:22:02.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/561
+- author: Salniy
+  changes:
+    - type: Add
+      message: >-
+        Добавлено в меню персонализации персонажа 2 новые вкладки для наложения
+        - нижнее бельё (вверх) и (вниз). 8 видов нижнего белья в 2-ух
+        категориях.
+  id: 12
+  time: '2026-10-25T11:47:19.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/558
