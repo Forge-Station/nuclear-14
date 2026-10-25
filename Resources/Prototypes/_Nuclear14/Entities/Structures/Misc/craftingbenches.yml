@@ -332,6 +332,9 @@
     - PowerCageRechargerCircuitboard
     - N14PowerCellMedium
     - N14PowerCellHigh
+    - N14CapacitorStockPart
+    - N14MicroManipulatorStockPart
+    - N14MatterBinStockPart
 
 - type: entity
   parent: BaseStructure

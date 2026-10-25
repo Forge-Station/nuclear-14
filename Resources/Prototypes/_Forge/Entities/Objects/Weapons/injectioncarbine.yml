@@ -10,6 +10,7 @@
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Guns/InjectionCarbine/injectioncarbine.rsi
     slots: [ back, suitstorage ]
+    quickEquip: false
   - type: Item
     size: Huge
     shape:
