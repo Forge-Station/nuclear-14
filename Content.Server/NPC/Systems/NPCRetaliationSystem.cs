@@ -1,10 +1,12 @@
+// Forge-Change: wake damaged NPCs, pursue attackers, and alert nearby visible allies.
 using Content.Server.NPC.Components;
 using Content.Shared.CombatMode;
 using Content.Shared.Damage;
+using Content.Shared._Forge.NPC;
 using Content.Shared.Mobs.Components;
 using Content.Shared.NPC.Components;
 using Content.Shared.NPC.Systems;
-using Robust.Shared.Collections;
+using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
 namespace Content.Server.NPC.Systems;
@@ -12,14 +14,15 @@ namespace Content.Server.NPC.Systems;
 /// <summary>
 ///     Handles NPC which become aggressive after being attacked.
 /// </summary>
-public sealed class NPCRetaliationSystem : EntitySystem
+public sealed partial class NPCRetaliationSystem : EntitySystem // Forge-Change: helpers live in _Forge.
 {
     [Dependency] private readonly NpcFactionSystem _npcFaction = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
-
     /// <inheritdoc />
     public override void Initialize()
     {
+        InitializeForgeRetaliation(); // Forge-Change
+
         SubscribeLocalEvent<NPCRetaliationComponent, DamageChangedEvent>(OnDamageChanged);
         SubscribeLocalEvent<NPCRetaliationComponent, DisarmedEvent>(OnDisarmed);
     }
@@ -32,7 +35,12 @@ public sealed class NPCRetaliationSystem : EntitySystem
         if (args.Origin is not {} origin)
             return;
 
-        TryRetaliate(ent, origin);
+        // Forge-Change-Start: a direct player hit alerts visible allies within the configured radius.
+        if (TryRetaliate(ent, origin) &&
+            HasComp<ProximityNPCComponent>(ent.Owner) &&
+            HasComp<ActorComponent>(origin))
+            AlertNearbyAllies(ent.Owner, origin);
+        // Forge-Change-End
     }
 
     private void OnDisarmed(Entity<NPCRetaliationComponent> ent, ref DisarmedEvent args)
@@ -46,13 +54,14 @@ public sealed class NPCRetaliationSystem : EntitySystem
         if (!HasComp<MobStateComponent>(target))
             return false;
 
-        if (!ent.Comp.RetaliateFriendlies
+        // Forge-Change: direct attacks by players provoke retaliation even with friendly faction status.
+        if ((!HasComp<ActorComponent>(target) || !HasComp<ProximityNPCComponent>(ent.Owner)) &&
+            !ent.Comp.RetaliateFriendlies
             && _npcFaction.IsEntityFriendly(ent.Owner, target))
             return false;
 
         _npcFaction.AggroEntity(ent.Owner, target);
-        if (ent.Comp.AttackMemoryLength is {} memoryLength)
-            ent.Comp.AttackMemories[target] = _timing.CurTime + memoryLength;
+        RememberAttackerAndReplan(ent, target); // Forge-Change
 
         return true;
     }
@@ -64,15 +73,7 @@ public sealed class NPCRetaliationSystem : EntitySystem
         var query = EntityQueryEnumerator<NPCRetaliationComponent, FactionExceptionComponent>();
         while (query.MoveNext(out var uid, out var retaliationComponent, out var factionException))
         {
-            // TODO: can probably reuse this allocation and clear it
-            foreach (var entity in new ValueList<EntityUid>(retaliationComponent.AttackMemories.Keys))
-            {
-                if (!TerminatingOrDeleted(entity) && _timing.CurTime < retaliationComponent.AttackMemories[entity])
-                    continue;
-
-                _npcFaction.DeAggroEntity((uid, factionException), entity);
-                // TODO: should probably remove the AttackMemory, thats the whole point of the ValueList right??
-            }
+            ClearExpiredAggression((uid, retaliationComponent), factionException); // Forge-Change
         }
     }
 }
