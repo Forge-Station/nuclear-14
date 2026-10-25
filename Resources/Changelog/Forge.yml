@@ -147,3 +147,14 @@ Entries:
   id: 12
   time: '2026-10-25T11:47:19.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/558
+- author: yanus43
+  changes:
+    - type: Add
+      message: Добавили новые категории лодаута :D
+    - type: Add
+      message: Добавили новые предметы в лодаут XD
+    - type: Tweak
+      message: Изменили цены в лодауте :D
+  id: 13
+  time: '2026-10-25T11:53:44.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/562
