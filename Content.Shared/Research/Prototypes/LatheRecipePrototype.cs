@@ -77,5 +77,12 @@ namespace Content.Shared.Research.Prototypes
         /// </summary>
         [DataField]
         public uint MiningPoints;
+
+        // #Misfits Add: Marks recipes that are unlocked by placing a blueprint item in
+        // the workbench storage. When true, the recipe is classified into the Blueprints
+        // subsection of the Lathe UI (instead of All Items) and is shown there only when
+        // the relevant blueprint item is present, with the item's actual material costs.
+        [DataField]
+        public bool RequiresBlueprint = false;
     }
 }

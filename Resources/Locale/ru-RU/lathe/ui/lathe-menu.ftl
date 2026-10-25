@@ -22,3 +22,5 @@ lathe-menu-connected-to-silo-message = Подключен к хранилищу 
 lathe-menu-fabricating-message = Создаем...
 lathe-menu-materials-title = Материалы
 lathe-menu-queue-title = Очередь создания
+lathe-menu-blueprints-title = Чертежи
+lathe-menu-search-blueprints = Поиск чертежей
