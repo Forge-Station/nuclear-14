@@ -286,6 +286,9 @@
           speed: 10
           lifetime: 0.025
           minlifetime: 0.0125
+    - !type:TraitAddActions
+      actions:
+        - ActionN14ChampionPunch
 
 - type: trait
   id: N14SittingDuck

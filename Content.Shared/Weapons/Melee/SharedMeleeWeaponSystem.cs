@@ -549,15 +549,19 @@ public abstract class SharedMeleeWeaponSystem : EntitySystem
         if (targetMap.MapId != userXform.MapID)
             return false;
 
+        var heavyCost = component.HeavyStaminaCost;
+        if (TryComp<Content.Shared._Forge.Weapons.Melee.MeleeStaminaCostModifierComponent>(user, out var heavyCostModifier))
+            heavyCost *= heavyCostModifier.HeavyCostMultiplier;
+
         if (TryComp<StaminaComponent>(user, out var stamina))
         {
-            if (stamina.CritThreshold - stamina.StaminaDamage <= component.HeavyStaminaCost)
+            if (stamina.CritThreshold - stamina.StaminaDamage <= heavyCost)
             {
                 PopupSystem.PopupClient(Loc.GetString("melee-heavy-no-stamina"), meleeUid, user);
                 return false;
             }
 
-            _stamina.TakeStaminaDamage(user, component.HeavyStaminaCost, stamina, visual: false);
+            _stamina.TakeStaminaDamage(user, heavyCost, stamina, visual: false);
         }
 
         var userPos = TransformSystem.GetWorldPosition(userXform);

@@ -70,6 +70,10 @@ public sealed class WieldableSystem : EntitySystem
 
     private void OnShootAttempt(EntityUid uid, GunRequiresWieldComponent component, ref ShotAttemptedEvent args)
     {
+        // Forge-Change: ambidextrous users can fire without wielding.
+        if (HasComp<Content.Shared._Forge.Abilities.AmbidextrousComponent>(args.User))
+            return;
+
         if (TryComp<WieldableComponent>(uid, out var wieldable) &&
             !wieldable.Wielded)
         {

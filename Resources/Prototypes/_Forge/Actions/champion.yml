@@ -1,0 +1,16 @@
+- type: entity
+  id: ActionN14ChampionPunch
+  name: action-name-n14-champion-punch
+  description: action-description-n14-champion-punch
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: EntityTargetAction
+    icon:
+      sprite: Clothing/Hands/Gloves/Boxing/boxingred.rsi
+      state: icon
+    useDelay: 20
+    checkCanAccess: false
+    range: 1.5
+    itemIconStyle: BigAction
+    canTargetSelf: false
+    event: !type:N14ChampionPunchActionEvent
