@@ -15,4 +15,15 @@ public sealed partial class FactionResearchComponent : Component
     /// </summary>
     [DataField]
     public HashSet<string> LearnedPrints = new();
+
+    /// <summary>
+    ///     Minimum time between printing already-learned blueprints.
+    /// </summary>
+    [DataField]
+    public TimeSpan PrintCooldown = TimeSpan.FromMinutes(1);
+
+    /// <summary>
+    ///     Next time an already-learned blueprint may be printed.
+    /// </summary>
+    public TimeSpan NextPrint;
 }

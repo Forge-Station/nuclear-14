@@ -169,6 +169,9 @@ public sealed class FactionResearchSystem : EntitySystem
 
         var learned = print.RandomSheet == null && component.LearnedPrints.Contains(print.ID);
 
+        if (learned && _timing.CurTime < component.NextPrint)
+            return;
+
         if (!learned)
         {
             if (!IsTierUnlocked(component, print))
@@ -195,6 +198,9 @@ public sealed class FactionResearchSystem : EntitySystem
             _audio.PlayPvs(FaxSound, uid);
             component.LearnedPrints.Add(print.ID);
         }
+
+        if (learned)
+            component.NextPrint = _timing.CurTime + component.PrintCooldown;
 
         Dirty(uid, component);
         UpdateUi(uid, component, args.Actor);

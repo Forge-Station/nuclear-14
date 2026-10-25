@@ -2207,16 +2207,17 @@
     - type: StorageFill
       contents:
         - id: N14ResearchArtifactDiscard
-          prob: 0.12
+          prob: 0.2
         - id: N14ResearchArtifactBallistic
-          prob: 0.12
+          prob: 0.2
         - id: N14ResearchArtifactEnergy
-          prob: 0.12
+          prob: 0.2
         - id: N14ResearchArtifactArmor
-          prob: 0.12
+          prob: 0.15
         - id: N14FactionResearchDisk2500
-          prob: 0.01
+          prob: 0.1
         - id: N14FactionResearchDisk5000
+          prob: 0.05
         # - id: GeigerCounter
         #   prob: 0.02
         # - id: N14DirtyGauze10
