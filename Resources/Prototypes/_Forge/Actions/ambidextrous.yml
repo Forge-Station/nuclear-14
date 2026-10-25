@@ -6,7 +6,7 @@
   components:
   - type: InstantAction
     icon:
-      sprite: Objects/Weapons/Guns/Shotguns/flaregun.rsi
-      state: base
+      sprite: Objects/Weapons/Guns/Revolvers/python.rsi
+      state: icon
     useDelay: 1
     event: !type:N14AmbidextrousActionEvent

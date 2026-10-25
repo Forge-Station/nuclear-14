@@ -1,26 +1,19 @@
 namespace Content.Server._Forge.Radiation;
 
 /// <summary>
-///     Heals physical/mechanical damage while the entity has radiation damage accumulated.
-///     Radiation damage itself is not removed.
+///     Passively reduces incoming damage based on the radiation damage currently in the body.
 /// </summary>
 [RegisterComponent]
 public sealed partial class N14RadiationChildComponent : Component
 {
     /// <summary>
-    ///     Radiation damage processed (and healed) per second.
+    ///     Damage reduction per unit of radiation (1 rad = 0.1 reduction).
     /// </summary>
     [DataField]
-    public float RadsPerSecond = 5f;
+    public float ConversionFactor = 0.1f;
 
     /// <summary>
-    ///     Healing per unit of radiation damage.
-    /// </summary>
-    [DataField]
-    public float HealPerTrigger = 0.1f;
-
-    /// <summary>
-    ///     Healing stops when the total damage reaches this value.
+    ///     Protection stops working when the total damage reaches this value.
     /// </summary>
     [DataField]
     public float MaxTotalDamage = 135f;

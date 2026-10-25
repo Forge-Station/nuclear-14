@@ -1,38 +1,52 @@
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 using Content.Shared.FixedPoint;
 
 namespace Content.Server._Forge.Radiation;
 
 public sealed partial class N14RadiationChildSystem : EntitySystem
 {
-    [Dependency] private readonly DamageableSystem _damageable = default!;
+    private static readonly string[] AffectedTypes = { "Blunt", "Slash", "Piercing", "Heat", "Shock" };
 
-    private static readonly string[] HealableTypes = { "Blunt", "Slash", "Piercing", "Heat" };
-
-    public override void Update(float frameTime)
+    public override void Initialize()
     {
-        var query = EntityQueryEnumerator<N14RadiationChildComponent, DamageableComponent>();
-        while (query.MoveNext(out var uid, out var comp, out var damageable))
+        base.Initialize();
+        SubscribeLocalEvent<N14RadiationChildComponent, DamageModifyEvent>(OnDamageModify);
+    }
+
+    private void OnDamageModify(EntityUid uid, N14RadiationChildComponent comp, DamageModifyEvent args)
+    {
+        if (!TryComp<DamageableComponent>(uid, out var damageable))
+            return;
+
+        if (damageable.TotalDamage >= comp.MaxTotalDamage)
+            return;
+
+        if (!damageable.Damage.DamageDict.TryGetValue("Radiation", out var radiation)
+            || radiation <= FixedPoint2.Zero)
+            return;
+
+        var reduction = FixedPoint2.New(radiation.Float() * comp.ConversionFactor);
+        if (reduction <= FixedPoint2.Zero)
+            return;
+
+        var damage = new DamageSpecifier(args.Damage);
+        var changed = false;
+        foreach (var type in AffectedTypes)
         {
-            if (damageable.TotalDamage >= comp.MaxTotalDamage)
+            if (!damage.DamageDict.TryGetValue(type, out var value) || value <= FixedPoint2.Zero)
                 continue;
 
-            if (!damageable.Damage.DamageDict.TryGetValue("Radiation", out var radiation)
-                || radiation <= FixedPoint2.Zero)
+            var reduced = FixedPoint2.Max(FixedPoint2.Zero, value - reduction);
+            if (reduced == value)
                 continue;
 
-            var convert = FixedPoint2.Min(radiation, FixedPoint2.New(comp.RadsPerSecond * frameTime));
-            var heal = FixedPoint2.New(convert.Float() * comp.HealPerTrigger);
-
-            var damage = damageable.Damage;
-            foreach (var type in HealableTypes)
-            {
-                if (damage.DamageDict.TryGetValue(type, out var value))
-                    damage.DamageDict[type] = FixedPoint2.Max(FixedPoint2.Zero, value - heal);
-            }
-
-            _damageable.SetDamage(uid, damageable, damage);
+            damage.DamageDict[type] = reduced;
+            changed = true;
         }
+
+        if (changed)
+            args.Damage = damage;
     }
 }
