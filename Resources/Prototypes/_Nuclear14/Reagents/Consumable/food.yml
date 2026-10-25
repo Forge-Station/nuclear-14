@@ -15,8 +15,8 @@
           species:
           - GhoulGlowing
           shouldHave: false
-        - !type:HasTag
-          tag: N14Gourmand
+        - !type:HasBodyComponent
+          component: N14GourmandPerk
           invert: true
         damage:
           types:
@@ -26,6 +26,12 @@
         conditions:
         - !type:OrganType
           type: Animal
+        reagent: Protein
+        amount: 0.5
+      - !type:AdjustReagent
+        conditions:
+        - !type:HasBodyComponent
+          component: N14GourmandPerk
         reagent: Protein
         amount: 0.5
       - !type:GenericStatusEffect
@@ -56,8 +62,8 @@
           species:
           - GhoulGlowing
           shouldHave: false
-        - !type:HasTag
-          tag: N14LeadBelly
+        - !type:HasBodyComponent
+          component: N14LeadBellyPerk
           invert: true
         damage:
           types:

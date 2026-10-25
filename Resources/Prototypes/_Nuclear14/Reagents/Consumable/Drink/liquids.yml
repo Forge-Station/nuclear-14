@@ -37,8 +37,8 @@
           species:
           - GhoulGlowing
           shouldHave: false
-        - !type:HasTag
-          tag: N14LeadBelly
+        - !type:HasBodyComponent
+          component: N14LeadBellyPerk
           invert: true
         damage:
           types:
@@ -64,8 +64,8 @@
           species:
           - GhoulGlowing
           shouldHave: false
-        - !type:HasTag
-          tag: N14LeadBelly
+        - !type:HasBodyComponent
+          component: N14LeadBellyPerk
           invert: true
         damage:
           types:

@@ -160,6 +160,29 @@ namespace Content.Server.Body.Systems
                 if (reagents >= ent.Comp1.MaxReagentsProcessable)
                     return;
 
+                // Forge-Change: Lead Belly turns dirty/irradiated reagents into clean water 1:1.
+                if (ent.Comp2?.Body is { } perkBody
+                    && HasComp<Content.Server._Forge.Metabolism.N14LeadBellyPerkComponent>(perkBody)
+                    && proto.ID is "WaterDirty" or "WaterIrradiated" or "N14RadParticleFood")
+                {
+                    var rate = quantity;
+                    if (ent.Comp1.MetabolismGroups != null)
+                    {
+                        foreach (var perkGroup in ent.Comp1.MetabolismGroups)
+                        {
+                            if (!proto.Metabolisms.TryGetValue(perkGroup.Id, out var perkEntry))
+                                continue;
+
+                            rate = FixedPoint2.Clamp(perkEntry.MetabolismRate * perkGroup.MetabolismRateModifier, 0, quantity);
+                            break;
+                        }
+                    }
+
+                    solution.RemoveReagent(reagent, rate);
+                    solution.AddReagent("Water", rate);
+                    reagents++;
+                    continue;
+                }
 
                 // loop over all our groups and see which ones apply
                 if (ent.Comp1.MetabolismGroups is null)

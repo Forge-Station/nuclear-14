@@ -492,8 +492,8 @@
           - !type:OrganType
             type: Animal
             shouldHave: false
-          - !type:HasTag
-            tag: N14Gourmand
+          - !type:HasBodyComponent
+            component: N14GourmandPerk
             invert: true
         type: Local
         visualType: MediumCaution
@@ -505,16 +505,16 @@
           - !type:OrganType
             type: Animal
             shouldHave: false
-          - !type:HasTag
-            tag: N14Gourmand
+          - !type:HasBodyComponent
+            component: N14GourmandPerk
             invert: true
       - !type:HealthChange
         conditions:
         - !type:OrganType
           type: Animal
           shouldHave: false
-        - !type:HasTag
-          tag: N14Gourmand
+        - !type:HasBodyComponent
+          component: N14GourmandPerk
           invert: true
         damage:
           types:
@@ -530,6 +530,12 @@
         conditions:
         - !type:OrganType
           type: Shadowkin
+        reagent: Protein
+        amount: 0.5
+      - !type:AdjustReagent
+        conditions:
+        - !type:HasBodyComponent
+          component: N14GourmandPerk
         reagent: Protein
         amount: 0.5
 

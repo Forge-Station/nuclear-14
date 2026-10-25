@@ -38,12 +38,14 @@
       inverted: true
       species:
         - GhoulGlowing
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14PerkLeadBelly
   functions:
     - !type:TraitAddComponent
       components:
-        - type: Tag
-          tags:
-            - N14Gourmand
+        - type: N14GourmandPerk
 
 - type: trait
   id: N14PerkWeakStomach
@@ -65,12 +67,14 @@
       inverted: true
       species:
         - GhoulGlowing
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14PerkGourmand
   functions:
     - !type:TraitAddComponent
       components:
-        - type: Tag
-          tags:
-            - N14LeadBelly
+        - type: N14LeadBellyPerk
 
 - type: trait
   id: N14PerkAmbidextrous
