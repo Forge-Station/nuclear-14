@@ -114,18 +114,6 @@ namespace Content.Server.EntityEffects.Effects
 
         public override void Effect(EntityEffectBaseArgs args)
         {
-            // Forge-Change: skip damage of the listed types from the listed reagents (Lead Belly / Gourmand).
-            if (args is EntityEffectReagentArgs reagentEv
-                && reagentEv.Reagent != null
-                && args.EntityManager.TryGetComponent<Content.Server._Forge.Metabolism.MetabolismDamageImmunityComponent>(
-                    args.TargetEntity, out var immunity)
-                && immunity.Reagents.Any(r => r.Id == reagentEv.Reagent.ID)
-                && Damage.DamageDict.Count > 0
-                && Damage.DamageDict.Keys.All(t => immunity.DamageTypes.Contains(t)))
-            {
-                return;
-            }
-
             var scale = FixedPoint2.New(1);
 
             if (args is EntityEffectReagentArgs reagentArgs)

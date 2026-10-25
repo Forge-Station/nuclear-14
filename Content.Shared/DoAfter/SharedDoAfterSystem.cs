@@ -211,8 +211,7 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
             {
                 var isTool = HasComp<ToolComponent>(used) ||
                              HasComp<Content.Shared.Prying.Components.PryingComponent>(used) ||
-                             HasComp<Content.Shared.Tools.Components.WelderComponent>(used) ||
-                             args.Event.GetType().Name.Contains("Construction");
+                             HasComp<Content.Shared.Tools.Components.WelderComponent>(used);
 
                 if (isTool)
                     args.Delay /= doAfterSpeed.ToolSpeed;
@@ -223,10 +222,6 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
                          _tag.HasTag(used, "Bloodpack") ||
                          _tag.HasTag(used, "Gauze"))
                     args.Delay /= doAfterSpeed.MedicalSpeed;
-            }
-            else if (args.Event.GetType().Name.Contains("Construction"))
-            {
-                args.Delay /= doAfterSpeed.ToolSpeed;
             }
             // Bare-handed tool use (e.g. hand as a crowbar) has no Used item.
             else if (HasComp<ToolComponent>(args.User))

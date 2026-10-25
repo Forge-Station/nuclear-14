@@ -37,6 +37,9 @@
           species:
           - GhoulGlowing
           shouldHave: false
+        - !type:HasTag
+          tag: N14LeadBelly
+          invert: true
         damage:
           types:
             Radiation: 0.25
@@ -61,6 +64,9 @@
           species:
           - GhoulGlowing
           shouldHave: false
+        - !type:HasTag
+          tag: N14LeadBelly
+          invert: true
         damage:
           types:
             Radiation: 1 # You really shouldn't drink this.

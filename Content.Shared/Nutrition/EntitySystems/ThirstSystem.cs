@@ -221,7 +221,11 @@ public sealed class ThirstSystem : EntitySystem
 
             thirst.NextUpdateTime += thirst.UpdateRate;
 
-            ModifyThirst(uid, thirst, -thirst.ActualDecayRate);
+            var thirstDecay = thirst.ActualDecayRate;
+            if (TryComp<Content.Shared._Forge.Nutrition.N14ConsumptionModifierComponent>(uid, out var consumptionModifier))
+                thirstDecay *= consumptionModifier.ThirstMultiplier;
+
+            ModifyThirst(uid, thirst, -thirstDecay);
             var calculatedThirstThreshold = GetThirstThreshold(thirst, thirst.CurrentThirst);
 
             if (calculatedThirstThreshold == thirst.CurrentThirstThreshold)

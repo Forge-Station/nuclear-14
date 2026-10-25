@@ -20,7 +20,7 @@ public sealed partial class HasTag : EntityEffectCondition
         if (args.EntityManager.TryGetComponent<TagComponent>(args.TargetEntity, out var tag))
             return args.EntityManager.System<TagSystem>().HasTag(tag, Tag) ^ Invert;
 
-        return false;
+        return Invert;
     }
 
     public override string GuidebookExplanation(IPrototypeManager prototype)

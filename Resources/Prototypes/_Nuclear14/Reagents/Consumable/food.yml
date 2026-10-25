@@ -15,6 +15,9 @@
           species:
           - GhoulGlowing
           shouldHave: false
+        - !type:HasTag
+          tag: N14Gourmand
+          invert: true
         damage:
           types:
             Poison: 2
@@ -53,6 +56,9 @@
           species:
           - GhoulGlowing
           shouldHave: false
+        - !type:HasTag
+          tag: N14LeadBelly
+          invert: true
         damage:
           types:
             Radiation: 2

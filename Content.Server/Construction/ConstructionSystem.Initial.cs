@@ -246,6 +246,10 @@ namespace Content.Server.Construction
                 return null;
             }
 
+            // Forge-Change: construction speed from jobs/traits.
+            if (TryComp<Content.Shared._Forge.DoAfter.DoAfterSpeedModifierComponent>(user, out var doAfterSpeed))
+                doAfterTime /= doAfterSpeed.ToolSpeed;
+
             var doAfterArgs = new DoAfterArgs(EntityManager, user, doAfterTime, new AwaitedDoAfterEvent(), null)
             {
                 BreakOnDamage = true,

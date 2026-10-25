@@ -33,16 +33,17 @@
   id: N14PerkGourmand
   category: Physical
   points: -3
+  requirements:
+    - !type:CharacterSpeciesRequirement
+      inverted: true
+      species:
+        - GhoulGlowing
   functions:
     - !type:TraitAddComponent
       components:
-        - type: MetabolismDamageImmunity
-          reagents:
-            - UncookedAnimalProteins
-            - N14UncookedAnimalProteinsRad
-          damageTypes:
-            - Poison
-            - Radiation
+        - type: Tag
+          tags:
+            - N14Gourmand
 
 - type: trait
   id: N14PerkWeakStomach
@@ -59,17 +60,17 @@
   id: N14PerkLeadBelly
   category: Physical
   points: -2
+  requirements:
+    - !type:CharacterSpeciesRequirement
+      inverted: true
+      species:
+        - GhoulGlowing
   functions:
     - !type:TraitAddComponent
       components:
-        - type: MetabolismDamageImmunity
-          reagents:
-            - N14RadParticleFood
-            - WaterDirty
-            - WaterIrradiated
-          damageTypes:
-            - Poison
-            - Radiation
+        - type: Tag
+          tags:
+            - N14LeadBelly
 
 - type: trait
   id: N14PerkAmbidextrous
@@ -128,3 +129,63 @@
     - !type:TraitAddComponent
       components:
         - type: N14RadiationChild
+
+- type: trait
+  id: N14PerkCamel
+  category: Physical
+  points: -2
+  requirements:
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14PerkWaterDrinker
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: N14ConsumptionModifier
+          thirstMultiplier: 0.8
+
+- type: trait
+  id: N14PerkGlutton
+  category: Physical
+  points: 2
+  requirements:
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14PerkTone
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: N14ConsumptionModifier
+          hungerMultiplier: 1.25
+
+- type: trait
+  id: N14PerkWaterDrinker
+  category: Physical
+  points: 2
+  requirements:
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14PerkCamel
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: N14ConsumptionModifier
+          thirstMultiplier: 1.25
+
+- type: trait
+  id: N14PerkTone
+  category: Physical
+  points: -2
+  requirements:
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14PerkGlutton
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: N14ConsumptionModifier
+          hungerMultiplier: 0.75

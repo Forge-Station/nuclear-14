@@ -259,7 +259,11 @@ public sealed class HungerSystem : EntitySystem
                 continue;
             hunger.NextUpdateTime = _timing.CurTime + hunger.UpdateRate;
 
-            ModifyHunger(uid, -hunger.ActualDecayRate, hunger);
+            var hungerDecay = hunger.ActualDecayRate;
+            if (TryComp<Content.Shared._Forge.Nutrition.N14ConsumptionModifierComponent>(uid, out var consumptionModifier))
+                hungerDecay *= consumptionModifier.HungerMultiplier;
+
+            ModifyHunger(uid, -hungerDecay, hunger);
             DoContinuousHungerEffects(uid, hunger);
         }
     }

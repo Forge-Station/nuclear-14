@@ -40,3 +40,15 @@ n14-ambidextrous-on = Стрельба с двух рук активна
 n14-ambidextrous-off = Стрельба с двух рук прекращена
 
 n14-champion-punch-emote = кашляет
+
+trait-name-N14PerkCamel = Верблюд
+trait-description-N14PerkCamel = Жажда накапливается на 20% медленнее.
+
+trait-name-N14PerkGlutton = Обжора
+trait-description-N14PerkGlutton = Голод накапливается на 25% быстрее.
+
+trait-name-N14PerkWaterDrinker = Водохлёб
+trait-description-N14PerkWaterDrinker = Жажда накапливается на 25% быстрее.
+
+trait-name-N14PerkTone = Тонус
+trait-description-N14PerkTone = Голод накапливается на 25% медленнее.

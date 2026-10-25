@@ -40,3 +40,15 @@ n14-ambidextrous-on = Dual-wield enabled
 n14-ambidextrous-off = Dual-wield disabled
 
 n14-champion-punch-emote = coughs
+
+trait-name-N14PerkCamel = Camel
+trait-description-N14PerkCamel = Your thirst accumulates 20% slower.
+
+trait-name-N14PerkGlutton = Glutton
+trait-description-N14PerkGlutton = Your hunger accumulates 25% faster.
+
+trait-name-N14PerkWaterDrinker = Water-drinker
+trait-description-N14PerkWaterDrinker = Your thirst accumulates 25% faster.
+
+trait-name-N14PerkTone = Tone
+trait-description-N14PerkTone = Your hunger accumulates 25% slower.

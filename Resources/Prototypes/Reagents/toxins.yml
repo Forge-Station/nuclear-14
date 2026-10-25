@@ -492,6 +492,9 @@
           - !type:OrganType
             type: Animal
             shouldHave: false
+          - !type:HasTag
+            tag: N14Gourmand
+            invert: true
         type: Local
         visualType: MediumCaution
         messages: [ "generic-reagent-effect-sick" ]
@@ -502,11 +505,17 @@
           - !type:OrganType
             type: Animal
             shouldHave: false
+          - !type:HasTag
+            tag: N14Gourmand
+            invert: true
       - !type:HealthChange
         conditions:
         - !type:OrganType
           type: Animal
           shouldHave: false
+        - !type:HasTag
+          tag: N14Gourmand
+          invert: true
         damage:
           types:
             Poison: 1
