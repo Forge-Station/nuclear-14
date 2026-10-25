@@ -1,6 +1,6 @@
 - type: loadout
   id: N14ClothingEyesGlassesWelding
-  category: Accessories
+  category: Eyes
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -16,7 +16,7 @@
 
 - type: loadout
   id: N14ClothingEyesSunGlasses
-  category: Accessories
+  category: Eyes
   cost: 2
   customColorTint: true # Forge-add
   requirements:
@@ -33,7 +33,7 @@
 
 - type: loadout
   id: N14ClothingEyesGlasses
-  category: Accessories
+  category: Eyes
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -49,7 +49,7 @@
 
 - type: loadout
   id: N14LoadoutEyesEyepatch
-  category: Accessories
+  category: Eyes
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -65,7 +65,7 @@
 
 - type: loadout # Forge-Change
   id: ClothingEyesGlassesChemist
-  category: Accessories
+  category: Eyes
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement

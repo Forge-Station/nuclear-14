@@ -1,6 +1,6 @@
 - type: loadout
   id: N14LoadoutOuterGhostSheet
-  category: Outer
+  category: OuterClothing
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -20,8 +20,8 @@
 
 - type: loadout
   id: N14LoadoutOuterJacketLettermanRed
-  category: Outer
-  cost: 2
+  category: OuterClothing
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -40,8 +40,8 @@
 
 - type: loadout
   id: N14LoadoutOuterJacketLettermanBrown
-  category: Outer
-  cost: 2
+  category: OuterClothing
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -60,8 +60,8 @@
 
 - type: loadout
   id: N14LoadoutOuterRobeConusrobe
-  category: Outer
-  cost: 5
+  category: OuterClothing
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -80,8 +80,8 @@
 
 - type: loadout
   id: N14ClothingOuterFlannelRed
-  category: Outer
-  cost: 2
+  category: OuterClothing
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -100,8 +100,8 @@
 
 - type: loadout
   id: N14ClothingOuterFlannelAqua
-  category: Outer
-  cost: 2
+  category: OuterClothing
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -120,8 +120,8 @@
 
 - type: loadout
   id: N14ClothingOuterFlannelBrown
-  category: Outer
-  cost: 2
+  category: OuterClothing
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -140,7 +140,7 @@
 
 - type: loadout
   id: N14ClothingOuterCoatFollowerLab
-  category: Outer
+  category: OuterClothing
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -160,8 +160,8 @@
 
 - type: loadout
   id: N14LoadoutOuterCoatWinterArmored
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -180,8 +180,8 @@
 
 - type: loadout
   id: N14LoadoutOuterCoatBattlecoat
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -200,8 +200,8 @@
 
 - type: loadout
   id: N14LoadoutOuterCoatBattlecoatTan
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -220,7 +220,7 @@
 
 - type: loadout
   id: N14LoadoutOuterCoatDuster
-  category: Outer
+  category: OuterClothing
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -240,7 +240,7 @@
 
 - type: loadout
   id: N14LoadoutOuterCoatLeatherDuster
-  category: Outer
+  category: OuterClothing
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -260,7 +260,7 @@
 
 - type: loadout
   id: N14ClothingOuterCoatLeatherJacket
-  category: Outer
+  category: OuterClothing
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -280,7 +280,7 @@
 
 - type: loadout
   id: N14ClothingOuterCoatLeatherCoat
-  category: Outer
+  category: OuterClothing
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -300,7 +300,7 @@
 
 - type: loadout
   id: N14ClothingOuterTownCoat
-  category: Outer
+  category: OuterClothing
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -320,7 +320,7 @@
 
 - type: loadout
   id: N14ClothingOuterTownMediumCoat
-  category: Outer
+  category: OuterArmor
   cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -340,7 +340,7 @@
 
 - type: loadout
   id: N14LoadoutOuterLeatherArmor
-  category: Outer
+  category: OuterArmor
   cost: 2 # Forge-Change
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -360,9 +360,12 @@
 
 - type: loadout
   id: N14LoadoutOuterMetalArmor
-  category: Outer
-  cost: 4 #Forge-change
+  category: OuterArmor
+  cost: 3 #Forge-change
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 24000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     - !type:CharacterDepartmentRequirement
@@ -380,7 +383,7 @@
 
 - type: loadout
   id: N14LoadoutOuterRaiderBadlands
-  category: Outer
+  category: OuterArmor
   cost: 1 # Forge-Change
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -400,7 +403,7 @@
 
 - type: loadout
   id: N14LoadoutOuterRaiderBlastmaster
-  category: Outer
+  category: OuterArmor
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -420,7 +423,7 @@
 
 - type: loadout
   id: N14LoadoutOuterHarperCoat
-  category: Outer
+  category: OuterArmor
   cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -440,8 +443,8 @@
 
 - type: loadout
   id: N14LoadoutOuterScavengerHeavyArmor
-  category: Outer
-  cost: 6
+  category: OuterArmor
+  cost: 5
   requirements:
     - !type:CharacterPlaytimeRequirement
       tracker: Wastelander
