@@ -1,0 +1,174 @@
+<controls:FancyWindow xmlns="https://spacestation14.io"
+ xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+ xmlns:newspaper="clr-namespace:Content.Client._Forge.Newspapers"
+ xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+ Title="{Loc newspaper-desk-title}" MinSize="780 480" SetSize="1200 900">
+ <BoxContainer Orientation="Vertical" Margin="12" HorizontalExpand="True" VerticalExpand="True">
+  <BoxContainer Orientation="Horizontal" Margin="0 0 0 8">
+   <Button Name="DraftModeButton" Text="{Loc newspaper-work-draft}" ToggleMode="True"/>
+   <Button Name="ModeButton" Text="{Loc newspaper-work-layout}" ToggleMode="True" Margin="6 0" Visible="False"/>
+   <Button Name="PreviewModeButton" Text="{Loc newspaper-work-archive}" ToggleMode="True"/>
+   <Control HorizontalExpand="True"/>
+   <Button Name="PhotoBufferButton" Text="{Loc newspaper-photo-buffer}" ToggleMode="True" Margin="6 0 12 0"/>
+   <Button Name="UndoButton" Text="{Loc newspaper-undo}" Margin="6 0"/>
+   <Button Name="RedoButton" Text="{Loc newspaper-redo}"/>
+  </BoxContainer>
+  <BoxContainer Orientation="Horizontal" Margin="0 0 0 8">
+   <Label Text="{Loc newspaper-publication}" VerticalAlignment="Center" Margin="0 0 6 0"/>
+   <OptionButton Name="PublicationList" HorizontalExpand="True"/>
+   <Button Name="RenamePublicationButton" Text="{Loc newspaper-publication-rename}" Margin="6 0"/>
+   <Button Name="NewPublicationButton" Text="{Loc newspaper-publication-new}"/>
+  </BoxContainer>
+  <BoxContainer Name="PublicationNameToolbar" Visible="False" Orientation="Horizontal" Margin="0 0 0 8">
+   <Label Text="{Loc newspaper-name-field}" VerticalAlignment="Center" Margin="0 0 6 0"/>
+   <LineEdit Name="NameField" HorizontalExpand="True"/>
+   <Button Name="ApplyNameButton" Text="{Loc newspaper-apply}" Margin="6 0"/>
+   <Button Name="CloseNameButton" Text="{Loc newspaper-publication-cancel}"/>
+  </BoxContainer>
+  <BoxContainer Name="NewPublicationToolbar" Visible="False" Orientation="Horizontal" Margin="0 0 0 8">
+   <LineEdit Name="NewPublicationName" HorizontalExpand="True" PlaceHolder="{Loc newspaper-name-field}"/>
+   <Button Name="CreatePublicationButton" Text="{Loc newspaper-publication-create}" Margin="6 0"/>
+   <Button Name="CancelPublicationButton" Text="{Loc newspaper-publication-cancel}"/>
+  </BoxContainer>
+  <BoxContainer Name="TemplateSelectionToolbar" Visible="False" Orientation="Horizontal" Margin="0 0 0 8">
+   <Label Text="{Loc newspaper-template-to-load}" VerticalAlignment="Center" Margin="0 0 6 0"/>
+   <OptionButton Name="TemplateList" HorizontalExpand="True"/>
+   <Button Name="LoadTemplateButton" Text="{Loc newspaper-template-load}" Margin="6 0"/>
+   <Button Name="BlankButton" Text="{Loc newspaper-template-blank}"/>
+   <Button Name="DemoButton" Text="{Loc newspaper-fill-example}" Margin="6 0"/>
+  </BoxContainer>
+  <RichTextLabel Name="CurrentTemplateLabel" StyleClasses="LabelSecondaryColor" Margin="0 0 0 6"/>
+  <BoxContainer Name="TemplateToolbar" Visible="False" Orientation="Horizontal" Margin="0 0 0 8">
+   <Label Text="{Loc newspaper-template-name}" VerticalAlignment="Center"/>
+   <LineEdit Name="TemplateNameField" HorizontalExpand="True" Margin="6 0"/>
+   <Button Name="SaveTemplateButton" Text="{Loc newspaper-template-save}"/>
+  </BoxContainer>
+  <BoxContainer Orientation="Horizontal" VerticalExpand="True">
+   <BoxContainer Name="PhotoBufferToolbar" Visible="False" Orientation="Vertical" MinWidth="260" MaxWidth="260" Margin="0 0 12 0" VerticalExpand="True">
+    <Label Name="PhotoTargetLabel" ClipText="True" Margin="0 0 0 6"/>
+    <OptionButton Name="PhotoTargetList" Margin="0 0 0 6"/>
+    <Button Name="InsertPhotoButton" Text="{Loc newspaper-photo-insert}" Margin="0 0 0 6"/>
+    <Button Name="BackToBlockButton" Text="{Loc newspaper-back-to-block}" Margin="0 0 0 8"/>
+    <Label Text="{Loc newspaper-photo-gallery-hint}" Margin="0 0 0 8"/>
+    <Button Name="RemovePhotoButton" Text="{Loc newspaper-remove-block-photo}" Margin="0 0 0 6"/>
+    <PanelContainer StyleClasses="LowDivider" Margin="0 4"/>
+    <Label Text="{Loc newspaper-photo-buffer-management}" StyleClasses="LabelSecondaryColor"/>
+    <Button Name="ForgetPhotoButton" Text="{Loc newspaper-photo-forget}" Margin="0 4 0 8"/>
+    <Label Name="PhotoGalleryEmptyLabel" Text="{Loc newspaper-photo-gallery-empty}" Visible="False" Margin="0 0 0 8"/>
+    <ScrollContainer Name="PhotoGalleryScroll" HScrollEnabled="False" VerticalExpand="True">
+     <BoxContainer Name="PhotoGalleryItems" Orientation="Vertical" HorizontalExpand="True"/>
+    </ScrollContainer>
+   </BoxContainer>
+   <ScrollContainer Name="EditorSidebar" MinWidth="260" MaxWidth="260" HScrollEnabled="False" Margin="0 0 12 0" VerticalExpand="True">
+    <BoxContainer Orientation="Vertical" HorizontalExpand="True">
+     <BoxContainer Name="SidebarModeToolbar" Orientation="Horizontal" Margin="0 0 0 8">
+      <Button Name="BlockSettingsButton" Text="{Loc newspaper-settings-block}" ToggleMode="True" HorizontalExpand="True"/>
+      <Button Name="PageSettingsButton" Text="{Loc newspaper-settings-page}" ToggleMode="True" HorizontalExpand="True" Margin="6 0 0 0"/>
+     </BoxContainer>
+     <RichTextLabel Name="EmptySelectionLabel" Text="{Loc newspaper-select-hint}" Margin="0 0 0 8"/>
+     <Label Name="SelectedBlockLabel" ClipText="True" Margin="0 0 0 8"/>
+     <Label Name="AutomaticBlockLabel" Text="{Loc newspaper-auto-block}" Visible="False" Margin="0 0 0 6"/>
+     <Button Name="CloseEditorButton" Text="{Loc newspaper-deselect}" Margin="0 0 0 8"/>
+     <BoxContainer Name="PageProperties" Visible="False" Orientation="Vertical">
+      <Label Text="{Loc newspaper-page-size}"/>
+      <Label Text="{Loc newspaper-page-size-range}" StyleClasses="LabelSecondaryColor"/>
+      <BoxContainer Orientation="Horizontal"><Label Text="W" VerticalAlignment="Center"/><SpinBox Name="PageWidth" HorizontalExpand="True"/><Label Text="H" VerticalAlignment="Center"/><SpinBox Name="PageHeight" HorizontalExpand="True"/></BoxContainer>
+      <Button Name="RotateButton" Text="{Loc newspaper-page-rotate}" Margin="0 6"/>
+      <Label Text="{Loc newspaper-page-count}"/>
+      <SpinBox Name="PageCount"/>
+      <CheckBox Name="SnapButton" Text="{Loc newspaper-snap-grid}" Pressed="True" Margin="0 6"/>
+      <OptionButton Name="AddKindButton"/>
+      <Button Name="AddButton" Text="{Loc newspaper-block-add}" Margin="0 6"/>
+     </BoxContainer>
+     <Label Name="BlockListLabel" Text="{Loc newspaper-block-select}"/>
+     <OptionButton Name="BlockList" Margin="0 4 0 8"/>
+     <BoxContainer Name="BlockProperties" Orientation="Vertical">
+      <BoxContainer Name="GeometryFields" Orientation="Vertical">
+       <Label Text="{Loc newspaper-block-position}"/>
+       <BoxContainer Orientation="Horizontal"><Label Text="X" VerticalAlignment="Center"/><SpinBox Name="BlockX" HorizontalExpand="True"/><Label Text="Y" VerticalAlignment="Center"/><SpinBox Name="BlockY" HorizontalExpand="True"/></BoxContainer>
+       <Label Text="{Loc newspaper-block-size}"/>
+       <BoxContainer Orientation="Horizontal"><Label Text="W" VerticalAlignment="Center"/><SpinBox Name="BlockWidth" HorizontalExpand="True"/><Label Text="H" VerticalAlignment="Center"/><SpinBox Name="BlockHeight" HorizontalExpand="True"/></BoxContainer>
+       <Label Text="{Loc newspaper-block-page}"/>
+       <SpinBox Name="BlockPage"/>
+       <BoxContainer Orientation="Horizontal" Margin="0 6"><Button Name="DuplicateButton" Text="{Loc newspaper-block-duplicate}" HorizontalExpand="True"/><Button Name="DeleteButton" Text="{Loc newspaper-block-delete}" HorizontalExpand="True"/></BoxContainer>
+      </BoxContainer>
+      <OptionButton Name="BordersButton" Margin="0 0 0 8" Visible="False"/>
+      <BoxContainer Name="PhotoProperties" Visible="False" Orientation="Vertical">
+       <Button Name="ChoosePhotoButton" Text="{Loc newspaper-choose-photo}" Margin="0 0 0 8"/>
+       <Label Text="{Loc newspaper-photo-size}"/>
+       <SpinBox Name="PhotoSizeField" Margin="0 4 0 8"/>
+       <CheckBox Name="GrayscaleButton" Text="{Loc newspaper-photo-grayscale}" Margin="0 0 0 8"/>
+       <Label Text="{Loc newspaper-photo-shared-hint}" Margin="0 6"/>
+      </BoxContainer>
+      <BoxContainer Name="TextProperties" Orientation="Vertical">
+       <BoxContainer Name="TextInputProperties" Orientation="Vertical">
+        <Label Text="{Loc newspaper-block-text}"/>
+        <PanelContainer MinHeight="110" Margin="0 4 0 8">
+         <PanelContainer.PanelOverride><graphics:StyleBoxFlat BackgroundColor="#242424" BorderColor="#8C887D" BorderThickness="1"/></PanelContainer.PanelOverride>
+         <TextEdit Name="TextField" Margin="5"/>
+        </PanelContainer>
+       </BoxContainer>
+       <BoxContainer Name="StyleProperties" Orientation="Vertical">
+        <BoxContainer Name="EmphasisToolbar" Orientation="Horizontal" Margin="0 0 0 6">
+         <Button Name="BoldButton" Text="{Loc newspaper-text-bold}" ToggleMode="True" HorizontalExpand="True"/>
+         <Button Name="ItalicButton" Text="{Loc newspaper-text-italic}" ToggleMode="True" HorizontalExpand="True" Margin="6 0 0 0"/>
+        </BoxContainer>
+        <Label Name="SelectionHintLabel" Text="{Loc newspaper-text-selection-hint}" StyleClasses="LabelSecondaryColor" Margin="0 0 0 6"/>
+        <Button Name="TextAppearanceButton" Text="{Loc newspaper-text-appearance}" ToggleMode="True" Margin="0 4 0 6"/>
+        <BoxContainer Name="AdvancedTextProperties" Orientation="Vertical" Visible="False">
+        <Label Text="{Loc newspaper-whole-block-style}" Margin="0 4"/>
+        <OptionButton Name="FontButton"/>
+        <OptionButton Name="WeightButton" Margin="0 4 0 0"/>
+        <Label Text="{Loc newspaper-block-font-size}" Margin="0 6 0 0"/>
+        <SpinBox Name="FontSizeField"/>
+        <CheckBox Name="CenterButton" Text="{Loc newspaper-block-center}" Margin="0 6"/>
+        <OptionButton Name="InkButton"/>
+        <Label Text="{Loc newspaper-markup-hint}" StyleClasses="LabelSecondaryColor" Margin="0 6"/>
+        </BoxContainer>
+       </BoxContainer>
+      </BoxContainer>
+     </BoxContainer>
+     <Label Name="CaptionLinkLabel" Margin="0 6"/>
+     <Button Name="LinkCaptionButton" Text="{Loc newspaper-caption-link}" Margin="0 0 0 6"/>
+    </BoxContainer>
+   </ScrollContainer>
+   <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True">
+    <BoxContainer Orientation="Horizontal" Margin="0 0 0 6">
+     <Label Name="PreviewLabel" HorizontalExpand="True"/>
+     <Label Name="SideLabel" Margin="0 0 8 0"/>
+     <Button Name="SideButton" Margin="0 0 8 0"/>
+     <OptionButton Name="ZoomButton"/>
+    </BoxContainer>
+    <BoxContainer Name="ArchiveToolbar" Orientation="Horizontal" Visible="False" Margin="0 0 0 6"><Label Text="{Loc newspaper-archive}" Margin="0 0 8 0" VerticalAlignment="Center"/><OptionButton Name="ArchiveButton" HorizontalExpand="True"/><Button Name="DeleteArchiveButton" Text="{Loc newspaper-archive-delete}" Margin="8 0 0 0"/></BoxContainer>
+    <Label Name="ArchiveEmptyLabel" Text="{Loc newspaper-archive-empty}" Visible="False" Margin="0 0 0 8"/>
+    <Label Name="ArchiveLoadingLabel" Text="{Loc newspaper-archive-loading}" Visible="False" Margin="0 0 0 8"/>
+    <ScrollContainer Name="PageViewport" HorizontalExpand="True" VerticalExpand="True" HScrollEnabled="True"><newspaper:NewspaperPage Name="PageView"/></ScrollContainer>
+   </BoxContainer>
+  </BoxContainer>
+  <RichTextLabel Name="ActionHintLabel" Margin="0 6"/>
+  <RichTextLabel Name="ConfirmationHintLabel" Visible="False" Margin="0 4"/>
+  <Label Name="AutoSaveHintLabel" Text="{Loc newspaper-autosave-hint}" StyleClasses="LabelSecondaryColor" Margin="0 4"/>
+  <BoxContainer Name="OverflowToolbar" Visible="False" Orientation="Horizontal" Margin="0 6">
+   <RichTextLabel Name="OverflowLabel" HorizontalExpand="True"/>
+   <Button Name="FindOverflowButton" Text="{Loc newspaper-find-overflow}"/>
+  </BoxContainer>
+  <PanelContainer StyleClasses="LowDivider" Margin="0 8"/>
+  <BoxContainer Orientation="Horizontal">
+   <Label Name="SaveStatusLabel" HorizontalExpand="True" VerticalAlignment="Center"/>
+   <BoxContainer Name="DraftActions" Orientation="Horizontal">
+    <Button Name="ReloadDraftButton" Text="{Loc newspaper-reload-draft}" Visible="False" Margin="0 0 8 0"/>
+    <Button Name="DiscardCloseButton" Text="{Loc newspaper-close-discard}" Visible="False" Margin="0 0 8 0"/>
+    <Button Name="SaveButton" Text="{Loc newspaper-save-draft}" Margin="0 0 8 0"/>
+    <Button Name="PublishButton" Text="{Loc newspaper-approve-edition}"/>
+   </BoxContainer>
+   <BoxContainer Name="PrintActions" Visible="False" Orientation="Horizontal">
+    <Label Text="{Loc newspaper-paper-quality}" VerticalAlignment="Center" Margin="0 0 6 0"/>
+    <OptionButton Name="PaperQualityButton" Margin="0 0 12 0"/>
+    <Label Name="PaperLabel" VerticalAlignment="Center" Margin="0 0 8 0"/>
+    <Label Text="{Loc newspaper-copies}" VerticalAlignment="Center" Margin="0 0 6 0"/>
+    <Button Name="DecreaseButton" Text="−" MinWidth="28"/><Label Name="CountLabel" MinWidth="28" HorizontalAlignment="Center" VerticalAlignment="Center"/><Button Name="IncreaseButton" Text="+" MinWidth="28" Margin="0 0 8 0"/>
+    <Button Name="PrintButton" Text="{Loc newspaper-print}"/>
+   </BoxContainer>
+  </BoxContainer>
+ </BoxContainer>
+</controls:FancyWindow>

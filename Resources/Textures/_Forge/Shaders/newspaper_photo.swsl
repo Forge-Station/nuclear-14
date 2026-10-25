@@ -1,0 +1,13 @@
+// Small feathered print edges; preserve the scene and optional black-and-white setting.
+uniform highp float EdgeWidth;
+uniform bool Grayscale;
+void fragment() {
+    highp vec4 color = zTexture(UV);
+    highp float edge = min(min(UV.x, 1.0 - UV.x), min(UV.y, 1.0 - UV.y));
+    highp float corner = min(min(UV.x + UV.y, 1.0 - UV.x + UV.y), min(UV.x + 1.0 - UV.y, 2.0 - UV.x - UV.y));
+    highp float waviness = 1.0 + 0.15 * sin(UV.x * 97.0 + UV.y * 113.0);
+    highp float mask = smoothstep(0.0, EdgeWidth * waviness, edge) * smoothstep(0.0, EdgeWidth * 2.0, corner);
+    highp float gray = zGrayscale(color.rgb);
+    highp vec3 printed = Grayscale ? vec3(gray) : mix(color.rgb, vec3(gray), 0.08);
+    COLOR = vec4(printed, color.a * mask);
+}

@@ -27,20 +27,25 @@ public static class PngUtility
     /// Returns false if image exceeds maxWidth/maxHeight.
     /// </summary>
     public static bool ValidatePng(ReadOnlySpan<byte> data, int maxWidth = 4096, int maxHeight = 4096)
+        => TryGetSize(data, out var width, out var height) && width <= maxWidth && height <= maxHeight;
+
+    /// <summary>Read the first IHDR without decoding pixels or allocating an image.</summary>
+    public static bool TryGetSize(ReadOnlySpan<byte> data, out int width, out int height)
     {
-        if (!CheckSignature(data))
+        width = height = 0;
+        if (data.Length < 33 || !CheckSignature(data))
             return false;
 
         // IHDR must be first chunk: bytes 8-11 = length, 12-15 = "IHDR", 16-19 = width, 20-23 = height
-        if (data.Length < 24)
+        if (data[8] != 0 || data[9] != 0 || data[10] != 0 || data[11] != 13)
             return false;
 
         if (data[12] != 0x49 || data[13] != 0x48 || data[14] != 0x44 || data[15] != 0x52) // "IHDR"
             return false;
 
-        var width = (data[16] << 24) | (data[17] << 16) | (data[18] << 8) | data[19];
-        var height = (data[20] << 24) | (data[21] << 16) | (data[22] << 8) | data[23];
+        width = (data[16] << 24) | (data[17] << 16) | (data[18] << 8) | data[19];
+        height = (data[20] << 24) | (data[21] << 16) | (data[22] << 8) | data[23];
 
-        return width > 0 && width <= maxWidth && height > 0 && height <= maxHeight;
+        return width > 0 && height > 0;
     }
 }
