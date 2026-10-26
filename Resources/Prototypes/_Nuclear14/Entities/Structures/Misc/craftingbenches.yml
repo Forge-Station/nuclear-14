@@ -611,6 +611,7 @@
     - N14IngotBrass       # Forge-add
     - SulfurPowder
     # Scrap
+    - N14ScrapFromSteel
     - SheetPlasticScrap
     - N14IngotBrassScrap
     - N14IngotCopperScrap
