@@ -238,7 +238,7 @@
     - !type:TileNotBlocked
 
 #MARK: Двери привязанные к радиальному Z колесу.
-    
+
 # === ДЛЯ ВСЕХ ДЕРЕВЯННЫХ ДВЕРЕЙ ===
 - type: construction
   id: N14DoorWoodSecureLockedPersonTall

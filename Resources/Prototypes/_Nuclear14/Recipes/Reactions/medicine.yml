@@ -151,7 +151,7 @@
     Water:
       amount: 1
   products:
-    Bitterdrink: 2
+    Bitterdrink: 1
 
 - type: reaction
   id: N14Ointment1

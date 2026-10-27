@@ -1,0 +1,7 @@
+- type: latheRecipe
+  id: N14JunkComponentMainboard
+  result: N14JunkComponentMainboard
+  category: Parts
+  completetime: 2
+  materials:
+    Circuitry: 20

@@ -39,6 +39,9 @@
       board: [ DoorElectronicsBOSMidwestGeneral ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunker3XBoSMidwestGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunker3X
@@ -127,6 +130,9 @@
       board: [ DoorElectronicsBOSMidwestGeneral ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerGlass3XBoSMidwestGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunkerGlass3X
@@ -150,6 +156,9 @@
       board: [ DoorElectronicsBOSWestGeneral ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerBoSWestGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunkerGlass
@@ -161,6 +170,9 @@
       board: [ DoorElectronicsBOSWestGeneral ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerGlassBoSWestGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunker
@@ -271,6 +283,9 @@
       board: [ DoorElectronicsBOSWestGeneral ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunker3XBoSWestGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunker3X
@@ -359,6 +374,9 @@
       board: [ DoorElectronicsBOSWestGeneral ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerGlass3XBoSWestGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunkerGlass3X

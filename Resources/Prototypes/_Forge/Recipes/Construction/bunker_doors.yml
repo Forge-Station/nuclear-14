@@ -1,0 +1,766 @@
+- type: constructionGraph
+  id: DoorBunkerBoSWestGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 4
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+
+- type: construction
+  id: N14DoorBunkerLockedBoSWest
+  graph: DoorBunkerBoSWestGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerGlassBoSWestGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 3
+      - material: ReinforcedGlass
+        amount: 1
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerGlassLockedBoSWest
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 3
+      - !type:SpawnPrototype
+        prototype: SheetRGlass
+        amount: 1
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerGlassLockedBoSWest
+  graph: DoorBunkerGlassBoSWestGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunker3XBoSWestGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 12
+      - material: Cable
+        amount: 15
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunker3XLockedBoSWest
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 12
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 15
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunker3XLockedBoSWest
+  graph: DoorBunker3XBoSWestGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerGlass3XBoSWestGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 9
+      - material: ReinforcedGlass
+        amount: 3
+      - material: Cable
+        amount: 15
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerGlass3XLockedBoSWest
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 9
+      - !type:SpawnPrototype
+        prototype: SheetRGlass
+        amount: 3
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 15
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerGlass3XLockedBoSWest
+  graph: DoorBunkerGlass3XBoSWestGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerBoSWashingtonGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 4
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerLockedBoSWashington
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 4
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerLockedBoSWashington
+  graph: DoorBunkerBoSWashingtonGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerGlassBoSWashingtonGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 3
+      - material: ReinforcedGlass
+        amount: 1
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerGlassLockedBoSWashington
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 3
+      - !type:SpawnPrototype
+        prototype: SheetRGlass
+        amount: 1
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerGlassLockedBoSWashington
+  graph: DoorBunkerGlassBoSWashingtonGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunker3XBoSMidwestGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 12
+      - material: Cable
+        amount: 15
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunker3XLockedBoSMidwest
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 12
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 15
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunker3XLockedBoSMidwest
+  graph: DoorBunker3XBoSMidwestGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerGlass3XBoSMidwestGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 9
+      - material: ReinforcedGlass
+        amount: 3
+      - material: Cable
+        amount: 15
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerGlass3XLockedBoSMidwest
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 9
+      - !type:SpawnPrototype
+        prototype: SheetRGlass
+        amount: 3
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 15
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerGlass3XLockedBoSMidwest
+  graph: DoorBunkerGlass3XBoSMidwestGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerGlassBoSMidwestGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 3
+      - material: ReinforcedGlass
+        amount: 1
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerGlassLockedBoSMidwest
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 3
+      - !type:SpawnPrototype
+        prototype: SheetRGlass
+        amount: 1
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerGlassLockedBoSMidwest
+  graph: DoorBunkerGlassBoSMidwestGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerBoSMidwestGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 4
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerLockedBoSMidwest
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 4
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerLockedBoSMidwest
+  graph: DoorBunkerBoSMidwestGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerBoSMidwestTallGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 4
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerLockedBoSMidwestTall
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 4
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerLockedBoSMidwestTall
+  graph: DoorBunkerBoSMidwestTallGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerNCRGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 4
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerLockedNCR
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 4
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerLockedNCR
+  graph: DoorBunkerNCRGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerGlassNCRGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 3
+      - material: ReinforcedGlass
+        amount: 1
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerGlassLockedNCR
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 3
+      - !type:SpawnPrototype
+        prototype: SheetRGlass
+        amount: 1
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerGlassLockedNCR
+  graph: DoorBunkerGlassNCRGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerVaultGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 4
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerLockedVaultDweller
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 4
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerLockedVaultDweller
+  graph: DoorBunkerVaultGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: constructionGraph
+  id: DoorBunkerVaultTallGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      completed:
+      - !type:SnapToGrid { }
+      steps:
+      - material: N14Iron
+        amount: 4
+      - material: Cable
+        amount: 5
+      - tag: Mainboard
+        name: mainframe board
+        icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
+        doAfter: 10
+  - node: done
+    entity: N14DoorBunkerLockedVaultDwellerTall
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 4
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
+
+
+- type: construction
+  id: N14DoorBunkerLockedVaultDwellerTall
+  graph: DoorBunkerVaultTallGraph
+  startNode: start
+  targetNode: done
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+
