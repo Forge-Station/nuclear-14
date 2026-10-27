@@ -16,6 +16,8 @@
     slots:
     - belt
     - idcard
+    - suitstorage #Forge-Change
+    - back #Forge-Change
   - type: Storage
     grid:
     - 0,0,2,1
