@@ -17,7 +17,7 @@
   - type: Storage
     maxItemSize: Normal # allow up to 5 large beakers / 10 beakers / 10 pill canisters
     grid:
-    - 0,0,4,3
+    - 0,0,9,3 #Forge-change
     quickInsert: true
     areaInsert: true
     whitelist:

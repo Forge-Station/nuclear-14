@@ -176,7 +176,7 @@
     materialComposition:
       Plastic: 100
   - type: Tag
-    tags: 
+    tags:
       - Abraxo
 
 - type: entity
@@ -213,6 +213,8 @@
     solutions:
       drink:
         maxVol: 50
+  - type: FitsInDispenser #Forge-add
+    solution: drink
   - type: MixableSolution
     solution: drink
   - type: DrawableSolution
@@ -249,7 +251,9 @@
   - type: SolutionContainerManager
     solutions:
       drink:
-        maxVol: 100
+        maxVol: 150
+  - type: FitsInDispenser #Forge-add
+    solution: drink
   - type: MixableSolution
     solution: drink
   - type: DrawableSolution
@@ -415,6 +419,8 @@
     solutions:
       drink:
         maxVol: 50
+  - type: FitsInDispenser #Forge-add
+    solution: drink
   - type: MixableSolution
     solution: drink
   - type: DrawableSolution
@@ -447,7 +453,7 @@
   - type: Sprite
     state: timer
   - type: Tag
-    tags: 
+    tags:
     - JunkTimer
 
 - type: entity
@@ -505,7 +511,7 @@
         - ReagentId: Turpentine
           Quantity: 50
   - type: Tag
-    tags: 
+    tags:
       - Turpentine
 
 - type: entity
@@ -922,6 +928,61 @@
   - type: Tag
     tags:
     - Mainboard
+  - type: ShortConstruction
+    entries:
+    - category:
+        name: Western Brotherhood doors
+        icon:
+          sprite: Corvax/Structures/Decoration/flag3.rsi
+          state: zbosmini
+        entries:
+          - prototype: N14DoorBunkerLockedBoSWest
+          - prototype: N14DoorBunkerGlassLockedBoSWest
+          - prototype: N14DoorBunker3XLockedBoSWest
+          - prototype: N14DoorBunkerGlass3XLockedBoSWest
+    - category:
+        name: Washington Brotherhood doors
+        icon:
+          sprite: _Nuclear14/Structures/Wallmounts/walldecor3.rsi
+          state: flag_washing
+        entries:
+          - prototype: N14DoorBunkerLockedBoSWashington
+          - prototype: N14DoorBunkerGlassLockedBoSWashington
+    - category:
+        name: Midwestern Brotherhood doors
+        icon:
+          sprite: _Nuclear14/Structures/Wallmounts/walldecor2.rsi
+          state: flag_midwest
+        entries:
+          - prototype: N14DoorBunker3XLockedBoSMidwest
+          - prototype: N14DoorBunkerGlass3XLockedBoSMidwest
+          - prototype: N14DoorBunkerGlassLockedBoSMidwest
+          - prototype: N14DoorBunkerLockedBoSMidwest
+          - prototype: N14DoorBunkerLockedBoSMidwestTall
+    - category:
+        name: NCR doors
+        icon:
+          sprite: _Nuclear14/Structures/Wallmounts/walldecor.rsi
+          state: flag_ncr
+        entries:
+          - prototype: N14DoorBunkerLockedNCR
+          - prototype: N14DoorBunkerGlassLockedNCR
+    - category:
+        name: US doors
+        icon:
+          sprite: _Nuclear14/Structures/Wallmounts/walldecor.rsi
+          state: flag_us
+        entries:
+          - prototype: N14DoorBunkerLockedVaultDweller
+          - prototype: N14DoorBunkerLockedVaultDwellerTall
+  - type: UserInterface
+    interfaces:
+      enum.RadialSelectorUiKey.Key:
+        type: RadialSelectorMenuBUI
+  - type: ActivatableUI
+    key: enum.RadialSelectorUiKey.Key
+    inHandsOnly: true
+    requireActiveHand: false
 
 - type: entity
   parent: N14JunkComponentElectronic

@@ -96,6 +96,16 @@
 - type: entity
   parent: N14FlagWallUS
   id: N14FlagWallWesternBrotherhood
+  suffix: Western BOS
+  description: A Western Brotherhood of Steel flag.
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/flag3.rsi
+    state: zbosmini
+
+- type: entity
+  parent: N14FlagWallUS
+  id: N14FlagWallMidWesternBrotherhood
   suffix: Midwestern BOS
   description: A Midwestern Brotherhood of Steel flag.
   components:

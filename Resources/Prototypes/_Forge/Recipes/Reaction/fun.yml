@@ -1,0 +1,15 @@
+- type: reaction
+  id: ZoiDarbiPlushieReaction
+  impact: Low
+  quantized: true
+  conserveEnergy: false
+  reactants:
+    Fiber:
+      amount: 50
+    BoneMeal:
+      amount: 25
+    Blood:
+      amount: 25
+  effects:
+  - !type:CreateEntityReactionEffect
+    entity: N14ZoiDarbiPlushie

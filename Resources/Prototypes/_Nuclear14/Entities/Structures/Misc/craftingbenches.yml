@@ -321,7 +321,7 @@
     - N14FlashlightLantern
     - N14GlowstickRed
     - N14CleanGauze1
-    - DoorElectronics
+    - N14JunkComponentMainboard
     - MagazineBoxNail # Forge-Change
     - DrumMagazineNailGun # Forge-Change
     #Электроника # Forge-Add
@@ -329,9 +329,12 @@
     - MicrowaveMachineCircuitboard
     - ReagentGrinderMachineCircuitboard
     - CellRechargerCircuitboard
-    - PowerCageRechargerCircuitboard
+    - WeaponCapacitorRechargerCircuitboard
     - N14PowerCellMedium
     - N14PowerCellHigh
+    - N14CapacitorStockPart
+    - N14MicroManipulatorStockPart
+    - N14MatterBinStockPart
 
 - type: entity
   parent: BaseStructure
@@ -457,9 +460,7 @@
     - OreBag # Forge-add
     - ClothingHeadHatWelding # Forge-add
     - Binoculars # Forge-add
-    - FireExtinguisher # Forge-add
     # Kitchen
-    - N14DrinkNukaColaEmpty # Forge-add
     - N14JunkTincan # Forge-add
     - N14ButchersCleaver
     - N14KitchenKnife

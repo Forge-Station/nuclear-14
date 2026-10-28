@@ -80,6 +80,9 @@
       board: [ DoorElectronicsBOSMidwestGeneral ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerBoSMidwestTallGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunkerGlass # needs replaced
@@ -296,6 +299,9 @@
     access: [["VaultDweller"]]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerVaultTallGraph
+    node: done
 
 - type: entity
   parent: N14DoorAirlockTall
