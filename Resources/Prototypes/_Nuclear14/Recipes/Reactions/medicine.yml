@@ -14,7 +14,7 @@
     Ethanol:
       amount: 1
     ScorpionTail:
-      amount: 1
+      amount: 0.5 #Forge-change
   products:
     AntidoteMixture: 2
 
@@ -104,7 +104,7 @@
     ExtractXander:
       amount: 1
     Blood:
-      amount: 1
+      amount: 0.5 #Forge-change
   products:
     DirtyStimpak: 1
 
@@ -127,7 +127,7 @@
     ExtractXander:
       amount: 1
     WastelandBlood:
-      amount: 1
+      amount: 0.5 #Forge-change
   products:
     DirtyStimpak: 1
 
@@ -149,9 +149,9 @@
     HealingPowder:
       amount: 1
     Water:
-      amount: 1
+      amount: 2
   products:
-    Bitterdrink: 1
+    Bitterdrink: 2
 
 - type: reaction
   id: N14Ointment1
@@ -161,7 +161,7 @@
     Water:
       amount: 5
     Ash:
-      amount: 2 #Forge-change
+      amount: 5
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Ointment1

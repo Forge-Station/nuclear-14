@@ -176,7 +176,7 @@
     materialComposition:
       Plastic: 100
   - type: Tag
-    tags: 
+    tags:
       - Abraxo
 
 - type: entity
@@ -213,6 +213,8 @@
     solutions:
       drink:
         maxVol: 50
+  - type: FitsInDispenser #Forge-add
+    solution: drink
   - type: MixableSolution
     solution: drink
   - type: DrawableSolution
@@ -249,7 +251,9 @@
   - type: SolutionContainerManager
     solutions:
       drink:
-        maxVol: 100
+        maxVol: 150
+  - type: FitsInDispenser #Forge-add
+    solution: drink
   - type: MixableSolution
     solution: drink
   - type: DrawableSolution
@@ -415,6 +419,8 @@
     solutions:
       drink:
         maxVol: 50
+  - type: FitsInDispenser #Forge-add
+    solution: drink
   - type: MixableSolution
     solution: drink
   - type: DrawableSolution
@@ -447,7 +453,7 @@
   - type: Sprite
     state: timer
   - type: Tag
-    tags: 
+    tags:
     - JunkTimer
 
 - type: entity
@@ -505,7 +511,7 @@
         - ReagentId: Turpentine
           Quantity: 50
   - type: Tag
-    tags: 
+    tags:
       - Turpentine
 
 - type: entity

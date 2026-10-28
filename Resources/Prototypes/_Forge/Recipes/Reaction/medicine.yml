@@ -1,3 +1,29 @@
+#MARK: Реакции стимпаков
+
+- type: reaction
+  id: DirtyStimpak3
+  reactants:
+    ExtractBroc:
+      amount: 1
+    ExtractXander:
+      amount: 1
+    Saline:
+      amount: 1
+  products:
+    DirtyStimpak: 1
+
+- type: reaction
+  id: DirtyStimpakCabbage
+  reactants:
+    ExtractBroc:
+      amount: 1
+    ExtractXander:
+      amount: 1
+    ExtractCabbage:
+      amount: 1
+  products:
+    DirtyStimpak: 1
+
 #MARK: Реакции тромбоза
 - type: reaction
   id: ThrombosisBaseRobust
@@ -174,7 +200,7 @@
     Whiskey:
       amount: 1
     ScorpionTail:
-      amount: 1
+      amount: 0.5
   products:
     AntidoteMixture: 2
 
@@ -184,7 +210,7 @@
     Vodka:
       amount: 1
     ScorpionTail:
-      amount: 1
+      amount: 0.5
   products:
     AntidoteMixture: 2
 
@@ -194,7 +220,7 @@
     N14RoentgenRum:
       amount: 1
     ScorpionTail:
-      amount: 1
+      amount: 0.5
   products:
     AntidoteMixture: 2
 
@@ -205,7 +231,7 @@
     Saline:
       amount: 5
     Blood:
-      amount: 10
+      amount: 5
     Antiseptic:
       amount: 5
   effects:
@@ -218,7 +244,7 @@
     Saline:
       amount: 5
     WastelandBlood:
-      amount: 10
+      amount: 5
     Antiseptic:
       amount: 5
   effects:
@@ -230,8 +256,21 @@
   reactants:
     ExtractCabbage:
       amount: 10
-    WastelandBlood:
+    Blood:
+      amount: 5
+    Antiseptic:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: Bloodpack1
+
+- type: reaction
+  id: BloodpackReaction4
+  reactants:
+    ExtractCabbage:
       amount: 10
+    WastelandBlood:
+      amount: 5
     Antiseptic:
       amount: 5
   effects:
@@ -393,7 +432,7 @@
     Bitterdrink:
       amount: 5
     Ash:
-      amount: 2
+      amount: 5
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14RegenerativeOintment1
@@ -404,9 +443,9 @@
     ExtractAgaveNectar:
       amount: 5
     DirtyStimpak:
-      amount: 2
+      amount: 1
     Ash:
-      amount: 2
+      amount: 5
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14RegenerativeOintment1
@@ -417,9 +456,9 @@
     ExtractAgaveNectar:
       amount: 5
     HealingMixture:
-      amount: 1
+      amount: 0.5
     Ash:
-      amount: 2
+      amount: 5
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14RegenerativeOintment1
@@ -432,6 +471,8 @@
       amount: 10
     Bitterdrink:
       amount: 5
+    Antiseptic:
+      amount: 1
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14MedicatedSuture1
@@ -442,7 +483,9 @@
     Fiber:
       amount: 10
     DirtyStimpak:
-      amount: 2
+      amount: 1
+    Antiseptic:
+      amount: 1
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14MedicatedSuture1
@@ -453,6 +496,8 @@
     Fiber:
       amount: 10
     HealingMixture:
+      amount: 0.5
+    Antiseptic:
       amount: 1
   effects:
     - !type:CreateEntityReactionEffect

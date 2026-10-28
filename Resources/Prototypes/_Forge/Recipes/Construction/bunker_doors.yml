@@ -16,6 +16,20 @@
         name: mainframe board
         icon: {sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi, state: frame}
         doAfter: 10
+  - node: done
+    entity: N14DoorBunkerLockedBoSWashington
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: N14IngotIron1
+        amount: 4
+      - !type:SpawnPrototype
+        prototype: CableApcStack
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: N14JunkComponentMainboard
+        amount: 1
 
 - type: construction
   id: N14DoorBunkerLockedBoSWest
@@ -26,7 +40,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
     state: closed
@@ -81,7 +95,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
     state: closed
@@ -131,7 +145,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
     state: closed
@@ -186,7 +200,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
     state: closed
@@ -236,7 +250,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
     state: closed
@@ -291,7 +305,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
     state: closed
@@ -341,7 +355,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
     state: closed
@@ -396,7 +410,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
     state: closed
@@ -451,7 +465,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
     state: closed
@@ -501,7 +515,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
     state: closed
@@ -551,7 +565,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
     state: closed
@@ -601,7 +615,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
     state: closed
@@ -656,7 +670,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/glassbunkerdoor.rsi
     state: closed
@@ -706,7 +720,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
     state: closed
@@ -756,7 +770,7 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/bunkerdoor.rsi
     state: closed
