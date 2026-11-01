@@ -741,7 +741,9 @@ public sealed partial class ChatSystem : SharedChatSystem
     {
         var language = languageOverride ?? _language.GetLanguage(source);
         var voiceRange = (float) VoiceRange;
-        if (TryComp<SpeechModifierComponent>(source, out var speechModifier))
+        // Screamer changes spoken range only. Whisper, emotes and LOOC keep their own distances.
+        if (channel == ChatChannel.Local
+            && TryComp<SpeechModifierComponent>(source, out var speechModifier))
             voiceRange *= speechModifier.VoiceRangeMultiplier;
 
         foreach (var (session, data) in GetRecipients(source, Transform(source).GridUid == null ? 0.3f : voiceRange))

@@ -1,3 +1,4 @@
+using Content.Server._Forge.Metabolism;
 using Content.Server.Body.Components;
 using Content.Server.Chemistry.Containers.EntitySystems;
 using Content.Shared.Administration.Logs;
@@ -162,7 +163,7 @@ namespace Content.Server.Body.Systems
 
                 // Forge-Change: Lead Belly turns dirty/irradiated reagents into clean water 1:1.
                 if (ent.Comp2?.Body is { } perkBody
-                    && HasComp<Content.Server._Forge.Metabolism.N14LeadBellyPerkComponent>(perkBody)
+                    && HasComp<N14LeadBellyPerkComponent>(perkBody)
                     && proto.ID is "WaterDirty" or "WaterIrradiated" or "N14RadParticleFood")
                 {
                     var rate = quantity;
@@ -213,8 +214,13 @@ namespace Content.Server.Body.Systems
                     var ev = new TryMetabolizeReagent(reagent, proto, quantity);
                     RaiseLocalEvent(actualEntity, ref ev);
 
-                    // Forge-Change: let listeners scale/neutralize metabolism effects.
+                    // Forge-Change: listeners can scale effects or speed up reagent removal.
                     scale *= ev.Scale;
+                    mostToRemove = FixedPoint2.Clamp(mostToRemove * ev.QuantityMultiplier, FixedPoint2.Zero, quantity);
+
+                    // Scale 0 neutralizes the effect, but the reagent is still consumed.
+                    if (scale <= 0f)
+                        continue;
 
                     var args = new EntityEffectReagentArgs(actualEntity, EntityManager, ent, solution, mostToRemove, proto, null, scale);
 

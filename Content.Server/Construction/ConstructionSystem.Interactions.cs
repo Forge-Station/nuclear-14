@@ -283,12 +283,8 @@ namespace Content.Server.Construction
                     {
                         var doAfterEv = new ConstructionInteractDoAfterEvent(EntityManager, interactUsing);
 
-                        // Forge-Change: construction speed from jobs/traits.
-                        var doAfterDuration = step.DoAfter;
-                        if (TryComp<Content.Shared._Forge.DoAfter.DoAfterSpeedModifierComponent>(interactUsing.User, out var doAfterSpeed))
-                            doAfterDuration /= doAfterSpeed.ToolSpeed;
-
-                        var doAfterEventArgs = new DoAfterArgs(EntityManager, interactUsing.User, doAfterDuration, doAfterEv, uid, uid, interactUsing.Used)
+                        // Tool speed is applied once in TryStartDoAfter when Used is a tool.
+                        var doAfterEventArgs = new DoAfterArgs(EntityManager, interactUsing.User, step.DoAfter, doAfterEv, uid, uid, interactUsing.Used)
                         {
                             BreakOnDamage = false,
                             BreakOnMove = true,

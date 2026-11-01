@@ -228,6 +228,7 @@ trait-name-N14WorldChampion = Чемпион мира
 trait-description-N14WorldChampion =
     С такими ударами вы могли бы стать чемпионом. Или уже были.
     Ваши удары отбрасывают противников.
+    Удар чемпиона наносит 20 дробящего урона, 50 урона выносливости и толчок. Перезарядка 20 секунд.
 
 trait-name-N14SittingDuck = Сидячая утка
 trait-description-N14SittingDuck =

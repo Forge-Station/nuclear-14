@@ -3,6 +3,7 @@ using Content.Shared.Alert;
 using Content.Shared.Damage;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Systems;
+using Content.Shared._Forge.Nutrition;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Rejuvenate;
 using Content.Shared.StatusIcon;
@@ -260,7 +261,7 @@ public sealed class HungerSystem : EntitySystem
             hunger.NextUpdateTime = _timing.CurTime + hunger.UpdateRate;
 
             var hungerDecay = hunger.ActualDecayRate;
-            if (TryComp<Content.Shared._Forge.Nutrition.N14ConsumptionModifierComponent>(uid, out var consumptionModifier))
+            if (TryComp<N14ConsumptionModifierComponent>(uid, out var consumptionModifier))
                 hungerDecay *= consumptionModifier.HungerMultiplier;
 
             ModifyHunger(uid, -hungerDecay, hunger);

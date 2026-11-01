@@ -1,25 +1,27 @@
+using Content.Shared.Actions;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.Weapons.Ranged.Components;
-using Content.Shared.Weapons.Ranged.Systems;
+using Content.Shared.Whitelist;
 using Robust.Shared.Network;
+using Robust.Shared.Timing;
 
 namespace Content.Shared._Forge.Abilities;
 
 public sealed partial class N14AmbidextrousSystem : EntitySystem
 {
-    [Dependency] private readonly SharedGunSystem _gun = default!;
+    [Dependency] private readonly SharedActionsSystem _actions = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
-
-    private readonly HashSet<EntityUid> _firing = new();
+    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
 
     public override void Initialize()
     {
         base.Initialize();
         SubscribeLocalEvent<N14AmbidextrousActionEvent>(OnToggle);
-        SubscribeLocalEvent<GunComponent, GunShotEvent>(OnGunShot);
+        SubscribeLocalEvent<AmbidextrousComponent, N14PickDualGunEvent>(OnPickGun);
     }
 
     private void OnToggle(N14AmbidextrousActionEvent args)
@@ -27,61 +29,95 @@ public sealed partial class N14AmbidextrousSystem : EntitySystem
         if (args.Handled)
             return;
 
-        if (HasComp<AmbidextrousComponent>(args.Performer))
-        {
-            RemComp<AmbidextrousComponent>(args.Performer);
+        var user = args.Performer;
+        var enable = !HasComp<AmbidextrousComponent>(user);
 
-            if (_net.IsServer)
-                _popup.PopupEntity(Loc.GetString("n14-ambidextrous-off"), args.Performer, args.Performer);
-        }
+        if (enable)
+            EnsureComp<AmbidextrousComponent>(user);
         else
-        {
-            EnsureComp<AmbidextrousComponent>(args.Performer);
+            RemComp<AmbidextrousComponent>(user);
 
-            if (_net.IsServer)
-                _popup.PopupEntity(Loc.GetString("n14-ambidextrous-on"), args.Performer, args.Performer);
-        }
+        _actions.SetToggled(args.Action.Owner, enable);
+
+        if (_net.IsServer)
+            _popup.PopupEntity(Loc.GetString(enable ? "n14-ambidextrous-on" : "n14-ambidextrous-off"), user, user);
 
         args.Handled = true;
     }
 
-    private static bool IsDualWieldable(EntityUid uid, MetaDataComponent meta)
+    private void OnPickGun(Entity<AmbidextrousComponent> ent, ref N14PickDualGunEvent args)
     {
-        var id = meta.EntityPrototype?.ID;
-        return id is not null
-               && id.StartsWith("N14Weapon")
-               && (id.Contains("Pistol") || id.Contains("Revolver"));
-    }
-
-    private void OnGunShot(EntityUid uid, GunComponent gun, ref GunShotEvent args)
-    {
-        if (!HasComp<AmbidextrousComponent>(args.User))
+        if (args.User != ent.Owner)
             return;
 
-        // Only the primary shot fires the other hand; ignore the cascaded one.
-        if (!_firing.Add(args.User))
+        if (!TryComp<DualWieldableComponent>(args.ActiveGun, out var activeDual))
             return;
 
-        try
+        if (!TryFindPartner(ent.Owner, args.ActiveGun, activeDual, out var partner, out var partnerGun))
         {
-            if (gun.ShootCoordinates is not { } toCoordinates)
-                return;
-
-            foreach (var held in _hands.EnumerateHeld(args.User))
-            {
-                if (held == uid || !TryComp<GunComponent>(held, out var otherGun))
-                    continue;
-
-                if (!IsDualWieldable(held, MetaData(held)))
-                    continue;
-
-                _gun.AttemptShoot(args.User, held, otherGun, toCoordinates);
-                break;
-            }
+            ent.Comp.OffhandNext = false;
+            Dirty(ent);
+            return;
         }
-        finally
+
+        args.DualWielding = true;
+
+        if (ent.Comp.OffhandNext && partnerGun.NextFire <= _timing.CurTime)
         {
-            _firing.Remove(args.User);
+            args.AlternateGun = partner;
+            ent.Comp.OffhandNext = false;
         }
+        else
+            ent.Comp.OffhandNext = true;
+
+        Dirty(ent);
     }
+
+    private bool TryFindPartner(
+        EntityUid user,
+        EntityUid active,
+        DualWieldableComponent activeDual,
+        out EntityUid partner,
+        out GunComponent partnerGun)
+    {
+        foreach (var held in _hands.EnumerateHeld(user))
+        {
+            if (held == active || !TryComp<GunComponent>(held, out var gun))
+                continue;
+
+            if (!CanDualFire(active, activeDual, held))
+                continue;
+
+            partner = held;
+            partnerGun = gun;
+            return true;
+        }
+
+        partner = default;
+        partnerGun = default!;
+        return false;
+    }
+
+    /// <summary>
+    ///     Both guns need the component, and each whitelist must accept the other gun.
+    /// </summary>
+    private bool CanDualFire(EntityUid firedUid, DualWieldableComponent fired, EntityUid otherUid)
+    {
+        if (!TryComp<DualWieldableComponent>(otherUid, out var other))
+            return false;
+
+        return _whitelist.IsWhitelistPass(fired.Whitelist, otherUid)
+               && _whitelist.IsWhitelistPass(other.Whitelist, firedUid);
+    }
+}
+
+/// <summary>
+///     Raised on the shooter before a gun actually fires.
+///     Sets <see cref="AlternateGun"/> when this shot should come from the other hand.
+/// </summary>
+[ByRefEvent]
+public record struct N14PickDualGunEvent(EntityUid User, EntityUid ActiveGun)
+{
+    public EntityUid? AlternateGun;
+    public bool DualWielding;
 }

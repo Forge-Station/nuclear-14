@@ -229,6 +229,7 @@ trait-name-N14WorldChampion = World Champion
 trait-description-N14WorldChampion =
     You could've been world champion with those punches and kicks, or maybe you were a champion.
     You gain a knockback effect to your unarmed melee punches.
+    Champion Strike deals 20 blunt damage, 50 stamina damage and a shove, with a 20 second cooldown.
 
 trait-name-N14SittingDuck = Sitting Duck
 trait-description-N14SittingDuck =

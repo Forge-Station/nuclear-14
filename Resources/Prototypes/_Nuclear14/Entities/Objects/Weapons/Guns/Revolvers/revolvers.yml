@@ -3,6 +3,10 @@
   id: N14WeaponRevolverBase
   abstract: true
   components:
+  - type: DualWieldable
+    whitelist:
+      components:
+      - DualWieldable
   - type: FollowDistance
     backStrength: 6
   - type: StaticPrice

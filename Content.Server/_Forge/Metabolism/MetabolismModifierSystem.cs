@@ -22,7 +22,6 @@ public sealed partial class MetabolismModifierSystem : EntitySystem
             if (reagent.Id != id)
                 continue;
 
-            args.QuantityMultiplier = 0f;
             args.Scale = 0f;
             return;
         }
@@ -33,7 +32,6 @@ public sealed partial class MetabolismModifierSystem : EntitySystem
                 continue;
 
             _vomit.Vomit(uid);
-            args.QuantityMultiplier = 0f;
             args.Scale = 0f;
             return;
         }

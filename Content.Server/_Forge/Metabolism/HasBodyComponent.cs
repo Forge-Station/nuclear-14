@@ -1,7 +1,5 @@
 using Content.Shared.EntityEffects;
 using JetBrains.Annotations;
-using Robust.Shared.GameObjects;
-using Robust.Shared.IoC;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Forge.Metabolism;
@@ -20,8 +18,7 @@ public sealed partial class HasBodyComponent : EntityEffectCondition
 
     public override bool Condition(EntityEffectBaseArgs args)
     {
-        var factory = IoCManager.Resolve<IComponentFactory>();
-        if (!factory.TryGetRegistration(Component, out var registration))
+        if (!args.EntityManager.ComponentFactory.TryGetRegistration(Component, out var registration))
             return false;
 
         return args.EntityManager.HasComponent(args.TargetEntity, registration.Type) ^ Invert;

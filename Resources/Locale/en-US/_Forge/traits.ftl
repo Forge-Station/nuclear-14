@@ -8,7 +8,7 @@ trait-description-N14PerkPackMule =
 
 trait-name-N14PerkSharpNails = Sharp Nails
 trait-description-N14PerkSharpNails =
-    Your unarmed attacks deal [color=green]5[/color] [color=yellow]Slash[/color] damage.
+    Your unarmed attacks deal [color=green]5[/color] [color=yellow]Slash[/color] damage instead of blunt.
 
 trait-name-N14PerkGourmand = Gourmand
 trait-description-N14PerkGourmand =
@@ -22,20 +22,21 @@ trait-description-N14PerkWeakStomach =
 
 trait-name-N14PerkLeadBelly = Lead Belly
 trait-description-N14PerkLeadBelly =
-    Dirty and irradiated water is turned into clean water in your stomach.
-    You take no [color=red]Poison[/color] or [color=yellow]Radiation[/color] damage from it.
+    Dirty water, irradiated water and radioactive particles from pre-war food turn into clean water in your stomach.
+    You take no [color=red]Poison[/color] or [color=yellow]Radiation[/color] damage from them.
 
 trait-name-N14PerkAmbidextrous = Ambidextrous
 trait-description-N14PerkAmbidextrous =
-    Activate the ability to fire pistols and revolvers without wielding them, one in each hand.
+    You fire one gun, then the other, and keep alternating while you shoot.
+    Only weapons allowed by their whitelist take part.
 
 action-name-n14-ambidextrous = Ambidextrous
 action-description-n14-ambidextrous =
-    Toggle dual-wield: fire pistols and revolvers from both hands.
+    Toggle two-handed shooting. Allowed guns fire in turn, without swapping hands.
 
 trait-name-N14PerkEagleEye = Eagle Eye
 trait-description-N14PerkEagleEye =
-    Your eyesight is sharper than most: your view range is increased by [color=green]+1[/color] tile.
+    Your eyesight is sharper than most: you see about [color=green]20%[/color] farther.
 
 trait-name-N14PerkHardy = Hardy
 trait-description-N14PerkHardy =
@@ -50,8 +51,8 @@ trait-description-N14PerkFrail =
 trait-name-N14PerkRadiationChild = Child of Radiation
 trait-description-N14PerkRadiationChild =
     While [color=yellow]Radiation[/color] is in your body, it passively heals damage.
-    [color=green]0.1[/color] healing per [color=yellow]1[/color] point of radiation for [color=yellow]Blunt[/color], [color=yellow]Slash[/color], [color=yellow]Piercing[/color], [color=yellow]Heat[/color] and [color=yellow]Shock[/color] damage.
-    Weakens and turns off as radiation leaves your body. Does not work above [color=red]140[/color] total damage.
+    It heals [color=green]0.1[/color] per [color=yellow]1[/color] point of radiation for [color=yellow]Blunt[/color], [color=yellow]Slash[/color], [color=yellow]Piercing[/color], [color=yellow]Heat[/color] and [color=yellow]Shock[/color] damage.
+    Weakens and turns off as radiation leaves your body. Does not work when damage other than radiation is above [color=red]140[/color].
 
 trait-name-N14PerkMonochromacy = Monochromacy
 trait-description-N14PerkMonochromacy =
@@ -75,8 +76,8 @@ trait-description-N14PerkTone =
 
 action-name-n14-champion-punch = Champion Strike
 action-description-n14-champion-punch =
-    A powerful strike that knocks the stamina out of your target.
+    A punch that deals [color=green]20[/color] blunt damage, [color=green]50[/color] stamina damage and a shove. 20 second cooldown.
 
 n14-ambidextrous-on = Dual-wield enabled
 n14-ambidextrous-off = Dual-wield disabled
-n14-champion-punch-emote = coughs
+n14-champion-punch-emote = throws a heavy punch!

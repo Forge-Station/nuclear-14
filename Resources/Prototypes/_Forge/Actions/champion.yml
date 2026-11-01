@@ -9,7 +9,7 @@
       sprite: Clothing/Hands/Gloves/Boxing/boxingred.rsi
       state: icon
     useDelay: 20
-    checkCanAccess: false
+    checkCanAccess: true
     range: 1.5
     itemIconStyle: BigAction
     canTargetSelf: false

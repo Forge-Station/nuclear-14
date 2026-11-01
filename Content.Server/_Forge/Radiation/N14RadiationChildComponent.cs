@@ -20,7 +20,8 @@ public sealed partial class N14RadiationChildComponent : Component
     public float Interval = 1f;
 
     /// <summary>
-    ///     Healing does not work above this total damage.
+    ///     Healing does not work when damage other than radiation is at or above this value.
+    ///     Radiation itself is the fuel and is not counted.
     /// </summary>
     [DataField]
     public float MaxTotalDamage = 140f;

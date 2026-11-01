@@ -81,6 +81,9 @@
   category: Physical
   points: -9
   functions:
+    - !type:TraitAddComponent
+      components:
+        - type: Ambidextrous
     - !type:TraitAddActions
       actions:
         - ActionN14Ambidextrous
@@ -144,10 +147,8 @@
       traits:
         - N14PerkWaterDrinker
   functions:
-    - !type:TraitAddComponent
-      components:
-        - type: N14ConsumptionModifier
-          thirstMultiplier: 0.8
+    - !type:TraitAdjustConsumption
+      thirstMultiplier: 0.8
 
 - type: trait
   id: N14PerkGlutton
@@ -159,10 +160,8 @@
       traits:
         - N14PerkTone
   functions:
-    - !type:TraitAddComponent
-      components:
-        - type: N14ConsumptionModifier
-          hungerMultiplier: 1.25
+    - !type:TraitAdjustConsumption
+      hungerMultiplier: 1.25
 
 - type: trait
   id: N14PerkWaterDrinker
@@ -174,10 +173,8 @@
       traits:
         - N14PerkCamel
   functions:
-    - !type:TraitAddComponent
-      components:
-        - type: N14ConsumptionModifier
-          thirstMultiplier: 1.25
+    - !type:TraitAdjustConsumption
+      thirstMultiplier: 1.25
 
 - type: trait
   id: N14PerkTone
@@ -189,7 +186,5 @@
       traits:
         - N14PerkGlutton
   functions:
-    - !type:TraitAddComponent
-      components:
-        - type: N14ConsumptionModifier
-          hungerMultiplier: 0.75
+    - !type:TraitAdjustConsumption
+      hungerMultiplier: 0.75

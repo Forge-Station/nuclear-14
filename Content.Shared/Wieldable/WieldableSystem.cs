@@ -15,6 +15,7 @@ using Content.Shared.Weapons.Melee.Components;
 using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
+using Content.Shared._Forge.Abilities;
 using Content.Shared.Weapons.Ranged.Systems;
 using Content.Shared.Wieldable.Components;
 using Robust.Shared.Audio.Systems;
@@ -70,8 +71,8 @@ public sealed class WieldableSystem : EntitySystem
 
     private void OnShootAttempt(EntityUid uid, GunRequiresWieldComponent component, ref ShotAttemptedEvent args)
     {
-        // Forge-Change: ambidextrous users can fire without wielding.
-        if (HasComp<Content.Shared._Forge.Abilities.AmbidextrousComponent>(args.User))
+        // Forge-Change: ambidextrous users can fire one-handed sidearms without wielding.
+        if (HasComp<DualWieldableComponent>(uid) && HasComp<AmbidextrousComponent>(args.User))
             return;
 
         if (TryComp<WieldableComponent>(uid, out var wieldable) &&
