@@ -39,7 +39,9 @@
     back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingShoesBlack
     gloves: N14ClothingHandsGlovesNitrile
+    mask: ClothingMaskSterile # Forge-Change
     id: N14IDDoctorTown
+    belt: N14ClothingBeltMedicalFilled # Forge-Change
     outerClothing: N14ClothingOuterCoatLab
   innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
   satchel: N14ClothingBackpackSatchelWastelanderFilled
