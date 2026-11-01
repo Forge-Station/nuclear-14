@@ -41,12 +41,9 @@ public sealed partial class BallisticCoverSystem : EntitySystem
         SubscribeLocalEvent<GunComponent, AmmoShotEvent>(OnAmmoShot);
         SubscribeLocalEvent<GunComponent, TakeAmmoEvent>(OnTakeAmmo, after: new[] { typeof(SharedGunSystem) });
         SubscribeLocalEvent<TransformComponent, SelfBeforeGunShotEvent>(OnBeforeShot);
-        SubscribeLocalEvent<TransformComponent, HitScanAfterRayCastEvent>(OnHitscan,
-            after: new[] { typeof(LamiaSystem) });
-        SubscribeLocalEvent<TransformComponent, ProjectileReflectAttemptEvent>(OnProjectileReflect,
-            after: new[] { typeof(ReflectSystem) });
-        SubscribeLocalEvent<TransformComponent, HitScanReflectAttemptEvent>(OnHitscanReflect,
-            after: new[] { typeof(ReflectSystem) });
+        SubscribeLocalEvent<TransformComponent, HitScanAfterRayCastEvent>(OnHitscan, after: new[] { typeof(LamiaSystem) });
+        SubscribeLocalEvent<TransformComponent, ProjectileReflectAttemptEvent>(OnProjectileReflect, after: new[] { typeof(ReflectSystem) });
+        SubscribeLocalEvent<TransformComponent, HitScanReflectAttemptEvent>(OnHitscanReflect, after: new[] { typeof(ReflectSystem) });
     }
 
     public override void Update(float frameTime)

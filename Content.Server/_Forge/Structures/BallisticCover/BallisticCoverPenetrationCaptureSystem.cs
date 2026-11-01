@@ -14,8 +14,7 @@ public sealed class BallisticCoverPenetrationCaptureSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<MetaDataComponent, StartCollideEvent>(OnContact,
-            before: new[] { typeof(ProjectileSystem), typeof(BallisticCoverSystem) });
+        SubscribeLocalEvent<MetaDataComponent, StartCollideEvent>(OnContact, before: new[] { typeof(ProjectileSystem), typeof(BallisticCoverSystem) });
     }
 
     private void OnContact(Entity<MetaDataComponent> ent, ref StartCollideEvent args)

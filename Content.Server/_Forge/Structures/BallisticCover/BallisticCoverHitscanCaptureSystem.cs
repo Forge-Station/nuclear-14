@@ -14,8 +14,7 @@ public sealed class BallisticCoverHitscanCaptureSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<MetaDataComponent, HitScanAfterRayCastEvent>(OnHitscan,
-            before: new[] { typeof(LamiaSystem), typeof(BallisticCoverSystem) });
+        SubscribeLocalEvent<MetaDataComponent, HitScanAfterRayCastEvent>(OnHitscan, before: new[] { typeof(LamiaSystem), typeof(BallisticCoverSystem) });
     }
 
     private void OnHitscan(Entity<MetaDataComponent> ent, ref HitScanAfterRayCastEvent args)
