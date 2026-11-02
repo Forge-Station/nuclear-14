@@ -158,3 +158,12 @@ Entries:
   id: 13
   time: '2026-10-25T11:53:44.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/562
+- author: yanus42
+  changes:
+    - type: Tweak
+      message: Кошелёк теперь вмещается в карман куртки :D
+    - type: Tweak
+      message: Имена целей охоты за головами теперь рандомные XD
+  id: 14
+  time: '2026-11-02T10:45:35.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/567
