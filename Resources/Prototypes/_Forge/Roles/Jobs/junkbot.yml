@@ -1,0 +1,19 @@
+- type: job
+  id: Junkbot
+  setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
+  name: job-name-junkbot
+  description: job-description-junkbot
+  playTimeTracker: Junkbot
+  requirements:
+  - !type:CharacterOverallTimeRequirement
+    min: 3600 # 1 час
+  icon: JobIconBorg
+  supervisors: job-supervisors-wastelander
+  jobEntity: PlayerN14Junkbot
+  spawnLoadout: false
+  applyTraits: false
+
+- type: playTimeTracker
+  id: Junkbot

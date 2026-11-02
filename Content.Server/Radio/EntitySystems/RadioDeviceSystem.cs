@@ -23,6 +23,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Player; // Nuclear-14
 using Robust.Shared.Prototypes;
 using Content.Shared.IdentityManagement;
+using Content.Shared.Silicons.Borgs.Components; // Forge-Change
 using Robust.Shared.Configuration; // Forge-Change
 
 namespace Content.Server.Radio.EntitySystems;
@@ -197,6 +198,31 @@ public sealed class RadioDeviceSystem : EntitySystem
     }
     #endregion
 
+    /// Forge-Change-Start
+    /// <summary>
+    /// Tunes a receiver's channel and frequency together, dropping the previous channel.
+    /// </summary>
+    public void SetReceiverChannel(EntityUid uid, ProtoId<RadioChannelPrototype> channel)
+    {
+        if (!_protoMan.TryIndex(channel, out var prototype) ||
+            !TryComp<RadioMicrophoneComponent>(uid, out var microphone) ||
+            !TryComp<RadioSpeakerComponent>(uid, out var speaker))
+            return;
+
+        microphone.BroadcastChannel = prototype.ID;
+        microphone.Frequency = prototype.Frequency;
+        speaker.Channels.Clear();
+        speaker.Channels.Add(prototype.ID);
+
+        if (TryComp<ActiveRadioComponent>(uid, out var active))
+        {
+            active.Channels.Clear();
+            if (speaker.Enabled)
+                active.Channels.Add(prototype.ID);
+        }
+    }
+
+    /// Forge-Change-End
     private void OnExamine(EntityUid uid, RadioMicrophoneComponent component, ExaminedEvent args)
     {
         if (!args.IsInDetailsRange)
@@ -242,7 +268,9 @@ public sealed class RadioDeviceSystem : EntitySystem
         var name = Loc.GetString("speech-name-relay", ("speaker", args.Channel.LocalizedName),
             ("originalName", nameEv.Sender));
 
-        if (_cfg.GetCVar(CorvaxVars.TTSEnabled))
+        // Borgs relay radio speech with their own synthetic voice. Do not overwrite it
+        // with the sender's voice, as that would also change their subsequent speech.
+        if (_cfg.GetCVar(CorvaxVars.TTSEnabled) && !HasComp<BorgChassisComponent>(uid)) // Forge-Change
         {
             var radTtsComp = Comp<TTSComponent>(uid);
             var userTtsComp = Comp<TTSComponent>(args.MessageSource);

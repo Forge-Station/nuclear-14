@@ -6,15 +6,26 @@
   name: job-name-bos-mid-squire
   description: job-description-bos-mid-squire
   playTimeTracker: BoSMidSquire
-  requirements:
-    - !type:CharacterLogicOrRequirement
+  #Forge-Change-Start
+  ranks:
+    - rank: BoSMidSeniorSquire
       requirements:
-        - !type:CharacterSpeciesRequirement
-          species:
-            - Human
-            - Ghoul
-    - !type:CharacterOverallTimeRequirement
-      min: 3600
+        - !type:CharacterPlaytimeRequirement
+          tracker: BoSMidSquire
+          min: 72000 # 1200 minutes
+    - rank: BoSMidSquire
+  #Forge-Change-End
+  requirements:
+  # Forge-Change-Start
+  - !type:CharacterOverallTimeRequirement
+    min: 3600
+  - !type:CharacterLogicOrRequirement
+    requirements:
+    - !type:CharacterSpeciesRequirement
+      species:
+      - Human
+      - Ghoul
+  # Forge-Change-End
   startingGear: BoSMidSquireGear
   alwaysUseSpawner: true
   icon: "JobIconBosMSquire" # Forge-Change

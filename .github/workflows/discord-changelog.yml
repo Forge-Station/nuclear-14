@@ -3,22 +3,35 @@ name: Discord Changelog
 on:
   workflow_dispatch:
   schedule:
-  - cron: '0 6 * * *'
+    - cron: '30 14 * * 3' # среда 17:30 МСК
+
+concurrency:
+  group: discord-changelog
+  cancel-in-progress: false
 
 jobs:
   publish_changelog:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
     steps:
-
-    - name: checkout
-      uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v4
       with:
         ref: master
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install deps
+      run: pip install requests pyyaml
 
     - name: Publish changelog
       run: Tools/actions_changelogs_since_last_run.py
       env:
-        CHANGELOG_DIR: Resources/Changelog/Nuclear14.yml
-        CHANGELOG_WEBHOOK: ${{ secrets.CHANGELOG_WEBHOOK }}
-        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
-    continue-on-error: true
+        CHANGELOG_DIR: Resources/Changelog/Forge.yml
+        CHANGELOG_WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -7,13 +7,15 @@
   description: job-description-tribal-healer
   playTimeTracker: TribalHealer
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: Tribe
-      min: 7200 # 2 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: Tribe
+    min: 7200 # 2 hours
+  # Forge-Change-End
   startingGear: TribalHealerGear
   alwaysUseSpawner: true
   icon: "JobIconTribalMedic" # Forge-Change

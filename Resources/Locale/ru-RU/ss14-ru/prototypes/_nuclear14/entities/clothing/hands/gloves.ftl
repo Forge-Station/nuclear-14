@@ -31,3 +31,7 @@ ent-N14ClothingHandsGlovesMountie = кожаные перчатки для ве�
 # Племя 
 ent-N14ClothingHandsGlovesTribal = первобытные перчатки
     .desc = Грубые куски кожи, обмотанные вокруг ладоней – простое, но эффективное средство защиты.
+
+# БС
+ent-N14ClothingHandsMidWestBoSScripterGlovesCombat = боевые перчатки скриптера
+    .desc = Перчатки, специально подготовленные под скриптера братства.

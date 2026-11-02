@@ -2,6 +2,12 @@
   id: VaultEngineer
   name: job-name-vault-engineer
   description: job-description-vault-engineer
+  # Forge-Change-Start
+  setPreference: true
+  overrideConsoleVisibility: true
+  canBeAntag: false
+  playTimeTracker: VaultEngineer
+  # Forge-Change-End
   requirements:
   - !type:CharacterSpeciesRequirement
     species:
@@ -9,10 +15,9 @@
   - !type:CharacterDepartmentTimeRequirement
     department: Vault
     min: 7200 # 2 hours
-  setPreference: true
-  overrideConsoleVisibility: true
-  canBeAntag: false
-  playTimeTracker: VaultEngineer
+  # Forge-Change-Start
+  - !type:MinPlayersRequirement
+    min: 20 # Forge-Change-End
   startingGear: VaultEngineerGear
   alwaysUseSpawner: true
   icon: "JobIconVaultEngineer" # Forge-Change

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Human variant supplied by the contributor as крюк хуман.png; base meat spike attribution in Structures/meat_spike.rsi/meta.json.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "spikebloodyhuman"
+    }
+  ]
+}

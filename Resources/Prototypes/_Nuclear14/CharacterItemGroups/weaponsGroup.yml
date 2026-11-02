@@ -19,10 +19,16 @@
   items:
     - type: loadout
       id: N14SpeedLoader9
+    - type: loadout
+      id: N14PowerCellHigh
 
 - type: characterItemGroup
   id: N14LoadoutMelee
   items:
+    - type: loadout
+      id: N14CombatKnife
+    - type: loadout
+      id: N14ScrapMachete
     - type: loadout
       id: N14KitchenKnife
     - type: loadout

@@ -1,7 +1,7 @@
 # MARK: Ranger
 - type: loadout
   id: LoadoutNCRRangerVest
-  category: Outer
+  category: OuterArmor
   cost: 1
   exclusive: true
   requirements:
@@ -13,7 +13,7 @@
 
 - type: loadout
   id: LoadoutNCRRangerRedwood
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   requirements:
@@ -28,7 +28,7 @@
 
 - type: loadout
   id: LoadoutNCRRangerCombat
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -43,7 +43,7 @@
 
 - type: loadout
   id: LoadoutNCRRangerCoyote
-  category: Outer
+  category: OuterArmor
   cost: 6
   exclusive: true
   requirements:
@@ -59,7 +59,7 @@
 
 - type: loadout
   id: LoadoutNCRRangerScorpion
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   requirements:
@@ -205,7 +205,7 @@
 # misc
 - type: loadout
   id: LoadoutNCRRangerMedkit
-  category: Items
+  category: ItemsMedical
   cost: 2
   exclusive: true
   requirements:
@@ -248,7 +248,7 @@
 
 - type: loadout
   id: LoadoutNCRuniformCombatDesert
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -263,7 +263,7 @@
 
 - type: loadout
   id: LoadoutNCRRangerEliteOld
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:

@@ -5,8 +5,53 @@
   id: Accessories
 
 - type: loadoutCategory
+  id: Belts
+  root: true
+
+- type: loadoutCategory
   id: Roles
 
 - type: loadoutCategory
   id: Weapons
   root: true
+  subCategories:
+  - WeaponsAmmo
+  - WeaponsMelee
+  - WeaponsFirearms
+  - WeaponsEnergy
+
+- type: loadoutCategory
+  id: WeaponsAmmo
+
+- type: loadoutCategory
+  id: WeaponsMelee
+
+- type: loadoutCategory
+  id: WeaponsFirearms
+
+- type: loadoutCategory
+  id: WeaponsEnergy
+
+- type: loadoutCategory
+  id: ItemsMusic
+
+- type: loadoutCategory
+  id: ItemsSmoking
+
+- type: loadoutCategory
+  id: ItemsTools
+
+- type: loadoutCategory
+  id: ItemsMedical
+
+- type: loadoutCategory
+  id: ItemsFood
+
+- type: loadoutCategory
+  id: ItemsPersonal
+
+- type: loadoutCategory
+  id: OuterClothing
+
+- type: loadoutCategory
+  id: OuterArmor

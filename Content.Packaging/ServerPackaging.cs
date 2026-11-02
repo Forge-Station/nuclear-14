@@ -10,6 +10,13 @@ namespace Content.Packaging;
 
 public static class ServerPackaging
 {
+    // Forge-Secrets-Start
+    private static readonly string SecretsServerProject =
+        Path.Combine("FalloutSecrets", "Content.Secrets.Server", "Content.Secrets.Server.csproj");
+
+    private static bool UseSecrets => File.Exists(SecretsServerProject);
+    // Forge-Secrets-End
+    
     private static readonly List<PlatformReg> Platforms = new()
     {
         new PlatformReg("win-x64", "Windows", true),
@@ -118,9 +125,31 @@ public static class ServerPackaging
                 }
             });
 
+            // Forge-Secrets-Start
+            if (UseSecrets)
+            {
+                logger.Info($"Secrets found, building secret server project for {platform.TargetOs}...");
+                await ProcessHelpers.RunCheck(new ProcessStartInfo
+                {
+                    FileName = "dotnet",
+                    ArgumentList =
+                    {
+                        "build",
+                        SecretsServerProject,
+                        "-c", configuration,
+                        "--nologo",
+                        "/v:m",
+                        $"/p:TargetOs={platform.TargetOs}",
+                        "/p:FullRelease=true",
+                        "/m"
+                    }
+                });
+            }
+            // Forge-Secrets-End
+
             await PublishClientServer(platform.Rid, platform.TargetOs, configuration);
         }
-
+            
         logger.Info($"Packaging {platform.Rid} server...");
 
         var sw = RStopwatch.StartNew();
@@ -221,7 +250,15 @@ public static class ServerPackaging
         var depsContentExclusive = depsContent.Except(depsRobust).ToHashSet();
 
         // Remove .dll suffix and apply filtering.
-        var names = depsContentExclusive.Select(p => p[..^4]).Where(p => !ServerNotExtraAssemblies.Any(p.StartsWith));
+        var names = depsContentExclusive.Select(p => p[..^4]).Where(p => !ServerNotExtraAssemblies.Any(p.StartsWith)).ToList();
+
+        // Forge-Secrets-Start
+        if (UseSecrets)
+        {
+            names.Add("Content.Secrets.Shared");
+            names.Add("Content.Secrets.Server");
+        }
+        // Forge-Secrets-End
 
         return names;
 

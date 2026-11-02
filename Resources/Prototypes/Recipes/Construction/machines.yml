@@ -19,6 +19,7 @@
   graph: Machine
   startNode: start
   targetNode: machine
+  hide: false # Forge-Change
   category: construction-category-machines
   placementMode: SnapgridCenter
   canBuildInImpassable: false

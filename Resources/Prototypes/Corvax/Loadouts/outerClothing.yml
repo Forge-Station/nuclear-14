@@ -1,6 +1,6 @@
 - type: loadout
   id: N14ClothingOuterPainspike
-  category: Outer
+  category: OuterArmor
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -20,7 +20,7 @@
 
 - type: loadout
   id: N14ClothingOuterReinforcedLeatherArmor
-  category: Outer
+  category: OuterArmor
   cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -40,7 +40,7 @@
 
 - type: loadout
   id: N14ClothingOuterLightLeatherArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -60,8 +60,8 @@
 
 - type: loadout
   id: N14ClothingOuterTireArmor
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -76,12 +76,12 @@
       - CaesarLegionSlave
       - NCRPisoner
   items:
-    - N14ClothingOuterTireArmor        
+    - N14ClothingOuterTireArmor
 
 - type: loadout
   id: N14ClothingOuterVestLeather
-  category: Outer
-  cost: 3
+  category: OuterArmor
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -96,13 +96,16 @@
       - CaesarLegionSlave
       - NCRPisoner
   items:
-    - N14ClothingOuterVestLeather 
+    - N14ClothingOuterVestLeather
 
 - type: loadout
   id: N14ClothingOuterInsectArmor
-  category: Outer
-  cost: 4
+  category: OuterArmor
+  cost: 3
   requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 12000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
     - !type:CharacterDepartmentRequirement
@@ -116,11 +119,11 @@
       - CaesarLegionSlave
       - NCRPisoner
   items:
-    - N14ClothingOuterInsectArmor 
+    - N14ClothingOuterInsectArmor
 
 - type: loadout
   id: N14LoadoutOuterTownGuardCoat
-  category: Outer
+  category: OuterClothing
   cost: 0
   exclusive: true
   requirements:
@@ -135,7 +138,7 @@
 
 - type: loadout
   id: N14LoadoutOuterTownGuardLight
-  category: Outer
+  category: OuterArmor
   cost: 3
   exclusive: true
   requirements:
@@ -150,7 +153,7 @@
 
 - type: loadout
   id: N14LoadoutOuterTownGuardRiot
-  category: Outer
+  category: OuterArmor
   cost: 6
   exclusive: true
   requirements:
@@ -163,8 +166,141 @@
   items:
     - N14ClothingOuterTownGuardRiot
 
+- type: loadout
+  id: M14ClothingOuterKhanLeatherArmored
+  category: OuterArmor
+  cost: 3
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - M14ClothingOuterKhanLeatherArmored
 
+- type: loadout
+  id: M14ClothingOuterKhanLeather
+  category: OuterClothing
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - M14ClothingOuterKhanLeather
 
+- type: loadout
+  id: N14ClothingOuterReinforcedArmorKit
+  category: OuterArmor
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterReinforcedArmorKit
 
+- type: loadout
+  id: N14ClothingOuterArmoredKit
+  category: OuterArmor
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterArmoredKit
 
+- type: loadout
+  id: N14ClothingOuterHeavySteelArmor
+  category: OuterArmor
+  cost: 5
+  requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 24000
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterHeavySteelArmor
 
+- type: loadout
+  id: ClothingOuterArmoredWinterCoat
+  category: OuterArmor
+  cost: 3
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - ClothingOuterArmoredWinterCoat
+
+- type: loadout
+  id: N14ClothingOuterCoatFollowersArmored
+  category: OuterArmor
+  cost: 4
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterJobRequirement
+      jobs:
+        - Followers
+    - !type:CharacterPlaytimeRequirement
+      tracker: Followers
+      min: 72000 # 20 hours veterancy unlock
+  items:
+    - N14ClothingOuterCoatFollowersArmored

@@ -178,10 +178,6 @@
       inverted: true
       departments:
       - Vault
-      - CaesarLegion
-      - BrotherhoodMidwest
-      - BrotherhoodWashington
-      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -203,7 +199,6 @@
       departments:
       - Vault
       - BrotherhoodMidwest
-      - BrotherhoodWashington
       - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true

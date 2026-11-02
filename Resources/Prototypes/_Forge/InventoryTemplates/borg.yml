@@ -1,0 +1,92 @@
+# Слоты экипировки роботов и ограничения бронепластин по корпусам.
+- type: inventoryTemplate
+  id: N14Borg
+  slots:
+  - name: head
+    slotTexture: head
+    slotFlags: HEAD
+    uiWindowPos: 1,0
+    strippingWindowPos: 0,0
+    displayName: Head
+    offset: 0, 0.09375
+  - name: eyes
+    slotTexture: glasses
+    slotFlags: PREVENTEQUIP
+    uiWindowPos: 0,1
+    strippingWindowPos: 0,1
+    stripTime: 8
+    displayName: Оптика
+    whitelist:
+      tags:
+      - N14BorgOptics
+  - name: outerClothing
+    slotTexture: suit
+    slotFlags: PREVENTEQUIP
+    uiWindowPos: 1,1
+    strippingWindowPos: 1,1
+    stripTime: 8
+    displayName: Бронепластины
+    whitelist:
+      tags:
+      - N14BorgArmor
+
+- type: inventoryTemplate
+  id: N14EyebotBorgInventory
+  slots:
+  - name: head
+    slotTexture: head
+    slotFlags: HEAD
+    uiWindowPos: 1,0
+    strippingWindowPos: 0,0
+    displayName: Head
+    offset: 0.03125, -0.125
+  - name: eyes
+    slotTexture: glasses
+    slotFlags: PREVENTEQUIP
+    uiWindowPos: 0,1
+    strippingWindowPos: 0,1
+    stripTime: 8
+    displayName: Оптика
+    whitelist:
+      tags: [N14BorgOptics]
+  - name: outerClothing
+    slotTexture: suit
+    slotFlags: PREVENTEQUIP
+    uiWindowPos: 1,1
+    strippingWindowPos: 1,1
+    stripTime: 8
+    displayName: Бронепластины
+    whitelist:
+      tags: [N14BorgArmorLight]
+
+- type: inventoryTemplate
+  id: N14JunkbotBorgInventory
+  slots:
+  - name: head
+    slotTexture: head
+    slotFlags: HEAD
+    uiWindowPos: 1,0
+    strippingWindowPos: 0,0
+    displayName: Head
+    offset: 0, 0.09375
+  - name: eyes
+    slotTexture: glasses
+    slotFlags: PREVENTEQUIP
+    uiWindowPos: 0,1
+    strippingWindowPos: 0,1
+    stripTime: 8
+    displayName: Оптика
+    whitelist:
+      tags:
+      - N14BorgOptics
+  - name: outerClothing
+    slotTexture: suit
+    slotFlags: PREVENTEQUIP
+    uiWindowPos: 1,1
+    strippingWindowPos: 1,1
+    stripTime: 8
+    displayName: Бронепластины
+    whitelist:
+      tags:
+      - N14BorgArmor
+      - N14JunkbotHeavyArmor

@@ -7,6 +7,7 @@ using Content.Shared.Database;
 using Content.Shared.Interaction;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Popups;
+using Content.Shared.Stacks;
 using Content.Shared.Storage;
 using Content.Shared.Verbs;
 using Content.Shared.Destructible;
@@ -102,13 +103,20 @@ public sealed class SharpSystem : EntitySystem
             return;
         }
 
-        var spawnEntities = EntitySpawnCollection.GetSpawns(butcher.SpawnedEntities, _robustRandom);
+        // Forge: butcher the entire stack, yielding materials for every unit in it.
+        var stackCount = 1;
+        if (TryComp<StackComponent>(args.Args.Target.Value, out var stackComp))
+            stackCount = Math.Max(1, stackComp.Count);
+
         var coords = _transform.GetMapCoordinates(args.Args.Target.Value);
         EntityUid popupEnt = default!;
-        foreach (var proto in spawnEntities)
+        for (var i = 0; i < stackCount; i++)
         {
-            // distribute the spawned items randomly in a small radius around the origin
-            popupEnt = Spawn(proto, coords.Offset(_robustRandom.NextVector2(0.25f)));
+            foreach (var proto in EntitySpawnCollection.GetSpawns(butcher.SpawnedEntities, _robustRandom))
+            {
+                // distribute the spawned items randomly in a small radius around the origin
+                popupEnt = Spawn(proto, coords.Offset(_robustRandom.NextVector2(0.25f)));
+            }
         }
 
         var hasBody = TryComp<BodyComponent>(args.Args.Target.Value, out var body);

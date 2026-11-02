@@ -7,14 +7,16 @@
   description: job-description-bos-washington-initiate
   playTimeTracker: BoSWashingtonInitiate
   requirements:
-    - !type:CharacterLogicOrRequirement
-      requirements:
-        - !type:CharacterSpeciesRequirement
-          species:
-            - Human
-            - Ghoul
-    - !type:CharacterOverallTimeRequirement
-      min: 21600 # Forge-Change (6 hours)
+  # Forge-Change-Start
+  - !type:CharacterOverallTimeRequirement
+    min: 21600 # Forge-Change (6 hours)
+  - !type:CharacterLogicOrRequirement
+    requirements:
+    - !type:CharacterSpeciesRequirement
+      species:
+      - Human
+      - Ghoul
+  # Forge-Change-End
   startingGear: BoSWashingtonInitiateGear
   alwaysUseSpawner: true
   icon: "JobIconbosWSquire"

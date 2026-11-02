@@ -26,9 +26,28 @@
     - N14BorgModuleJunkGardening
     - N14BorgModuleJunkBureaucracy
     - N14BorgModuleJunkCombat
+    - N14BorgModuleJunkConstruction
     - N14BorgModuleJunkManipulator
     - N14BorgModuleJunkMining
     - N14BorgModuleJunkMusique
+    - N14MrHandyBody
+    - N14MrHandyManipulator
+    - N14MrHandyThruster
+    - N14EyebotBody
+    - N14EyebotAntenna
+    - N14EyebotThruster
+    - N14BorgModuleMrHandyMedical
+    - N14BorgModuleMrHandySurgery
+    - N14BorgModuleMrHandyDefibrillator
+    - N14BorgModuleMrHandyLaser
+    - N14BorgModuleMrHandyPlasma
+    - N14BorgModuleEyebotCombat
+    - N14BorgUpgradeNightVision
+    - N14BorgUpgradeUniversalHud
+    - N14BorgUpgradeFlashProtection
+    - N14BorgUpgradeArmorLight
+    - N14BorgUpgradeArmor
+    - N14BorgUpgradeArmorHeavy
     dynamicRecipes: []
   - type: MaterialStorage
     materialWhiteList:
@@ -39,6 +58,9 @@
     - ScrapCopper
     - ScrapBrass
     - ScrapLead
+  - type: MaterialStorageMagnetPickup
+    magnetEnabled: true
+    range: 1.25
   - type: Destructible
     thresholds:
     - trigger:

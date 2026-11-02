@@ -5,7 +5,7 @@ using Robust.Shared.Console;
 
 namespace Content.Server._Goobstation.Administration.Commands;
 
-[AdminCommand(AdminFlags.Admin)]
+[AdminCommand(AdminFlags.Host)]
 public sealed class TimeTransferPanelCommand : LocalizedCommands
 {
     [Dependency] private readonly EuiManager _euis = default!;

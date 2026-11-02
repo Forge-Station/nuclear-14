@@ -13,3 +13,75 @@
 
 - type: Tag
   id: InjectionSyringe
+
+- type: Tag
+  id: ForgeLootSinew
+
+- type: Tag
+  id: ForgeLootBone
+
+- type: Tag
+  id: ForgeDogHide
+
+- type: Tag
+  id: ForgeDeathclawHide
+
+- type: Tag
+  id: ForgePigratHide
+
+- type: Tag
+  id: ForgeHumanSkinLarge
+
+- type: Tag
+  id: ForgeRadstagHide
+
+- type: Tag
+  id: ForgeBighornerPelt
+
+- type: Tag
+  id: N14PowerArmorPadding
+
+- type: Tag
+  id: N14PowerArmorPlate
+
+- type: Tag
+  id: N14TinNade
+
+- type: Tag
+  id: N14BorgOptics
+
+- type: Tag
+  id: N14BorgArmor
+
+- type: Tag
+  id: N14BorgModuleMrHandy
+
+- type: Tag
+  id: N14BorgModuleJunkbot
+
+- type: Tag
+  id: N14BorgModuleEyebot
+
+- type: Tag
+  id: N14MrHandyBody
+
+- type: Tag
+  id: N14MrHandyManipulator
+
+- type: Tag
+  id: N14MrHandyThruster
+
+- type: Tag
+  id: N14EyebotBody
+
+- type: Tag
+  id: N14EyebotAntenna
+
+- type: Tag
+  id: N14EyebotThruster
+
+- type: Tag
+  id: N14JunkbotHeavyArmor
+
+- type: Tag
+  id: N14BorgArmorLight

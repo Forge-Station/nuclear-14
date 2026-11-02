@@ -1,0 +1,12 @@
+# Рецепт индустриального модуля хламоборга.
+- type: latheRecipe
+  id: N14BorgModuleJunkConstruction
+  result: N14BorgModuleJunkConstruction
+  category: N14RobotModules
+  completetime: 4
+  materials:
+    ScrapSteel: 600
+    ScrapElectronic: 600
+    ScrapGold: 200
+    ScrapCopper: 200
+    ScrapLead: 400

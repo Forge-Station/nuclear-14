@@ -922,6 +922,44 @@
       maximumEntitiesSpawned: 3
 
 - type: entity
+  name: Sentrybot Timed Spawner
+  id: N14TimedSpawnerSentrybot
+  parent: N14TimedSpawnerMolerat
+  components:
+    - type: Sprite
+      layers:
+        - state: blue
+        - sprite: Corvax/Mobs/Robots/Sentrybot.rsi
+          state: sentrybot
+        - state: timed
+    - type: TimedSpawner
+      prototypes:
+        - N14MobRobotHostileSentrybot # Forge-Change
+      chance: 0.65
+      intervalSeconds: 1500
+      minimumEntitiesSpawned: 1
+      maximumEntitiesSpawned: 3
+
+- type: entity
+  name: Military Sentrybot Timed Spawner
+  id: N14TimedSpawnerMilitarySentrybot
+  parent: N14TimedSpawnerMolerat
+  components:
+    - type: Sprite
+      layers:
+        - state: blue
+        - sprite: Corvax/Mobs/Robots/MIlitarySentrybot.rsi
+          state: sentrybot
+        - state: timed
+    - type: TimedSpawner
+      prototypes:
+        - N14MobRobotHostileMilitarySentrybot # Forge-Change
+      chance: 0.65
+      intervalSeconds: 1500
+      minimumEntitiesSpawned: 1
+      maximumEntitiesSpawned: 3
+
+- type: entity
   name: Spore Plant Timed Spawner
   id: N14TimedSpawnerSporePlant
   parent: N14TimedSpawnerMolerat

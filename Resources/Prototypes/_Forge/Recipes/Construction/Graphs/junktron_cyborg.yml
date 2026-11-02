@@ -44,5 +44,51 @@
       - tool: Screwing
         doAfter: 0.5
 
+    - to: mrhandy
+      steps:
+      - assemblyId: mrhandy
+        guideString: borg-construction-guide-string
+      - material: Cable
+        amount: 1
+        doAfter: 1
+        store: part-container
+      - tag: N14OpticalSensor
+        name: оптический сенсор
+        store: part-container
+        icon:
+          sprite: Objects/Weapons/Melee/flash.rsi
+          state: flash
+      - tag: N14OpticalSensor
+        name: оптический сенсор
+        store: part-container
+        icon:
+          sprite: Objects/Weapons/Melee/flash.rsi
+          state: flash
+      - tool: Screwing
+        doAfter: 2
+
+    - to: eyebot
+      steps:
+      - assemblyId: eyebot
+        guideString: borg-construction-guide-string
+      - material: Cable
+        amount: 1
+        doAfter: 1
+        store: part-container
+      - tag: N14OpticalSensor
+        name: оптический сенсор
+        store: part-container
+        icon:
+          sprite: Objects/Weapons/Melee/flash.rsi
+          state: flash
+      - tool: Screwing
+        doAfter: 2
+
   - node: cyborg
     entity: N14Junkbot
+
+  - node: mrhandy
+    entity: N14BorgMrHandy
+
+  - node: eyebot
+    entity: N14BorgEyebot

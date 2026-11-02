@@ -1,0 +1,184 @@
+Entries:
+- author: Sh1ntra
+  changes:
+    - type: Add
+      message: Added fun :D
+  id: 1
+  time: '2026-10-16T20:10:51.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/551
+- author: Sh1ntra
+  changes:
+    - type: Add
+      message: Автоотправка ченжлогов дискорд вебхуком
+  id: 2
+  time: '2026-10-16T20:47:17.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/552
+- author: akino-tech
+  changes:
+    - type: Tweak
+      message: >-
+        Вся довоенная еда теперь содержит радиоактивные частицы и наносит
+        радиационный урон при переваривании восприимчивым к нему персонажам.
+  id: 3
+  time: '2026-10-17T10:38:53.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/547
+- author: akino-tech
+  changes:
+    - type: Fix
+      message: Исправлено устранение клина по Z у оружия с переключением хвата.
+  id: 4
+  time: '2026-10-17T11:07:42.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/555
+- author: akino-tech
+  changes:
+    - type: Add
+      message: >-
+        Добавлено руководство по готовке с примерами рецептов и списком
+        продуктов.
+    - type: Fix
+      message: >-
+        Исправлены советы по выживанию, очистке воды и применению
+        противорадиационных препаратов.
+    - type: Tweak
+      message: Обновлены введение справочника и сведения о фракциях и ролях.
+    - type: Fix
+      message: >-
+        Добавлены недостающие переводы подчинения Вашингтонского Братства и
+        уровней доступа Легиона и Западного Братства; исправлено название общего
+        доступа Легиона.
+    - type: Fix
+      message: >-
+        Уточнены подписи подчинения и названия зон доступа Fallout, исправлены
+        ссылки на переводы подчинения отдельных ролей.
+  id: 5
+  time: '2026-10-17T12:31:20.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/541
+- author: yanus42
+  changes:
+    - type: Add
+      message: Звания для ролей.
+  id: 6
+  time: '2026-10-18T14:22:54.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/511
+- author: Patrioy
+  changes:
+    - type: Fix
+      message: Обновил Уэндовер, Юму, Джуно
+  id: 7
+  time: '2026-10-18T14:26:20.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/557
+- author: akino-tech
+  changes:
+    - type: Add
+      message: В пип-бой добавлены радиоприёмник с выбором двух станций и ВолтЧат.
+    - type: Add
+      message: >-
+        В плеер пип-боя добавлены ползунок громкости и все песни музыкального
+        автомата.
+    - type: Tweak
+      message: >-
+        Обновлены интерфейс и иконки пип-боя, добавлен выбор зелёного и
+        янтарного цвета.
+    - type: Remove
+      message: Из пип-боя убраны новости станции и кнопка рингтона в новом интерфейсе.
+  id: 8
+  time: '2026-10-19T14:04:11.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/521
+- author: Patrioy
+  changes:
+    - type: Tweak
+      message: Новые наборы для деканов
+    - type: Tweak
+      message: Поменял наборы ветерана легиона
+    - type: Tweak
+      message: Увеличил объем энергобатареи до 30 снарядов.
+    - type: Tweak
+      message: Понёрфил 22ЛР ПП
+    - type: Tweak
+      message: Добавил в полевой набор Писаря Лазер RCW. (О нет, Бафф БС)
+    - type: Tweak
+      message: Бейсбольные шлема легионеров теперь защищают 15% вместо 20%
+    - type: Tweak
+      message: >-
+        Обновил торгомат и его содержимое добавив туда 22ЛР ппшку и изменил
+        позиции товаров.
+    - type: Fix
+      message: Исправил гайдбуки
+  id: 9
+  time: '2026-10-19T17:56:10.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/560
+- author: yanus42
+  changes:
+    - type: Add
+      message: >-
+        Бронепластины, модификации, и новые типы боргов. (Когда-то янус начнет
+        писать чейнджлог вместо патра, он про, я верю в него).
+    - type: Tweak
+      message: Магнит для верстака хламоборгов.
+  id: 10
+  time: '2026-10-20T15:07:28.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/548
+- author: Patrioy
+  changes:
+    - type: Fix
+      message: >-
+        Мои любимые игроки напомнили о брене. Я исправил так называемый недочет
+        в том что он плохо замедлял.
+    - type: Tweak
+      message: Бафф минигана ещё один.
+    - type: Fix
+      message: Убрал клин у лазера RCW
+    - type: Tweak
+      message: >-
+        пальто скриптеров кроме полевого, больше не на 30 колющих... (О НЕТ,
+        НЕРФ БС)
+    - type: Add
+      message: Боевая броня скриптера в спонсорские предметы.
+  id: 11
+  time: '2026-10-20T15:22:02.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/561
+- author: Salniy
+  changes:
+    - type: Add
+      message: >-
+        Добавлено в меню персонализации персонажа 2 новые вкладки для наложения
+        - нижнее бельё (вверх) и (вниз). 8 видов нижнего белья в 2-ух
+        категориях.
+  id: 12
+  time: '2026-10-25T11:47:19.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/558
+- author: yanus43
+  changes:
+    - type: Add
+      message: Добавили новые категории лодаута :D
+    - type: Add
+      message: Добавили новые предметы в лодаут XD
+    - type: Tweak
+      message: Изменили цены в лодауте :D
+  id: 13
+  time: '2026-10-25T11:53:44.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/562
+- author: yanus42
+  changes:
+    - type: Tweak
+      message: Кошелёк теперь вмещается в карман куртки :D
+    - type: Tweak
+      message: Имена целей охоты за головами теперь рандомные XD
+  id: 14
+  time: '2026-11-02T10:45:35.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/567
+- author: yanus42
+  changes:
+    - type: Add
+      message: >-
+        Мешки с песком, металлические баррикады и бетонные ограждения теперь
+        работают как укрытия.
+    - type: Add
+      message: Добавлено веселье :D
+    - type: Add
+      message: >-
+        Пули могут пробивать металлические баррикады и мешки с песком с
+        некоторым шансом.
+  id: 15
+  time: '2026-11-02T11:11:22.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/563

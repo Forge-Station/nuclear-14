@@ -8,10 +8,14 @@
     sprite: Corvax/Objects/Specific/romanstandard.rsi
     state: icon
   - type: Item
-    size: Ginormous
+    size: Huge
   - type: MeleeWeapon
     damage:
       types:
         Blunt: 4
     soundHit:
         collection: MetalThud
+  - type: Clothing
+    sprite: Objects/Weapons/Melee/spear.rsi
+    slots:
+    - suitStorage

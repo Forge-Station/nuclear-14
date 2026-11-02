@@ -112,7 +112,7 @@
     juiceSolution:
       reagents:
       - ReagentId: Fiber
-        Quantity: 3
+        Quantity: 5 #Forge-change
   - type: Sprite
     state: cloth_3
     layers:
@@ -272,7 +272,7 @@
           state: full
         entries:
           - prototype: N14WallWoodHalf
-          - prototype: N14WallWoodSlanted     
+          - prototype: N14WallWoodSlanted
           - prototype: N14WallWoodLog
     - category:
         name: Torch
@@ -428,7 +428,7 @@
   - type: Material # Forge-add
   - type: PhysicalComposition # Forge-add
     materialComposition:
-      Cotton: 100  
+      Cotton: 100
   - type: Stack
     stackType: Cotton
     baseLayer: base

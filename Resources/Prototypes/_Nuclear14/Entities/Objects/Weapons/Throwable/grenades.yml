@@ -167,6 +167,9 @@
     graph: N14TinNade
     node: TinNade
   - type: LandAtCursor # Forge-Change
+  - type: Tag # Forge-add
+    tags:
+    - N14TinNade
 
 - type: entity
   name: Nuka-nade

@@ -111,6 +111,20 @@
       path: /Audio/Animals/small_dog_bark_happy.ogg
   - type: ReplacementAccent
     accent: dog
+      # Forge-Change-Start
+  - type: Butcherable # Forge-Change-Comp
+    spawned:
+    - id: N14FoodMeatRadRaw
+      amount: 1
+    - id: N14MaterialRawLeather1
+      amount: 1
+    - id: ForgeAnimalDogHide
+      amount: 1
+    - id: ForgeAnimalBone
+      amount: 2
+    - id: ForgeAnimalSinew
+      amount: 1
+  # Forge-Change-End
   - type: LanguageKnowledge
     speaks:
     - N14Dog
@@ -548,6 +562,14 @@
     spawned:
     - id: N14FoodMeatPigrat
       amount: 3
+    # Forge-Change-Start
+    - id: ForgeAnimalPigratHide
+      amount: 1
+    - id: ForgeAnimalBone
+      amount: 2
+    - id: ForgeAnimalSinew
+      amount: 1
+    # Forge-Change-End
   - type: InteractionPopup
     interactSuccessString: petting-success-crab
     interactFailureString: petting-failure-generic

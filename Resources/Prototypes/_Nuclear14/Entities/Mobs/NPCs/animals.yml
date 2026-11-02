@@ -51,12 +51,18 @@
     damage:
       groups:
         Brute: 3
-  - type: Butcherable # Forge-add
+  - type: Butcherable
     spawned:
     - id: N14FoodMeatRadRaw
       amount: 2
     - id: N14MaterialRawLeather1
       amount: 2
+    - id: ForgeAnimalMoleratHide # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalBone
+      amount: 2
+    - id: ForgeAnimalSinew
+      amount: 1 # Forge-Change-End
  #- type: Reproductive
    #breedChance: 0.05
    #birthPopup: reproductive-birth-popup
@@ -131,12 +137,18 @@
     damage:
       groups:
         Brute: 3
-  - type: Butcherable # Forge-add
+  - type: Butcherable 
     spawned:
     - id: N14FoodMeatPigrat
       amount: 3
     - id: N14MaterialRawLeather1
       amount: 1
+    - id: ForgeAnimalPigratHide # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalBone
+      amount: 2
+    - id: ForgeAnimalSinew
+      amount: 1 # Forge-Change-End
  #- type: Reproductive
    #breedChance: 0.05
    #birthPopup: reproductive-birth-popup
@@ -202,12 +214,18 @@
     damage:
       groups:
         Brute: 5
-  - type: Butcherable # Forge-add
+  - type: Butcherable
     spawned:
     - id: N14FoodMeatRadRaw
       amount: 1
     - id: N14MaterialRawLeather1
       amount: 2
+    - id: ForgeAnimalDogHide # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalBone
+      amount: 2
+    - id: ForgeAnimalSinew
+      amount: 1 # Forge-Change-End
  #- type: Reproductive
    #breedChance: 0.05
    #birthPopup: reproductive-birth-popup
@@ -261,12 +279,6 @@
       100: 1.05
       250: 1.1
       400: 1.2
-  - type: Butcherable
-    spawned:
-    - id: N14MaterialYaoguaiHide
-      amount: 1
-    - id: N14FoodMeatYaoguai
-      amount: 2
   - type: DamageStateVisuals
     states:
       Alive:
@@ -292,6 +304,18 @@
     baseWalkSpeed : 3
     baseSprintSpeed : 4.75
   - type: NoSlip
+  - type: Butcherable # Forge-Change-Start
+    spawned:
+    - id: N14MaterialYaoguaiHide
+      amount: 1
+    - id: N14FoodMeatYaoguai
+      amount: 2
+    - id: ForgeAnimalBone3
+      amount: 1
+    - id: ForgeAnimalClaw
+      amount: 2
+    - id: ForgeAnimalSinew
+      amount: 3 # Forge-Change-End
  #- type: Reproductive
    #breedChance: 0.05
    #birthPopup: reproductive-birth-popup
@@ -340,6 +364,10 @@
     - id: N14MaterialBrahminHide1
       amount: 1
       prob: 0.95
+    - id: ForgeAnimalBone3 # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 3 # Forge-Change-End
   - type: SolutionContainerManager
     solutions:
       udder:
@@ -407,6 +435,12 @@
       amount: 4
     - id: N14MaterialRawLeather1
       amount: 4
+    - id: ForgeAnimalBighornerPelt # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalBone3
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 3 # Forge-Change-End
   - type: MeleeWeapon
     altDisarm: false
     hidden: true
@@ -478,6 +512,12 @@
       amount: 4
     - id: N14MaterialRawLeather1
       amount: 4
+    - id: ForgeAnimalRadstagHide # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalBone2
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 2 # Forge-Change-End
   - type: MeleeWeapon
     altDisarm: false
     hidden: true
@@ -545,6 +585,12 @@
     spawned:
     - id: N14FoodMeatRadstag
       amount: 4
+    - id: ForgeAnimalRadhogHide # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalBone2
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 2 # Forge-Change-End
   - type: MeleeWeapon
     altDisarm: false
     hidden: true
@@ -600,6 +646,8 @@
     - id: N14FoodMeatRadchicken
       amount: 1
       prob: 0.95
+    - id: ForgeAnimalBone # Forge-Change
+      amount: 1
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: WastelandAnimal
@@ -641,11 +689,15 @@
         Base: dead
   - type: Stamina
     critThreshold: 20
-  # - type: Butcherable
-    # spawned:
-    # - id: N14FoodMeatRadchicken
-      # amount: 1
-      # prob: 0.95
+  - type: Butcherable 
+    spawned:
+    - id: N14FoodMeatRadchicken
+      amount: 1
+      prob: 0.95
+    - id: ForgeAnimalBone # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 1 # Forge-Change-End
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: WastelandAnimal
@@ -693,6 +745,10 @@
     - id: N14FoodMeatRadRaw
       amount: 1
       prob: 0.95
+    - id: ForgeAnimalBone # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 2 # Forge-Change-End
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: WastelandAnimal
@@ -721,6 +777,10 @@
     - id: N14FoodMeatRadRaw
       amount: 1
       prob: 0.95
+    - id: ForgeAnimalBone # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 2 # Forge-Change-End
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: WastelandAnimal
@@ -748,6 +808,10 @@
     - id: N14FoodMeatRadRaw #At some point need their own meat
       amount: 1
       prob: 0.95
+    - id: ForgeAnimalBone # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 2 # Forge-Change-End
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: WastelandAnimal
@@ -776,6 +840,10 @@
     - id: N14FoodMeatRadRaw
       amount: 1
       prob: 0.95
+    - id: ForgeAnimalBone # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 1 # Forge-Change-End
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: WastelandAnimal
@@ -803,6 +871,10 @@
     - id: N14FoodMeatRadRaw #At some point need their own meat
       amount: 1
       prob: 0.95
+    - id: ForgeAnimalBone # Forge-Change-Start
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 2 # Forge-Change-End
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: WastelandAnimal
