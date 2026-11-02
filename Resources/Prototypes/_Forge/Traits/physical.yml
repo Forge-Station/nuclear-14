@@ -79,7 +79,7 @@
 - type: trait
   id: N14PerkAmbidextrous
   category: Physical
-  points: -9
+  points: -6
   functions:
     - !type:TraitAddComponent
       components:
@@ -125,7 +125,7 @@
 - type: trait
   id: N14PerkRadiationChild
   category: Physical
-  points: -5
+  points: -8
   requirements:
     - !type:CharacterSpeciesRequirement
       inverted: true

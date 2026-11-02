@@ -8,10 +8,10 @@ namespace Content.Server._Forge.Radiation;
 public sealed partial class N14RadiationChildComponent : Component
 {
     /// <summary>
-    ///     Healing per unit of radiation (1 rad = 0.1 healing to each type).
+    ///     Healing per unit of radiation (1 rad = 0.05 healing to each type).
     /// </summary>
     [DataField]
-    public float ConversionFactor = 0.1f;
+    public float ConversionFactor = 0.05f;
 
     /// <summary>
     ///     Seconds between healing applications.
@@ -24,7 +24,7 @@ public sealed partial class N14RadiationChildComponent : Component
     ///     Radiation itself is the fuel and is not counted.
     /// </summary>
     [DataField]
-    public float MaxTotalDamage = 140f;
+    public float MaxTotalDamage = 125f;
 
     /// <summary>
     ///     Next time healing should be applied.

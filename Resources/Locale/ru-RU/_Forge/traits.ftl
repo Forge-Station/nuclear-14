@@ -52,8 +52,8 @@ trait-description-N14PerkFrail =
 trait-name-N14PerkRadiationChild = Дитя радиации
 trait-description-N14PerkRadiationChild =
     Пока в теле есть [color=yellow]радиация[/color], она пассивно лечит повреждения.
-    Лечит по [color=green]0.1[/color] за каждую [color=yellow]1[/color] единицу радиации для [color=yellow]дробящего[/color], [color=yellow]рубящего[/color], [color=yellow]колющего[/color], [color=yellow]огненного[/color] и [color=yellow]электрического[/color] урона.
-    Лечение слабеет и отключается, когда радиация выводится из тела. Не работает, если урон кроме радиации выше [color=red]140[/color].
+    Лечит по [color=green]0.05[/color] за каждую [color=yellow]1[/color] единицу радиации для [color=yellow]дробящего[/color], [color=yellow]рубящего[/color], [color=yellow]колющего[/color], [color=yellow]огненного[/color] и [color=yellow]электрического[/color] урона.
+    Лечение слабеет и отключается, когда радиация выводится из тела. Не работает, если урон кроме радиации выше [color=red]125[/color].
 
 trait-name-N14PerkMonochromacy = Монохромия
 trait-description-N14PerkMonochromacy =
