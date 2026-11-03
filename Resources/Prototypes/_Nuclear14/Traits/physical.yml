@@ -267,7 +267,7 @@
               Burn: -1.0 # Forge-Change
             types:
               Poison: -0.1 # Forge-Change
-              Bloodloss: -0.05 # Forge-Change
+              Bloodloss: -0.1 # Forge-Change
 
 - type: trait
   id: N14WorldChampion
