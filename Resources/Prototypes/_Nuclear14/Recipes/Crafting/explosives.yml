@@ -12,6 +12,7 @@
     state: icon
   hide: false
 
+# Forge-Add-Start
 - type: construction
   name: Nuka-cola Grenade
   id: N14NukaNade
@@ -25,6 +26,7 @@
     sprite: _Nuclear14/Objects/Weapons/Grenades/NukaNade.rsi
     state: icon
   hide: false
+# Forge-Add-End
 
 - type: construction
   name: Tin can grenade
@@ -37,6 +39,20 @@
   description: Very improvised, very unreliable, very fun.
   icon:
     sprite: _Nuclear14/Objects/Weapons/Grenades/TincanNade.rsi
+    state: icon
+  hide: false
+
+- type: construction
+  name: Nuka cocktail
+  id: N14NukaCocktailCraft
+  graph: N14NukaCocktail
+  startNode: start
+  targetNode: cocktail
+  category: construction-category-explosives
+  objectType: Item
+  description: An expensive improvised incendiary made from a Nuka-Cola bottle and fuel.
+  icon:
+    sprite: _Nuclear14/Objects/Weapons/Grenades/NukaCocktail.rsi
     state: icon
   hide: false
 

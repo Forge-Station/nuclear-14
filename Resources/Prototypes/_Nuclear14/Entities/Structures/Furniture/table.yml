@@ -70,7 +70,7 @@
 
 - type: entity
   id: N14TableDeskSchool # Base off this for wooden tables
-  parent: N14FreeTableBase
+  parent: [ N14FreeTableBase, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   name: school desk
   description: A wooden desk for studying at.
   components:

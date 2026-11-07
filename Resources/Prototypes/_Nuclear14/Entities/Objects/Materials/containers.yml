@@ -1,5 +1,5 @@
 - type: entity
-  parent: BaseItem
+  parent: [ BaseItem, ForgeBaseFlammableFuelContainer ] # Forge-Change: surface fire integration
   id: N14FuelTankHandy
   name: fuel tank
   description: A tank of Mr Handy fuel.

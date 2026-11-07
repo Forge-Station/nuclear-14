@@ -161,7 +161,7 @@
 #MARK: Wooden
 
 - type: entity
-  parent: N14DoorMetalBlueSlanted
+  parent: [ N14DoorMetalBlueSlanted, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14DoorWoodSlanted
   name: wooden door
   suffix: Slanted

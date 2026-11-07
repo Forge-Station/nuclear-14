@@ -221,7 +221,7 @@
 # Wooden Closets
 
 - type: entity
-  parent: N14ClosetBase
+  parent: [ N14ClosetBase, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14ClosetCabinetWood
   name: cabinet
   description: An old pre-war wooden cabinet.
