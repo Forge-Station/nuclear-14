@@ -111,6 +111,10 @@ public sealed partial class PathfindingSystem
             // TODO: Often we invalidate the entire chunk when it might be something as simple as an airlock change
             // Would be better to handle that though this was safer and max it's taking is like 1-2ms every half-second.
             var dirt = new GridPathfindingChunk[comp.DirtyChunks.Count];
+            // Forge-Change-Start: count rebuilt chunks while profiling.
+            if (_profileEnabled)
+                _profileRebuiltChunks += dirt.Length;
+            // Forge-Change-End
             var idx = 0;
 
             foreach (var origin in comp.DirtyChunks)
