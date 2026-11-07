@@ -25,3 +25,5 @@ lathe-menu-connected-to-silo-message = Connected to material silo.
 lathe-menu-fabricating-message = Fabricating...
 lathe-menu-materials-title = Materials
 lathe-menu-queue-title = Build Queue
+lathe-menu-blueprints-title = Blueprints
+lathe-menu-search-blueprints = Search blueprints
