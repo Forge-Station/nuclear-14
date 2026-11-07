@@ -228,3 +228,36 @@
   completetime: 5
   materials:
     Steel: 100
+
+#MARK: Brotherhood West
+- type: latheRecipe
+  id: HolotagWestScribe
+  result: N14IDBrotherhoodWestHolotag
+  category: N14Identification
+  completetime: 5
+  materials:
+    Steel: 100
+
+- type: latheRecipe
+  id: HolotagWestGunsmith
+  result: N14IDBrotherhoodWestHolotagGunsmith
+  category: N14Identification
+  completetime: 5
+  materials:
+    Steel: 100
+
+- type: latheRecipe
+  id: HolotagWestKnight
+  result: N14IDBrotherhoodWestHolotagKnight
+  category: N14Identification
+  completetime: 5
+  materials:
+    Steel: 100
+
+- type: latheRecipe
+  id: HolotagWestPaladin
+  result: N14IDBrotherhoodWestHolotagPaladin
+  category: N14Identification
+  completetime: 5
+  materials:
+    Steel: 100

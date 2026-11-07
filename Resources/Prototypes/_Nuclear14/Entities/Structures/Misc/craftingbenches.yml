@@ -761,3 +761,16 @@
     - IDVaultEngineer
     - IDVaultSecurity
     - IDVaultDoctor
+
+- type: entity
+  parent: N14WorkbenchIDPrinter
+  id: N14WorkbenchIDPrinterBrotherhoodWest
+  description: An ID printer for printing West Brotherhood holotags.
+  suffix: West BOS
+  components:
+  - type: Lathe
+    staticRecipes:
+    - HolotagWestScribe
+    - HolotagWestGunsmith
+    - HolotagWestKnight
+    - HolotagWestPaladin # Forge-add
