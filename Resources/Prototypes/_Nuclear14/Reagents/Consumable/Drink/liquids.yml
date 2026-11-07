@@ -37,6 +37,9 @@
           species:
           - GhoulGlowing
           shouldHave: false
+        - !type:HasBodyComponent
+          component: N14LeadBellyPerk
+          invert: true
         damage:
           types:
             Radiation: 0.25
@@ -61,6 +64,9 @@
           species:
           - GhoulGlowing
           shouldHave: false
+        - !type:HasBodyComponent
+          component: N14LeadBellyPerk
+          invert: true
         damage:
           types:
             Radiation: 1 # You really shouldn't drink this.

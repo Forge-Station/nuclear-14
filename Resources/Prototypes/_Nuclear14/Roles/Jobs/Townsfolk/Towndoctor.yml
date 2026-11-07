@@ -26,6 +26,10 @@
   special:
   - !type:AddComponentSpecial
     components:
+      - type: DoAfterSpeedModifier
+        medicalSpeed: 1.5
+      - type: SurgerySpeedModifier
+        speedModifier: 1.5
       - type: NpcFactionMember
         factions:
           - Wastelander

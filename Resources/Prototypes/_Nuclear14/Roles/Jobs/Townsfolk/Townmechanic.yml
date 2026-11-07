@@ -26,6 +26,8 @@
   special:
   - !type:AddComponentSpecial
     components:
+      - type: DoAfterSpeedModifier
+        toolSpeed: 1.5
       - type: NpcFactionMember
         factions:
           - Wastelander
