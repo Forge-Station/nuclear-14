@@ -43,8 +43,21 @@
   - BarterNcrToCaps
   - BarterDenariusToCaps
   - BarterAureusToCaps
+  - BarterBoSToCaps
 
 - type: ncBarterPreset
   id: BarterPresetCityCurrency
   categories:
   - BarterCatCurrency
+
+- type: ncBarterListing
+  id: BarterBoSToCaps
+  name: "Чеки братства в крышки"
+  description: "Обмен 1 чек братства на 1 крышку."
+  icon: N14CurrencyBoSDollar
+  cost:
+  - currency: BoSDollar
+    count: 1
+  receive:
+  - currency: Caps
+    count: 1

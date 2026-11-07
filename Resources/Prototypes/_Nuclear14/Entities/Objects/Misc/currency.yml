@@ -450,3 +450,4 @@
   stackEntity: N14CurrencyLegionDenarius
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: denarius3 }
   price: 4 # Forge-Change
+

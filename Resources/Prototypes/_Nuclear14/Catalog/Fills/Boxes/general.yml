@@ -95,3 +95,37 @@
           amount: 2
       sound:
         path: /Audio/Items/can_open3.ogg
+    
+- type: entity
+  name: military box
+  parent: N14BoxPlastic
+  id: N14BoxPlasticFilledMilitary2
+  components:
+    - type: SpawnItemsOnUse
+      items:
+        - id: N14Stimpak
+          prob: 0.7
+          orGroup: RandomMed
+        - id: N14ChemicalSyringeAntidote
+          prob: 0.2
+          orGroup: RandomMed
+        - id: N14SuperStimpak
+          prob: 0.1
+          orGroup: RandomMed
+        - id: N14CleanGauze10
+          amount: 1
+        - id: N14RadXPill
+          amount: 1
+        - id: N14CurrencyBoSDollar10
+          prob: 0.6
+          orGroup: StashCash
+        - id: N14CurrencyBoSDollar50
+          prob: 0.3
+          orGroup: StashCash
+        - id: N14CurrencyBoSDollar100
+          prob: 0.1
+          orGroup: StashCash
+        - id: Flare
+          amount: 2
+      sound:
+        path: /Audio/Items/can_open3.ogg
