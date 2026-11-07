@@ -1,0 +1,60 @@
+- type: entity
+  parent: N14TableDeskSchool
+  id: N14NewspaperDesk
+  name: newspaper desk
+  description: Compose a bulletin and print copies of the approved edition.
+  components:
+  - type: Sprite
+    sprite: _Forge/Structures/Furniture/newspaper_desk.rsi
+    state: desk
+  - type: NewspaperDesk
+    printedPrototype: N14PrintedBulletin
+    paperMaterial: Paper
+    paperPerCopy: 100
+    printCooldown: 2
+    publishCooldown: 2
+  - type: MaterialStorage
+    whitelist:
+      components:
+      - Paper
+      - Stack
+      tags:
+      - Sheet
+    materialWhiteList:
+    - Paper
+  - type: ActivatableUI
+    key: enum.NewspaperDeskUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.NewspaperDeskUiKey.Key:
+        type: NewspaperDeskBoundUserInterface
+
+- type: entity
+  parent: BaseItem
+  id: N14PrintedBulletin
+  name: printed bulletin
+  description: A small printed news sheet.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Misc/newspaper.rsi
+    state: icon
+    scale: 0.8, 0.8
+  - type: NewspaperCopy
+  - type: PaperSurface
+    appearance:
+      profile: N14WornNewsprint
+      wear: 0.65
+  - type: Item
+    sprite: _Forge/Objects/Misc/newspaper.rsi
+    size: Tiny
+  - type: Tag
+    tags:
+    - Document
+    - Paper
+  - type: ActivatableUI
+    key: enum.NewspaperCopyUiKey.Key
+    requiresComplex: false
+  - type: UserInterface
+    interfaces:
+      enum.NewspaperCopyUiKey.Key:
+        type: NewspaperCopyBoundUserInterface
