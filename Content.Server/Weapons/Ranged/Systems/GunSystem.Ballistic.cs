@@ -14,6 +14,7 @@ public sealed partial class GunSystem
         if (component.Entities.Count > 0)
         {
             var existing = component.Entities[^1];
+            ent = existing; // #Forge-Change: eject existing cartridges too, including spent casings.
             component.Entities.RemoveAt(component.Entities.Count - 1);
 
             Containers.Remove(existing, component.Container);
