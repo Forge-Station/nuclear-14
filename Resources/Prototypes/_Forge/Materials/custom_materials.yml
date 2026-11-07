@@ -1,0 +1,8 @@
+- type: material
+  id: Cable
+  stackEntity: CableApcStack1
+  name: materials-cable
+  unit: materials-unit-sheet
+  icon: { sprite: _Corvax/Objects/Tools/cable-coils.rsi, state: coillv-30 }
+  color: "#404040"
+  price: 0.02

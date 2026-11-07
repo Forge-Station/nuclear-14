@@ -29,6 +29,9 @@
             False: { visible: false }
     - type: Item
       size: Large
+    - type: Clothing
+      sprite: Objects/Specific/Medical/defib.rsi
+      slots: [ back , suitStorage]
     - type: Speech
       speechVerb: Robotic
     - type: ItemToggle

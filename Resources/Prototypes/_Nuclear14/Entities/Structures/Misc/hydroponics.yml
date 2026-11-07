@@ -71,6 +71,8 @@
         - MachineMask
         layer:
         - MachineLayer
+  - type: Anchorable #Forge-add
+  - type: Pullable
   - type: SeedExtractor
   - type: ApcPowerReceiver
     powerLoad: 0

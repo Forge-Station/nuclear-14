@@ -131,7 +131,7 @@
               doAfter: 10
 
     # === УЗЛЫ ДЛЯ ДЕРЕВЯННЫХ ДВЕРЕЙ ===
-    - node: WoodDoorTown           
+    - node: WoodDoorTown
       entity: N14DoorWoodSecureLockedPersonTall
       edges:
         - to: start
@@ -146,7 +146,7 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: WoodDoorLegion          
+    - node: WoodDoorLegion
       entity: N14DoorWoodSecureLockedLegion
       edges:
         - to: start
@@ -160,8 +160,148 @@
           steps:
             - tool: Anchoring
               doAfter: 15
+      # === ШЛЮЗЫ ===
+        - to: DoorBunkerBoSWest
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+              doAfter: 10
 
-    - node: WoodDoorNCR            
+        - to: DoorBunkerGlassBoSWest
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 3
+            - material: Glass
+              amount: 1
+              doAfter: 10
+
+        - to: DoorBunker3XBoSWest
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 12
+              doAfter: 10
+
+        - to: DoorBunkerGlass3XBoSWest
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 9
+            - material: Glass
+              amount: 3
+              doAfter: 10
+
+        - to: DoorBunkerBoSWashington
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+              doAfter: 10
+
+        - to: DoorAirlockSlantedBoSWashington
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 6
+              doAfter: 10
+
+        - to: DoorBunkerGlassBoSWashington
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 3
+            - material: Glass
+              amount: 1
+              doAfter: 10
+
+        - to: DoorBunker3XBoSMidwest
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 12
+              doAfter: 10
+
+        - to: DoorBunkerGlass3XBoSMidwest
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 9
+            - material: Glass
+              amount: 3
+              doAfter: 10
+
+        - to: DoorBunkerGlassBoSMidwest
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 3
+            - material: Glass
+              amount: 1
+              doAfter: 10
+
+        - to: DoorBunkerBoSMidwest
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+              doAfter: 10
+
+        - to: DoorBunkerBoSMidwestTall
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+              doAfter: 10
+
+        - to: DoorBunkerNCR
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+              doAfter: 10
+
+        - to: DoorBunkerGlassNCR
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 3
+            - material: Glass
+              amount: 1
+              doAfter: 10
+
+        - to: DoorBunkerVault
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+              doAfter: 10
+
+        - to: DoorBunkerVaultTall
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+              doAfter: 10
+
+    - node: WoodDoorNCR
       entity: N14DoorWoodSecureLockedNCRNew
       edges:
         - to: start
@@ -176,7 +316,7 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: WoodDoorLocked           
+    - node: WoodDoorLocked
       entity: N14DoorWoodWhiteTallLocked
       edges:
         - to: start
@@ -192,7 +332,7 @@
               doAfter: 15
 
     # === УЗЛЫ ДЛЯ РЕШЕТЧАТЫХ ДВЕРЕЙ ===
-    - node: CellMetalDoorTown       
+    - node: CellMetalDoorTown
       entity: N14DoorCellMetalLockedPersonTall
       edges:
         - to: start
@@ -209,7 +349,7 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: CellMetalDoorLegion    
+    - node: CellMetalDoorLegion
       entity: N14DoorCellMetalLockedLegion
       edges:
         - to: start
@@ -226,7 +366,7 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: CellMetalDoorNCR       
+    - node: CellMetalDoorNCR
       entity: N14DoorCellMetalLockedNCRNew
       edges:
         - to: start
@@ -243,7 +383,7 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: CellMetalDoorLocked      
+    - node: CellMetalDoorLocked
       entity: N14DoorCellMetalLocked
       edges:
         - to: start
@@ -261,7 +401,7 @@
               doAfter: 15
 
     # === УЗЛЫ ДЛЯ КРАСНЫХ МЕТАЛЛИЧЕСКИХ ДВЕРЕЙ ===
-    - node: MetalDoorTown           
+    - node: MetalDoorTown
       entity: N14DoorMetalSecureLockedPersonTall
       edges:
         - to: start
@@ -278,7 +418,7 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalDoorLegion         
+    - node: MetalDoorLegion
       entity: N14DoorMetalSecureLockedRedLegion
       edges:
         - to: start
@@ -295,7 +435,7 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalDoorNCR            
+    - node: MetalDoorNCR
       entity: N14DoorMetalSecureLockedNCRNew
       edges:
         - to: start
@@ -311,8 +451,8 @@
               doAfter: 5
             - tool: Anchoring
               doAfter: 15
-  
-    - node: MetalRedLocked          
+
+    - node: MetalRedLocked
       entity: N14DoorMetalRedSlantedLocked
       edges:
         - to: start
@@ -327,4 +467,4 @@
             - tool: Screwing
               doAfter: 5
             - tool: Anchoring
-              doAfter: 15  
+              doAfter: 15

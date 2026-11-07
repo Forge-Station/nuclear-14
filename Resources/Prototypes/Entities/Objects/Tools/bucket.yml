@@ -7,6 +7,8 @@
   - type: Drink
     solution: bucket
     ignoreEmpty: true
+  - type: FitsInDispenser #Forge-add
+    solution: bucket
   - type: Clickable
   - type: Sprite
     sprite: Objects/Tools/bucket.rsi

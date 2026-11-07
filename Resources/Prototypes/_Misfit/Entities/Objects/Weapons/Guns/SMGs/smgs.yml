@@ -26,9 +26,9 @@
   - type: Gun
     fireRate: 7
     minAngle: 10
-    maxAngle: 25
-    angleIncrease: 2
-    angleDecay: 14
+    maxAngle: 20
+    angleIncrease: 1
+    angleDecay: 5
     selectedMode: Fullauto
     availableModes:
     - Fullauto
