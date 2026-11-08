@@ -10,7 +10,8 @@ public sealed class NewspaperStorageTests
 {
     private static NewspaperEdition Article() => new()
     {
-        Name = "News", PublicationId = 1,
+        Name = "News",
+        PublicationId = 1,
         Blocks = [new NewspaperBlock { Text = "Article" }, new NewspaperBlock { Kind = NewspaperBlockKind.Photo, PhotoId = 7 }],
     };
 
@@ -18,13 +19,15 @@ public sealed class NewspaperStorageTests
     public void ArchiveRejectsDuplicatesFullCapacityAndCooldown()
     {
         var draft = Article();
-        var published = draft.Clone(); published.Number = 1;
+        var published = draft.Clone();
+        published.Number = 1;
         var now = TimeSpan.FromSeconds(10);
         Assert.That(NewspaperStorage.CanPublish([published], draft, now, TimeSpan.Zero), Is.False);
         draft.Blocks[1].PhotoId = 8;
         Assert.That(NewspaperStorage.CanPublish([published], draft, now, TimeSpan.Zero), Is.True);
         Assert.That(NewspaperStorage.CanPublish([published], draft, now, now + TimeSpan.FromSeconds(2)), Is.False);
-        Assert.That(NewspaperStorage.CanPublish(Enumerable.Repeat(published, NewspaperStorage.MaxEditions).ToArray(), draft, now, TimeSpan.Zero), Is.False);
+        Assert.That(NewspaperStorage.CanPublish(Enumerable.Repeat(published, NewspaperStorage.MaxEditions)
+            .ToArray(), draft, now, TimeSpan.Zero), Is.False);
     }
 
     [Test]
@@ -53,7 +56,8 @@ public sealed class NewspaperStorageTests
     [Test]
     public void UndoCannotRestoreForgottenPhotographsButKeepsAvailableOnes()
     {
-        var history = Article(); history.PhotoId = 7;
+        var history = Article();
+        history.PhotoId = 7;
         history.Blocks.Add(new NewspaperBlock { Kind = NewspaperBlockKind.Photo, PhotoId = 8 });
         history.Blocks.Add(new NewspaperBlock { Kind = NewspaperBlockKind.Photo, PhotoId = -2 });
         NewspaperStorage.RemoveUnavailablePhotos(history, [8]);
@@ -65,7 +69,8 @@ public sealed class NewspaperStorageTests
     public void PhotoRemovalIsSafeToMergeButReplacingAPhotoIsAnEditConflict()
     {
         var previous = Article();
-        var removed = previous.Clone(); removed.Blocks[1].PhotoId = -1;
+        var removed = previous.Clone();
+        removed.Blocks[1].PhotoId = -1;
         Assert.That(NewspaperStorage.IsPhotoRemoval(previous, removed, []), Is.True);
         removed.Blocks[1].PhotoId = 8;
         Assert.That(NewspaperStorage.IsPhotoRemoval(previous, removed, [7, 8]), Is.False);

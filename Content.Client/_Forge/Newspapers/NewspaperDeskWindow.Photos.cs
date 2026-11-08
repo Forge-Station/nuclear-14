@@ -19,14 +19,18 @@ public sealed partial class NewspaperDeskWindow
             ? _photoCards.Where(p => p.Value.Button.Height > 0 && p.Value.Button.GlobalPosition.Y < bottom &&
                 p.Value.Button.GlobalPosition.Y + p.Value.Button.Height > top).Select(p => p.Key).ToHashSet()
             : new HashSet<int>();
-        if (_visibleGalleryPhotos.SetEquals(visible)) return;
+        if (_visibleGalleryPhotos.SetEquals(visible))
+            return;
+
         _visibleGalleryPhotos = visible;
         Refresh();
     }
 
     private void RefreshPhotoGallery()
     {
-        if (_state == null) return;
+        if (_state == null)
+            return;
+
         var ids = _state.BufferedPhotos;
         if (!_photoCards.Keys.SequenceEqual(ids))
         {
@@ -39,8 +43,10 @@ public sealed partial class NewspaperDeskWindow
                 var content = new BoxContainer { Orientation = BoxContainer.LayoutOrientation.Vertical };
                 var preview = new TextureRect
                 {
-                    CanShrink = true, Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                    MinSize = new Vector2(0, 150), MaxHeight = 150,
+                    CanShrink = true,
+                    Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                    MinSize = new Vector2(0, 150),
+                    MaxHeight = 150,
                     MouseFilter = MouseFilterMode.Ignore,
                 };
                 content.AddChild(preview);
@@ -56,7 +62,9 @@ public sealed partial class NewspaperDeskWindow
                 _photoCards.Add(id, (button, preview));
             }
         }
-        if (!ids.Contains(_selectedGalleryPhotoId)) _selectedGalleryPhotoId = -1;
+
+        if (!ids.Contains(_selectedGalleryPhotoId))
+            _selectedGalleryPhotoId = -1;
         PhotoGalleryEmptyLabel.Visible = ids.Length == 0;
         PhotoTargetLabel.Text = Selected?.Kind == NewspaperBlockKind.Photo
             ? Loc.GetString("newspaper-photo-target", ("block", _selectedBlockIndex + 1), ("page", Selected.Page + 1))
@@ -82,24 +90,29 @@ public sealed partial class NewspaperDeskWindow
     {
         ClearReplacementConfirmation();
         PhotoBufferButton.Pressed = true;
-        if (Selected?.Kind == NewspaperBlockKind.Photo) _selectedGalleryPhotoId = _draft.PhotoFor(Selected);
+        if (Selected?.Kind == NewspaperBlockKind.Photo)
+            _selectedGalleryPhotoId = _draft.PhotoFor(Selected);
         Refresh();
     }
 
     private void SelectPhotoTarget(int blockIndex)
     {
-        if (_loading) return;
+        if (_loading)
+            return;
+
         ClearReplacementConfirmation();
         _selectedBlockIndex = blockIndex;
         _typingBlock = -1;
-        if (Selected != null) _page = Selected.Page;
+        if (Selected != null)
+            _page = Selected.Page;
         Refresh();
     }
 
     private void ForgetSelectedPhoto()
     {
         var id = _selectedGalleryPhotoId;
-        foreach (var block in _draft.Blocks.Where(b => b.Kind == NewspaperBlockKind.Photo && _draft.PhotoFor(b) == id)) block.PhotoId = -1;
+        foreach (var block in _draft.Blocks.Where(b => b.Kind == NewspaperBlockKind.Photo && _draft.PhotoFor(b) == id))
+            block.PhotoId = -1;
         OnForgetPhoto?.Invoke(id);
         Refresh();
     }

@@ -16,9 +16,15 @@ internal sealed class PaperSurfaceRenderer : IDisposable
     public void Update(PaperSurfaceAppearance appearance, int width, int height, int side)
     {
         var key = (appearance.Seed, appearance.Profile, appearance.Wear, appearance.Fibers, appearance.Impurities, width, height);
-        if (_key != key) { Dispose(); _key = key; }
+        if (_key != key)
+        {
+            Dispose();
+            _key = key;
+        }
         _side = side;
-        if (_faces.TryGetValue(side, out var face) && face != null) return;
+        if (_faces.TryGetValue(side, out var face) && face != null)
+            return;
+
         var profile = IoCManager.Resolve<IPrototypeManager>().Index<PaperSurfacePrototype>(appearance.Profile);
         _color = profile.BaseColor;
         var scale = Math.Min(1f, 512f / Math.Max(width, height));
@@ -29,16 +35,21 @@ internal sealed class PaperSurfaceRenderer : IDisposable
     }
     public void DrawBackground(DrawingHandleScreen handle, UIBox2 bounds)
     {
-        if (_faces.TryGetValue(_side, out var face) && face != null) handle.DrawTextureRect(face.Value.Background, bounds);
-        else handle.DrawRect(bounds, _color);
+        if (_faces.TryGetValue(_side, out var face) && face != null)
+            handle.DrawTextureRect(face.Value.Background, bounds);
+        else
+            handle.DrawRect(bounds, _color);
     }
     public void DrawOverlay(DrawingHandleScreen handle, UIBox2 bounds)
     {
-        if (_faces.TryGetValue(_side, out var face) && face?.Value.Overlay is {} overlay) handle.DrawTextureRect(overlay, bounds);
+        if (_faces.TryGetValue(_side, out var face) && face?.Value.Overlay is { } overlay)
+            handle.DrawTextureRect(overlay, bounds);
     }
     public void Dispose()
     {
-        foreach (var face in _faces.Values) face?.Dispose();
-        _faces.Clear(); _key = null;
+        foreach (var face in _faces.Values)
+            face?.Dispose();
+        _faces.Clear();
+        _key = null;
     }
 }

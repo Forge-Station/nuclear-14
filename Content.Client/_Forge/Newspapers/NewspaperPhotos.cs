@@ -14,7 +14,9 @@ internal sealed class NewspaperPhotos : IDisposable
     private readonly Dictionary<int, (string Key, DocumentResourceCache<DocumentTextures>.Lease? Lease, bool Failed)> _entries = new();
 
     public NewspaperPhotos() : this(IoCManager.Resolve<IEntityManager>().System<DocumentTextureCacheSystem>().Photo,
-        pending: IoCManager.Resolve<IEntityManager>().System<DocumentTextureCacheSystem>().PhotoPending) { }
+        pending: IoCManager.Resolve<IEntityManager>().System<DocumentTextureCacheSystem>().PhotoPending)
+    {
+    }
     internal NewspaperPhotos(Func<string, byte[]?, DocumentResourceCache<DocumentTextures>.Lease?> load, Action<string>? logError = null,
         Func<string, bool>? pending = null)
     {
@@ -28,10 +30,14 @@ internal sealed class NewspaperPhotos : IDisposable
 
     public Texture? Get(int id, string? key, byte[]? data = null)
     {
-        if (id < 0 || string.IsNullOrEmpty(key)) return null;
+        if (id < 0 || string.IsNullOrEmpty(key))
+            return null;
+
         if (_entries.TryGetValue(id, out var entry))
         {
-            if (entry.Key == key && (entry.Lease != null || entry.Failed)) return entry.Lease?.Value.Background;
+            if (entry.Key == key && (entry.Lease != null || entry.Failed))
+                return entry.Lease?.Value.Background;
+
             entry.Lease?.Dispose();
         }
         try
@@ -61,13 +67,16 @@ internal sealed class NewspaperPhotos : IDisposable
     public bool Poll()
     {
         foreach (var (id, entry) in _entries.ToArray())
-            if (entry.Lease == null && !entry.Failed && Get(id, entry.Key) != null) return true;
+            if (entry.Lease == null && !entry.Failed && Get(id, entry.Key) != null)
+                return true;
+
         return false;
     }
 
     public void Dispose()
     {
-        foreach (var entry in _entries.Values) entry.Lease?.Dispose();
+        foreach (var entry in _entries.Values)
+            entry.Lease?.Dispose();
         _entries.Clear();
     }
 }

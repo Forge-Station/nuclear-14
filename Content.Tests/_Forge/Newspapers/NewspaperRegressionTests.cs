@@ -17,7 +17,9 @@ public sealed class NewspaperRegressionTests
     private sealed class TestTexture() : Texture(new Vector2i(1, 1)), IDisposable
     {
         public override Color GetPixel(int x, int y) => Color.White;
-        public void Dispose() {}
+        public void Dispose()
+        {
+        }
     }
 
     [Test]
@@ -27,7 +29,8 @@ public sealed class NewspaperRegressionTests
         using var photos = new NewspaperPhotos((key, _) =>
             cache.Acquire(key, 4L * 1024 * 1024, () => new DocumentTextures(new TestTexture())));
         var firstSide = Enumerable.Range(0, 16).ToDictionary(id => id, id => $"photo:{id}");
-        foreach (var (id, key) in firstSide) Assert.That(photos.Get(id, key), Is.Not.Null);
+        foreach (var (id, key) in firstSide)
+            Assert.That(photos.Get(id, key), Is.Not.Null);
         Assert.That(photos.Get(16, "photo:16"), Is.Null);
         var secondSide = new Dictionary<int, string> { [16] = "photo:16" };
         photos.Retain(secondSide);
@@ -39,8 +42,12 @@ public sealed class NewspaperRegressionTests
     [Test]
     public void RemovingAnArchiveEntryDoesNotRetargetAnotherEntryOrAPrintedSnapshot()
     {
-        var first = Draft("first"); first.ArchiveId = 11; first.Number = 1;
-        var second = Draft("second"); second.ArchiveId = 12; second.Number = 2;
+        var first = Draft("first");
+        first.ArchiveId = 11;
+        first.Number = 1;
+        var second = Draft("second");
+        second.ArchiveId = 12;
+        second.Number = 2;
         var archive = new List<NewspaperEdition> { first, second };
         var printed = second;
         var request = new NewspaperDeleteEditionMessage(12);
@@ -59,12 +66,16 @@ public sealed class NewspaperRegressionTests
     [Test]
     public void DeletedIssueNumbersAreNotReusedAndDeletionFreesTheArchiveLimit()
     {
-        var edition = Draft("archive"); edition.Number = 9;
+        var edition = Draft("archive");
+        edition.Number = 9;
         Assert.That(NewspaperLayout.NextEditionNumber(Array.Empty<NewspaperEdition>(), 1, 9), Is.EqualTo(10));
         Assert.That(NewspaperLayout.NextEditionNumber(new[] { edition }, 1, 8), Is.EqualTo(10));
         Assert.That(NewspaperLayout.NextEditionNumber(new[] { edition }, 2, 3), Is.EqualTo(4));
-        var full = Enumerable.Range(1, NewspaperStorage.MaxEditions).Select(i => {
-            var item = Draft($"old {i}"); item.Number = i; return item;
+        var full = Enumerable.Range(1, NewspaperStorage.MaxEditions).Select(i =>
+        {
+            var item = Draft($"old {i}");
+            item.Number = i;
+            return item;
         }).ToList();
         var draft = Draft("new article");
         Assert.That(NewspaperStorage.CanPublish(full, draft, TimeSpan.FromSeconds(1), TimeSpan.Zero), Is.False);
@@ -76,21 +87,36 @@ public sealed class NewspaperRegressionTests
     public void NullDraftAndNestedNullsAreRejectedWithoutThrowing()
     {
         Assert.That(NewspaperLayout.IsValid(null), Is.False);
-        Assert.That(NewspaperLayout.IsValid(new() { Blocks = null! }), Is.False);
-        Assert.That(NewspaperLayout.IsValid(new() { Blocks = new() { null! } }), Is.False);
-        Assert.That(NewspaperLayout.IsValid(new() { Name = null! }), Is.False);
+        Assert.That(NewspaperLayout.IsValid(new()
+        {
+            Blocks = null!
+        }), Is.False);
+        Assert.That(NewspaperLayout.IsValid(new()
+        {
+            Blocks = new() { null! }
+        }), Is.False);
+        Assert.That(NewspaperLayout.IsValid(new()
+        {
+            Name = null!
+        }), Is.False);
     }
 
     [Test]
     public void RequestsOnlyContainPhotosOnTheCurrentSideIncludingLegacyAssignments()
     {
-        var edition = new NewspaperEdition { Pages = 2, PhotoId = 5, Blocks = new() {
+        var edition = new NewspaperEdition
+        {
+            Pages = 2,
+            PhotoId = 5,
+            Blocks = new()
+        {
             new() { Kind = NewspaperBlockKind.Photo, Page = 0, PhotoId = -2 },
             new() { Kind = NewspaperBlockKind.Photo, Page = 0, PhotoId = 7 },
             new() { Kind = NewspaperBlockKind.Photo, Page = 0, PhotoId = 7 },
             new() { Kind = NewspaperBlockKind.Photo, Page = 1, PhotoId = 9 },
             new() { Kind = NewspaperBlockKind.Photo, Page = 1, PhotoId = -1 },
-        } };
+        }
+        };
         Assert.That(edition.PhotoIdsForPage(0), Is.EquivalentTo(new[] { 5, 7 }));
         Assert.That(edition.PhotoIdsForPage(1), Is.EquivalentTo(new[] { 9 }));
         edition.Blocks.RemoveAt(0);
@@ -106,7 +132,10 @@ public sealed class NewspaperRegressionTests
         Assert.That(recovery.CanRestore(baseline.Clone()), Is.True);
         Assert.That(recovery.CanRestore(pending.Clone()), Is.True);
         Assert.That(recovery.CanRestore(Draft("someone else")), Is.False);
-        Assert.That(recovery.CanRestore(new() { PublicationId = 2 }), Is.False);
+        Assert.That(recovery.CanRestore(new()
+        {
+            PublicationId = 2
+        }), Is.False);
     }
 
     [Test]
@@ -130,7 +159,8 @@ public sealed class NewspaperRegressionTests
         system.Store(new NetEntity(1), 1, recovery);
         system.Store(new NetEntity(1), 1, null);
         Assert.That(system.TryTake(new NetEntity(1), 1, out _), Is.False);
-        for (var i = 1; i <= 65; i++) system.Store(new NetEntity(i), 1, recovery);
+        for (var i = 1; i <= 65; i++)
+            system.Store(new NetEntity(i), 1, recovery);
         Assert.That(Enumerable.Range(1, 65).Count(i => system.TryTake(new NetEntity(i), 1, out _)), Is.EqualTo(64));
     }
 

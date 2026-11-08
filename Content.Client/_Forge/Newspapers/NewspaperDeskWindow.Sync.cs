@@ -23,12 +23,16 @@ public sealed partial class NewspaperDeskWindow
 
     internal void RestoreRecovery(NewspaperDraftRecovery recovery)
     {
-        if (_state == null || SameDraft(recovery.Draft, _state.Draft)) return;
+        if (_state == null || SameDraft(recovery.Draft, _state.Draft))
+            return;
+
         var safe = recovery.CanRestore(_state.Draft);
         _save.Restore(safe ? _state.Draft : recovery.Baseline,
             safe ? _state.Revision : recovery.Revision, !safe);
         _recoveredDraft = true;
-        _undo.Clear(); _redo.Clear(); _checkpoint = null;
+        _undo.Clear();
+        _redo.Clear();
+        _checkpoint = null;
         var draft = recovery.Draft.Clone();
         NewspaperStorage.RemoveUnavailablePhotos(draft, _state.BufferedPhotos.Concat(_state.Draft.PhotoIds));
         SetDraft(draft);
@@ -57,13 +61,16 @@ public sealed partial class NewspaperDeskWindow
                 if (_state?.Revision == result.Revision && SameDraft(completion.Saved, _draft))
                 {
                     _save.AcceptBaseline(_state.Draft, result.Revision);
-                    _undo.Clear(); _redo.Clear(); _checkpoint = null;
+                    _undo.Clear();
+                    _redo.Clear();
+                    _checkpoint = null;
                     SetDraft(_state.Draft.Clone());
                     UpdateState(_state);
                 }
                 else
                     _save.MarkConflict();
             }
+
             if (_state != null && _state.Revision > result.Revision && !SameDraft(_state.Draft, _save.Saved!))
                 _save.MarkConflict();
 
@@ -74,23 +81,36 @@ public sealed partial class NewspaperDeskWindow
             }
         }
         Refresh();
-        if (!_closeAfterSave) return;
-        if (SameDraft(_save.Saved!, _draft)) { _closeAfterSave = false; base.Close(); }
-        else SaveIfChanged();
+        if (!_closeAfterSave)
+            return;
+
+        if (SameDraft(_save.Saved!, _draft))
+        {
+            _closeAfterSave = false;
+            base.Close();
+        }
+        else
+            SaveIfChanged();
     }
 
     private void ReloadServerDraft()
     {
-        if (_state == null) return;
+        if (_state == null)
+            return;
+
         _save.Reload(_state.Draft, _state.Revision);
         _recoveredDraft = false;
-        _undo.Clear(); _redo.Clear(); _checkpoint = null;
+        _undo.Clear();
+        _redo.Clear();
+        _checkpoint = null;
         SetDraft(_state.Draft.Clone());
     }
 
     public void ReceiveArchive(NewspaperArchiveMessage message)
     {
-        if (message.Index != _selectedArchiveId) return;
+        if (message.Index != _selectedArchiveId)
+            return;
+
         _loadedArchiveId = message.Index;
         _loadedEdition = message.Edition;
         _archivePhotoKeys = message.PhotoKeys;
@@ -99,10 +119,13 @@ public sealed partial class NewspaperDeskWindow
 
     private Dictionary<int, string> VisiblePhotoKeys()
     {
-        if (_state == null) return new();
+        if (_state == null)
+            return new();
+
         var keys = _published ? _archivePhotoKeys : _state.PhotoKeys;
         var ids = Displayed.PhotoIdsForPage(_page);
-        if (!_published && PhotoBufferButton.Pressed) ids = ids.Concat(_visibleGalleryPhotos);
+        if (!_published && PhotoBufferButton.Pressed)
+            ids = ids.Concat(_visibleGalleryPhotos);
         return ids.Distinct().Where(keys.ContainsKey).ToDictionary(id => id, id => keys[id]);
     }
 

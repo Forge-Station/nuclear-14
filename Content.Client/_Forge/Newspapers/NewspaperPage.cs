@@ -28,9 +28,12 @@ public sealed class NewspaperPage : Control
         set
         {
             var scale = Math.Clamp(value, 0.1f, 1.25f);
-            if (Math.Abs(scale - _previewScale) < 0.002f) return;
+            if (Math.Abs(scale - _previewScale) < 0.002f)
+                return;
+
             _previewScale = scale;
-            if (_edition != null) SetContent(_edition, _currentPhoto, _photoResolver);
+            if (_edition != null)
+                SetContent(_edition, _currentPhoto, _photoResolver);
         }
     }
     private readonly List<BlockControl> _blocks = new();
@@ -44,7 +47,11 @@ public sealed class NewspaperPage : Control
     public event Action<int>? OnSelected;
     public event Action? OnChanged;
 
-    public NewspaperPage() { RectClipContent = true; MouseFilter = MouseFilterMode.Pass; }
+    public NewspaperPage()
+    {
+        RectClipContent = true;
+        MouseFilter = MouseFilterMode.Pass;
+    }
 
     public void SetContent(NewspaperEdition edition, Texture? photo = null, Func<int, Texture?>? photoResolver = null)
     {
@@ -64,7 +71,8 @@ public sealed class NewspaperPage : Control
         }
         _currentPhoto = photo;
         _photoResolver = photoResolver;
-        if (SurfaceAppearance != null) _surface.Update(SurfaceAppearance, edition.Width, edition.Height, Page);
+        if (SurfaceAppearance != null)
+            _surface.Update(SurfaceAppearance, edition.Width, edition.Height, Page);
         SetSize = MinSize = MaxSize = new Vector2(edition.Width, edition.Height) * PreviewScale;
         if (_ruleOverlay != null)
             _ruleOverlay.SetSize = _ruleOverlay.MinSize = _ruleOverlay.MaxSize = SetSize;
@@ -83,8 +91,10 @@ public sealed class NewspaperPage : Control
     protected override void Draw(DrawingHandleScreen handle)
     {
         base.Draw(handle);
-        if (SurfaceAppearance != null) _surface.DrawBackground(handle, PixelSizeBox);
-        else handle.DrawRect(PixelSizeBox, PaperColor);
+        if (SurfaceAppearance != null)
+            _surface.DrawBackground(handle, PixelSizeBox);
+        else
+            handle.DrawRect(PixelSizeBox, PaperColor);
         if (Editable && LayoutMode)
         {
             for (var x = 0f; x < Width; x += 10 * PreviewScale)
@@ -101,26 +111,34 @@ public sealed class NewspaperPage : Control
         if (_edition != null)
             foreach (var block in _edition.Blocks)
             {
-                if (block.Page != Page) continue;
+                if (block.Page != Page)
+                    continue;
+
                 var color = NewspaperTextBlock.InkColor(block.Ink);
                 if (block.Kind == NewspaperBlockKind.Line)
                     handle.DrawRect(RuleRectangle(block, UIScale * PreviewScale), color);
-                if (block.Borders == NewspaperBorders.None) continue;
+                if (block.Borders == NewspaperBorders.None)
+                    continue;
+
                 if (block.Kind == NewspaperBlockKind.Photo && _currentPhoto != null)
                     color = new Color(color.R, color.G, color.B, 0.25f);
                 foreach (var edge in new[] { NewspaperBorders.Top, NewspaperBorders.Bottom, NewspaperBorders.Left, NewspaperBorders.Right })
                 {
-                    if ((block.Borders & edge) == 0) continue;
+                    if ((block.Borders & edge) == 0)
+                        continue;
+
                     var rule = new NewspaperBlock { X = block.X, Y = block.Y, Width = block.Width, Height = block.Height };
                     if (edge is NewspaperBorders.Top or NewspaperBorders.Bottom)
                     {
                         rule.Height = 1;
-                        if (edge == NewspaperBorders.Bottom) rule.Y += block.Height - 1;
+                        if (edge == NewspaperBorders.Bottom)
+                            rule.Y += block.Height - 1;
                     }
                     else
                     {
                         rule.Width = 1;
-                        if (edge == NewspaperBorders.Right) rule.X += block.Width - 1;
+                        if (edge == NewspaperBorders.Right)
+                            rule.X += block.Width - 1;
                     }
                     handle.DrawRect(RuleRectangle(rule, UIScale * PreviewScale), color);
                 }
@@ -147,7 +165,8 @@ public sealed class NewspaperPage : Control
         protected override void Draw(DrawingHandleScreen handle)
         {
             _page.DrawRules(handle);
-            if (_page.SurfaceAppearance != null) _page._surface.DrawOverlay(handle, PixelSizeBox);
+            if (_page.SurfaceAppearance != null)
+                _page._surface.DrawOverlay(handle, PixelSizeBox);
             _page.DrawSelection(handle);
         }
     }
@@ -155,9 +174,13 @@ public sealed class NewspaperPage : Control
     // Draw on top of every text/photo/rule. A selected photo must not cover its own outline.
     private void DrawSelection(DrawingHandleScreen handle)
     {
-        if (!Editable || _edition == null || Selected < 0 || Selected >= _edition.Blocks.Count) return;
+        if (!Editable || _edition == null || Selected < 0 || Selected >= _edition.Blocks.Count)
+            return;
+
         var block = _edition.Blocks[Selected];
-        if (block.Page != Page) return;
+        if (block.Page != Page)
+            return;
+
         var box = RuleRectangle(block, UIScale * PreviewScale);
         var color = Color.FromHex("#51B9F2");
         var thickness = Math.Min(3f, Math.Max(1f, Math.Min(box.Width, box.Height) / 4));
@@ -175,7 +198,8 @@ public sealed class NewspaperPage : Control
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing) _surface.Dispose();
+        if (disposing)
+            _surface.Dispose();
         base.Dispose(disposing);
     }
 
@@ -197,7 +221,9 @@ public sealed class NewspaperPage : Control
 
         public BlockControl(NewspaperPage page, NewspaperBlock block, int index)
         {
-            _page = page; _block = block; _index = index;
+            _page = page;
+            _block = block;
+            _index = index;
             HorizontalAlignment = HAlignment.Left;
             VerticalAlignment = VAlignment.Top;
             RectClipContent = true;
@@ -245,6 +271,7 @@ public sealed class NewspaperPage : Control
                     _text.LoadText(text);
                 _text.SetContent(text, _block.Ink);
             }
+
             if (_photo != null && _placeholder != null)
             {
                 _photo.Texture = photo;
@@ -270,7 +297,8 @@ public sealed class NewspaperPage : Control
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing) _photoShader?.Dispose();
+            if (disposing)
+                _photoShader?.Dispose();
             base.Dispose(disposing);
         }
 
@@ -279,10 +307,13 @@ public sealed class NewspaperPage : Control
             base.KeyBindDown(args);
             if (!_page.Editable || args.Function != EngineKeyFunctions.UIClick)
                 return;
+
             _page.Selected = _index;
             _page.OnSelected?.Invoke(_index);
             args.Handle();
-            if (!_page.LayoutMode) return;
+            if (!_page.LayoutMode)
+                return;
+
             _dragging = true;
             UserInterfaceManager.ControlFocused = this;
             _resizing = args.RelativePosition.X >= Width - 10 && args.RelativePosition.Y >= Height - 10;
@@ -297,6 +328,7 @@ public sealed class NewspaperPage : Control
             base.KeyBindUp(args);
             if (args.Function != EngineKeyFunctions.UIClick)
                 return;
+
             _dragging = false;
             if (UserInterfaceManager.ControlFocused == this)
                 UserInterfaceManager.ControlFocused = null;
@@ -313,8 +345,10 @@ public sealed class NewspaperPage : Control
             base.MouseMove(args);
             if (!_dragging || _page._edition == null)
                 return;
+
             var delta = (args.GlobalPosition - _startPointer) / _page.PreviewScale;
-            if (delta.LengthSquared() > 0 && _block.Kind == NewspaperBlockKind.Text) _block.CaptionFor = null;
+            if (delta.LengthSquared() > 0 && _block.Kind == NewspaperBlockKind.Text)
+                _block.CaptionFor = null;
             int Snap(float value) => (int)Math.Round(value / (_page.Snap ? 10 : 1)) * (_page.Snap ? 10 : 1);
             if (_resizing)
             {

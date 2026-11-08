@@ -21,21 +21,31 @@ internal sealed class DocumentResourceCache<T> : IDisposable where T : class, ID
     {
         private Action? _release = release;
         public readonly T Value = value;
-        public void Dispose() { _release?.Invoke(); _release = null; }
+        public void Dispose()
+        {
+            _release?.Invoke();
+            _release = null;
+        }
     }
     public Lease? Acquire(string key, long bytes, Func<T> load)
     {
         if (!_entries.TryGetValue(key, out var entry))
         {
-            if (bytes <= 0 || bytes > _budget) return null;
+            if (bytes <= 0 || bytes > _budget)
+                return null;
+
             while (Bytes + bytes > _budget)
             {
                 var oldest = _entries.Where(p => p.Value.Users == 0).OrderBy(p => p.Value.Used).FirstOrDefault();
-                if (oldest.Value == null) return null; // Never evict a texture still drawn by another window.
-                _entries.Remove(oldest.Key); Bytes -= oldest.Value.Bytes; oldest.Value.Value.Dispose();
+                if (oldest.Value == null)
+                    return null; // Never evict a texture still drawn by another window.
+                _entries.Remove(oldest.Key);
+                Bytes -= oldest.Value.Bytes;
+                oldest.Value.Value.Dispose();
             }
             entry = new Entry(load(), bytes);
-            _entries.Add(key, entry); Bytes += bytes;
+            _entries.Add(key, entry);
+            Bytes += bytes;
         }
         return Acquire(entry);
     }
@@ -43,12 +53,19 @@ internal sealed class DocumentResourceCache<T> : IDisposable where T : class, ID
 
     private Lease Acquire(Entry entry)
     {
-        entry.Users++; entry.Used = ++_clock;
-        return new Lease(entry.Value, () => { entry.Users--; entry.Used = ++_clock; });
+        entry.Users++;
+        entry.Used = ++_clock;
+        return new Lease(entry.Value, () =>
+        {
+            entry.Users--;
+            entry.Used = ++_clock;
+        });
     }
     public void Dispose()
     {
-        foreach (var entry in _entries.Values) entry.Value.Dispose();
-        _entries.Clear(); Bytes = 0;
+        foreach (var entry in _entries.Values)
+            entry.Value.Dispose();
+        _entries.Clear();
+        Bytes = 0;
     }
 }

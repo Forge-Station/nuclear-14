@@ -9,6 +9,7 @@ public sealed partial class NewspaperCopyComponent : Component
     [DataField] public byte[]? ImageData;
     [DataField] public Dictionary<int, byte[]> Photos = new();
     public Dictionary<int, string> PhotoKeys = new();
-    [ViewVariables] public string PhotoKey = "";
+    [ViewVariables]
+    public string PhotoKey = "";
     public NewspaperCopyUiState? CachedUiState;
 }

@@ -21,7 +21,10 @@ public sealed class NewspaperDeskBoundUserInterface : BoundUserInterface
         _window.OnArchiveRequested += index => SendMessage(new NewspaperArchiveRequestMessage(index));
         _window.OnDeleteEdition += id => SendMessage(new NewspaperDeleteEditionMessage(id));
         _window.OnSaveTemplate += template => SendMessage(new NewspaperSaveTemplateMessage(template));
-        _window.OnSwitchPublication += (draft, id, name) => SendMessage(new NewspaperSwitchPublicationMessage(draft, id, name, _window.Revision, _window.BeginRequest(draft, true)));
+        _window.OnSwitchPublication += (
+            draft,
+            id,
+            name) => SendMessage(new NewspaperSwitchPublicationMessage(draft, id, name, _window.Revision, _window.BeginRequest(draft, true)));
         _window.OnSave += draft => SendMessage(new NewspaperSaveDraftMessage(draft, _window.Revision, _window.BeginRequest(draft)));
         _window.OnPublish += draft => SendMessage(new NewspaperPublishMessage(draft, _window.Revision, _window.BeginRequest(draft)));
         _window.OnPrint += (count, edition, paper) => SendMessage(new NewspaperPrintMessage(count, edition, paper));
@@ -52,8 +55,10 @@ public sealed class NewspaperDeskBoundUserInterface : BoundUserInterface
     protected override void ReceiveMessage(BoundUserInterfaceMessage message)
     {
         base.ReceiveMessage(message);
-        if (message is NewspaperDraftResultMessage result) _window?.ReceiveResult(result);
-        if (message is NewspaperArchiveMessage archive) _window?.ReceiveArchive(archive);
+        if (message is NewspaperDraftResultMessage result)
+            _window?.ReceiveResult(result);
+        if (message is NewspaperArchiveMessage archive)
+            _window?.ReceiveArchive(archive);
         if (message is NewspaperImageMessage image)
             _window?.ReceivePhoto(image.PhotoId, image.Data, image.PhotoKey);
     }

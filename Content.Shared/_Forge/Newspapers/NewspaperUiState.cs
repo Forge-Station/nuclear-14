@@ -21,7 +21,12 @@ public sealed class NewspaperPublicationInfo
     public readonly int Id;
     public readonly string Name;
     public readonly int NextNumber;
-    public NewspaperPublicationInfo(int id, string name, int nextNumber = 1) { Id = id; Name = name; NextNumber = nextNumber; }
+    public NewspaperPublicationInfo(int id, string name, int nextNumber = 1)
+    {
+        Id = id;
+        Name = name;
+        NextNumber = nextNumber;
+    }
 }
 
 [Serializable, NetSerializable]
@@ -38,7 +43,16 @@ public sealed class NewspaperDeskUiState : BoundUserInterfaceState
     public readonly long Revision;
     public readonly bool DraftPublished;
 
-    public NewspaperDeskUiState(NewspaperEdition draft, NewspaperEdition[] editions, int paperCount, NewspaperEdition[] templates, NewspaperPublicationInfo[] publications, Dictionary<int, string>? photoKeys = null, int[]? bufferedPhotos = null, long revision = 0, bool draftPublished = false)
+    public NewspaperDeskUiState(
+        NewspaperEdition draft,
+        NewspaperEdition[] editions,
+        int paperCount,
+        NewspaperEdition[] templates,
+        NewspaperPublicationInfo[] publications,
+        Dictionary<int, string>? photoKeys = null,
+        int[]? bufferedPhotos = null,
+        long revision = 0,
+        bool draftPublished = false)
     {
         Draft = draft;
         Revision = revision;
@@ -60,10 +74,15 @@ public sealed class NewspaperCopyUiState : BoundUserInterfaceState
     public readonly PaperSurfaceAppearance? Surface;
     public readonly string PhotoKey;
     public readonly Dictionary<int, string> PhotoKeys;
-    public NewspaperCopyUiState(NewspaperEdition edition, PaperSurfaceAppearance? surface = null, string photoKey = "", Dictionary<int, string>? photoKeys = null)
+    public NewspaperCopyUiState(
+        NewspaperEdition edition,
+        PaperSurfaceAppearance? surface = null,
+        string photoKey = "",
+        Dictionary<int, string>? photoKeys = null)
     {
         PhotoKeys = photoKeys ?? new();
-        if (edition.PhotoId >= 0 && photoKey.Length > 0) PhotoKeys.TryAdd(edition.PhotoId, photoKey);
+        if (edition.PhotoId >= 0 && photoKey.Length > 0)
+            PhotoKeys.TryAdd(edition.PhotoId, photoKey);
         Edition = edition;
         Surface = surface;
         PhotoKey = photoKey;
@@ -80,7 +99,8 @@ public sealed class NewspaperSaveDraftMessage : BoundUserInterfaceMessage
     public NewspaperSaveDraftMessage(NewspaperEdition draft, long revision = -1, int requestId = 0)
     {
         Draft = draft;
-        Revision = revision; RequestId = requestId;
+        Revision = revision;
+        RequestId = requestId;
     }
 }
 
@@ -94,7 +114,8 @@ public sealed class NewspaperPublishMessage : BoundUserInterfaceMessage
     public NewspaperPublishMessage(NewspaperEdition draft, long revision = -1, int requestId = 0)
     {
         Draft = draft;
-        Revision = revision; RequestId = requestId;
+        Revision = revision;
+        RequestId = requestId;
     }
 }
 
@@ -118,7 +139,11 @@ public sealed class NewspaperImageRequestMessage : BoundUserInterfaceMessage
 {
     public readonly int Edition;
     public readonly int PhotoId;
-    public NewspaperImageRequestMessage(int edition, int photoId = -1) { Edition = edition; PhotoId = photoId; }
+    public NewspaperImageRequestMessage(int edition, int photoId = -1)
+    {
+        Edition = edition;
+        PhotoId = photoId;
+    }
 }
 
 [Serializable, NetSerializable]
@@ -166,7 +191,13 @@ public sealed class NewspaperSwitchPublicationMessage : BoundUserInterfaceMessag
     // Zero ID creates a new publication with this name.
     public readonly string Name;
     public NewspaperSwitchPublicationMessage(NewspaperEdition draft, int publicationId, string name = "", long revision = -1, int requestId = 0)
-    { Draft = draft; PublicationId = publicationId; Name = name; Revision = revision; RequestId = requestId; }
+    {
+        Draft = draft;
+        PublicationId = publicationId;
+        Name = name;
+        Revision = revision;
+        RequestId = requestId;
+    }
 }
 
 [Serializable, NetSerializable]

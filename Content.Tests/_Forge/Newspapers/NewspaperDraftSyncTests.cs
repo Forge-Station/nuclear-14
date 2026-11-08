@@ -12,7 +12,8 @@ public sealed class NewspaperDraftSyncTests
     public void AcknowledgingAnEarlierSaveCannotReplaceNewerLocalTyping()
     {
         var sent = new NewspaperEdition { Name = "Saved A" };
-        var local = sent.Clone(); local.Name = "Typed B";
+        var local = sent.Clone();
+        local.Name = "Typed B";
         Assert.That(NewspaperDraftSync.IsAcknowledgement(1, 1, sent), Is.True);
         // A is now the saved baseline; B must remain in the editor after subsequent UI states.
         Assert.That(NewspaperDraftSync.CanApply(sent, local, false, false), Is.False);
@@ -24,7 +25,8 @@ public sealed class NewspaperDraftSyncTests
     {
         var saved = new NewspaperEdition { Name = "A" };
         Assert.That(NewspaperDraftSync.CanApply(saved, saved.Clone(), false, false), Is.True);
-        var dirty = saved.Clone(); dirty.Name = "B";
+        var dirty = saved.Clone();
+        dirty.Name = "B";
         Assert.That(NewspaperDraftSync.CanApply(saved, dirty, false, false), Is.False);
         Assert.That(NewspaperDraftSync.CanApply(saved, saved, false, true), Is.False);
     }

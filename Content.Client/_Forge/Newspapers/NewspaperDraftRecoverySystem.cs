@@ -19,8 +19,11 @@ public sealed class NewspaperDraftRecoverySystem : EntitySystem
     internal void Store(NetEntity desk, int publication, NewspaperDraftRecovery? recovery)
     {
         _drafts.Remove((desk, publication));
-        if (recovery == null) return;
-        if (_drafts.Count >= MaxDrafts) _drafts.Remove(_drafts.Keys.First());
+        if (recovery == null)
+            return;
+
+        if (_drafts.Count >= MaxDrafts)
+            _drafts.Remove(_drafts.Keys.First());
         _drafts[(desk, publication)] = recovery;
     }
 

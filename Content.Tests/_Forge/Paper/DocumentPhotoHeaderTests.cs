@@ -20,7 +20,10 @@ public sealed class DocumentPhotoHeaderTests
         Assert.That((width, height), Is.EqualTo((128, 96)));
 
         // An oversized IHDR must be rejected before the decoder allocates pixels.
-        data[16] = 0; data[17] = 0; data[18] = 8; data[19] = 1;
+        data[16] = 0;
+        data[17] = 0;
+        data[18] = 8;
+        data[19] = 1;
         Assert.That(DocumentTextureCacheSystem.TryPhotoSize(data, out _, out _), Is.False);
         data[16] = 128;
         Assert.That(DocumentTextureCacheSystem.TryPhotoSize(data, out _, out _), Is.False);

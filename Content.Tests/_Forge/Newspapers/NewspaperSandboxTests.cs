@@ -26,8 +26,12 @@ public sealed class NewspaperSandboxTests
             new object?[] { null, logs.GetSawmill("test.sandbox") })!;
         var resolverType = checkerType.GetNestedType("Resolver", BindingFlags.NonPublic)!;
         using var resolver = (IDisposable)Activator.CreateInstance(resolverType,
-            new object[] { checker, new[] { AppContext.BaseDirectory, Path.GetDirectoryName(typeof(object).Assembly.Location)! },
-                Array.Empty<ResPath>() })!;
+            new object[]
+            {
+            checker,
+            new[] { AppContext.BaseDirectory, Path.GetDirectoryName(typeof(object).Assembly.Location)! },
+                Array.Empty<ResPath>()
+                })!;
         using var assembly = File.OpenRead(typeof(PaperSurfacePanel).Assembly.Location);
         var check = checkerType.GetMethod("CheckAssembly", new[] { typeof(Stream), resolverType })!;
         Assert.That(check.Invoke(checker, new object[] { assembly, resolver }), Is.EqualTo(true),

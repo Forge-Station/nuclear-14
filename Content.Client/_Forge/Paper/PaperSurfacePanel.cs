@@ -14,8 +14,10 @@ public sealed class PaperSurfacePanel : PanelContainer
     public void SetSurface(PaperSurfaceAppearance? appearance)
     {
         _appearance = appearance?.Clone();
-        if (_appearance == null) _surface.Dispose();
-        else _surface.Update(_appearance, 510, 660, 0);
+        if (_appearance == null)
+            _surface.Dispose();
+        else
+            _surface.Update(_appearance, 510, 660, 0);
     }
 
     protected override void FrameUpdate(FrameEventArgs args)
@@ -27,14 +29,19 @@ public sealed class PaperSurfacePanel : PanelContainer
 
     protected override void Draw(DrawingHandleScreen handle)
     {
-        if (_appearance == null) { base.Draw(handle); return; }
+        if (_appearance == null)
+        {
+            base.Draw(handle);
+            return;
+        }
         _surface.DrawBackground(handle, PixelSizeBox);
         _surface.DrawOverlay(handle, PixelSizeBox);
     }
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing) _surface.Dispose();
+        if (disposing)
+            _surface.Dispose();
         base.Dispose(disposing);
     }
 }

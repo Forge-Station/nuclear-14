@@ -42,10 +42,13 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
     private string? _captionNotice;
     private static readonly StyleBox GallerySelectionStyle = new StyleBoxFlat
     {
-        BackgroundColor = Color.FromHex("#233847"), BorderColor = Color.FromHex("#55B7F3"),
+        BackgroundColor = Color.FromHex("#233847"),
+        BorderColor = Color.FromHex("#55B7F3"),
         BorderThickness = new Thickness(2),
-        ContentMarginLeftOverride = 6, ContentMarginRightOverride = 6,
-        ContentMarginTopOverride = 2, ContentMarginBottomOverride = 2,
+        ContentMarginLeftOverride = 6,
+        ContentMarginRightOverride = 6,
+        ContentMarginTopOverride = 2,
+        ContentMarginBottomOverride = 2,
     };
     private int _zoom = 75;
     private int _page;
@@ -84,16 +87,20 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
             if (args.Id != _draft.PublicationId && _save.Pending == null && !_save.Conflict)
                 OnSwitchPublication?.Invoke(_draft.Clone(), args.Id, "");
         };
+
         NewPublicationButton.OnPressed += _ => OpenNewPublication();
         CancelPublicationButton.OnPressed += _ =>
         {
             NewPublicationToolbar.Visible = false;
             Refresh();
         };
+
         NewPublicationName.OnTextChanged += _ =>
         {
-            if (!_loading) Refresh();
+            if (!_loading)
+                Refresh();
         };
+
         CreatePublicationButton.OnPressed += _ => CreatePublication();
         DraftModeButton.OnPressed += _ => SetMode(false, false);
         PhotoBufferButton.OnPressed += _ =>
@@ -101,17 +108,20 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
             ClearReplacementConfirmation();
             Refresh();
         };
+
         ChoosePhotoButton.OnPressed += _ => ChoosePhotoForSelectedBlock();
         BlockSettingsButton.OnPressed += _ =>
         {
             _pageSettings = false;
             Refresh();
         };
+
         PageSettingsButton.OnPressed += _ =>
         {
             _pageSettings = true;
             Refresh();
         };
+
         RenamePublicationButton.OnPressed += _ => OpenRename();
         ApplyNameButton.OnPressed += _ => ApplyPublicationName();
         CloseNameButton.OnPressed += _ =>
@@ -120,21 +130,26 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
             NameField.Text = _draft.Name;
             Refresh();
         };
+
         BackToBlockButton.OnPressed += _ =>
         {
             PhotoBufferButton.Pressed = false;
             Refresh();
         };
+
         InsertPhotoButton.OnPressed += _ => EditBlock(b =>
         {
-            if (b.Kind == NewspaperBlockKind.Photo && _state!.BufferedPhotos.Contains(_selectedGalleryPhotoId)) b.PhotoId = _selectedGalleryPhotoId;
+            if (b.Kind == NewspaperBlockKind.Photo && _state!.BufferedPhotos.Contains(_selectedGalleryPhotoId))
+                b.PhotoId = _selectedGalleryPhotoId;
         });
+
         PhotoTargetList.OnItemSelected += args => SelectPhotoTarget(args.Id);
         TextAppearanceButton.OnPressed += _ => Refresh();
         UndoButton.OnPressed += _ => RestoreHistory(_undo, _redo);
         RedoButton.OnPressed += _ => RestoreHistory(_redo, _undo);
         ZoomButton.AddItem(Loc.GetString("newspaper-fit-page"), 0);
-        foreach (var zoom in new[] { 50, 75, 100, 125 }) ZoomButton.AddItem($"{zoom}%", zoom);
+        foreach (var zoom in new[] { 50, 75, 100, 125 })
+            ZoomButton.AddItem($"{zoom}%", zoom);
         ZoomButton.SelectId(_zoom);
         foreach (var paper in Enum.GetValues<NewspaperPaper>())
             PaperQualityButton.AddItem(Loc.GetString($"newspaper-paper-{paper.ToString().ToLowerInvariant()}"), (int)paper);
@@ -144,11 +159,21 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
             _zoom = args.Id;
             ZoomButton.SelectId(args.Id);
         };
+
         FindOverflowButton.OnPressed += _ => FindOverflowBlock();
         LinkCaptionButton.OnPressed += _ => LinkSelectedCaption();
         // Registered before the BUI close handler so the save is sent while the UI is still open.
-        OnClose += () => { if (!_discardOnClose) SaveIfChanged(); };
-        BindReplacement(DiscardCloseButton, () => { _discardOnClose = true; base.Close(); }, "newspaper-close-discard-tip");
+        OnClose += () =>
+        {
+            if (!_discardOnClose)
+                SaveIfChanged();
+        };
+
+        BindReplacement(DiscardCloseButton, () =>
+        {
+            _discardOnClose = true;
+            base.Close();
+        }, "newspaper-close-discard-tip");
     }
 
     private void InitializeTemplateAndPrintActions()
@@ -160,9 +185,17 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
             TemplateList.SelectId(args.Id);
             Refresh();
         };
+
         BindReplacement(LoadTemplateButton, LoadSelectedTemplate);
         BindReplacement(BlankButton, () => SetDraft(_layout
-            ? new NewspaperEdition { Width = _draft.Width, Height = _draft.Height, Pages = _draft.Pages, Name = _draft.Name, PublicationId = _draft.PublicationId }
+            ? new NewspaperEdition
+            {
+                Width = _draft.Width,
+                Height = _draft.Height,
+                Pages = _draft.Pages,
+                Name = _draft.Name,
+                PublicationId = _draft.PublicationId
+            }
             : NewspaperLayout.ClearContents(_draft)));
         BindReplacement(DemoButton, LoadSelectedExample);
         ModeButton.OnPressed += _ => SetMode(true, false);
@@ -171,39 +204,59 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
             _page = (_page + 1) % Displayed.Pages;
             Refresh();
         };
+
         RotateButton.OnPressed += _ =>
         {
             (_draft.Width, _draft.Height) = (_draft.Height, _draft.Width);
             ClampBlocks();
             Refresh();
         };
+
         SnapButton.OnToggled += _ => Refresh();
         SaveTemplateButton.OnPressed += _ => SaveCurrentTemplate();
         BindReplacement(RemovePhotoButton, () => EditBlock(b => b.PhotoId = -1), "newspaper-confirm-block-photo");
         BindReplacement(ForgetPhotoButton, ForgetSelectedPhoto, "newspaper-photo-forget-confirm");
         SaveButton.OnPressed += _ => SaveIfChanged();
         BindReplacement(ReloadDraftButton, ReloadServerDraft, "newspaper-reload-confirm");
-        BindReplacement(DeleteArchiveButton, () => { if (_selectedArchiveId > 0) OnDeleteEdition?.Invoke(_selectedArchiveId); }, "newspaper-archive-delete-confirm");
+        BindReplacement(DeleteArchiveButton, () =>
+        {
+            if (_selectedArchiveId > 0)
+                OnDeleteEdition?.Invoke(_selectedArchiveId);
+        }, "newspaper-archive-delete-confirm");
         PublishButton.OnPressed += _ => PublishDraft();
         PrintButton.OnPressed += _ =>
         {
-            if (_published && _selectedArchiveId > 0) OnPrint?.Invoke(_printCount, _selectedArchiveId, _printPaper);
+            if (_published && _selectedArchiveId > 0)
+                OnPrint?.Invoke(_printCount, _selectedArchiveId, _printPaper);
         };
+
         DecreaseButton.OnPressed += _ =>
         {
             _printCount = Math.Max(1, _printCount - 1);
             Refresh();
         };
+
         IncreaseButton.OnPressed += _ =>
         {
             _printCount = Math.Min(10, _printCount + 1);
             Refresh();
         };
+
         NameField.OnTextChanged += _ =>
         {
-            if (!_loading) Refresh();
+            if (!_loading)
+                Refresh();
         };
-        TemplateNameField.OnTextChanged += _ => { if (!_loading) { _draft.TemplateName = TemplateNameField.Text; Refresh(); } };
+
+        TemplateNameField.OnTextChanged += _ =>
+        {
+            if (!_loading)
+            {
+                _draft.TemplateName = TemplateNameField.Text;
+                Refresh();
+            }
+        };
+
         PreviewModeButton.OnPressed += _ => SetMode(false, true);
         ArchiveButton.OnItemSelected += args =>
         {
@@ -213,6 +266,7 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
             _published = true;
             Refresh();
         };
+
         PageView.OnSelected += SelectPageBlock;
         PageView.OnChanged += Refresh;
     }
@@ -227,7 +281,9 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
 
     private void CreatePublication()
     {
-        if (_save.Pending != null || _save.Conflict || !NewNameAvailable(NewPublicationName.Text) || !DraftIsValid()) return;
+        if (_save.Pending != null || _save.Conflict || !NewNameAvailable(NewPublicationName.Text) || !DraftIsValid())
+            return;
+
         OnSwitchPublication?.Invoke(_draft.Clone(), 0, NewPublicationName.Text);
         NewPublicationToolbar.Visible = false;
         NewPublicationName.Text = "";
@@ -235,7 +291,9 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
 
     private void ApplyPublicationName()
     {
-        if (_save.Pending != null || _save.Conflict || !DraftIsValid() || !NameAvailable(NameField.Text)) return;
+        if (_save.Pending != null || _save.Conflict || !DraftIsValid() || !NameAvailable(NameField.Text))
+            return;
+
         _draft.Name = NameField.Text.Trim();
         PublicationNameToolbar.Visible = false;
         SaveIfChanged();
@@ -244,7 +302,9 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
 
     private void SelectPrintPaper(NewspaperPaper paper)
     {
-        if (_loading || !_published) return;
+        if (_loading || !_published)
+            return;
+
         _printPaper = paper;
         Refresh();
     }
@@ -258,7 +318,8 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
     {
         ClearReplacementConfirmation();
         _pageSettings = false;
-        _layout = layout && _layoutEditorEnabled; _published = archive;
+        _layout = layout && _layoutEditorEnabled;
+        _published = archive;
         PublicationNameToolbar.Visible = NewPublicationToolbar.Visible = false;
         Refresh();
     }
@@ -282,7 +343,9 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
 
     private void SaveIfChanged()
     {
-        if (_save.Pending != null || _save.Conflict || _state == null || !DraftIsValid() || _save.Saved != null && SameDraft(_save.Saved, _draft)) return;
+        if (_save.Pending != null || _save.Conflict || _state == null || !DraftIsValid() || _save.Saved != null && SameDraft(_save.Saved, _draft))
+            return;
+
         _save.Prepare(_draft, _timing.RealTime);
         OnSave?.Invoke(_draft.Clone());
         Refresh();
@@ -293,7 +356,8 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
         button.ToolTip = Loc.GetString(tooltip);
         button.OnPressed += _ =>
         {
-            if (ConfirmButton(button, tooltip == "newspaper-replace-repeat-tip" ? null : Loc.GetString(tooltip))) action();
+            if (ConfirmButton(button, tooltip == "newspaper-replace-repeat-tip" ? null : Loc.GetString(tooltip)))
+                action();
         };
     }
 
@@ -301,7 +365,9 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
     {
         var confirmed = _armedReplacement == button && _timing.RealTime <= _armedUntil;
         ClearReplacementConfirmation();
-        if (confirmed) return true;
+        if (confirmed)
+            return true;
+
         _armedReplacement = button;
         _armedReplacementText = button.Text;
         _armedReplacementHadDangerStyle = button.StyleClasses.Contains(StyleBase.ButtonDanger);
@@ -316,20 +382,26 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
     {
         if (_armedReplacement != null)
         {
-            if (!_armedReplacementHadDangerStyle) _armedReplacement.RemoveStyleClass(StyleBase.ButtonDanger);
+            if (!_armedReplacementHadDangerStyle)
+                _armedReplacement.RemoveStyleClass(StyleBase.ButtonDanger);
         }
-        _armedReplacement = null; _armedReplacementText = null;
+        _armedReplacement = null;
+        _armedReplacementText = null;
         ConfirmationHintLabel.Visible = false;
     }
 
     private void RestoreHistory(List<NewspaperEdition> source, List<NewspaperEdition> target)
     {
         _typingBlock = -1;
-        if (_published || source.Count == 0) return;
+        if (_published || source.Count == 0)
+            return;
+
         target.Add(_draft.Clone());
-        var draft = source[^1]; source.RemoveAt(source.Count - 1);
+        var draft = source[^1];
+        source.RemoveAt(source.Count - 1);
         draft.PhotoId = _draft.PhotoId; // Physical attachments are owned by the server, not layout history.
-        if (_state != null) NewspaperStorage.RemoveUnavailablePhotos(draft, _state.BufferedPhotos.Concat(_state.Draft.PhotoIds));
+        if (_state != null)
+            NewspaperStorage.RemoveUnavailablePhotos(draft, _state.BufferedPhotos.Concat(_state.Draft.PhotoIds));
         _restoring = true;
         SetDraft(draft);
         _restoring = false;
@@ -353,7 +425,8 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
         var initial = _state == null;
         var archiveChanged = initial || !_state!.Editions.Select(e => e.ArchiveId).SequenceEqual(state.Editions.Select(e => e.ArchiveId));
         var archiveAdded = initial || state.Editions.Any(e => !_state!.Editions.Any(old => old.ArchiveId == e.ArchiveId));
-        if (archiveChanged) ClearReplacementConfirmation();
+        if (archiveChanged)
+            ClearReplacementConfirmation();
         var publicationChanged = initial || _state!.Draft.PublicationId != state.Draft.PublicationId;
         var photosOnly = !initial && state.Revision != _state!.Revision &&
             NewspaperStorage.IsPhotoRemoval(_state.Draft, state.Draft, state.BufferedPhotos.Concat(state.Draft.PhotoIds));
@@ -361,8 +434,10 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
         if (photosOnly)
         {
             _save.AdvanceRevision(state.Revision);
-            if (_save.Saved != null) NewspaperStorage.RemoveUnavailablePhotos(_save.Saved, state.BufferedPhotos.Concat(state.Draft.PhotoIds));
+            if (_save.Saved != null)
+                NewspaperStorage.RemoveUnavailablePhotos(_save.Saved, state.BufferedPhotos.Concat(state.Draft.PhotoIds));
         }
+
         if (!initial && state.Revision != _save.Revision && !accept && _save.Pending == null)
             _save.MarkConflict();
         _state = state;
@@ -371,27 +446,35 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
             _save.AcceptBaseline(state.Draft, state.Revision);
             var draft = initial && state.Draft.Blocks.Count == 0
                 ? CreateStarter(_starters.FirstOrDefault(p => p.Default) ?? _starters[0], false) : state.Draft.Clone();
-            draft.Name = state.Draft.Name; draft.PublicationId = state.Draft.PublicationId;
-            if (!SameDraft(_draft, draft)) SetDraft(draft);
+            draft.Name = state.Draft.Name;
+            draft.PublicationId = state.Draft.PublicationId;
+            if (!SameDraft(_draft, draft))
+                SetDraft(draft);
             if (initial || publicationChanged)
             {
-                _undo.Clear(); _redo.Clear(); _checkpoint = _draft.Clone();
+                _undo.Clear();
+                _redo.Clear();
+                _checkpoint = _draft.Clone();
                 _selectedBlockIndex = -1;
                 PublicationNameToolbar.Visible = false;
             }
         }
+
         if (_draft.PublicationId == state.Draft.PublicationId)
             NewspaperStorage.RemoveUnavailablePhotos(_draft, state.BufferedPhotos.Concat(state.Draft.PhotoIds));
         TemplateList.Clear();
         var id = 0;
-        foreach (var starter in _starters) TemplateList.AddItem(Loc.GetString(starter.Name), id++);
-        foreach (var template in state.Templates) TemplateList.AddItem(template.TemplateName, id++);
+        foreach (var starter in _starters)
+            TemplateList.AddItem(Loc.GetString(starter.Name), id++);
+        foreach (var template in state.Templates)
+            TemplateList.AddItem(template.TemplateName, id++);
         _selectedTemplateIndex = Math.Clamp(_selectedTemplateIndex, 0, Math.Max(0, id - 1));
         if (initial || publicationChanged)
         {
             var names = _starters.Select(p => Loc.GetString(p.Name)).Concat(state.Templates.Select(t => t.TemplateName)).ToArray();
             var current = Array.IndexOf(names, _draft.TemplateName);
-            if (current >= 0) _selectedTemplateIndex = current;
+            if (current >= 0)
+                _selectedTemplateIndex = current;
         }
         TemplateList.SelectId(_selectedTemplateIndex);
         PublicationList.Clear();
@@ -406,9 +489,11 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
             ArchiveButton.AddItem(Loc.GetString("newspaper-archive-entry", ("edition", entry.Edition.Number), ("headline", ShortText(EditionHeadline(entry.Edition), 48))), entry.Index);
         if (publicationChanged || !archive.Any(e => e.Index == _selectedArchiveId) || archiveAdded && archive.LastOrDefault().Index > _selectedArchiveId)
             _selectedArchiveId = archive.LastOrDefault().Index;
-        if (_selectedArchiveId > 0) ArchiveButton.SelectId(_selectedArchiveId);
+        if (_selectedArchiveId > 0)
+            ArchiveButton.SelectId(_selectedArchiveId);
         Refresh();
-        if (_save.DeferredResult != null && state.Revision >= _save.DeferredResult.Revision) ReceiveResult(_save.DeferredResult);
+        if (_save.DeferredResult != null && state.Revision >= _save.DeferredResult.Revision)
+            ReceiveResult(_save.DeferredResult);
         if (_closeAfterSave && _save.Saved != null && SameDraft(_save.Saved, _draft))
         {
             _closeAfterSave = false;
@@ -423,15 +508,23 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
     {
 
         ClearReplacementConfirmation();
-        _draft = draft; _published = false; _page = 0; _selectedBlockIndex = -1;
+        _draft = draft;
+        _published = false;
+        _page = 0;
+        _selectedBlockIndex = -1;
         _loading = true;
         NameField.Text = draft.Name;
         TemplateNameField.Text = draft.TemplateName;
         _loading = false;
-        var templateNames = _starters.Select(p => Loc.GetString(p.Name)).Concat(_state?.Templates.Select(t => t.TemplateName) ?? Enumerable.Empty<string>()).ToArray();
+        var templateNames = _starters
+            .Select(p => Loc.GetString(p.Name)).Concat(_state?.Templates
+            .Select(t => t.TemplateName) ?? Enumerable.Empty<string>())
+            .ToArray();
         var templateIndex = Array.IndexOf(templateNames, draft.TemplateName);
-        if (templateIndex >= 0) _selectedTemplateIndex = templateIndex;
-        RefreshBlockList(); Refresh();
+        if (templateIndex >= 0)
+            _selectedTemplateIndex = templateIndex;
+        RefreshBlockList();
+        Refresh();
     }
 
     private void RefreshBlockList()
@@ -451,8 +544,10 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
         _page = Math.Min(_page, _draft.Pages - 1);
         foreach (var b in _draft.Blocks)
         {
-            b.Width = Math.Min(b.Width, _draft.Width); b.Height = Math.Min(b.Height, _draft.Height);
-            b.X = Math.Min(b.X, _draft.Width - b.Width); b.Y = Math.Min(b.Y, _draft.Height - b.Height);
+            b.Width = Math.Min(b.Width, _draft.Width);
+            b.Height = Math.Min(b.Height, _draft.Height);
+            b.X = Math.Min(b.X, _draft.Width - b.Width);
+            b.Y = Math.Min(b.Y, _draft.Height - b.Height);
             b.Page = Math.Min(b.Page, _draft.Pages - 1);
         }
         RefreshBlockList();
@@ -460,18 +555,30 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
 
     private void FormatSelection(string tag)
     {
-        if (_published || Selected?.Kind != NewspaperBlockKind.Text) return;
+        if (_published || Selected?.Kind != NewspaperBlockKind.Text)
+            return;
+
         _typingBlock = -1;
         var text = Rope.Collapse(TextField.TextRope);
         var start = TextField.SelectionLower.Index;
         var end = TextField.SelectionUpper.Index;
         var formatted = NewspaperTypography.ToggleStyle(text, start, end, tag);
         var updated = formatted.Text;
-        if (updated.Length > NewspaperLayout.MaxTextLength) return;
+        if (updated.Length > NewspaperLayout.MaxTextLength)
+            return;
+
         TextField.TextRope = new Rope.Leaf(updated);
         Selected.Text = updated;
-        TextField.CursorPosition = TextField.CursorPosition with { Index = formatted.End };
-        TextField.SelectionStart = TextField.SelectionStart with { Index = formatted.Start };
+        TextField.CursorPosition = TextField.CursorPosition with
+        {
+            Index = formatted.End
+        };
+
+        TextField.SelectionStart = TextField.SelectionStart with
+        {
+            Index = formatted.Start
+        };
+
         TextField.GrabKeyboardFocus();
         Refresh();
         _typingBlock = -1;
@@ -479,7 +586,9 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
 
     private void Refresh()
     {
-        if (_loading || _state == null) return;
+        if (_loading || _state == null)
+            return;
+
         _loading = true;
         NewspaperLayout.ResolvePhotoCaptions(_draft);
         if (!_restoring && _checkpoint != null && !SameDraft(_checkpoint, _draft))
@@ -491,7 +600,9 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
                 _captionNotice = _draft.Blocks[_selectedBlockIndex].Id;
             if (!_typingChange || _typingBlock != _selectedBlockIndex || _timing.RealTime >= _typingUntil)
             {
-                _undo.Add(_checkpoint); if (_undo.Count > 64) _undo.RemoveAt(0);
+                _undo.Add(_checkpoint);
+                if (_undo.Count > 64)
+                    _undo.RemoveAt(0);
             }
             _typingBlock = _typingChange ? _selectedBlockIndex : -1;
             _typingUntil = _timing.RealTime + TimeSpan.FromMilliseconds(750);
@@ -571,7 +682,11 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
         var lastEdition = _loadedEdition?.PublicationId == _draft.PublicationId && _loadedEdition.Number == latest?.Number ? _loadedEdition : null;
         var alreadyPublished = _state.DraftPublished && SameDraft(_state.Draft, _draft) || lastEdition != null && SameDraft(lastEdition, _draft);
         PublishButton.Disabled = _published || _save.Publishing || _save.Pending != null || _save.Conflict || alreadyPublished || !contentValid || !PageView.ContentFits;
-        PublishButton.ToolTip = Loc.GetString(alreadyPublished ? "newspaper-publish-unchanged-tip" : !contentValid ? "newspaper-publish-content-tip" : !PageView.ContentFits ? "newspaper-publish-overflow-tip" : "newspaper-publish-tip");
+        PublishButton.ToolTip = Loc.GetString(
+            alreadyPublished ? "newspaper-publish-unchanged-tip" :
+            !contentValid ? "newspaper-publish-content-tip" :
+            !PageView.ContentFits ? "newspaper-publish-overflow-tip" :
+            "newspaper-publish-tip");
         PrintButton.ToolTip = Loc.GetString(_selectedArchiveId == 0 ? "newspaper-archive-empty" : _state.PaperCount < _printCount ? "newspaper-print-paper-tip" : "newspaper-print-tip");
         CaptionLinkLabel.Visible = (!_layout || !_pageSettings) && (Selected?.CaptionFor != null || Selected != null && Selected.Id == _captionNotice);
         CaptionLinkLabel.Text = Loc.GetString(Selected?.CaptionFor != null ? "newspaper-caption-linked" : "newspaper-caption-unlinked");
@@ -588,7 +703,9 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
     protected override void FrameUpdate(FrameEventArgs args)
     {
         base.FrameUpdate(args);
-        if (_armedReplacement != null && (_timing.RealTime > _armedUntil || _armedReplacement.Disabled || !_armedReplacement.VisibleInTree || _published && _armedReplacement != DeleteArchiveButton))
+        if (_armedReplacement != null &&
+            (_timing.RealTime > _armedUntil || _armedReplacement.Disabled ||
+                !_armedReplacement.VisibleInTree || _published && _armedReplacement != DeleteArchiveButton))
             ClearReplacementConfirmation();
         if (_save.TryTimeout(_timing.RealTime))
         {
@@ -608,18 +725,23 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
                 ? Math.Clamp(Math.Min((PageViewport.Width - 20) / shown.Width, (PageViewport.Height - 20) / shown.Height), 0.1f, 1f)
                 : _zoom / 100f;
         }
+
         if (VisibleInTree && _state != null)
         {
             PollVisibleGallery();
             if (_published && _selectedArchiveId > 0 && _loadedArchiveId != _selectedArchiveId &&
                 (_requestedArchiveId != _selectedArchiveId || _timing.RealTime - _archiveRequestTime > TimeSpan.FromSeconds(2)))
             {
-                _requestedArchiveId = _selectedArchiveId; _archiveRequestTime = _timing.RealTime;
+                _requestedArchiveId = _selectedArchiveId;
+                _archiveRequestTime = _timing.RealTime;
                 OnArchiveRequested?.Invoke(_selectedArchiveId);
             }
-            if (_photos.Poll()) Refresh();
+
+            if (_photos.Poll())
+                Refresh();
             var ids = Displayed.PhotoIdsForPage(_page);
-            if (PhotoBufferToolbar.Visible) ids = ids.Concat(_visibleGalleryPhotos);
+            if (PhotoBufferToolbar.Visible)
+                ids = ids.Concat(_visibleGalleryPhotos);
             if (_photoRequests.TryRequest(ids, _published ? _selectedArchiveId : 0, _timing.RealTime, _photos.IsResolved, out var id))
                 OnImageRequested?.Invoke(_published ? _selectedArchiveId : 0, id);
         }
@@ -628,8 +750,11 @@ public sealed partial class NewspaperDeskWindow : FancyWindow
     public void ReceivePhoto(int photoId, byte[] data, string photoKey = "")
     {
         var keys = VisiblePhotoKeys();
-        if (!keys.TryGetValue(photoId, out var key) || photoKey.Length > 0 && photoKey != key) return;
-        if (_photos.Get(photoId, key, data) != null) Refresh();
+        if (!keys.TryGetValue(photoId, out var key) || photoKey.Length > 0 && photoKey != key)
+            return;
+
+        if (_photos.Get(photoId, key, data) != null)
+            Refresh();
     }
 
     protected override void Dispose(bool disposing)

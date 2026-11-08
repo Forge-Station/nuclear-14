@@ -2,6 +2,7 @@ using Robust.Shared.Serialization;
 using Robust.Shared.Prototypes;
 using System.Linq;
 namespace Content.Shared._Forge.Newspapers;
+
 [Serializable, NetSerializable]
 public enum NewspaperInk : byte { Black, Red, Blue, Green }
 [Serializable, NetSerializable]
@@ -13,8 +14,14 @@ public enum NewspaperPaper : byte { White, Yellowed, Recycled }
 [Flags, Serializable, NetSerializable]
 public enum NewspaperBorders : byte
 {
-    None = 0, Top = 1, Bottom = 2, Left = 4, Right = 8,
-    Horizontal = Top | Bottom, Vertical = Left | Right, All = Horizontal | Vertical,
+    None = 0,
+    Top = 1,
+    Bottom = 2,
+    Left = 4,
+    Right = 8,
+    Horizontal = Top | Bottom,
+    Vertical = Left | Right,
+    All = Horizontal | Vertical,
 }
 /// <summary>A player-editable rectangle in logical page pixels.</summary>
 [Serializable, NetSerializable, DataDefinition]
@@ -64,8 +71,15 @@ public sealed partial class NewspaperEdition
         .Select(PhotoFor).Where(id => id >= 0).Distinct();
     public NewspaperEdition Clone() => new()
     {
-        Name = Name, TemplateName = TemplateName, Width = Width, Height = Height,
-        Pages = Pages, PhotoId = PhotoId, Number = Number, PublicationId = PublicationId, ArchiveId = ArchiveId,
+        Name = Name,
+        TemplateName = TemplateName,
+        Width = Width,
+        Height = Height,
+        Pages = Pages,
+        PhotoId = PhotoId,
+        Number = Number,
+        PublicationId = PublicationId,
+        ArchiveId = ArchiveId,
         Blocks = Blocks.Select(block => block.Clone()).ToList(),
     };
 }
@@ -102,8 +116,10 @@ public static class NewspaperLayout
         clean.PhotoId = -1;
         foreach (var block in clean.Blocks)
         {
-            if (block.Kind == NewspaperBlockKind.Text && !block.IsLabel && block.TextKey == null) block.Text = "";
-            if (block.Kind == NewspaperBlockKind.Photo) block.PhotoId = -1;
+            if (block.Kind == NewspaperBlockKind.Text && !block.IsLabel && block.TextKey == null)
+                block.Text = "";
+            if (block.Kind == NewspaperBlockKind.Photo)
+                block.PhotoId = -1;
         }
         return clean;
     }
@@ -112,8 +128,12 @@ public static class NewspaperLayout
         foreach (var caption in edition.Blocks.Where(b => b.CaptionFor != null))
         {
             var photo = edition.Blocks.FirstOrDefault(b => b.Id == caption.CaptionFor && b.Kind == NewspaperBlockKind.Photo && b.Page == caption.Page);
-            if (photo == null) continue;
-            caption.X = photo.X; caption.Y = photo.Y + photo.Height + 6; caption.Width = photo.Width;
+            if (photo == null)
+                continue;
+
+            caption.X = photo.X;
+            caption.Y = photo.Y + photo.Height + 6;
+            caption.Width = photo.Width;
         }
     }
 
@@ -124,6 +144,7 @@ public static class NewspaperLayout
             edition.Width is < MinPageSize or > MaxPageSize || edition.Height is < MinPageSize or > MaxPageSize ||
             edition.Pages is < 1 or > 2 || edition.Blocks.Count > MaxBlocks)
             return false;
+
         var total = 0;
         var hasText = false;
         foreach (var block in edition.Blocks)
@@ -137,6 +158,7 @@ public static class NewspaperLayout
                 block.PhotoId < -2 || block.Kind != NewspaperBlockKind.Photo && block.PhotoId != -2 ||
                 block.FontSize is < 1 or > 72 || block.Text.Length > MaxTextLength)
                 return false;
+
             total += block.Text.Length;
             hasText |= block.Kind == NewspaperBlockKind.Text && !block.IsLabel && !string.IsNullOrWhiteSpace(block.Text);
         }
@@ -144,6 +166,7 @@ public static class NewspaperLayout
         if (ids.Distinct().Count() != ids.Length || edition.Blocks.Any(b => b.CaptionFor != null &&
             (b.Kind != NewspaperBlockKind.Text || !edition.Blocks.Any(p => p.Kind == NewspaperBlockKind.Photo && p.Id == b.CaptionFor && p.Id.Length > 0 && p.Page == b.Page))))
             return false;
+
         return total <= MaxTotalText && (!requireContent || (!string.IsNullOrWhiteSpace(edition.Name) && hasText));
     }
 }

@@ -53,7 +53,9 @@ public sealed partial class NewspaperCopyWindow : BaseWindow
 
     private void RefreshPage()
     {
-        if (_edition == null) return;
+        if (_edition == null)
+            return;
+
         _photos.Retain(VisiblePhotoKeys());
         PageView.SetContent(_edition, photoResolver: Photo);
     }
@@ -61,7 +63,8 @@ public sealed partial class NewspaperCopyWindow : BaseWindow
     protected override void FrameUpdate(FrameEventArgs args)
     {
         base.FrameUpdate(args);
-        if (_edition != null && _photos.Poll()) RefreshPage();
+        if (_edition != null && _photos.Poll())
+            RefreshPage();
         if (_edition != null && ScrollingContents.Width > 0 && ScrollingContents.Height > 0)
             PageView.PreviewScale = FitPageButton.Pressed
                 ? Math.Clamp(Math.Min(ScrollingContents.Width / _edition.Width, ScrollingContents.Height / _edition.Height), 0.1f, 1f)
@@ -72,7 +75,9 @@ public sealed partial class NewspaperCopyWindow : BaseWindow
 
     public void ReceivePhoto(int id, byte[] data)
     {
-        if (!VisiblePhotoKeys().TryGetValue(id, out var key)) return;
+        if (!VisiblePhotoKeys().TryGetValue(id, out var key))
+            return;
+
         _photos.Get(id, key, data);
         RefreshPage();
     }
@@ -81,10 +86,14 @@ public sealed partial class NewspaperCopyWindow : BaseWindow
     {
         const int edge = 12;
         var mode = DragMode.None;
-        if (position.X < edge) mode |= DragMode.Left;
-        else if (position.X > Width - edge) mode |= DragMode.Right;
-        if (position.Y < edge) mode |= DragMode.Top;
-        else if (position.Y > Height - edge) mode |= DragMode.Bottom;
+        if (position.X < edge)
+            mode |= DragMode.Left;
+        else if (position.X > Width - edge)
+            mode |= DragMode.Right;
+        if (position.Y < edge)
+            mode |= DragMode.Top;
+        else if (position.Y > Height - edge)
+            mode |= DragMode.Bottom;
         return mode == DragMode.None ? DragMode.Move : mode;
     }
 

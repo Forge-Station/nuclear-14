@@ -16,8 +16,10 @@ internal static class PaperSurfaceGenerator
     {
         unchecked
         {
-            value ^= value >> 16; value *= 0x7feb352d;
-            value ^= value >> 15; value *= 0x846ca68b;
+            value ^= value >> 16;
+            value *= 0x7feb352d;
+            value ^= value >> 15;
+            value *= 0x846ca68b;
             return value ^ (value >> 16);
         }
     }
@@ -25,9 +27,12 @@ internal static class PaperSurfaceGenerator
     private static float Noise(uint seed, int x, int y) => Random(seed, unchecked((uint)(x * 73856093) ^ (uint)(y * 19349663)));
     private static float SmoothNoise(uint seed, float x, float y)
     {
-        var ix = (int)MathF.Floor(x); var iy = (int)MathF.Floor(y);
-        var fx = x - ix; var fy = y - iy;
-        fx *= fx * (3 - 2 * fx); fy *= fy * (3 - 2 * fy);
+        var ix = (int)MathF.Floor(x);
+        var iy = (int)MathF.Floor(y);
+        var fx = x - ix;
+        var fy = y - iy;
+        fx *= fx * (3 - 2 * fx);
+        fy *= fy * (3 - 2 * fy);
         var a = Noise(seed, ix, iy) * (1 - fx) + Noise(seed, ix + 1, iy) * fx;
         var b = Noise(seed, ix, iy + 1) * (1 - fx) + Noise(seed, ix + 1, iy + 1) * fx;
         return a * (1 - fy) + b * fy;
@@ -76,60 +81,65 @@ internal static class PaperSurfaceGenerator
                 0.045f + Random(seed, index + 4) * 0.06f);
         }
         for (var y = 0; y < height; y++)
-        for (var x = 0; x < width; x++)
-        {
-            var u = (x + 0.5f) / width; var v = (y + 0.5f) / height;
-            // Viewing the reverse mirrors sheet geometry. Dirt is independent on each face.
-            var physicalU = side == 0 ? u : 1 - u;
-            var edge = Math.Min(Math.Min(u, 1 - u), Math.Min(v, 1 - v));
-            var edgeFactor = Math.Clamp(1 - edge / 0.045f, 0, 1);
-            var grain = (Noise(faceSeed, x, y) - 0.5f) * profile.Grain;
-            var mottling = (SmoothNoise(faceSeed, u * 9, v * 9) - 0.5f) * profile.Discoloration;
-            var stain = edgeFactor * profile.EdgeWear * (0.2f + SmoothNoise(faceSeed, u * 45, v * 45) * 0.8f);
-            foreach (var smudge in smudges)
+            for (var x = 0; x < width; x++)
             {
-                var dx = (u - smudge.X) / smudge.Radius; var dy = (v - smudge.Y) / smudge.Radius;
-                var falloff = Math.Max(0, 1 - (dx * dx + dy * dy));
-                stain += falloff * falloff * smudge.Strength * profile.EdgeWear;
+                var u = (x + 0.5f) / width;
+                var v = (y + 0.5f) / height;
+                // Viewing the reverse mirrors sheet geometry. Dirt is independent on each face.
+                var physicalU = side == 0 ? u : 1 - u;
+                var edge = Math.Min(Math.Min(u, 1 - u), Math.Min(v, 1 - v));
+                var edgeFactor = Math.Clamp(1 - edge / 0.045f, 0, 1);
+                var grain = (Noise(faceSeed, x, y) - 0.5f) * profile.Grain;
+                var mottling = (SmoothNoise(faceSeed, u * 9, v * 9) - 0.5f) * profile.Discoloration;
+                var stain = edgeFactor * profile.EdgeWear * (0.2f + SmoothNoise(faceSeed, u * 45, v * 45) * 0.8f);
+                foreach (var smudge in smudges)
+                {
+                    var dx = (u - smudge.X) / smudge.Radius;
+                    var dy = (v - smudge.Y) / smudge.Radius;
+                    var falloff = Math.Max(0, 1 - (dx * dx + dy * dy));
+                    stain += falloff * falloff * smudge.Strength * profile.EdgeWear;
+                }
+                var tone = wear * (grain + mottling - stain);
+                // Geometry uses the sheet seed on both faces. Keep damage inside the blank outer margin.
+                var roughness = Math.Clamp(profile.EdgeRoughness, 0, 0.012f) * wear;
+                var edgeDistance = Math.Min(
+                    Math.Min(physicalU - roughness * SmoothNoise(seed, 0, v * 65),
+                        1 - physicalU - roughness * SmoothNoise(seed, 15, v * 65)),
+                    Math.Min(v - roughness * SmoothNoise(seed, physicalU * 65, 0),
+                        1 - v - roughness * SmoothNoise(seed, physicalU * 65, 15)));
+                var cornerDistance = Math.Min(Math.Min(physicalU + v, 1 - physicalU + v),
+                    Math.Min(physicalU + 1 - v, 2 - physicalU - v)) - Math.Clamp(profile.CornerWear, 0, 0.035f) * wear;
+                var paperAlpha = wear == 0 ? 1 : Math.Clamp(Math.Min(edgeDistance, cornerDistance) * Math.Min(width, height) + 0.5f, 0, 1);
+                pixels[y * width + x] = new Rgba32(Byte(profile.BaseColor.R + tone), Byte(profile.BaseColor.G + tone), Byte(profile.BaseColor.B + tone), Byte(paperAlpha));
+                var fold = 0f;
+                foreach (var crease in creases)
+                {
+                    var across = crease.Vertical ? physicalU : v;
+                    var along = crease.Vertical ? v : physicalU;
+                    var distance = across - crease.Position - (along - 0.5f) * crease.Slope;
+                    var ridge = Math.Max(0, 1 - Math.Abs(distance) / 0.0035f);
+                    var shadow = Math.Max(0, 1 - Math.Abs(distance - 0.004f) / 0.009f);
+                    fold += (ridge - shadow * 0.6f) * wear * profile.CreaseStrength;
+                }
+                foreach (var wrinkle in wrinkles)
+                {
+                    var dx = physicalU - wrinkle.X;
+                    var dy = v - wrinkle.Y;
+                    var along = dx * wrinkle.Dx + dy * wrinkle.Dy;
+                    if (along < 0 || along > wrinkle.Length)
+                        continue;
+
+                    var distance = dx * -wrinkle.Dy + dy * wrinkle.Dx;
+                    var taper = MathF.Sin(along / wrinkle.Length * MathF.PI);
+                    var ridge = Math.Max(0, 1 - Math.Abs(distance) / 0.002f);
+                    var shadow = Math.Max(0, 1 - Math.Abs(distance - 0.003f) / 0.006f);
+                    fold += (ridge - shadow * 0.5f) * taper * wear * profile.CreaseStrength * 0.7f;
+                }
+                // Cap damage above printed contents; stains and grain live below the ink.
+                var alpha = Math.Clamp(Math.Abs(fold), 0, 0.1f);
+                var ink = fold >= 0 ? (byte)255 : (byte)40;
+                overlay[x, y] = new Rgba32(ink, ink, ink, Byte(alpha * paperAlpha));
             }
-            var tone = wear * (grain + mottling - stain);
-            // Geometry uses the sheet seed on both faces. Keep damage inside the blank outer margin.
-            var roughness = Math.Clamp(profile.EdgeRoughness, 0, 0.012f) * wear;
-            var edgeDistance = Math.Min(
-                Math.Min(physicalU - roughness * SmoothNoise(seed, 0, v * 65),
-                    1 - physicalU - roughness * SmoothNoise(seed, 15, v * 65)),
-                Math.Min(v - roughness * SmoothNoise(seed, physicalU * 65, 0),
-                    1 - v - roughness * SmoothNoise(seed, physicalU * 65, 15)));
-            var cornerDistance = Math.Min(Math.Min(physicalU + v, 1 - physicalU + v),
-                Math.Min(physicalU + 1 - v, 2 - physicalU - v)) - Math.Clamp(profile.CornerWear, 0, 0.035f) * wear;
-            var paperAlpha = wear == 0 ? 1 : Math.Clamp(Math.Min(edgeDistance, cornerDistance) * Math.Min(width, height) + 0.5f, 0, 1);
-            pixels[y * width + x] = new Rgba32(Byte(profile.BaseColor.R + tone), Byte(profile.BaseColor.G + tone), Byte(profile.BaseColor.B + tone), Byte(paperAlpha));
-            var fold = 0f;
-            foreach (var crease in creases)
-            {
-                var across = crease.Vertical ? physicalU : v;
-                var along = crease.Vertical ? v : physicalU;
-                var distance = across - crease.Position - (along - 0.5f) * crease.Slope;
-                var ridge = Math.Max(0, 1 - Math.Abs(distance) / 0.0035f);
-                var shadow = Math.Max(0, 1 - Math.Abs(distance - 0.004f) / 0.009f);
-                fold += (ridge - shadow * 0.6f) * wear * profile.CreaseStrength;
-            }
-            foreach (var wrinkle in wrinkles)
-            {
-                var dx = physicalU - wrinkle.X; var dy = v - wrinkle.Y;
-                var along = dx * wrinkle.Dx + dy * wrinkle.Dy;
-                if (along < 0 || along > wrinkle.Length) continue;
-                var distance = dx * -wrinkle.Dy + dy * wrinkle.Dx;
-                var taper = MathF.Sin(along / wrinkle.Length * MathF.PI);
-                var ridge = Math.Max(0, 1 - Math.Abs(distance) / 0.002f);
-                var shadow = Math.Max(0, 1 - Math.Abs(distance - 0.003f) / 0.006f);
-                fold += (ridge - shadow * 0.5f) * taper * wear * profile.CreaseStrength * 0.7f;
-            }
-            // Cap damage above printed contents; stains and grain live below the ink.
-            var alpha = Math.Clamp(Math.Abs(fold), 0, 0.1f);
-            var ink = fold >= 0 ? (byte)255 : (byte)40;
-            overlay[x, y] = new Rgba32(ink, ink, ink, Byte(alpha * paperAlpha));
-        }
         // Recycled pulp is part of the material, not wear. Small raster marks avoid
         // testing thousands of fibers against every pixel and stay beneath the ink.
         var fibers = Math.Clamp(float.IsFinite(appearance.Fibers) ? appearance.Fibers : 0, 0, 1);
@@ -146,7 +156,8 @@ internal static class PaperSurfaceGenerator
             var strength = Math.Clamp(profile.FiberStrength, 0, 0.2f) * fibers *
                 (0.35f + Random(faceSeed, index + 4) * 0.65f);
             // Both pale fibers and darker flecks occur in unbleached pulp.
-            if (Random(faceSeed, index + 5) < 0.25f) strength *= -0.7f;
+            if (Random(faceSeed, index + 5) < 0.25f)
+                strength *= -0.7f;
             for (var step = 0; step <= (int)length; step++)
                 Tint(pixels, width, height, (int)(x + MathF.Cos(angle) * step),
                     (int)(y + MathF.Sin(angle) * step), strength * MathF.Sin((step + 1) / (length + 2) * MathF.PI));
@@ -160,16 +171,19 @@ internal static class PaperSurfaceGenerator
             var strength = Math.Clamp(profile.ImpurityStrength, 0, 0.25f) * impurities *
                 (0.3f + Random(faceSeed, index + 2) * 0.7f);
             Tint(pixels, width, height, x, y, strength);
-            if (Random(faceSeed, index + 3) > 0.7f) Tint(pixels, width, height, x + 1, y, strength * 0.5f);
+            if (Random(faceSeed, index + 3) > 0.7f)
+                Tint(pixels, width, height, x + 1, y, strength * 0.5f);
         }
         for (var y = 0; y < height; y++)
-        for (var x = 0; x < width; x++)
-            background[x, y] = pixels[y * width + x];
+            for (var x = 0; x < width; x++)
+                background[x, y] = pixels[y * width + x];
         return (background, overlay);
     }
     private static void Tint(Rgba32[] pixels, int width, int height, int x, int y, float strength)
     {
-        if (x < 0 || y < 0 || x >= width || y >= height) return;
+        if (x < 0 || y < 0 || x >= width || y >= height)
+            return;
+
         var pixel = pixels[y * width + x];
         pixels[y * width + x] = new Rgba32(Byte(pixel.R / 255f - strength),
             Byte(pixel.G / 255f - strength * 0.95f), Byte(pixel.B / 255f - strength * 0.85f), pixel.A);

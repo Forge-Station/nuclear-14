@@ -36,7 +36,8 @@ public sealed partial class NewspaperDeskWindow
                 return;
             }
             _closeAfterSave = true;
-            if (_save.Pending == null || !SameDraft(_save.Pending, _draft)) SaveIfChanged();
+            if (_save.Pending == null || !SameDraft(_save.Pending, _draft))
+                SaveIfChanged();
             Refresh();
             return;
         }
@@ -45,11 +46,14 @@ public sealed partial class NewspaperDeskWindow
 
     private void RefreshFeedback(bool valid, bool dirty, bool alreadyPublished)
     {
-        if (_state == null) return;
+        if (_state == null)
+            return;
+
         CurrentTemplateLabel.Visible = !_published;
         CurrentTemplateLabel.SetMessage(Loc.GetString("newspaper-current-template", ("name",
             string.IsNullOrEmpty(_draft.TemplateName) ? Loc.GetString("newspaper-custom-layout") : _draft.TemplateName)));
-        if (_armedReplacement != BlankButton) BlankButton.Text = Loc.GetString(_layout ? "newspaper-template-blank" : "newspaper-clear-materials");
+        if (_armedReplacement != BlankButton)
+            BlankButton.Text = Loc.GetString(_layout ? "newspaper-template-blank" : "newspaper-clear-materials");
         AutoSaveHintLabel.Visible = !_published && dirty;
         DiscardCloseButton.Visible = _closeWarning && dirty && !_published;
         ApplyNameButton.Disabled = _save.Pending != null || _save.Conflict || !valid || !NameAvailable(NameField.Text);
@@ -57,38 +61,66 @@ public sealed partial class NewspaperDeskWindow
         NewPublicationButton.Disabled = _save.Pending != null || _save.Conflict || _published || _state!.Publications.Length >= NewspaperLayout.MaxPublications;
 
         ReloadDraftButton.Visible = _save.Conflict && !_published;
-        string? reason = null;
-        if (_published)
-        {
-            if (_selectedArchiveId > 0 && _state.PaperCount < _printCount) reason = "newspaper-print-paper-tip";
-        }
-        else if (_closeWarning && !valid) reason = "newspaper-close-invalid";
-        else if (_save.Failed) reason = "newspaper-save-failed";
-        else if (_closeAfterSave) reason = "newspaper-close-saving";
-        else if (PublicationNameToolbar.Visible && !NameAvailable(NameField.Text)) reason = "newspaper-name-error";
-        else if (NewPublicationToolbar.Visible && !NewNameAvailable(NewPublicationName.Text)) reason = "newspaper-name-error";
-        else if (_draft.Name.Trim().Length > 80) reason = "newspaper-name-error";
-        else if (_state.Publications.Any(p => p.Id != _draft.PublicationId && string.Equals(p.Name, _draft.Name.Trim(), StringComparison.OrdinalIgnoreCase))) reason = "newspaper-name-error";
-        else if (!valid) reason = "newspaper-layout-error";
-        else if (string.IsNullOrWhiteSpace(_draft.Name)) reason = "newspaper-name-required";
-        else if (!_draft.Blocks.Any(b => b.Kind == NewspaperBlockKind.Text && !b.IsLabel && !string.IsNullOrWhiteSpace(b.Text))) reason = "newspaper-material-required";
-        else if (_save.Publishing) reason = "newspaper-publishing";
-        else if (alreadyPublished) reason = "newspaper-publish-unchanged-tip";
-        else if (_recoveredDraft) reason = "newspaper-draft-restored";
-        reason = _save.Error ?? reason;
+        var reason = GetActionHint(valid, alreadyPublished);
         ActionHintLabel.Visible = reason != null;
         ActionHintLabel.SetMessage(reason == null ? "" : Loc.GetString(reason));
-        if (_save.Failed) SaveStatusLabel.Text = Loc.GetString("newspaper-save-failed-short");
+        if (_save.Failed)
+            SaveStatusLabel.Text = Loc.GetString("newspaper-save-failed-short");
+    }
+
+    private string? GetActionHint(bool valid, bool alreadyPublished)
+    {
+        if (_state == null)
+            return null;
+
+        return true switch
+        {
+            _ when _save.Error != null => _save.Error,
+
+            _ when _published && _selectedArchiveId > 0 && _state.PaperCount < _printCount =>
+                "newspaper-print-paper-tip",
+            _ when _published => null,
+
+            _ when _closeWarning && !valid => "newspaper-close-invalid",
+            _ when _save.Failed => "newspaper-save-failed",
+            _ when _closeAfterSave => "newspaper-close-saving",
+
+            _ when PublicationNameToolbar.Visible && !NameAvailable(NameField.Text) =>
+                "newspaper-name-error",
+            _ when NewPublicationToolbar.Visible && !NewNameAvailable(NewPublicationName.Text) =>
+                "newspaper-name-error",
+            _ when _draft.Name.Trim().Length > 80 => "newspaper-name-error",
+            _ when _state.Publications.Any(p => p.Id != _draft.PublicationId &&
+                string.Equals(p.Name, _draft.Name.Trim(), StringComparison.OrdinalIgnoreCase)) =>
+                "newspaper-name-error",
+
+            _ when !valid => "newspaper-layout-error",
+            _ when string.IsNullOrWhiteSpace(_draft.Name) => "newspaper-name-required",
+            _ when !_draft.Blocks.Any(b => b.Kind == NewspaperBlockKind.Text &&
+                !b.IsLabel && !string.IsNullOrWhiteSpace(b.Text)) =>
+                "newspaper-material-required",
+
+            _ when _save.Publishing => "newspaper-publishing",
+            _ when alreadyPublished => "newspaper-publish-unchanged-tip",
+            _ when _recoveredDraft => "newspaper-draft-restored",
+            _ => null,
+        };
     }
 
     private void RefreshEmphasis()
     {
-        if (Selected?.Kind != NewspaperBlockKind.Text) return;
+        if (Selected?.Kind != NewspaperBlockKind.Text)
+            return;
+
         var text = Rope.Collapse(TextField.TextRope);
         var start = TextField.SelectionLower.Index;
         var end = TextField.SelectionUpper.Index;
-        if (text == _emphasisText && start == _emphasisStart && end == _emphasisEnd) return;
-        _emphasisText = text; _emphasisStart = start; _emphasisEnd = end;
+        if (text == _emphasisText && start == _emphasisStart && end == _emphasisEnd)
+            return;
+
+        _emphasisText = text;
+        _emphasisStart = start;
+        _emphasisEnd = end;
         var styles = NewspaperTypography.SelectedStyles(text, start, end);
         BoldButton.Pressed = styles.Bold;
         ItalicButton.Pressed = styles.Italic;

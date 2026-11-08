@@ -16,6 +16,7 @@ internal static class NewspaperTypography
     {
         if (text.Length == 0)
             return (text, maxSize, true);
+
         var font = createFont(maxSize);
         var lines = Wrap(text, font, Math.Max(1, width - 4));
         var textHeight = font.GetHeight(1) + Math.Max(0, lines.Length - 1) * font.GetLineHeight(1);
@@ -77,16 +78,41 @@ internal static class NewspaperTypography
     internal static List<StyledCharacter> ParseStyles(string text, int start = 0, int end = int.MaxValue)
     {
         var result = new List<StyledCharacter>();
-        var bold = 0; var italic = 0;
+        var bold = 0;
+        var italic = 0;
         for (var index = 0; index < text.Length;)
         {
             var rest = text.AsSpan(index);
-            if (rest.StartsWith("[b]")) { bold++; index += 3; continue; }
-            if (rest.StartsWith("[/b]")) { bold = Math.Max(0, bold - 1); index += 4; continue; }
-            if (rest.StartsWith("[i]")) { italic++; index += 3; continue; }
-            if (rest.StartsWith("[/i]")) { italic = Math.Max(0, italic - 1); index += 4; continue; }
+            if (rest.StartsWith("[b]"))
+            {
+                bold++;
+                index += 3;
+                continue;
+            }
+
+            if (rest.StartsWith("[/b]"))
+            {
+                bold = Math.Max(0, bold - 1);
+                index += 4;
+                continue;
+            }
+
+            if (rest.StartsWith("[i]"))
+            {
+                italic++;
+                index += 3;
+                continue;
+            }
+
+            if (rest.StartsWith("[/i]"))
+            {
+                italic = Math.Max(0, italic - 1);
+                index += 4;
+                continue;
+            }
             var rune = Rune.TryGetRuneAt(text, index, out var parsed) ? parsed : Rune.ReplacementChar;
-            if (index >= start && index < end) result.Add(new StyledCharacter(rune, bold > 0, italic > 0));
+            if (index >= start && index < end)
+                result.Add(new StyledCharacter(rune, bold > 0, italic > 0));
             index += rune.Utf16SequenceLength;
         }
         return result;
@@ -100,11 +126,17 @@ internal static class NewspaperTypography
 
     internal static (string Text, int Start, int End) ToggleStyle(string text, int start, int end, string tag)
     {
-        if (start == end) { start = 0; end = text.Length; }
-        var open = $"[{tag}]"; var close = $"[/{tag}]";
+        if (start == end)
+        {
+            start = 0;
+            end = text.Length;
+        }
+        var open = $"[{tag}]";
+        var close = $"[/{tag}]";
         if (start >= open.Length && end + close.Length <= text.Length &&
             text.AsSpan(0, start).EndsWith(open) && text.AsSpan(end).StartsWith(close))
             return (text[..(start - open.Length)] + text[start..end] + text[(end + close.Length)..], start - open.Length, end - open.Length);
+
         var selection = text[start..end];
         if (selection.StartsWith(open) && selection.EndsWith(close) && selection.Length >= open.Length + close.Length)
         {
@@ -118,38 +150,68 @@ internal static class NewspaperTypography
     {
         var input = markup ? ParseStyles(text) : text.EnumerateRunes().Select(r => new StyledCharacter(r, false, false)).ToList();
         var lines = new List<List<StyledCharacter>>();
-        var current = new List<StyledCharacter>(); var word = new List<StyledCharacter>();
+        var current = new List<StyledCharacter>();
+        var word = new List<StyledCharacter>();
         float Advance(StyledCharacter c) => fontFor(c.Bold, c.Italic).GetCharMetrics(c.Rune, 1)?.Advance ?? 0;
         float Measure(IEnumerable<StyledCharacter> chars) => chars.Sum(Advance);
         var maxWidth = Math.Max(1, width - 4);
         var currentWidth = 0f;
         var separator = new StyledCharacter(new Rune(' '), false, false);
-        void EndLine() { lines.Add(current); current = new List<StyledCharacter>(); currentWidth = 0; }
+        void EndLine()
+        {
+            lines.Add(current);
+            current = new List<StyledCharacter>();
+            currentWidth = 0;
+        }
         void EndWord()
         {
-            if (word.Count == 0) return;
+            if (word.Count == 0)
+                return;
+
             var space = separator;
             var wordWidth = Measure(word);
             var spaceWidth = Advance(space);
             if (current.Count > 0 && currentWidth + spaceWidth + wordWidth <= maxWidth)
-            { current.Add(space); current.AddRange(word); currentWidth += spaceWidth + wordWidth; word.Clear(); return; }
-            if (current.Count > 0) EndLine();
+            {
+                current.Add(space);
+                current.AddRange(word);
+                currentWidth += spaceWidth + wordWidth;
+                word.Clear();
+                return;
+            }
+
+            if (current.Count > 0)
+                EndLine();
             foreach (var character in word)
             {
                 var advance = Advance(character);
-                if (current.Count > 0 && currentWidth + advance > maxWidth) EndLine();
-                current.Add(character); currentWidth += advance;
+                if (current.Count > 0 && currentWidth + advance > maxWidth)
+                    EndLine();
+                current.Add(character);
+                currentWidth += advance;
             }
             word.Clear();
         }
         foreach (var character in input)
         {
-            if (character.Rune.Value == '\r') continue;
-            if (character.Rune.Value == '\n') { EndWord(); EndLine(); }
-            else if (character.Rune.Value == ' ') { EndWord(); separator = character; }
-            else word.Add(character);
+            if (character.Rune.Value == '\r')
+                continue;
+
+            if (character.Rune.Value == '\n')
+            {
+                EndWord();
+                EndLine();
+            }
+            else if (character.Rune.Value == ' ')
+            {
+                EndWord();
+                separator = character;
+            }
+            else
+                word.Add(character);
         }
-        EndWord(); EndLine();
+        EndWord();
+        EndLine();
         var output = new List<StyledLine>();
         foreach (var line in lines)
         {

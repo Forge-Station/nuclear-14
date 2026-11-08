@@ -17,7 +17,9 @@ public sealed partial class PaperWindow
     protected override void FrameUpdate(FrameEventArgs args)
     {
         base.FrameUpdate(args);
-        if (_surfaceOwner is not {} owner) return;
+        if (_surfaceOwner is not { } owner)
+            return;
+
         if (IoCManager.Resolve<IEntityManager>().TryGetComponent<PaperSurfaceComponent>(owner, out var surface))
         {
             if (_surfaceStyle == null)
@@ -41,7 +43,8 @@ public sealed partial class PaperWindow
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing) _surfaceStyle?.Dispose();
+        if (disposing)
+            _surfaceStyle?.Dispose();
         base.Dispose(disposing);
     }
 

@@ -14,7 +14,8 @@ internal sealed class NewspaperPhotoRequest
     {
         if (PhotoId != photoId || _edition != edition)
         {
-            _nextAttempt = TimeSpan.Zero; _attempts = 0;
+            _nextAttempt = TimeSpan.Zero;
+            _attempts = 0;
         }
         PhotoId = photoId;
         _edition = edition;
@@ -25,6 +26,7 @@ internal sealed class NewspaperPhotoRequest
         edition = _edition;
         if (PhotoId < 0 || received || _attempts >= MaxAttempts || now < _nextAttempt)
             return false;
+
         _attempts++;
         _nextAttempt = now + RetryInterval;
         return true;

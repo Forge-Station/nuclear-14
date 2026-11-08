@@ -22,18 +22,39 @@ public sealed class NewspaperValidationTests
         Assert.That(NewspaperLayout.IsValid(edition), Is.True);
         switch (invalidCase)
         {
-            case 0: edition.Width = NewspaperLayout.MinPageSize - 1; break;
-            case 1: edition.Height = NewspaperLayout.MaxPageSize + 1; break;
-            case 2: edition.Pages = 3; break;
+            case 0:
+                edition.Width = NewspaperLayout.MinPageSize - 1;
+                break;
+
+            case 1:
+                edition.Height = NewspaperLayout.MaxPageSize + 1;
+                break;
+
+            case 2:
+                edition.Pages = 3;
+                break;
+
             case 3:
                 edition.Blocks = Enumerable.Range(0, NewspaperLayout.MaxBlocks + 1).Select(_ => new NewspaperBlock()).ToList();
                 break;
-            case 4: edition.Blocks[0].X = int.MaxValue; break;
-            case 5: edition.Blocks[0].Font = (NewspaperFont)255; break;
-            case 6: edition.Blocks[0].Text = new string('x', NewspaperLayout.MaxTextLength + 1); break;
+
+            case 4:
+                edition.Blocks[0].X = int.MaxValue;
+                break;
+
+            case 5:
+                edition.Blocks[0].Font = (NewspaperFont)255;
+                break;
+
+            case 6:
+                edition.Blocks[0].Text = new string('x', NewspaperLayout.MaxTextLength + 1);
+                break;
+
             case 7:
                 edition.Blocks = Enumerable.Range(0, 5).Select(_ => new NewspaperBlock
-                    { Text = new string('x', NewspaperLayout.MaxTotalText / 5 + 1) }).ToList();
+                {
+                    Text = new string('x', NewspaperLayout.MaxTotalText / 5 + 1)
+                }).ToList();
                 break;
         }
         Assert.That(NewspaperLayout.IsValid(edition), Is.False);
@@ -44,7 +65,9 @@ public sealed class NewspaperValidationTests
     {
         var draft = new NewspaperEdition
         {
-            Name = "News", PublicationId = 1, PhotoId = 7,
+            Name = "News",
+            PublicationId = 1,
+            PhotoId = 7,
             Blocks = [new NewspaperBlock { Text = "Original" }, new NewspaperBlock { Kind = NewspaperBlockKind.Photo }],
         };
         var published = draft.Clone();
