@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Numerics;
 using Content.Shared._Forge.Fire;
+using Content.Shared._Forge.Geometry;
 using Content.Server.Chemistry.TileReactions;
 using Content.Server.Chemistry.Containers.EntitySystems;
 using Content.Shared.Doors.Components;
@@ -675,44 +676,21 @@ public sealed class SurfaceFireSystem : EntitySystem
         if (origin.GridUid != target.GridUid)
             return false;
 
-        var x = origin.GridIndices.X;
-        var y = origin.GridIndices.Y;
-        var endX = target.GridIndices.X;
-        var endY = target.GridIndices.Y;
-        var dx = Math.Abs(endX - x);
-        var sx = x < endX ? 1 : -1;
-        var dy = -Math.Abs(endY - y);
-        var sy = y < endY ? 1 : -1;
-        var error = dx + dy;
-
-        while (x != endX || y != endY)
+        return GridLineTraversal.Visit(origin.GridIndices, target.GridIndices, indices =>
         {
-            var twiceError = 2 * error;
-            if (twiceError >= dy)
-            {
-                error += dy;
-                x += sx;
-            }
-
-            if (twiceError <= dx)
-            {
-                error += dx;
-                y += sy;
-            }
-
             // TrySpawnFire validates the destination itself. Here only intermediate blockers matter.
-            if (x == endX && y == endY)
+            if (indices == target.GridIndices)
                 return true;
 
-            if (!_map.TryGetTileRef(origin.GridUid, grid, new Vector2i(x, y), out var crossed) ||
+            if (!_map.TryGetTileRef(origin.GridUid, grid, indices, out var crossed) ||
                 crossed.Tile.IsEmpty ||
                 TileBlocksFire(crossed))
             {
                 return false;
             }
-        }
 
-        return true;
+            return true;
+        });
     }
 
 }

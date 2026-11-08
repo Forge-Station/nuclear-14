@@ -1,3 +1,4 @@
+using Content.Shared._Forge.Geometry;
 using Content.Shared.Maps;
 using Content.Shared.Projectiles;
 using Robust.Shared.Map;
@@ -91,34 +92,11 @@ public sealed class SurfaceFireTrailSystem : EntitySystem
         if (!TryComp<MapGridComponent>(current.GridUid, out var grid))
             return;
 
-        var start = trail.Comp.LastTile;
-        var end = current.GridIndices;
-        var x = start.X;
-        var y = start.Y;
-        var dx = Math.Abs(end.X - start.X);
-        var sx = start.X < end.X ? 1 : -1;
-        var dy = -Math.Abs(end.Y - start.Y);
-        var sy = start.Y < end.Y ? 1 : -1;
-        var error = dx + dy;
-
-        // Bresenham traversal prevents fast projectiles from leaving gaps in the flame trail.
-        while (x != end.X || y != end.Y)
+        // Visit every crossed cell so a fast projectile cannot leave gaps in the trail.
+        GridLineTraversal.Visit(trail.Comp.LastTile, current.GridIndices, indices =>
         {
-            var twiceError = 2 * error;
-            if (twiceError >= dy)
-            {
-                error += dy;
-                x += sx;
-            }
-
-            if (twiceError <= dx)
-            {
-                error += dx;
-                y += sy;
-            }
-
-            if (!_map.TryGetTileRef(current.GridUid, grid, new Vector2i(x, y), out var crossed) || crossed.Tile.IsEmpty)
-                break;
+            if (!_map.TryGetTileRef(current.GridUid, grid, indices, out var crossed) || crossed.Tile.IsEmpty)
+                return false;
 
             if (trail.Comp.RemainingTilesToSkip > 0)
             {
@@ -126,28 +104,30 @@ public sealed class SurfaceFireTrailSystem : EntitySystem
                 if (_surfaceFire.TileBlocksFire(crossed))
                 {
                     QueueDel(trail.Owner);
-                    break;
+                    return false;
                 }
 
-                continue;
+                return true;
             }
 
             if (trail.Comp.MaxTiles > 0 && trail.Comp.PaintedTiles >= trail.Comp.MaxTiles)
             {
                 QueueDel(trail.Owner);
-                break;
+                return false;
             }
 
             SpawnTrailTile(crossed, trail.Comp, source, trail.Owner);
             trail.Comp.PaintedTiles++;
             if (_surfaceFire.TileBlocksFire(crossed))
-                break;
+                return false;
             if (trail.Comp.MaxTiles > 0 && trail.Comp.PaintedTiles >= trail.Comp.MaxTiles)
             {
                 QueueDel(trail.Owner);
-                break;
+                return false;
             }
-        }
+
+            return true;
+        });
 
         trail.Comp.LastTile = current.GridIndices;
     }
