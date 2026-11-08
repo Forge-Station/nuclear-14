@@ -1,0 +1,11 @@
+- type: entity
+  parent: N14GrandfatherClock
+  id: N14RingingClock
+  name: grandfather clock with chimes
+  description: An old pre-war clock that chimes every four hours.
+  components:
+  - type: TriggerOnWorldTime
+    minutes: [0, 240, 480, 720, 960, 1200]
+  - type: EmitSoundOnTrigger
+    sound:
+      path: /Audio/Effects/church_bell1.ogg
