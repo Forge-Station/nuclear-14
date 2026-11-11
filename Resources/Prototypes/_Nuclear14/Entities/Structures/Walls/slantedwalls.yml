@@ -111,7 +111,7 @@
         acts: [ "Destruction" ]
 
 - type: entity
-  parent: N14BaseWallSlanted
+  parent: [ N14BaseWallSlanted, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14BaseWallSlantedWood
   abstract: true
   components:

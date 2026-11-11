@@ -104,7 +104,7 @@
         - WallLayer
 
 - type: entity
-  parent: N14StorageTankWide
+  parent: [ N14StorageTankWide, ForgeBaseFlammableFuelContainer ] # Forge-Change: surface fire integration
   id: N14StorageTankWideFullFuel
   suffix: Full
   components:
@@ -139,7 +139,7 @@
       
 - type: entity
   id: N14StorageTankFullFuel
-  parent: N14StorageTank
+  parent: [ N14StorageTank, ForgeBaseFlammableFuelContainer ] # Forge-Change: surface fire integration
   suffix: Full
   components:
   - type: SolutionContainerManager
@@ -172,7 +172,7 @@
       
 - type: entity
   id: N14StorageTankHugeFullFuel
-  parent: N14StorageTankHuge
+  parent: [ N14StorageTankHuge, ForgeBaseFlammableFuelContainer ] # Forge-Change: surface fire integration
   suffix: Full
   components:
   - type: SolutionContainerManager
@@ -204,7 +204,7 @@
         - WallLayer
       
 - type: entity
-  parent: N14StorageTankVat
+  parent: [ N14StorageTankVat, ForgeBaseFlammableFuelContainer ] # Forge-Change: surface fire integration
   id: N14StorageTankVatFullFuel
   suffix: Full, fuel
   components:

@@ -41,7 +41,7 @@
     resistance: 10
     
 - type: entity
-  parent: N14BaseWallTall
+  parent: [ N14BaseWallTall, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14BaseWallTallWood
   abstract: true
   components:
