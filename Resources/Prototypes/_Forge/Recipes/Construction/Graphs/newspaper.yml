@@ -1,0 +1,20 @@
+- type: constructionGraph
+  id: N14NewspaperDeskGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: complete
+      completed:
+      - !type:SnapToGrid {}
+      conditions:
+      - !type:EntityAnchored {}
+      steps:
+      - material: WoodPlank
+        amount: 2
+        doAfter: 2
+      - material: Steel
+        amount: 1
+        doAfter: 2
+  - node: complete
+    entity: N14NewspaperDesk
