@@ -1,0 +1,16 @@
+# Faction armor lathe recipes: Legion - hands
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingHandsGlovesCenturion
+  result: N14ClothingHandsGlovesCenturion
+  category: N14ClothingHands
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 1000
+    Leather: 600
+    Cloth: 400
+    Thread: 200

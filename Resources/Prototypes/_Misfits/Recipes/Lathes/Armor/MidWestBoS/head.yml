@@ -1,0 +1,120 @@
+# Faction armor lathe recipes: MidWestBoS - head
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatBanganeBoS
+  result: N14ClothingHeadHatBanganeBoS
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 200
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatBoSInquisitorBlackHat
+  result: N14ClothingHeadHatBoSInquisitorBlackHat
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 200
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatBoSInquisitorCap
+  result: N14ClothingHeadHatBoSInquisitorCap
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 200
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatBoSInquisitorHat
+  result: N14ClothingHeadHatBoSInquisitorHat
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 200
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatBrotherhoodFieldCap
+  result: N14ClothingHeadHatBrotherhoodFieldCap
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 200
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingHeadHatBrotherhoodMidwestHelmet
+  result: N14ClothingHeadHatBrotherhoodMidwestHelmet
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 700
+    N14Iron: 300
+    Leather: 200
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingHeadHatBoSInquisitorBattleHelmet
+  result: N14ClothingHeadHatBoSInquisitorBattleHelmet
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 800
+    N14Iron: 400
+    Leather: 300
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingHeadHatBoSInquisitorBattleHelmetHood
+  result: N14ClothingHeadHatBoSInquisitorBattleHelmetHood
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 800
+    N14Iron: 400
+    Leather: 300
+    Cloth: 300
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingHeadHatBrotherhoodMidwestHelmetVeteran
+  result: N14ClothingHeadHatBrotherhoodMidwestHelmetVeteran
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 1000
+    N14Iron: 500
+    Circuitry: 300
+    Leather: 200
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingHeadHatBrotherhoodMidwestHelmetRecon
+  result: N14ClothingHeadHatBrotherhoodMidwestHelmetRecon
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 1000
+    N14Iron: 500
+    Circuitry: 400

@@ -263,6 +263,7 @@ reagent-desc-antiseptic = Чистящий раствор, сделанный и
 materials-gunpowder = порох
 materials-lead = свинец
 materials-lead-scrap = лом свинца
+materials-circuitry = электронная схема
 materials-raw-lead = необработанный свинец
 materials-aluminum = алюминий
 materials-raw-N14aluminum = необработанный алюминий
