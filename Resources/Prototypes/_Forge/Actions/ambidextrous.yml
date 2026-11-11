@@ -1,0 +1,13 @@
+- type: entity
+  id: ActionN14Ambidextrous
+  name: action-name-n14-ambidextrous
+  description: action-description-n14-ambidextrous
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: InstantAction
+    toggled: true
+    icon:
+      sprite: Objects/Weapons/Guns/Revolvers/python.rsi
+      state: icon
+    useDelay: 1
+    event: !type:N14AmbidextrousActionEvent

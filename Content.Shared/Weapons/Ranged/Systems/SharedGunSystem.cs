@@ -23,6 +23,7 @@ using Content.Shared.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
+using Content.Shared._Forge.Abilities;
 using Content.Shared.Whitelist;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
@@ -147,7 +148,47 @@ public abstract partial class SharedGunSystem : EntitySystem
 
         gun.ShootCoordinates = GetCoordinates(msg.Coordinates);
         gun.Target = GetEntity(msg.Target);
+
+        var pick = new N14PickDualGunEvent(user.Value, ent);
+        RaiseLocalEvent(user.Value, ref pick);
+
+        // Forge: with two allowed guns, shots alternate. This one comes from the other hand.
+        if (pick.AlternateGun is { } alternate &&
+            alternate != ent &&
+            TryComp<GunComponent>(alternate, out var alternateGun))
+        {
+            alternateGun.ShotCounter = 0;
+            if (alternateGun.FireRateModified <= 0f)
+                alternateGun.FireRateModified = alternateGun.FireRate;
+
+            AttemptShoot(user.Value, alternate, alternateGun, gun.ShootCoordinates.Value);
+            PaceGun(ent, gun);
+            return;
+        }
+
+        // Forge: keep the sequence going while the button is held. Otherwise a semi-auto
+        // pistol locks after one bullet until the hand is swapped.
+        if (pick.DualWielding)
+            gun.ShotCounter = 0;
+
         AttemptShoot(user.Value, ent, gun);
+    }
+
+    /// <summary>
+    ///     Forge: hold the active gun's cooldown so the client waits one interval
+    ///     before asking for the next alternating shot.
+    /// </summary>
+    private void PaceGun(EntityUid uid, GunComponent gun)
+    {
+        var rate = gun.FireRateModified > 0f ? gun.FireRateModified : gun.FireRate;
+        if (rate <= 0f)
+            return;
+
+        var next = Timing.CurTime + TimeSpan.FromSeconds(1f / rate);
+        if (gun.NextFire < next)
+            gun.NextFire = next;
+
+        Dirty(uid, gun);
     }
 
     private void OnStopShootRequest(RequestStopShootEvent ev, EntitySessionEventArgs args)

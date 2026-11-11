@@ -1,0 +1,26 @@
+# Two extra pockets appended by the Scavenger trait (normal pocket texture).
+- type: inventoryTemplate
+  id: human_extra_pockets
+  slots:
+    - name: extrapocket1
+      slotTexture: pocket
+      fullTextureName: template_small
+      slotFlags: POCKET
+      slotGroup: MainHotbar
+      stripTime: 3
+      uiWindowPos: 3,3
+      strippingWindowPos: 3,4
+      dependsOn: jumpsuit
+      displayName: Pocket 3
+      stripHidden: true
+    - name: extrapocket2
+      slotTexture: pocket
+      fullTextureName: template_small
+      slotFlags: POCKET
+      slotGroup: MainHotbar
+      stripTime: 3
+      uiWindowPos: 3,2
+      strippingWindowPos: 3,5
+      dependsOn: jumpsuit
+      displayName: Pocket 4
+      stripHidden: true

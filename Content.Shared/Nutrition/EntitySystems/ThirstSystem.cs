@@ -1,6 +1,7 @@
 using Content.Shared.Alert;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
+using Content.Shared._Forge.Nutrition;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Rejuvenate;
 using Content.Shared.StatusIcon;
@@ -221,7 +222,11 @@ public sealed class ThirstSystem : EntitySystem
 
             thirst.NextUpdateTime += thirst.UpdateRate;
 
-            ModifyThirst(uid, thirst, -thirst.ActualDecayRate);
+            var thirstDecay = thirst.ActualDecayRate;
+            if (TryComp<N14ConsumptionModifierComponent>(uid, out var consumptionModifier))
+                thirstDecay *= consumptionModifier.ThirstMultiplier;
+
+            ModifyThirst(uid, thirst, -thirstDecay);
             var calculatedThirstThreshold = GetThirstThreshold(thirst, thirst.CurrentThirst);
 
             if (calculatedThirstThreshold == thirst.CurrentThirstThreshold)

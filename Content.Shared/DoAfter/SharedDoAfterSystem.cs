@@ -3,7 +3,12 @@ using System.Threading.Tasks;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Damage;
 using Content.Shared.Hands.Components;
+using Content.Shared._Forge.DoAfter;
+using Content.Shared.Chemistry.Components;
+using Content.Shared.Medical;
 using Content.Shared.Mobs;
+using Content.Shared.Prying.Components;
+using Content.Shared.Tools.Components;
 using Content.Shared.Tag;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
@@ -198,6 +203,32 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
             Log.Error($"Attempting to start a doAfter with invalid user: {ToPrettyString(args.User)}.");
             id = null;
             return false;
+        }
+
+        // Forge-Change: tool/medical DoAfter speed (2 = twice as fast, 0.5 = twice as slow).
+        if (args.MultiplyDelay
+            && TryComp<DoAfterSpeedModifierComponent>(args.User, out var doAfterSpeed))
+        {
+            if (args.Used is { } used)
+            {
+                var isTool = HasComp<ToolComponent>(used) ||
+                             HasComp<PryingComponent>(used) ||
+                             HasComp<WelderComponent>(used);
+
+                if (isTool && doAfterSpeed.ToolSpeed > 0f)
+                    args.Delay /= doAfterSpeed.ToolSpeed;
+                else if (doAfterSpeed.MedicalSpeed > 0f &&
+                         (HasComp<DefibrillatorComponent>(used) ||
+                          HasComp<InjectorComponent>(used) ||
+                          _tag.HasTag(used, "Brutepack") ||
+                          _tag.HasTag(used, "Ointment") ||
+                          _tag.HasTag(used, "Bloodpack") ||
+                          _tag.HasTag(used, "Gauze")))
+                    args.Delay /= doAfterSpeed.MedicalSpeed;
+            }
+            // Bare-handed tool use (e.g. hand as a crowbar) has no Used item.
+            else if (doAfterSpeed.ToolSpeed > 0f && HasComp<ToolComponent>(args.User))
+                args.Delay /= doAfterSpeed.ToolSpeed;
         }
 
         // Duplicate blocking & cancellation.
