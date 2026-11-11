@@ -1,0 +1,81 @@
+<controls:FancyWindow xmlns="https://spacestation14.io"
+                     xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                     xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+                     MinSize="380 320"
+                     Title="{Loc 'quest-board-title'}">
+    <BoxContainer Orientation="Vertical" Margin="12" SeparationOverride="10">
+
+        <PanelContainer>
+            <PanelContainer.PanelOverride>
+                <gfx:StyleBoxFlat BackgroundColor="#1a140d"
+                                  BorderColor="#a88b5e"
+                                  BorderThickness="1 1 1 1" />
+            </PanelContainer.PanelOverride>
+            <BoxContainer Orientation="Vertical" Margin="10 8">
+                <Label Text="{Loc 'quest-board-title'}"
+                       StyleClasses="LabelHeading" FontColorOverride="#e3c88f"
+                       HorizontalAlignment="Center" />
+                <Label Name="StatusLabel"
+                       Text=""
+                       HorizontalAlignment="Center"
+                       Margin="0 4 0 0" />
+            </BoxContainer>
+        </PanelContainer>
+
+        <controls:HLine Color="#6f5636" Thickness="1" Margin="0 0 0 2" />
+
+        <PanelContainer Name="CreateBox">
+            <PanelContainer.PanelOverride>
+                <gfx:StyleBoxFlat BackgroundColor="#17120d"
+                                  BorderColor="#8f6a33"
+                                  BorderThickness="1 1 1 1" />
+            </PanelContainer.PanelOverride>
+            <BoxContainer Orientation="Vertical" Margin="10" SeparationOverride="6">
+                <Label Text="{Loc 'quest-board-select-difficulty'}"
+                       StyleClasses="StatusFieldTitle"
+                       HorizontalAlignment="Center"
+                       Margin="0 0 0 6" />
+                <Button Name="EasyButton"
+                        Text="{Loc 'quest-board-easy'}"
+                        StyleClasses="Caution"
+                        HorizontalExpand="True"
+                        Margin="0 1"
+                        MinSize="0 30" />
+                <Button Name="MediumButton"
+                        Text="{Loc 'quest-board-medium'}"
+                        StyleClasses="Caution"
+                        HorizontalExpand="True"
+                        Margin="0 1"
+                        MinSize="0 30" />
+                <Button Name="HardButton"
+                        Text="{Loc 'quest-board-hard'}"
+                        StyleClasses="Caution"
+                        HorizontalExpand="True"
+                        Margin="0 1"
+                        MinSize="0 30" />
+            </BoxContainer>
+        </PanelContainer>
+
+        <PanelContainer Name="JoinBox" Visible="False">
+            <PanelContainer.PanelOverride>
+                <gfx:StyleBoxFlat BackgroundColor="#18120e"
+                                  BorderColor="#a88b5e"
+                                  BorderThickness="1 1 1 1" />
+            </PanelContainer.PanelOverride>
+            <BoxContainer Orientation="Vertical" Margin="10" SeparationOverride="6">
+                <Label Text="{Loc 'quest-board-instance-active'}"
+                       StyleClasses="StatusFieldTitle"
+                       HorizontalAlignment="Center"
+                       Margin="0 0 0 6" />
+                <Button Name="JoinButton"
+                        Text="{Loc 'quest-board-join'}"
+                        StyleClasses="Caution"
+                        HorizontalExpand="True"
+                        Margin="0 1"
+                        MinSize="0 30" />
+            </BoxContainer>
+        </PanelContainer>
+
+    </BoxContainer>
+</controls:FancyWindow>
+
