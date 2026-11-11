@@ -1,0 +1,14 @@
+# Forge visual for the adapted Misfits casing implementation, spawned in response to SpentCartridgeEvent.
+- type: entity
+  id: N14SpentCartridgeVisual
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Casings/ammo_casing.rsi
+    state: base-spent
+    drawdepth: Items
+  - type: TimedDespawn
+    lifetime: 10
+  - type: Tag
+    tags:
+    - HideContextMenu
