@@ -96,10 +96,10 @@
       sound:
         path: /Audio/Items/can_open3.ogg
     
-- type: entity
+- type: entity #Forge-add
   name: military box
   parent: N14BoxPlastic
-  id: N14BoxPlasticFilledMilitary2
+  id: N14BoxPlasticFilledMidWest
   components:
     - type: SpawnItemsOnUse
       items:
