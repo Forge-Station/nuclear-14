@@ -99,7 +99,7 @@
 - type: entity #Forge-add
   name: military box
   parent: N14BoxPlastic
-  id: N14BoxPlasticFilledMidWest
+  id: N14BoxPlasticFilledMilitaryMidBoS
   components:
     - type: SpawnItemsOnUse
       items:

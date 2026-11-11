@@ -52,7 +52,7 @@
     ears: N14ClothingHeadsetBOSMidwestLightScribe
   storage: # Forge-Change
     back:
-    - N14BoxPlasticFilledMidWest # Forge-Change
+    - N14BoxPlasticFilledMilitaryMidBoS # Forge-Change
 
 - type: playTimeTracker
   id: BoSMidScribe

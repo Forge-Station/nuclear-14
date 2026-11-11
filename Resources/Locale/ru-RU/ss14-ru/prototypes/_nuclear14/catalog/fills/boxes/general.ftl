@@ -8,5 +8,5 @@ ent-N14BoxPlasticFilledMilitary = военный ящик
     .desc = { ent-N14BoxPlastic.desc }
 ent-N14BoxPlasticFilledMilitaryNCR = военный ящик
     .desc = { ent-N14BoxPlastic.desc }
-ent-N14BoxPlasticFilledMidWest = военный ящик
+ent-N14BoxPlasticFilledMilitaryMidBoS = военный ящик
     .desc = { ent-N14BoxPlastic.desc }

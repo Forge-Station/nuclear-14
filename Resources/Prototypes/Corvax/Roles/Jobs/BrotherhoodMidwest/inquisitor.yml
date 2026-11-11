@@ -51,7 +51,7 @@
     ears: N14ClothingHeadsetBOSMidwest
   storage: # Forge-Change
     back:
-    - N14BoxPlasticFilledMidWest # Forge-Change
+    - N14BoxPlasticFilledMilitaryMidBoS # Forge-Change
 
 - type: playTimeTracker
   id: BoSMidInquisitor
