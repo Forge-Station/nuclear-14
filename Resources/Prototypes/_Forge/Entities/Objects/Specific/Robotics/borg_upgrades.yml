@@ -1,0 +1,141 @@
+# Оптика и бронепластины для роботов.
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: N14BaseBorgUpgrade
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/borg_upgrades.rsi
+    layers:
+    - state: armor_light
+  - type: Item
+    size: Small
+  - type: Clothing
+    equipDelay: 5
+    unequipDelay: 8
+
+- type: entity
+  parent: N14BaseBorgUpgrade
+  id: N14BorgUpgradeNightVision
+  components:
+  - type: Sprite
+    layers:
+    - state: optics_nightvision
+  - type: Clothing
+    slots:
+    - PREVENTEQUIP
+    quickEquip: false
+    clothingVisuals:
+      eyes: []
+  - type: Tag
+    tags:
+    - N14BorgOptics
+  - type: NightVision
+    isEquipment: true
+
+- type: entity
+  parent: N14BaseBorgUpgrade
+  id: N14BorgUpgradeArmor
+  components:
+  - type: Sprite
+    layers:
+    - state: armor_medium
+  - type: Clothing
+    slots:
+    - PREVENTEQUIP
+    quickEquip: false
+    clothingVisuals:
+      outerClothing: []
+  - type: Tag
+    tags:
+    - N14BorgArmor
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.8
+        Heat: 0.8
+        Shock: 0.8
+  - type: ClothingSpeedModifier
+    walkModifier: 0.8
+    sprintModifier: 0.8
+
+- type: entity
+  parent: N14BorgUpgradeArmor
+  id: N14BorgUpgradeArmorLight
+  components:
+  - type: Tag
+    tags: [N14BorgArmor, N14BorgArmorLight]
+  - type: Sprite
+    layers:
+    - state: armor_light
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+        Shock: 0.9
+  - type: ClothingSpeedModifier
+    walkModifier: 0.9
+    sprintModifier: 0.9
+
+- type: entity
+  parent: N14BorgUpgradeArmor
+  id: N14BorgUpgradeArmorHeavy
+  components:
+  - type: Tag
+    tags: [N14JunkbotHeavyArmor]
+  - type: Sprite
+    layers:
+    - state: armor_heavy
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.7
+        Heat: 0.7
+        Shock: 0.7
+  - type: ClothingSpeedModifier
+    walkModifier: 0.7
+    sprintModifier: 0.7
+
+
+- type: entity
+  parent: N14BaseBorgUpgrade
+  id: N14BorgUpgradeUniversalHud
+  components:
+  - type: Sprite
+    layers:
+    - state: optics_universal
+  - type: Clothing
+    slots: [PREVENTEQUIP]
+    quickEquip: false
+    clothingVisuals:
+      eyes: []
+  - type: Tag
+    tags: [N14BorgOptics]
+  - type: ShowHealthBars
+    damageContainers: [Biological, Inorganic, Silicon]
+  - type: ShowHealthIcons
+    damageContainers: [Biological, Inorganic, Silicon]
+
+- type: entity
+  parent: N14BaseBorgUpgrade
+  id: N14BorgUpgradeFlashProtection
+  components:
+  - type: Sprite
+    layers:
+    - state: optics_flash
+  - type: Clothing
+    slots: [PREVENTEQUIP]
+    quickEquip: false
+    clothingVisuals:
+      eyes: []
+  - type: Tag
+    tags: [N14BorgOptics]
+  - type: FlashImmunity
+    enabled: true

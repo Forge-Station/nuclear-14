@@ -1,0 +1,38 @@
+- type: entity
+  parent: ComputerComms
+  id: N14ComputerRadioBroadcast
+  name: radio broadcasting console
+  description: A radio console for broadcasting announcements across the wasteland.
+  components:
+  - type: Sprite
+    layers:
+    - map: ["computerLayerBody"]
+      texture: Corvax/Structures/Machines/radio_broadcast.png
+    - map: ["computerLayerScreen"]
+      visible: false
+    - map: ["computerLayerKeys"]
+      visible: false
+    - map: ["enum.WiresVisualLayers.MaintenancePanel"]
+      visible: false
+  - type: AccessReader
+    access: [["RadioBroadcast"]]
+  - type: CommunicationsConsole
+    title: comms-console-announcement-title-radio-broadcast
+    delay: 3600
+    canShuttle: false
+    global: true
+  - type: Computer
+    board: N14RadioBroadcastComputerCircuitboard
+  - type: PointLight
+    color: "#b89f25"
+
+- type: entity
+  parent: BaseComputerCircuitboard
+  id: N14RadioBroadcastComputerCircuitboard
+  name: radio broadcasting console board
+  description: A circuit board for a radio broadcasting console.
+  components:
+  - type: Sprite
+    state: cpu_command
+  - type: ComputerBoard
+    prototype: N14ComputerRadioBroadcast

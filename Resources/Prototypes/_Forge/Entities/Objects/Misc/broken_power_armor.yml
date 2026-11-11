@@ -1,0 +1,142 @@
+# =====================================================================
+# СЛОМАННАЯ СИЛОВАЯ БРОНЯ И КОМПОНЕНТЫ ПОЧИНКИ
+# =====================================================================
+
+# ====================  СЛОМАННЫЕ СИЛОВЫЕ БРОНИ  ====================
+- type: entity
+  parent: BaseStructureDynamic
+  id: N14BrokenPowerArmorT45NCR
+  name: сломанная T-45 НКР
+  description: Её защитные элементы были полностью уничтожены, требуется серьёзное вмешательство для полнонного восстановления.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45ncr.rsi
+    state: icon
+  - type: Appearance
+  - type: Pullable
+  - type: Construction
+    graph: N14BrokenPowerArmorT45NCR
+    node: start
+    defaultTarget: Repaired
+
+- type: entity
+  parent: BaseStructureDynamic
+  id: N14BrokenPowerArmorT45
+  name: сломанная T-45
+  description: Её защитные элементы были полностью уничтожены, требуется серьёзное вмешательство для полнонного восстановления.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45.rsi
+    state: icon
+  - type: Appearance
+  - type: Pullable
+  - type: Construction
+    graph: N14BrokenPowerArmorT45
+    node: start
+    defaultTarget: Repaired
+- type: entity
+  parent: BaseStructureDynamic
+  id: N14BrokenPowerArmorT51
+  name: сломанная T-51
+  suffix: Маппинг
+  description: Её защитные элементы были полностью уничтожены, требуется серьёзное вмешательство для полного восстановления.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t51.rsi
+    state: icon
+  - type: Appearance
+  - type: Pullable
+  - type: Construction
+    graph: N14BrokenPowerArmorT51
+    node: start
+    defaultTarget: Repaired
+
+- type: entity
+  parent: BaseStructureDynamic
+  id: N14BrokenPowerArmorT60
+  name: сломанная T-60
+  suffix: Маппинг
+  description: Её защитные элементы были полностью уничтожены, требуется серьёзное вмешательство для полного восстановления.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t60.rsi
+    state: icon
+  - type: Appearance
+  - type: Pullable
+  - type: Construction
+    graph: N14BrokenPowerArmorT60
+    node: start
+    defaultTarget: Repaired
+
+- type: entity
+  parent: BaseStructureDynamic
+  id: N14BrokenPowerArmorT51China
+  name: сломанная китайская силовая броня
+  suffix: Маппинг
+  description: Её защитные элементы были полностью уничтожены, требуется серьёзное вмешательство для полного восстановления.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/PowerArmor/t51china.rsi
+    state: icon
+  - type: Appearance
+  - type: Pullable
+  - type: Construction
+    graph: N14BrokenPowerArmorT51China
+    node: start
+    defaultTarget: Repaired
+
+- type: entity
+  parent: BaseStructureDynamic
+  id: N14BrokenPowerArmorRaider
+  name: сломанная рейдерская силовая броня
+  suffix: Маппинг
+  description: Её защитные элементы были полностью уничтожены, требуется серьёзное вмешательство для полного восстановления.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/raider.rsi
+    state: icon
+  - type: Appearance
+  - type: Pullable
+  - type: Construction
+    graph: N14BrokenPowerArmorRaider
+    node: start
+    defaultTarget: Repaired
+
+# ====================  КОМПОНЕНТЫ ДЛЯ ПОЧИНКИ  ====================
+- type: entity
+  parent: BaseItem
+  id: N14RepairPowerArmorPadding
+  name: защитные подкладки силовой брони
+  description: Не броня — лишь элемент для починки силовой брони.
+  suffix: repair item
+  components:
+  - type: Sprite
+    sprite: Clothing/OuterClothing/Armor/riot.rsi
+    state: icon
+  - type: Item
+    size: Normal
+  - type: Construction
+    graph: N14RepairPowerArmorPadding
+    node: padding
+  - type: Tag
+    tags:
+    - N14PowerArmorPadding
+
+- type: entity
+  parent: BaseItem
+  id: N14RepairPowerArmorPlate
+  name: стальные бронеплиты силовой брони
+  description: Не броня — лишь элемент для починки силовой брони.
+  suffix: repair item
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/heavysteelarmor.rsi
+    state: icon
+  - type: Item
+    size: Normal
+  - type: Construction
+    graph: N14RepairPowerArmorPlate
+    node: plate
+  - type: Tag
+    tags:
+    - N14PowerArmorPlate

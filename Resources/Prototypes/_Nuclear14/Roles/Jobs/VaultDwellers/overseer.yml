@@ -2,6 +2,7 @@
   id: Overseer
   name: job-name-overseer
   description: job-description-overseer
+  playTimeTracker: Overseer # Forge-Change
   requirements:
   - !type:CharacterSpeciesRequirement
     species:
@@ -9,7 +10,9 @@
   - !type:CharacterDepartmentTimeRequirement
     department: Vault
     min: 36000 # 10 hours
-  playTimeTracker: Overseer
+  # Forge-Change-Start
+  - !type:MinPlayersRequirement
+    min: 20 # Forge-Change-End
   weight: 20
   startingGear: OverseerGear
   alwaysUseSpawner: true

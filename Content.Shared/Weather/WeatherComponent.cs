@@ -25,6 +25,12 @@ public sealed partial class WeatherData
     [NonSerialized]
     public EntityUid? Stream;
 
+    // #Forge-Change-Start: client-only cache scheduling; never included in the weather network state.
+    [NonSerialized] public TimeSpan NextAudioOcclusionUpdate;
+    [NonSerialized] public EntityUid? AudioOcclusionEntity;
+    [NonSerialized] public EntityUid? AudioOcclusionGrid;
+    // #Forge-Change-End
+
     /// <summary>
     /// When the weather started if relevant.
     /// </summary>

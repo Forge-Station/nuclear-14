@@ -15,14 +15,14 @@
 - type: ncBarterListing
   id: BarterDenariusToCaps
   name: "Денарии в крышки"
-  description: "Обмен 1 денария на 10 крышек."
+  description: "Обмен 1 денария на 4 крышки."
   icon: N14CurrencyLegionDenarius
   cost:
   - currency: LegionDenarius
     count: 1
   receive:
   - currency: Caps
-    count: 10
+    count: 4
 
 - type: ncBarterListing
   id: BarterAureusToCaps

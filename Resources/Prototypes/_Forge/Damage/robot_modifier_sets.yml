@@ -1,0 +1,39 @@
+# Сопротивления урону трёх корпусов роботов.
+- type: damageModifierSet
+  id: N14JunkbotBorg
+  coefficients:
+    Blunt: 0.9
+    Slash: 0.9
+    Piercing: 0.9
+    Heat: 0.9
+    Shock: 0.9
+  flatReductions:
+    Blunt: 5
+    Slash: 5
+    Piercing: 5
+
+- type: damageModifierSet
+  id: N14EyebotBorg
+  coefficients:
+    Blunt: 1
+    Slash: 1
+    Piercing: 1
+    Heat: 1
+    Shock: 1.2
+  flatReductions:
+    Blunt: 5
+    Slash: 5
+    Piercing: 5
+
+- type: damageModifierSet
+  id: N14MrHandyBorg
+  coefficients:
+    Blunt: 1
+    Slash: 1
+    Piercing: 1
+    Heat: 1
+    Shock: 1.1
+  flatReductions:
+    Blunt: 5
+    Slash: 5
+    Piercing: 5

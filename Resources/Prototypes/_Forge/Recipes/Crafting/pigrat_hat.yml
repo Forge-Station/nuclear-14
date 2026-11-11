@@ -1,0 +1,33 @@
+- type: construction
+  id: ForgePigratHat
+  name: шапка из свинокрыса
+  description: Шапка из шкуры свинокрыса с торчащими ушами.
+  graph: ForgePigratHat
+  startNode: start
+  targetNode: hat
+  category: construction-category-clothing
+  icon:
+    sprite: _Forge/Clothing/Head/pigrat_hat.rsi
+    state: icon
+  objectType: Item
+  hide: false
+
+- type: constructionGraph
+  id: ForgePigratHat
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: hat
+      steps:
+      - tag: ForgePigratHide
+        name: шкура свинокрыса
+        icon:
+          sprite: _Forge/Objects/Misc/mob_drops.rsi
+          state: hide_pigrat
+        doAfter: 3
+      - material: ForgeAnimalSinew
+        amount: 1
+        doAfter: 5
+  - node: hat
+    entity: ForgeClothingPigratHat

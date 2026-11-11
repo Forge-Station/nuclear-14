@@ -64,7 +64,7 @@
   - type: SolutionContainerManager
     solutions:
       melee:
-        maxVol: 10
+        maxVol: 5
   - type: MeleeChemicalInjector
     solution: melee
   - type: RefillableSolution
@@ -140,7 +140,7 @@
   - type: SolutionContainerManager
     solutions:
       melee:
-        maxVol: 10
+        maxVol: 5
   - type: MeleeChemicalInjector
     solution: melee
   - type: RefillableSolution
@@ -204,7 +204,7 @@
   - type: MeleeWeapon
     damage:
       types:
-        Piercing: 30
+        Piercing: 25
         Slash: 10
   - type: DamageOtherOnHit
     damage:

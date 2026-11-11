@@ -1,7 +1,7 @@
 # Pistols
 - type: loadout
   id: N14WeaponPistol22lr
-  category: Weapons
+  category: WeaponsFirearms
   cost: 1 # Forge-Change
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -21,7 +21,7 @@
 
 - type: loadout
   id: N14WeaponRevolver9mm
-  category: Weapons
+  category: WeaponsFirearms
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -41,7 +41,7 @@
 
 - type: loadout
   id: N14WeaponPistol10mmPipe
-  category: Weapons
+  category: WeaponsFirearms
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -61,7 +61,7 @@
 
 - type: loadout
   id: N14WeaponPistol9mm
-  category: Weapons
+  category: WeaponsFirearms
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -83,7 +83,7 @@
 
 - type: loadout
   id: N14WeaponRifle556Pipe
-  category: Weapons
+  category: WeaponsFirearms
   cost: 5
   requirements:
     - !type:OverallTimeRequirement
@@ -106,7 +106,7 @@
 # Ammo
 - type: loadout
   id: N14SpeedLoader9
-  category: Weapons
+  category: WeaponsAmmo
   cost: 2 # Forge-Change
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -130,8 +130,8 @@
 # Melee
 - type: loadout
   id: N14KitchenKnife
-  category: Weapons
-  cost: 2
+  category: WeaponsMelee
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
@@ -146,8 +146,8 @@
 
 - type: loadout
   id: N14BrassKnife
-  category: Weapons
-  cost: 3
+  category: WeaponsMelee
+  cost: 1
   customColorTint: true
   exclusive: true
   requirements:
@@ -168,7 +168,7 @@
 
 - type: loadout
   id: N14WastelandTribalSpear
-  category: Weapons
+  category: WeaponsMelee
   cost: 4
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -179,3 +179,43 @@
         - Tribe
   items:
     - N14WastelandTribalSpear
+
+- type: loadout
+  id: N14CombatKnife
+  category: WeaponsMelee
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMelee
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14CombatKnife
+
+- type: loadout
+  id: N14ScrapMachete
+  category: WeaponsMelee
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMelee
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ScrapMachete

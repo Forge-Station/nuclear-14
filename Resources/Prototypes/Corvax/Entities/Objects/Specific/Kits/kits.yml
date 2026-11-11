@@ -46,9 +46,7 @@
       - id: N14WeaponLMGchinese
       - id: Magazine762AmmoBelt
         amount: 2
-      - id: N14WeaponPistol45Colt
-      - id: N14MagazinePistol45
-        amount: 2
+      - id: N14ClothingHandsPowerFistCenturion
       - id: N14HealingPoultice
         amount: 2
       - id: N14CleanGauze10
@@ -198,6 +196,61 @@
       path: /Audio/Effects/unwrap.ogg
 
 - type: entity
+  name: dean-demoman kit
+  parent: KitBase
+  id: KitDeanDemoman
+  description: "A set of Legion equipment."
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRifleGrenade
+      - id: 40mmGrenadeFrag
+        amount: 3
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
+        amount: 2
+      - id: N14BerserkerPowder
+        amount: 1
+      - id: N14HealingPoultice
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14MacheteGladius
+      - id: N14BoxCardboardMREBoxLegionFilled
+    sound:
+      path: /Audio/Effects/unwrap.ogg
+
+- type: entity
+  name: dean-heavy-sniper kit
+  parent: KitBase
+  id: KitDeanHeavySniper
+  description: "A set of Legion equipment."
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponSniper50Pipe
+      - id: MagazineBox50
+        amount: 1
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
+        amount: 2
+      - id: N14HealingPoultice
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
+    sound:
+      path: /Audio/Effects/unwrap.ogg
+
+- type: entity
   name: veteran-firearm kit
   parent: KitBase
   id: KitVeteranFirearm
@@ -262,10 +315,10 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponSMGNAil
+      - id: N14WeaponSMGP90
       - id: N14ClothingHandsIndusrialPowerFist
-      - id: MagazineBoxNail
-      - id: DrumMagazineNailGun
+      - id: N14MagazineSMG9mmP90
+        amount: 3
       - id: N14HealingPoultice
       - id: N14Hydra
       - id: N14CleanGauze10
@@ -302,6 +355,34 @@
       path: /Audio/Effects/unwrap.ogg
 
 - type: entity
+  name: veteran-swordsman kit
+  parent: KitBase
+  id: KitVeteranSwordsman
+  description: "A set of Legion equipment."
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14BumperSword
+      - id: N14LegionnaireShield
+      - id: Bola
+        amount: 2
+      - id: N14BerserkerPowder
+        amount: 2
+      - id: N14DirtySuperStimpak
+      - id: N14HealingPoultice
+        amount: 2
+      - id: N14Hydra
+      - id: N14MedkitFilled
+      - id: N14BoxCardboardMREBoxLegionFilled
+    sound:
+      path: /Audio/Effects/unwrap.ogg
+
+- type: entity
   name: warrior-base kit
   parent: KitBase
   id: KitWarriorBase
@@ -314,7 +395,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: N14LegionnaireBuckler
       - id: N14WeaponShotgunLever
       - id: MagazineBox20gauge
@@ -365,7 +446,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: ClothingBeltMedical
       - id: N14MortarpestleGrinder
       - id: LargeBeaker
@@ -398,7 +479,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: N14WeaponSMG10mm
       - id: MagazineBox10mm
       - id: N14MagazineSMG10mm
@@ -477,7 +558,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: N14WeaponSMG9mm
       - id: N14MagazineSMG9mm
         amount: 2
@@ -531,7 +612,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: N14WeaponShotgunBloodyStick
       - id: MagazineBox12gauge
       - id: N14LegionnaireBuckler

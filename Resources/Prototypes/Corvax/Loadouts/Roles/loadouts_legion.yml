@@ -13,7 +13,7 @@
 
 - type: loadout
   id: LoadoutLegionVenatorReconnaissanceArmor
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   requirements:
@@ -71,7 +71,7 @@
 
 - type: loadout
   id: LoadoutLegionDeadVeteranArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -86,7 +86,7 @@
 
 - type: loadout
   id: LoadoutLegionDeadPrimeArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -162,7 +162,7 @@
 
 - type: loadout
   id: LoadoutConquerorCenturioArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -302,7 +302,6 @@
   requirements:
     - !type:CharacterJobRequirement
       jobs:
-        - CaesarLegionDean
         - CaesarLegionLegionnaireVeteran
     - !type:CharacterDepartmentTimeRequirement
       department: CaesarLegion
@@ -314,7 +313,7 @@
     - N14ClothingHeadHatPrinceps
 
 - type: loadout
-  id: LoadoutHeadHatPrincepsPrime
+  id: LoadoutHeadGaleaPrinceps
   category: Head
   cost: 2
   exclusive: true
@@ -324,6 +323,42 @@
         - CaesarLegionDean
     - !type:CharacterDepartmentTimeRequirement
       department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionDean
+      min: 108000
+  items:
+    - N14ClothingHeadHatPrincepsGalea
+
+- type: loadout
+  id: LoadoutHeadGaleaPrincepsPrime
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionDean
+      min: 144000
+  items:
+    - N14ClothingHeadHatPrincepsPrimeGalea
+
+- type: loadout
+  id: LoadoutHeadHatPrincepsPrime
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireVeteran
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
       min: 144000
   items:
     - N14ClothingHeadHatPrincepsPrime
@@ -331,7 +366,7 @@
 # ассасины
 - type: loadout
   id: LoadoutOuterLegionnaireAssassin+Armor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -346,7 +381,7 @@
 
 - type: loadout
   id: LoadoutOuterLegionnaireAssassinArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -365,7 +400,7 @@
 # гастаты
 - type: loadout
   id: LoadoutOuterLegionnaireArmorGastat
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -384,7 +419,7 @@
 
 - type: loadout
   id: LoadoutOuterLegionnaireArmorPrimeGastat
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -399,7 +434,7 @@
 
 - type: loadout
   id: LoadoutOuterLegionnaireVeteranArmorVeteranGastat
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -414,7 +449,7 @@
 # Триарий
 - type: loadout
   id: LoadoutOuterLegionnaireTriariumArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -433,14 +468,14 @@
 # Принцепсы
 - type: loadout
   id: LoadoutOuterLegionnairePrincepsArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
       jobs:
-        - CaesarLegionDean
         - CaesarLegionLegionnaireVeteran
+        - CaesarLegionDean
     - !type:CharacterDepartmentTimeRequirement
       department: CaesarLegion
       min: 72000
@@ -452,7 +487,7 @@
 
 - type: loadout
   id: LoadoutOuterLegionnairePrinceps+Armor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -464,6 +499,8 @@
       min: 144000
   items:
     - N14ClothingOuterLegionnairePrincepsPrimeArmor
+
+
 
 # - type: loadout
 #   id: LoadoutN14BerserkerPowder
@@ -521,7 +558,7 @@
 
 - type: loadout
   id: LoadoutOuterVexillariusArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -555,7 +592,7 @@
 
 - type: loadout
   id: ClothingOuterToga
-  category: Roles
+  category: OuterClothing
   cost: 1
   exclusive: true
   requirements:
@@ -571,7 +608,7 @@
 
 - type: loadout
   id: LoadoutCinderCenturioArmor
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   requirements:
@@ -655,3 +692,36 @@
   items:
     - M14ClothingNeckLegionMantle
 
+- type: loadout
+  id: LoadoutLegionVenatorOuterLegionnaireDusterMk2
+  category: OuterArmor
+  cost: 4
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionVenator
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionVenator
+      min: 36000
+  items:
+    - N14ClothingOuterLegionnaireDusterMk2
+
+- type: loadout
+  id: LoadoutN14BerserkerPowder
+  category: ItemsMedical
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionVenator
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionCenturion
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 36000
+  items:
+    - N14BerserkerPowder

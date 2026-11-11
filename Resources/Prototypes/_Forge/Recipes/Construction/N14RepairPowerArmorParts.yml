@@ -1,0 +1,21 @@
+- type: construction
+  name: защитные подкладки силовой брони
+  id: N14RepairPowerArmorPadding
+  graph: N14RepairPowerArmorPadding
+  startNode: start
+  targetNode: padding
+  icon: { sprite: Clothing/OuterClothing/Armor/riot.rsi, state: icon }
+  category: construction-category-misc
+  objectType: Item
+  hide: false
+
+- type: construction
+  name: стальные бронеплиты силовой брони
+  id: N14RepairPowerArmorPlate
+  graph: N14RepairPowerArmorPlate
+  startNode: start
+  targetNode: plate
+  icon: { sprite: Corvax/Clothing/OuterClothing/Armor/heavysteelarmor.rsi, state: icon }
+  category: construction-category-misc
+  objectType: Item
+  hide: false

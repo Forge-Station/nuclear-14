@@ -328,17 +328,19 @@
     N14InjectionCarbineBlueprint:
       amount: 1
       catalyzer: true
-    N14JunkGunpartsAdvancedFrame:
-      amount: 1
-    N14JunkGunpartsTrigger:
+    N14WeaponSniper308PipeRifle:
       amount: 1
     N14JunkComponentScrew:
       amount: 2
     N14JunkGunpartsBolt:
       amount: 1
-    N14JunkGunpartsStockWood:
-      amount: 1
     N14JunkGunpartsRecoilComp:
+      amount: 1
+    SheetSteel1:
+      amount: 2
+    N14JunkComponentGearSmall:
+      amount: 1
+    N14JunkDuctTape:
       amount: 1
     N14Screwdriver:
       amount: 1

@@ -1,0 +1,18 @@
+- type: entity
+  parent: ClothingNeckBase
+  id: ForgeClothingPigratCloak
+  name: плащ из свинокрыса
+  description: Плащ из шкуры свинокрыса, сшитый крепкими сухожилиями.
+  components:
+  - type: Item
+    sprite: _Nuclear14/Clothing/Neck/yaoguai.rsi
+  - type: Sprite
+    sprite: _Forge/Clothing/Neck/pigrat_cloak.rsi
+    state: icon
+  - type: Clothing
+    sprite: _Forge/Clothing/Neck/pigrat_cloak.rsi
+    slots:
+    - neck
+  - type: Construction
+    graph: ForgePigratCloak
+    node: cloak

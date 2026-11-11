@@ -1,0 +1,33 @@
+- type: construction
+  id: ForgeBighornerShoes
+  name: туфли из толсторога
+  description: Мягкие мохнатые туфли из шкуры толсторога. Уютный островок комфорта на пыльных дорогах Пустоши.
+  graph: ForgeBighornerShoes
+  startNode: start
+  targetNode: shoes
+  category: construction-category-clothing
+  icon:
+    sprite: _Forge/Clothing/Shoes/bighorner_shoes.rsi
+    state: icon
+  objectType: Item
+  hide: false
+
+- type: constructionGraph
+  id: ForgeBighornerShoes
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: shoes
+      steps:
+      - tag: ForgeBighornerPelt
+        name: шкура толсторога
+        icon:
+          sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+          state: pelt_bighorner
+        doAfter: 3
+      - material: ForgeAnimalSinew
+        amount: 1
+        doAfter: 5
+  - node: shoes
+    entity: ForgeClothingShoesBighorner

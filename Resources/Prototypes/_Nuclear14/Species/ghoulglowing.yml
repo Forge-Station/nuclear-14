@@ -27,6 +27,8 @@
     Head: N14MobGhoulGlowingHead
     Hair: MobHumanoidAnyMarking
     FacialHair: MobHumanoidAnyMarking
+    UndergarmentTop: MobHumanoidAnyMarking
+    UndergarmentBottom: MobHumanoidAnyMarking
     Chest: N14MobGhoulGlowingTorso
     Eyes: MobHumanoidEyes
     LArm: N14MobGhoulGlowingLArm

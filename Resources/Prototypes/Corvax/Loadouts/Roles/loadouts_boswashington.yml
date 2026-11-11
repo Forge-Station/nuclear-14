@@ -1,6 +1,6 @@
 - type: loadout
   id: LoadoutClothingOuterWBoSReconBattleArmor
-  category: Outer
+  category: OuterArmor
   cost: 10
   exclusive: true
   requirements:
@@ -15,7 +15,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterWBoSKnightBattleArmorKilt
-  category: Outer
+  category: OuterArmor
   cost: 6
   exclusive: true
   requirements:

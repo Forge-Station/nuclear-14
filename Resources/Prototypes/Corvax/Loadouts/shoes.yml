@@ -13,3 +13,19 @@
       - NCRPisoner
   items:
     - N14ClothingShoesTribal
+
+- type: loadout
+  id: N14ClothingShoesRaider
+  category: Shoes
+  cost: 0
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutShoes
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingShoesRaider

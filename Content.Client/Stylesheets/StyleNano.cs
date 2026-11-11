@@ -1715,7 +1715,8 @@ namespace Content.Client.Stylesheets
                     .Prop(TextureButton.StylePropertyTexture, resCache.GetTexture("/Textures/_Shitmed/Interface/Targeting/Doll/mouth_hover.png")),
                 // Shitmed Change End
 
-            }).ToList());
+            /// Forge-Change
+            }).Concat(StyleNewVegas.Rules()).ToList());
         }
     }
 }

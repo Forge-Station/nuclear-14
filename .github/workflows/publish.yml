@@ -8,11 +8,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SECRETS_TOKEN: ${{ secrets.SECRETS_TOKEN }}
 
     steps:
     - uses: actions/checkout@v3.6.0
       with:
         submodules: 'recursive'
+
+# Forge-Secrets-Start
+    - name: Checkout secrets
+      if: ${{ env.SECRETS_TOKEN != '' }}
+      uses: actions/checkout@v4
+      with:
+        repository: Forge-Station/FalloutSecrets
+        path: FalloutSecrets
+        token: ${{ env.SECRETS_TOKEN }}
+        persist-credentials: false
+
+    - name: Verify secrets
+      if: ${{ env.SECRETS_TOKEN != '' }}
+      run: test -f FalloutSecrets/Content.Secrets.Server/Content.Secrets.Server.csproj
+# Forge-Secrets-End
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4.1.0
@@ -44,12 +61,6 @@ jobs:
       env:
         PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
         GITHUB_REPOSITORY: ${{ vars.GITHUB_REPOSITORY }}
-
-    # - name: Publish changelog (Discord)
-    #   run: Tools/actions_changelogs_since_last_run.py
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     DISCORD_WEBHOOK_URL: ${{ secrets.CHANGELOG_DISCORD_WEBHOOK }}
 
     #- name: Publish changelog (RSS)
     #  run: Tools/actions_changelog_rss.py

@@ -18,3 +18,5 @@ ent-N14SawAdvanced = advanced circular saw
     .desc = You think you can cut anything with it.
 ent-N14Chainsaw = chainsaw
     .desc = A very large chainsaw. Usually you use this for cutting down trees... usually.
+ent-N14PowerDrill = power drill
+    .desc = A simple powered hand drill, common in the wasteland.
