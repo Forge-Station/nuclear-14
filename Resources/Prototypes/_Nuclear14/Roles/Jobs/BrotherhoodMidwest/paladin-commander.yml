@@ -55,7 +55,7 @@
     belt: ClothingBeltMilitary
   storage: # Forge-Change
     back:
-    - N14BoxPlasticFilledMilitary
+    - N14BoxPlasticFilledMilitaryMidBoS # Forge-Change
 
 - type: playTimeTracker
   id: BoSMidPaladinCommander
