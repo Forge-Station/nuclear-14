@@ -29,6 +29,6 @@
   source: "https://github.com/Forge-Station/nuclear-14"
 
 - files: ["nain.png"]
-  license: "CC-BY-NC-SA-4.0"
-  copyright: "NaiN on discord"
+  license: "Custom"
+  copyright: "NaiN on discord. All rights reserved."
   source: "https://github.com/Forge-Station/nuclear-14"
