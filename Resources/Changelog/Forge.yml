@@ -182,3 +182,12 @@ Entries:
   id: 15
   time: '2026-11-02T11:11:22.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/563
+- author: akino-tech
+  changes:
+    - type: Tweak
+      message: >-
+        Для ассетов NaiN установлена лицензия All rights reserved, как у
+        спонсорских спрайтов.
+  id: 16
+  time: '2026-11-14T15:40:33.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/571
