@@ -1,0 +1,227 @@
+# Faction armor lathe recipes: MidWestBoS - outer
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterBrotherhoodMidwestFieldScribeCoat
+  result: N14ClothingOuterBrotherhoodMidwestFieldScribeCoat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 500
+    Thread: 400
+    Leather: 200
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterMBoSInitiateArmor
+  result: N14ClothingOuterMBoSInitiateArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Cloth: 400
+    Thread: 300
+    Steel: 300
+    Leather: 200
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterMBoSSquireArmor
+  result: N14ClothingOuterMBoSSquireArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Cloth: 400
+    Thread: 300
+    Steel: 300
+    Leather: 200
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterMidwestBoSCoat
+  result: N14ClothingOuterMidwestBoSCoat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 500
+    Thread: 400
+    Leather: 200
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterBOSInquisitorCoat
+  result: N14ClothingOuterBOSInquisitorCoat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Cloth: 600
+    Thread: 400
+    Steel: 400
+    Leather: 300
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterBrotherhoodMedicalScribeRobes
+  result: N14ClothingOuterBrotherhoodMedicalScribeRobes
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 600
+    Thread: 400
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterMBoSKnightArmor
+  result: N14ClothingOuterMBoSKnightArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 1200
+    Cloth: 800
+    Thread: 600
+    Leather: 500
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterMidwestArmor
+  result: N14ClothingOuterMidwestArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 1200
+    Cloth: 600
+    Leather: 500
+    N14Iron: 400
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterBOSInquisitorBattleArmor
+  result: N14ClothingOuterBOSInquisitorBattleArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 1600
+    Cloth: 600
+    Leather: 600
+    N14Iron: 400
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterBOSInquisitorBlackCoat
+  result: N14ClothingOuterBOSInquisitorBlackCoat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Cloth: 700
+    Thread: 500
+    Steel: 600
+    Leather: 400
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterMBoSPaladinArmor
+  result: N14ClothingOuterMBoSPaladinArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 16
+  materials:
+    Steel: 2000
+    Cloth: 800
+    Thread: 600
+    Leather: 600
+    N14Iron: 600
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterMBoSSeniorKArmor
+  result: N14ClothingOuterMBoSSeniorKArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 16
+  materials:
+    Steel: 1800
+    Cloth: 800
+    Thread: 600
+    Leather: 600
+    N14Iron: 600
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterMidwestArmorMK2
+  result: N14ClothingOuterMidwestArmorMK2
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 16
+  materials:
+    Steel: 2000
+    Cloth: 600
+    Leather: 600
+    N14Iron: 800
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorT45
+  result: N14ClothingOuterPowerArmorT45
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 30
+  materials:
+    Steel: 6000
+    N14Iron: 2000
+    Circuitry: 1000
+    ScrapElectronic: 800
+    N14Brass: 400
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterMidwestReconArmor
+  result: N14ClothingOuterMidwestReconArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 2400
+    Cloth: 800
+    Leather: 800
+    N14Iron: 800
+    Circuitry: 400
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorMidwest
+  result: N14ClothingOuterPowerArmorMidwest
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 35
+  materials:
+    Steel: 7200
+    N14Iron: 2400
+    Circuitry: 1200
+    ScrapElectronic: 1000
+    N14Brass: 500
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorMidwestCommander
+  result: N14ClothingOuterPowerArmorMidwestCommander
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 40
+  materials:
+    Steel: 8000
+    N14Iron: 2800
+    Circuitry: 1400
+    ScrapElectronic: 1200
+    N14Brass: 600
+    N14Gold: 200

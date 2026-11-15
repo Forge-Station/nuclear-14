@@ -338,6 +338,7 @@ materials-exoskeleton = exoskeleton
 materials-leather = leather
 materials-lead = lead
 materials-lead-scrap = scrap lead
+materials-circuitry = circuitry
 materials-raw-lead = raw lead
 materials-raw-leather = raw leather
 materials-thread = thread
