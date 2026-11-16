@@ -124,6 +124,15 @@ public sealed partial class PathfindingSystem
             }
         }
 
+        // Forge-Change-Start: resume searches that exhaust the per-tick node budget.
+        // Reaching the node budget does not mean the destination is unreachable.
+        // Keep the frontier so this search can resume on the next update.
+        if (!arrived && request.Frontier.Count > 0)
+        {
+            return PathResult.Continuing;
+        }
+        // Forge-Change-End
+
         if (!arrived)
         {
             return PathResult.NoPath;

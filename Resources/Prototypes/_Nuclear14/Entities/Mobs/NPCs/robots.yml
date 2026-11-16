@@ -103,6 +103,9 @@
   - type: NpcFactionMember
     factions:
     - HostileRobot
+  - type: ProximityNPC # Forge-Change: sleep distant Wendover NPCs
+  - type: NPCRetaliation # Forge-Change: pursue players who damage NPCs from beyond vision range
+    attackMemoryLength: 30 # Forge-Change
   - type: HTN
     rootTask:
       task: N14HostileCompound
