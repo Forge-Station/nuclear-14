@@ -1,0 +1,151 @@
+- type: entity
+  id: N14MobRobotHostileMilitarySentrybot
+  name: Military Sentry Bot
+  description: A pre-war military sentry bot running heavy combat protocols. It locks onto its target and launches a slow missile.
+  suffix: hostile, boss
+  components:
+  - type: LagCompensation
+  - type: Reactive
+    groups:
+      Acidic: [Touch]
+  - type: Clickable
+  - type: InteractionOutline
+  - type: StatusEffects
+    allowed:
+    - Stun
+    - KnockedDown
+    - SlowedDown
+    - Stutter
+    - Electrocution
+  - type: MovedByPressure
+  - type: Damageable
+    damageContainer: Inorganic
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+            radius: 0.4
+        density: 150
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: Input
+    context: "human"
+  - type: InputMover
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 0.3
+    baseSprintSpeed: 0.7
+  - type: Sprite
+    sprite: Corvax/Mobs/Robots/MIlitarySentrybot.rsi
+    noRot: false
+    drawdepth: Mobs
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
+      state: sentrybot
+  - type: SpriteMovement
+    movementLayers:
+      movement:
+        state: sentrybot
+    noMovementLayers:
+      movement:
+        state: sentrybot
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: sentrybot
+      Dead:
+        Base: dead
+  - type: Physics
+    bodyType: KinematicController
+  - type: NameIdentifier
+    group: GenericNumber
+  - type: Pullable
+  - type: MobState
+    allowedStates:
+      - Alive
+      - Dead
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      600: Dead
+    showOverlays: false
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 600
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          N14Scrap1:
+            min: 1
+            max: 5
+          N14ScrapElectronic1:
+            min: 6
+            max: 8
+          N14ScrapCopper1:
+            min: 2
+            max: 4
+          N14CurrencyCap:
+            min: 200
+            max: 300
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: MobMover
+  - type: Body
+    prototype: Bot
+  - type: CombatMode
+  - type: NpcFactionMember
+    factions:
+    - HostileRobot
+  - type: HTN
+    rootTask:
+      task: N14RangedHostileCompound
+  - type: MovementAlwaysTouching
+  - type: Appearance
+  - type: ReplacementAccent
+    accent: genericAggressive
+  - type: Gun #Mobs currently cannot bolt a gun, so we have to simulate them firing it
+    minAngle: 4
+    maxAngle: 12
+    angleIncrease: 2
+    angleDecay: 8
+    fireRate: 4
+    soundGunshot:
+      collection: N14LaserAutoRifleGunshot
+    useKey: false
+    selectedMode: FullAuto
+    availableModes:
+      - FullAuto
+  - type: AlternatingEntityAmmoProvider # Fires the laser rifle and the minigun alternately
+    protoA: BulletLaser
+    protoB: BulletLaser
+    soundA:
+      collection: N14LaserAutoRifleGunshot
+    soundB:
+      collection: N14LaserAutoRifleGunshot
+  - type: MilitarySentrybot
+    focusRange: 20
+    rocketSpeed: 10
+
+- type: entity
+  id: N14MilitaryAimIndicator
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    sprite: _Nuclear14/Interface/Actions/aim_indicator.rsi
+    layers:
+    - state: icon
+      shader: unshaded
+  - type: MilitaryAimIndicator
+    duration: 5
+  - type: TimedDespawn
+    lifetime: 7
+  - type: AnimationPlayer

@@ -1,0 +1,118 @@
+- type: loadout
+  id: N14ClothingHalfWraps
+  category: Mask
+  cost: 1
+  exclusive: true
+  items:
+    - N14ClothingHalfWraps
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+
+- type: loadout
+  id: ClothingMaskGasMaskHose
+  category: Mask
+  cost: 2
+  exclusive: true
+  items:
+    - ClothingMaskGasMaskHose
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+
+- type: loadout
+  id: ClothingMaskGasCaptainsMask
+  category: Mask
+  cost: 2
+  exclusive: true
+  items:
+    - ClothingMaskGasCaptainsMask
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+
+- type: loadout
+  id: ClothingMaskGasFire
+  category: Mask
+  cost: 2
+  exclusive: true
+  items:
+    - ClothingMaskGasFire
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+
+- type: loadout
+  id: N14ClothingMaskSkirmisher
+  category: Mask
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingMaskSkirmisher
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+
+- type: loadout
+  id: N14ClothingMaskHockey
+  category: Mask
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingMaskHockey
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+
+- type: loadout
+  id: ClothingMaskGasMiner
+  category: Mask
+  cost: 2
+  exclusive: true
+  items:
+    - ClothingMaskGasMiner
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner

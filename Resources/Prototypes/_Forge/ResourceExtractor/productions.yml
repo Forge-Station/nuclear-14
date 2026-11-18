@@ -1,0 +1,183 @@
+# Таблица выбора одной единицы руды. Веса относительные, а не процентные.
+- type: entityTable
+  id: N14ResourceExtractorOreTable
+  table: !type:GroupSelector
+    children:
+    - !type:EntSelector
+      id: N14IronOre1
+      weight: 45
+    - !type:EntSelector
+      id: N14CopperOre1
+      weight: 30
+    - !type:EntSelector
+      id: N14SilverOre1
+      weight: 10
+    - !type:EntSelector
+      id: N14GoldOre1
+      weight: 5
+    - !type:EntSelector
+      id: N14LeadOre1
+      weight: 5
+    - !type:EntSelector
+      id: N14AluminumOre1
+      weight: 5
+
+- type: resourceExtractorProduction
+  id: N14ResourceExtractorOreProduction
+  outputTable: N14ResourceExtractorOreTable
+  # За один цикл таблица руды прокручивается случайное целое число раз от 1 до 6.
+  minOutputRolls: 1
+  maxOutputRolls: 6
+  # Максимальное количество СУЩНОСТЕЙ (не стаков) может получиться из одного ролла.
+  # (Этот параметр существует, если вдруг вы решите в один вес впихнуть несколько сущностей).
+  maxOutputEntities: 10
+  events:
+  # Шанс проверяется один раз за каждый завершённый и оплаченный топливный цикл.
+  # Вместо кротокрыса можно и служебную сущность Взрыв-при-Спавне какую-нибудь поставить при желании.
+  - entity: N14MobMolerat
+    amount: 4
+    chancePerRoll: 0.1
+    telegraph: N14ResourceExtractorBurrowEffect
+    telegraphDuration: 1.2
+    spawnRadius: 3
+
+# Один готовый к применению медицинский предмет за завершённый цикл экстракции.
+# Веса относительные, а не процентные. Пустые шприцы и ингаляторы,
+# медицинские инструменты и контейнеры намеренно исключены.
+- type: entityTable
+  id: N14ResourceExtractorMedicalTable
+  table: !type:GroupSelector
+    children:
+    - !type:EntSelector
+      id: N14StimpakDirty
+      weight: 24
+    - !type:EntSelector
+      id: N14Stimpak
+      weight: 20
+    - !type:EntSelector
+      id: N14HealingPowder
+      weight: 18
+    - !type:EntSelector
+      id: N14RadXPill
+      weight: 10
+    - !type:EntSelector
+      id: N14RadAwayInhaler
+      weight: 10
+    - !type:EntSelector
+      id: N14RadAwayPhial
+      weight: 8
+    - !type:EntSelector
+      id: N14FixerPill
+      weight: 8
+    - !type:EntSelector
+      id: N14Bandage1
+      weight: 8
+    - !type:EntSelector
+      id: N14CleanGauze1
+      weight: 7
+    - !type:EntSelector
+      id: N14Ointment1
+      weight: 6
+    - !type:EntSelector
+      id: N14AloeSalve1
+      weight: 5
+    - !type:EntSelector
+      id: N14RadAwayBloodbag
+      weight: 5
+    - !type:EntSelector
+      id: N14Med-X
+      weight: 7
+    - !type:EntSelector
+      id: N14Jet
+      weight: 7
+    - !type:EntSelector
+      id: N14BuffoutPill
+      weight: 6
+    - !type:EntSelector
+      id: N14MentatsPill
+      weight: 6
+    - !type:EntSelector
+      id: N14Hydra
+      weight: 5
+    - !type:EntSelector
+      id: N14Psycho
+      weight: 5
+    - !type:EntSelector
+      id: N14SuperStimpak
+      weight: 4
+    - !type:EntSelector
+      id: N14HealingPoultice
+      weight: 4
+    - !type:EntSelector
+      id: N14Antidote
+      weight: 4
+    - !type:EntSelector
+      id: N14SmellingSalts
+      weight: 3
+    - !type:EntSelector
+      id: N14Turbo
+      weight: 3
+    - !type:EntSelector
+      id: N14BuffjetPill
+      weight: 3
+    - !type:EntSelector
+      id: N14BufftatsPill
+      weight: 3
+    - !type:EntSelector
+      id: N14CateyePill
+      weight: 3
+    - !type:EntSelector
+      id: N14BerserkerPowder
+      weight: 2
+    - !type:EntSelector
+      id: N14MourningPoultice
+      weight: 2
+    - !type:EntSelector
+      id: N14Traumapack
+      weight: 1
+    - !type:EntSelector
+      id: N14UltraStimpak
+      weight: 0.5
+
+- type: resourceExtractorProduction
+  id: N14ResourceExtractorMedicalProduction
+  outputTable: N14ResourceExtractorMedicalTable
+  minOutputRolls: 1
+  maxOutputRolls: 1
+  maxOutputEntities: 5
+
+# Таблица выбора одной единицы руды. Веса относительные, а не процентные.
+- type: entityTable
+  id: N14ResourceExtractorCapsTable
+  table: !type:GroupSelector
+    children:
+    - !type:EntSelector
+      id: N14CurrencyCap
+      weight: 45
+    - !type:EntSelector
+      id: N14CurrencyCap10
+      weight: 30
+    - !type:EntSelector
+      id: N14CurrencyCap100
+      weight: 5
+    - !type:EntSelector
+      id: N14CurrencyCap50
+      weight: 10
+    - !type:EntSelector
+      id: N14CurrencyCap500
+      weight: 2
+
+- type: resourceExtractorProduction
+  id: N14ResourceExtractorCapsProduction
+  outputTable: N14ResourceExtractorCapsTable
+  minOutputRolls: 1
+  maxOutputRolls: 10
+  maxOutputEntities: 10
+  events:
+  # Лорное обоснование: это волшебный коготь смерти-упырь, который наказывает за жадность.
+  - entity: N14MobDeathclaw
+    amount: 1
+    chancePerRoll: 0.01
+    telegraph: N14ResourceExtractorBurrowEffect
+    telegraphDuration: 1.0
+    spawnRadius: 2

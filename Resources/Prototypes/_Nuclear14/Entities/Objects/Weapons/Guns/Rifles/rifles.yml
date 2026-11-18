@@ -28,6 +28,12 @@
   - type: StaticPrice
     price: 100
   - type: Craftable
+  - type: MeleeWeapon # Forge-Change
+    attackRate: 2
+    damage:
+      types:
+        Blunt: 15
+    bluntStaminaDamageFactor: 1.25
 
 #Перенёс из snipers.yml
 - type: entity
@@ -237,7 +243,7 @@
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 45
+    maxAngle: 44 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
     soundGunshot:
@@ -267,6 +273,8 @@
             - N14Cartridge762Rifle
   - type: StaticPrice
     price: 125
+  - type: FollowDistance
+    backStrength: 3.2  # Forge-Change
 
 - type: entity
   name: service rifle
@@ -376,7 +384,8 @@
         whitelist:
           tags:
             - N14Cartridge556Rifle
-
+  - type: FollowDistance
+    backStrength: 3.2  # Forge-Change
 - type: entity
   name: scout rifle
   parent: N14WeaponRifleBase
@@ -560,12 +569,12 @@
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 46 # Forge-Change
+    maxAngle: 45 # Forge-Change
     angleIncrease: 5 # Forge-Change
     angleDecay: 16
     soundGunshot:
       collection: N14MarksmanGunshot
-    fireRate: 4
+    fireRate: 4.5 # Forge-Change
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
@@ -612,7 +621,7 @@
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 45
+    maxAngle: 50 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
     fireRate: 4
@@ -669,7 +678,7 @@
     angleDecay: 16
     soundGunshot:
       collection: N14MarksmanGunshot
-    fireRate: 4
+    fireRate: 4.5 # Forge-Change
     selectedMode: FullAuto
     availableModes:
     - FullAuto
@@ -799,6 +808,8 @@
             - N14Cartridge762Rifle
   - type: StaticPrice
     price: 175
+  - type: FollowDistance
+    backStrength: 3.2 # Forge-Change
 
 - type: entity
   name: SKS chinese carbine

@@ -82,6 +82,11 @@
             sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
             state: hide_yaoguai
           doAfter: 8
+        # Forge-Change-Start
+        - material: ForgeAnimalSinew
+          amount: 1
+          doAfter: 5
+        # Forge-Change-End
 
   - node: cloak
     entity: N14ClothingNeckCloakYaoguai
@@ -117,7 +122,11 @@
             sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
             state: pelt_nightstalker
           doAfter: 8
+        # Forge-Change-Start
+        - material: ForgeAnimalSinew
+          amount: 1
+          doAfter: 5
+        # Forge-Change-End
 
   - node: head
     entity: N14ClothingHeadHatNightstalker
-

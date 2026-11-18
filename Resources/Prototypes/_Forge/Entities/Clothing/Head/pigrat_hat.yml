@@ -1,0 +1,16 @@
+- type: entity
+  parent: ClothingHeadBase
+  id: ForgeClothingPigratHat
+  name: шапка из свинокрыса
+  description: Шапка из шкуры свинокрыса с торчащими ушами.
+  components:
+  - type: Sprite
+    sprite: _Forge/Clothing/Head/pigrat_hat.rsi
+    state: icon
+  - type: Clothing
+    sprite: _Forge/Clothing/Head/pigrat_hat.rsi
+    slots:
+    - head
+  - type: Construction
+    graph: ForgePigratHat
+    node: hat

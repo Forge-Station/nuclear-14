@@ -37,7 +37,7 @@
     attackRate: 1.3333
     damage:
       types:
-        Blunt: 8.0
+        Blunt: 16.0 # Forge-Change
     bluntStaminaDamageFactor: 1.25
     swapKeys: true
     disableHeavy: true
@@ -96,7 +96,7 @@
     attackRate: 1.3333
     damage:
       types:
-        Blunt: 8.0
+        Blunt: 16.0 # Forge-Change
     bluntStaminaDamageFactor: 1.25
     swapKeys: true
     disableHeavy: true
@@ -688,7 +688,8 @@
             - N14Cartridge308Rifle
   - type: StaticPrice
     price: 175
-
+  - type: FollowDistance
+    backStrength: 3 # Forge-Change
 # Forge-add-start
 - type: entity
   name: 308 Sniper Rifle

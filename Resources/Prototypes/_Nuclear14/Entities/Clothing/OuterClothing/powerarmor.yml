@@ -66,6 +66,9 @@
   - type: Reflect
     reflectProb: 0.1
     spread: 150
+  - type: Construction # Forge-add
+    graph: N14BrokenPowerArmorT45
+    node: Repaired
   - type: EmitsSoundOnMove # Forge-Change
     soundCollection:
       collection: N14FootstepPowerArmor
@@ -85,6 +88,9 @@
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t51.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t51.rsi
+  - type: Construction
+    graph: N14BrokenPowerArmorT51
+    node: Repaired
   - type: Armor
     modifiers:
       coefficients:
@@ -126,6 +132,9 @@
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t60.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t60.rsi
+  - type: Construction
+    graph: N14BrokenPowerArmorT60
+    node: Repaired
   - type: Armor
     modifiers:
       coefficients:
@@ -323,6 +332,9 @@
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/raider.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/raider.rsi
+  - type: Construction
+    graph: N14BrokenPowerArmorRaider
+    node: Repaired
   - type: Armor
     modifiers:
       coefficients:
@@ -503,6 +515,9 @@
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45ncr.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45ncr.rsi
+  - type: Construction #Forge-add
+    graph: N14BrokenPowerArmorT45NCR
+    node: Repaired
   # - type: Armor #Forge-start
   #   modifiers:
   #     coefficients:

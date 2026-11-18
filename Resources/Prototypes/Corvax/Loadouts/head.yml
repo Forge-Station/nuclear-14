@@ -60,3 +60,184 @@
       - TownSheriff
   items:
     - N14ClothingHeadTownGuardBrodieVisor
+
+- type: loadout
+  id: MisfitsClothingHeadKhanHelmet
+  category: Head
+  cost: 3
+  exclusive: true
+  items:
+    - MisfitsClothingHeadKhanHelmet
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadHatEyeBot
+  category: Head
+  cost: 3
+  exclusive: true
+  items:
+    - N14ClothingHeadHatEyeBot
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadHatScavengerHelmet
+  category: Head
+  cost: 3
+  exclusive: true
+  items:
+    - N14ClothingHeadHatScavengerHelmet
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadHatAnimal
+  category: Head
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingHeadHatAnimal
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadBaron
+  category: Head
+  cost: 3
+  exclusive: true
+  items:
+    - N14ClothingHeadBaron
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: ClothingHeadHelmetBone
+  category: Head
+  cost: 3
+  exclusive: true
+  items:
+    - ClothingHeadHelmetBone
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadHatRaiderbag
+  category: Head
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingHeadHatRaiderbag
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadMarksmanHood
+  category: Head
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingHeadMarksmanHood
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+          - CaesarLegion
+
+- type: loadout
+  id: N14ClothingHeadSackMetal
+  category: Head
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingHeadSackMetal
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander

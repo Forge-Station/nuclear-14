@@ -34,6 +34,7 @@
   - type: Tag
     tags:
       - RawLeather
+      # - ForgeLootHide # Forge-Change-Del
   - type: PhysicalComposition
     materialComposition:
       RawLeather: 400
@@ -87,6 +88,7 @@
     tags:
       - NightstalkerPelt
       - RawLeather # Forge-Change
+      # - ForgeLootHide # Forge-Change-Del
   - type: PhysicalComposition
     materialComposition:
       RawLeather: 300
@@ -105,6 +107,7 @@
     tags:
       - YaoguaiHide
       - RawLeather
+      # - ForgeLootHide # Forge-Change-Del
   - type: PhysicalComposition
     materialComposition:
       RawLeather: 600

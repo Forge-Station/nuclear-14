@@ -18,6 +18,7 @@
   id: N14ClothingEyesSunGlasses
   category: Accessories
   cost: 2
+  customColorTint: true # Forge-add
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutEyes

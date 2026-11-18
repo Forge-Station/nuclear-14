@@ -72,8 +72,8 @@
     impactEffect: BulletImpactEffect
     damage:
       types:
-        Heat: 27 # Forge-Change
-        Radiation: 6
+        Heat: 37 # Forge-Change
+        Radiation: 9 # Forge-Change
     soundHit:
       path: "/Audio/Weapons/Guns/Hits/energy_meat1.ogg"
 

@@ -37,6 +37,14 @@
       spawned:
       - id: N14FoodMeatRadRaw
         amount: 5
+      # Forge-Change-Start
+      - id: ForgeHumanSkin3
+        amount: 1
+      - id: ForgeAnimalBone3
+        amount: 1
+      - id: ForgeAnimalSinew
+        amount: 2
+      # Forge-Change-End
     - type: HumanoidAppearance
       species: Human
       hideLayersOnEquip:

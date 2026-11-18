@@ -98,11 +98,16 @@
       edges:
         - to: spear
           steps:
-            - material: Bones
-              amount: 4
+            # Forge-Change-Start
+            - material: ForgeAnimalBone
+              amount: 3
               doAfter: 2
-            - material: WebSilk
+            - material: WoodPlank
+              amount: 2
+              doAfter: 2
+            - material: ForgeAnimalSinew
               amount: 1
-              doAfter: 1
+              doAfter: 3
+            # Forge-Change-End
     - node: spear
       entity: SpearBone

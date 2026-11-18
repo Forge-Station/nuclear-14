@@ -186,6 +186,9 @@ ent-N14TimedSpawnerRobobrain = повторяющийся спавнер роб�
 ent-N14TimedSpawnerEyebot = повторяющийся спавнер робоглаз
     .suffix = { ent-N14MobRobotHostileMelee.suffix }
     .desc = { ent-N14TimedSpawnerMolerat.desc }
+ent-N14TimedSpawnerSentrybot = повторяющийся спавнер роботов-часовых
+    .suffix = { ent-N14MobRobotHostileSentrybot.suffix }
+    .desc = { ent-N14TimedSpawnerMolerat.desc }
 
 # Споры 
 ent-N14TimedSpawnerSporePlant = повторяющийся спавнер мухоловок

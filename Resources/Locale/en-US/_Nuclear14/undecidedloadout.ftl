@@ -290,6 +290,12 @@ undecided-loadout-category-mbos-kni-bal-description =
     Includes 1 assault carbine, 3 5.56 magazines, 1 AEP-7, 2 energy
     cells, 1 roll of gauze, and 1 K ration MRE.
 
+undecided-loadout-category-mbos-kni-snip-name = Knight Sniper Kit
+undecided-loadout-category-mbos-kni-bal-description =
+    A cache containing belongings of a Midwestern chapter Knight.
+    Includes 1 F1, 2 308 boxes , 1 AEP-7, 2 energy
+    cells, 1 roll of gauze,binoculars, and 1 K ration MRE.
+
 undecided-loadout-category-mbos-scribe-medic-name = Scribe Medical Kit
 undecided-loadout-category-mbos-scribe-medic-description =
     A cache containing belongings of a Midwestern chapter Scribe.

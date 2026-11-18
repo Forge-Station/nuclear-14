@@ -1,0 +1,530 @@
+# =====================================================================
+# ВСЕ ГРАФЫ ПОЧИНКИ СИЛОВОЙ БРОНИ
+# Разделы: T-45 / T-45 НКР / T-51 / T-60 / Китайская / Рейдерская / Компоненты починки
+# =====================================================================
+
+# =========================  СЛОМАННАЯ T-45  =========================
+- type: constructionGraph
+  id: N14BrokenPowerArmorT45
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: Pried
+          completed:
+            - !type:GivePrototype
+              prototype: N14Scrap1
+              amount: 2
+          steps:
+            - tool: Prying
+              doAfter: 4
+
+    - node: Pried
+      edges:
+        - to: Wires
+          steps:
+            - material: N14ScrapElectronic
+              amount: 4
+              doAfter: 4
+
+    - node: Wires
+      edges:
+        - to: Bolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+
+    - node: Bolted
+      edges:
+        - to: Framed
+          steps:
+            - material: Aluminum
+              amount: 3
+              doAfter: 5
+
+    - node: Framed
+      edges:
+        - to: Welded
+          steps:
+            - tool: Welding
+              doAfter: 5
+
+    - node: Welded
+      edges:
+        - to: Padded
+          steps:
+            - tag: N14PowerArmorPadding
+              name: защитная подкладка
+              icon: { sprite: Clothing/OuterClothing/Armor/riot.rsi, state: icon }
+              doAfter: 3
+
+    - node: Padded
+      edges:
+        - to: PaddedBolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+
+    - node: PaddedBolted
+      edges:
+        - to: Plated
+          steps:
+            - tag: N14PowerArmorPlate
+              name: стальные бронепластины
+              icon: { sprite: Corvax/Clothing/OuterClothing/Armor/heavysteelarmor.rsi, state: icon }
+              doAfter: 3
+
+    - node: Plated
+      edges:
+        - to: PlatedBolted
+          steps:
+            - tool: Anchoring
+              doAfter: 4
+
+    - node: PlatedBolted
+      edges:
+        - to: Repaired
+          steps:
+            - tool: SprayPainting
+              doAfter: 3
+
+    - node: Repaired
+      entity: N14ClothingOuterPowerArmorT45
+
+# =======================  СЛОМАННАЯ T-45 НКР  =======================
+- type: constructionGraph
+  id: N14BrokenPowerArmorT45NCR
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: Pried
+          completed:
+            - !type:GivePrototype
+              prototype: N14Scrap1
+              amount: 2
+          steps:
+            - tool: Prying
+              doAfter: 4
+
+    - node: Pried
+      edges:
+        - to: Wires
+          steps:
+            - material: N14ScrapElectronic
+              amount: 4
+              doAfter: 4
+
+    - node: Wires
+      edges:
+        - to: Bolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+
+    - node: Bolted
+      edges:
+        - to: Framed
+          steps:
+            - material: Aluminum
+              amount: 3
+              doAfter: 5
+
+    - node: Framed
+      edges:
+        - to: Welded
+          steps:
+            - tool: Welding
+              doAfter: 5
+
+    - node: Welded
+      edges:
+        - to: Padded
+          steps:
+            - tag: N14PowerArmorPadding
+              name: защитная подкладка
+              icon: { sprite: Clothing/OuterClothing/Armor/riot.rsi, state: icon }
+              doAfter: 3
+
+    - node: Padded
+      edges:
+        - to: PaddedBolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+
+    - node: PaddedBolted
+      edges:
+        - to: Plated
+          steps:
+            - tag: N14PowerArmorPlate
+              name: стальные бронепластины
+              icon: { sprite: Corvax/Clothing/OuterClothing/Armor/heavysteelarmor.rsi, state: icon }
+              doAfter: 3
+
+    - node: Plated
+      edges:
+        - to: PlatedBolted
+          steps:
+            - tool: Anchoring
+              doAfter: 4
+
+    - node: PlatedBolted
+      edges:
+        - to: Repaired
+          steps:
+            - tool: SprayPainting
+              doAfter: 3
+
+    - node: Repaired
+      entity: N14ClothingOuterPowerArmorT45NCR
+
+# ==========  T-51 / T-60 / КИТАЙСКАЯ / РЕЙДЕРСКАЯ  ==========
+- type: constructionGraph
+  id: N14BrokenPowerArmorT51
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: Pried
+          completed:
+            - !type:GivePrototype
+              prototype: N14Scrap1
+              amount: 2
+          steps:
+            - tool: Prying
+              doAfter: 4
+    - node: Pried
+      edges:
+        - to: Wires
+          steps:
+            - material: N14ScrapElectronic
+              amount: 4
+              doAfter: 4
+    - node: Wires
+      edges:
+        - to: Bolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+    - node: Bolted
+      edges:
+        - to: Framed
+          steps:
+            - material: Aluminum
+              amount: 3
+              doAfter: 5
+    - node: Framed
+      edges:
+        - to: Welded
+          steps:
+            - tool: Welding
+              doAfter: 5
+    - node: Welded
+      edges:
+        - to: Padded
+          steps:
+            - tag: N14PowerArmorPadding
+              name: защитная подкладка
+              icon: { sprite: Clothing/OuterClothing/Armor/riot.rsi, state: icon }
+              doAfter: 3
+    - node: Padded
+      edges:
+        - to: PaddedBolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+    - node: PaddedBolted
+      edges:
+        - to: Plated
+          steps:
+            - tag: N14PowerArmorPlate
+              name: алюминиевые бронепластины
+              icon: { sprite: Corvax/Clothing/OuterClothing/Armor/heavysteelarmor.rsi, state: icon }
+              doAfter: 3
+    - node: Plated
+      edges:
+        - to: PlatedBolted
+          steps:
+            - tool: Anchoring
+              doAfter: 4
+    - node: PlatedBolted
+      edges:
+        - to: Repaired
+          steps:
+            - material: N14Iron
+              amount: 10
+            - tool: SprayPainting
+              doAfter: 3
+    - node: Repaired
+      entity: N14ClothingOuterPowerArmorT51
+
+- type: constructionGraph
+  id: N14BrokenPowerArmorT60
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: Pried
+          completed:
+            - !type:GivePrototype
+              prototype: N14Scrap1
+              amount: 2
+          steps:
+            - tool: Prying
+              doAfter: 4
+    - node: Pried
+      edges:
+        - to: Wires
+          steps:
+            - material: N14ScrapElectronic
+              amount: 4
+              doAfter: 4
+    - node: Wires
+      edges:
+        - to: Bolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+    - node: Bolted
+      edges:
+        - to: Framed
+          steps:
+            - material: Aluminum
+              amount: 3
+              doAfter: 5
+    - node: Framed
+      edges:
+        - to: Welded
+          steps:
+            - tool: Welding
+              doAfter: 5
+    - node: Welded
+      edges:
+        - to: Padded
+          steps:
+            - tag: N14PowerArmorPadding
+              name: защитная подкладка
+              icon: { sprite: Clothing/OuterClothing/Armor/riot.rsi, state: icon }
+              doAfter: 3
+    - node: Padded
+      edges:
+        - to: PaddedBolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+    - node: PaddedBolted
+      edges:
+        - to: Plated
+          steps:
+            - tag: N14PowerArmorPlate
+              name: алюминиевые бронепластины
+              icon: { sprite: Corvax/Clothing/OuterClothing/Armor/heavysteelarmor.rsi, state: icon }
+              doAfter: 3
+    - node: Plated
+      edges:
+        - to: PlatedBolted
+          steps:
+            - tool: Anchoring
+              doAfter: 4
+    - node: PlatedBolted
+      edges:
+        - to: Repaired
+          steps:
+            - material: N14Iron
+              amount: 10
+            - tool: SprayPainting
+              doAfter: 3
+    - node: Repaired
+      entity: N14ClothingOuterPowerArmorT60
+
+- type: constructionGraph
+  id: N14BrokenPowerArmorT51China
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: Pried
+          completed:
+            - !type:GivePrototype
+              prototype: N14Scrap1
+              amount: 2
+          steps:
+            - tool: Prying
+              doAfter: 4
+    - node: Pried
+      edges:
+        - to: Wires
+          steps:
+            - material: N14ScrapElectronic
+              amount: 4
+              doAfter: 4
+    - node: Wires
+      edges:
+        - to: Bolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+    - node: Bolted
+      edges:
+        - to: Framed
+          steps:
+            - material: Aluminum
+              amount: 3
+              doAfter: 5
+    - node: Framed
+      edges:
+        - to: Welded
+          steps:
+            - tool: Welding
+              doAfter: 5
+    - node: Welded
+      edges:
+        - to: Padded
+          steps:
+            - tag: N14PowerArmorPadding
+              name: защитная подкладка
+              icon: { sprite: Clothing/OuterClothing/Armor/riot.rsi, state: icon }
+              doAfter: 3
+    - node: Padded
+      edges:
+        - to: PaddedBolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+    - node: PaddedBolted
+      edges:
+        - to: Plated
+          steps:
+            - tag: N14PowerArmorPlate
+              name: алюминиевые бронепластины
+              icon: { sprite: Corvax/Clothing/OuterClothing/Armor/heavysteelarmor.rsi, state: icon }
+              doAfter: 3
+    - node: Plated
+      edges:
+        - to: PlatedBolted
+          steps:
+            - tool: Anchoring
+              doAfter: 4
+    - node: PlatedBolted
+      edges:
+        - to: Repaired
+          steps:
+            - material: N14Iron
+              amount: 10
+            - tool: SprayPainting
+              doAfter: 3
+    - node: Repaired
+      entity: N14ClothingOuterPowerArmorT51China
+
+- type: constructionGraph
+  id: N14BrokenPowerArmorRaider
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: Pried
+          completed:
+            - !type:GivePrototype
+              prototype: N14Scrap1
+              amount: 2
+          steps:
+            - tool: Prying
+              doAfter: 4
+    - node: Pried
+      edges:
+        - to: Wires
+          steps:
+            - material: N14ScrapElectronic
+              amount: 4
+              doAfter: 4
+    - node: Wires
+      edges:
+        - to: Bolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+    - node: Bolted
+      edges:
+        - to: Framed
+          steps:
+            - material: Aluminum
+              amount: 3
+              doAfter: 5
+    - node: Framed
+      edges:
+        - to: Welded
+          steps:
+            - tool: Welding
+              doAfter: 5
+    - node: Welded
+      edges:
+        - to: Padded
+          steps:
+            - tag: N14PowerArmorPadding
+              name: защитная подкладка
+              icon: { sprite: Clothing/OuterClothing/Armor/riot.rsi, state: icon }
+              doAfter: 3
+    - node: Padded
+      edges:
+        - to: PaddedBolted
+          steps:
+            - tool: Screwing
+              doAfter: 4
+    - node: PaddedBolted
+      edges:
+        - to: Plated
+          steps:
+            - tag: N14PowerArmorPlate
+              name: алюминиевые бронепластины
+              icon: { sprite: Corvax/Clothing/OuterClothing/Armor/heavysteelarmor.rsi, state: icon }
+              doAfter: 3
+    - node: Plated
+      edges:
+        - to: PlatedBolted
+          steps:
+            - tool: Anchoring
+              doAfter: 4
+    - node: PlatedBolted
+      edges:
+        - to: Repaired
+          steps:
+            - tool: SprayPainting
+              doAfter: 3
+    - node: Repaired
+      entity: N14ClothingOuterPowerArmorT45
+
+# ==========  КОМПОНЕНТЫ ПОЧИНКИ (подкладки / пластины)  ==========
+- type: constructionGraph
+  id: N14RepairPowerArmorPadding
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: padding
+          steps:
+            - material: Cloth
+              amount: 10
+            - material: Plastic
+              amount: 10
+            - material: Leather
+              amount: 10
+
+    - node: padding
+      entity: N14RepairPowerArmorPadding
+
+- type: constructionGraph
+  id: N14RepairPowerArmorPlate
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: plate
+          steps:
+            - material: Steel
+              amount: 15
+            - material: N14Iron
+              amount: 5
+
+    - node: plate
+      entity: N14RepairPowerArmorPlate

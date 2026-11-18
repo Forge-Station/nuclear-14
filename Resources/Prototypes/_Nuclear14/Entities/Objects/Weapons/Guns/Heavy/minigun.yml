@@ -73,7 +73,7 @@
     attackRate: 1.3333
     damage:
       types:
-        Blunt: 8.5
+        Blunt: 20 # Forge-Change
     bluntStaminaDamageFactor: 1.25
     swapKeys: true
     disableHeavy: true

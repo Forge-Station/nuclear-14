@@ -1,0 +1,18 @@
+- type: entity
+  parent: ClothingNeckBase
+  id: ForgeClothingNeckCloakDeathclaw
+  name: плащ из когтя смерти
+  description: Тяжёлый плащ из шкуры когтя смерти, сшитый крепкими сухожилиями.
+  components:
+  - type: Item
+    sprite: _Nuclear14/Clothing/Neck/yaoguai.rsi
+  - type: Sprite
+    sprite: _Forge/Clothing/Neck/deathclaw_cloak.rsi
+    state: icon
+  - type: Clothing
+    sprite: _Forge/Clothing/Neck/deathclaw_cloak.rsi
+    slots:
+    - neck
+  - type: Construction
+    graph: ForgeDeathclawCloak
+    node: cloak

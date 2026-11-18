@@ -1060,6 +1060,34 @@
       - id: N14CleanGauze10
       - id: N14BoxCardboardMREBoxKFilled
 
+- type: entity
+  name: Brotherhood Initiate StoormTrooper kit
+  parent: KitBase
+  id: KitMBoS_IniStTr
+  description: A crate containing everything a member of the Brotherhood might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponSMG9mm
+      - id: N14MagazineSMG9mm
+        amount: 3
+      - id: N14WeaponLaserPistol
+      - id: N14PowerCellSmall
+        amount: 2
+      - id: N14ShieldMetalLight
+      - id: SheetSteel1
+        amount: 15
+      - id: N14Scrap1
+        amount: 9
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+#forge-add
+
 # MBoS Knight & Senior Knight kits
 - type: entity
   name: Brotherhood Knight laser kit
@@ -1102,6 +1130,57 @@
         amount: 2
       - id: N14CleanGauze10
       - id: N14BoxCardboardMREBoxKFilled
+
+- type: entity
+  name: Brotherhood Knight Stoormtrooper kit
+  parent: KitBase
+  id: KitMBoS_KniStTr
+  description: A crate containing everything a member of the Brotherhood might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponSMG10mm
+      - id: N14MagazineSMG10mm
+        amount: 3
+      - id: N14ShieldMetalHeavy
+      - id: N14WeaponLaserPistol
+      - id: N14PowerCellSmall
+        amount: 2
+      - id: N14Scrap1
+        amount: 15
+      - id: SheetSteel1
+        amount: 25
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+#forge-add
+
+- type: entity
+  name: Brotherhood Knight sniper kit
+  parent: KitBase
+  id: KitMBoS_KniSnip
+  description: A crate containing everything a member of the Brotherhood might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponSniper308Canadian
+      - id: MagazineBox308
+        amount: 2
+      - id: N14WeaponLaserPistol
+      - id: N14PowerCellSmall
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: Binoculars
+#forge-add
 
 # MBoS Scribe Medic Kit
 - type: entity
@@ -1692,14 +1771,14 @@
       - id: MagazineBox12gauge
         amount: 3
       - id: N14CleanGauze10
-      - id: N14MedkitCombatFilled
       - id: N14Stimpak
         amount: 2
       - id: N14Psycho
         amount: 2
-      - id: N14MedkitCombatFilled
       - id: N14ClothingMaskPlate
       - id: N14BoxCardboardMREBoxKFilled
+        amount: 1
+      - id: N14MedkitCombatFilled # Forge-Change
 
 # Forge: KitTownGuard_Riot disabled
 #- type: entity

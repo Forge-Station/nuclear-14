@@ -3,6 +3,8 @@
   name: job-name-overseer
   description: job-description-overseer
   requirements:
+  - !type:MinPlayersRequirement
+    min: 40
   - !type:CharacterSpeciesRequirement
     species:
     - Human

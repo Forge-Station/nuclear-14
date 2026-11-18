@@ -88,6 +88,14 @@ undecided-loadout-category-veteran-kebab-description =
     2 болы, 2 целебные парки, 1 гидра, 2 порошка берсерка,
     1 аптечка первой помощи полная, 1 рацион легионеров
 
+undecided-loadout-category-veteran-swordsman-name = Набор легионера-ветерана мечника
+undecided-loadout-category-veteran-swordsman-description =
+    Ящик со всем необходимым для ведения ближнего боя.
+    Содержит: 1 бампер-меч, 1 легионерский щит,
+    2 болы, 2 порошка берсерка, 1 грязный суперстимулятор,
+    2 целебные парки, 1 гидра,
+    1 аптечка первой помощи полная, 1 рацион легионеров
+
 undecided-loadout-category-veteran-scout-name = Набор ветерана-лазутчика
 undecided-loadout-category-veteran-scout-description =
     Ящик со всем необходимым для разведки и бесшумных стычек.
@@ -101,7 +109,7 @@ undecided-loadout-category-veteran-scout-description =
 undecided-loadout-category-warrior-base-name = Обычный набор легионера-воина
 undecided-loadout-category-warrior-base-description =
     Ящик со всем необходимым для воина.
-    Содержит: 1 племенное мачете, 1 деревянный баклер,
+    Содержит: 1 легионерское мачете, 1 деревянный баклер,
     1 рычажной дробовик, 1 коробка дробовых патронов (20-gauge),
     1 целебная парка, 1 рулон бинтов, 1 рацион легионеров
 
@@ -115,7 +123,7 @@ undecided-loadout-category-warrior-slave-owner-description =
 undecided-loadout-category-warrior-healer-name = Набор легионера-воина лекаря
 undecided-loadout-category-warrior-healer-description =
     Ящик со всем необходимым для помощи товарищам на поле боя.
-    Содержит: 1 племенное мачете, 1 дробовик без приклада,
+    Содержит: 1 легионерское мачете, 1 дробовик без приклада,
     1 коробка дробовых патронов (12-gauge), 1 пустой пояс медика,
     1 докторский саквояж, 2 целебные парки, 1 гидра, 2 целебных порошка,
     2 рулона бинтов, 1 пачка пакетов крови, 1 пачка мази из алое,
@@ -124,7 +132,7 @@ undecided-loadout-category-warrior-healer-description =
 undecided-loadout-category-warrior-firearm-name = Огнестрельный набор легионера-воина
 undecided-loadout-category-warrior-firearm-description =
     Ящик со всем необходимым для перестрелок на открытой местности.
-    Содержит: 1 племенное мачете, 1 пистолет-пулемёт 10 мм, 1 деревянный баклер,
+    Содержит: 1 легионерское мачете, 1 пистолет-пулемёт 10 мм, 1 деревянный баклер,
     1 коробка патронов (10mm Auto), 2 магазина ПП (10mm Auto),
     1 рулон бинтов, 1 целебная парка, 1 рацион легионеров
 
@@ -146,7 +154,7 @@ undecided-loadout-category-warrior-spear-description =
 undecided-loadout-category-recruit-base-name = Обычный набор легионера-рекрута
 undecided-loadout-category-recruit-base-description =
     Ящик со всем необходимым для ведения боя на средней дистанции.
-    Содержит: 1 племенное мачете, 1 пистолет-пулемёт M3,
+    Содержит: 1 легионерское мачете, 1 пистолет-пулемёт M3,
     2 магазина ПП (9mm Parabellum), 1 коробка патронов (9mm Parabellum),
     1 легионерский баклер, 2 целебных порошка, 1 рулон бинтов,
     1 рацион легионеров.

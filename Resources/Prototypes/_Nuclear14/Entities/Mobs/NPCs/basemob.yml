@@ -272,6 +272,19 @@
   - type: Clumsy
     clumsySound:
       collection: BodyFall
+  # Forge-Change-Start
+  - type: Butcherable # Forge-Change-Comp
+    butcheringType: Knife
+    spawned:
+    - id: N14FoodMeatRadRaw
+      amount: 1
+    - id: ForgeHumanSkin3
+      amount: 1
+    - id: ForgeAnimalBone3
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 2
+  # Forge-Change-End
   - type: PassiveDamage
     allowedStates:
     - Alive

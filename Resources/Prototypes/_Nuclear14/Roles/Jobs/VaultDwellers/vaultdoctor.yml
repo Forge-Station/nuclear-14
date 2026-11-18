@@ -3,6 +3,8 @@
   name: job-name-vault-doctor
   description: job-description-vault-doctor
   requirements:
+  - !type:MinPlayersRequirement
+    min: 40
   - !type:CharacterSpeciesRequirement
     species:
     - Human
