@@ -1,78 +1,78 @@
 - type: loadout
   id: N14InstrumentBanjo
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentBanjo
 
 - type: loadout
   id: N14InstrumentClarinet
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentClarinet
 
 - type: loadout
   id: N14InstrumentFlute
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentFlute
 
 - type: loadout
   id: N14InstrumentGuitar
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentGuitar
 
 - type: loadout
   id: N14InstrumentHarmonica
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentHarmonica
 
 - type: loadout
   id: N14InstrumentPanflute
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentPanflute
 
 - type: loadout
   id: N14InstrumentSaxaphone
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentSaxaphone
 
 - type: loadout
   id: N14InstrumentTrombone
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentTrombone
 
 - type: loadout
   id: N14InstrumentTrumpet
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentTrumpet
 
 - type: loadout
   id: N14InstrumentViolin
-  category: Items
-  cost: 2
+  category: ItemsMusic
+  cost: 1
   items:
     - N14InstrumentViolin
 
 # Smokeables
 - type: loadout
   id: N14LoadoutItemCigsSalem
-  category: Items
-  cost: 2
+  category: ItemsSmoking
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutSmokeables
@@ -85,8 +85,8 @@
 
 - type: loadout
   id: N14LoadoutItemCigsKool
-  category: Items
-  cost: 2
+  category: ItemsSmoking
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutSmokeables
@@ -99,8 +99,8 @@
 
 - type: loadout
   id: N14LoadoutItemCigsMarlboro
-  category: Items
-  cost: 2
+  category: ItemsSmoking
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutSmokeables
@@ -113,8 +113,8 @@
 
 - type: loadout
   id: N14LoadoutItemCigsWinston
-  category: Items
-  cost: 2
+  category: ItemsSmoking
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutSmokeables
@@ -127,8 +127,8 @@
 
 - type: loadout
   id: N14LoadoutItemCigsCustom
-  category: Items
-  cost: 2
+  category: ItemsSmoking
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutSmokeables
@@ -141,8 +141,8 @@
 
 - type: loadout
   id: N14LoadoutItemCigsRepublics
-  category: Items
-  cost: 2
+  category: ItemsSmoking
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutSmokeables
@@ -153,10 +153,22 @@
   items:
     - N14CigarettePackRepublics
 
+- type: loadout
+  id: N14LoadoutItemRollingPaper
+  category: ItemsSmoking
+  cost: 1
+  requirements:
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - CaesarLegion
+  items:
+    - N14PackRollingPaper
+
 # Lighters
 - type: loadout
   id: N14LoadoutItemLighter
-  category: Items
+  category: ItemsSmoking
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -166,7 +178,7 @@
 
 - type: loadout
   id: N14LoadoutItemLighterCheap
-  category: Items
+  category: ItemsSmoking
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -176,7 +188,7 @@
 
 - type: loadout
   id: N14LoadoutItemMatches
-  category: Items
+  category: ItemsSmoking
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -186,28 +198,28 @@
 
 - type: loadout
   id: N14LoadoutItemWallet
-  category: Items
-  cost: 2
+  category: ItemsPersonal
+  cost: 1
   items:
     - N14Wallet
 
 - type: loadout
   id: d6Dice
-  category: Items
-  cost: 2
+  category: ItemsPersonal
+  cost: 1
   items:
     - d6Dice
 
 - type: loadout
   id: N14LoadoutItemCanteen
-  category: Items
+  category: ItemsFood
   cost: 1
   items:
     - N14JunkVaultCanteen
 
 - type: loadout
   id: N14LoadoutItemFlask
-  category: Items
+  category: ItemsFood
   cost: 1
   requirements:
   - !type:CharacterDepartmentRequirement
@@ -219,7 +231,7 @@
 
 - type: loadout
   id: N14LoadoutItemCig
-  category: Items
+  category: ItemsSmoking
   cost: 1
   requirements:
     - !type:CharacterDepartmentRequirement
@@ -232,7 +244,7 @@
 # Tools
 - type: loadout
   id: N14LoadoutBeltUtility
-  category: Items
+  category: Belts
   cost: 5
   requirements:
     - !type:OverallTimeRequirement
@@ -253,7 +265,7 @@
 # Food
 - type: loadout
   id: N14LoadoutFoodPorkBeans
-  category: Items
+  category: ItemsFood
   cost: 1
   requirements: 
     - !type:CharacterDepartmentRequirement
@@ -262,6 +274,55 @@
       - Vault # Никакой вам еды, пошли нахуй!
   items:
     - N14FoodPorkBeans
+
+- type: loadout
+  id: N14LoadoutItemBedroll
+  category: ItemsTools
+  cost: 2
+  items:
+    - N14BedrollFolded
+
+- type: loadout
+  id: N14LoadoutItemJournal
+  category: ItemsPersonal
+  cost: 1
+  items:
+    - BookBase
+
+- type: loadout
+  id: N14LoadoutItemPencil
+  category: ItemsPersonal
+  cost: 1
+  items:
+    - Pen
+
+- type: loadout
+  id: N14LoadoutItemShovel
+  category: ItemsTools
+  cost: 2
+  items:
+    - N14Shovel
+
+- type: loadout
+  id: N14LoadoutItemBinoculars
+  category: ItemsTools
+  cost: 5
+  items:
+    - Binoculars
+
+- type: loadout
+  id: N14LoadoutItemMortarPestle
+  category: ItemsMedical
+  cost: 1
+  items:
+    - N14MortarpestleGrinder
+
+- type: loadout
+  id: N14LoadoutItemBeaker
+  category: ItemsMedical
+  cost: 2
+  items:
+    - Beaker
 
 # Misc
 # - type: loadout #Forge-change

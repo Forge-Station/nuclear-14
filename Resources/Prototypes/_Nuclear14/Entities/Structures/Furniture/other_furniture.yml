@@ -12,6 +12,7 @@
   name: grandfather clock
   description: An old pre-war clock. Looks grand.
   components:
+  - type: WorldClock
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/np13_misc.rsi
     state: grand_clock

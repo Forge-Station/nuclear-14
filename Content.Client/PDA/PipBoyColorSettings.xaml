@@ -1,0 +1,14 @@
+<pda:PipBoyColorSettings xmlns="https://spacestation14.io"
+                         xmlns:pda="clr-namespace:Content.Client.PDA"
+                         Orientation="Vertical" HorizontalExpand="True">
+    <pda:PdaSettingsButton Name="ColorButton"
+                           Text="{Loc pipboy-theme-color}"
+                           Description="{Loc pipboy-theme-color-description}"/>
+    <BoxContainer Name="Colors" Orientation="Horizontal" SeparationOverride="8"
+                  Margin="8" Visible="False">
+        <Button Name="GreenButton" Text="{Loc pipboy-theme-green}"
+                ToggleMode="True" HorizontalExpand="True"/>
+        <Button Name="AmberButton" Text="{Loc pipboy-theme-amber}"
+                ToggleMode="True" HorizontalExpand="True"/>
+    </BoxContainer>
+</pda:PipBoyColorSettings>

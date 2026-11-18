@@ -6,17 +6,38 @@
   name: job-name-ncr-lt
   description: job-description-ncr-lt
   playTimeTracker: NCROfficer
+  #Forge-Change-Start
+  ranks:
+    - rank: NCRMajor
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCROfficer
+          min: 216000 # 3600 minutes
+    - rank: NCRCaptain
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCROfficer
+          min: 144000 # 2400 minutes
+    - rank: NCRLieutenant
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCROfficer
+          min: 72000 # 1200 minutes
+    - rank: NCRJuniorLieutenant
+  #Forge-Change-End
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: NCR
-      min: 216000 # 60 hours Corvax-Change
-    - !type:CharacterPlaytimeRequirement # Corvax-Add
-      tracker: NCRNCO
-      min: 43200 # 12 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 216000 # 60 hours Corvax-Change
+  - !type:CharacterPlaytimeRequirement # Corvax-Add
+    tracker: NCRNCO
+    min: 43200 # 12 hours
+  # Forge-Change-End
   weight: 10
   startingGear: NCRLTGear
   icon: "JobIconNcrLeader" # Forge-Change
@@ -24,6 +45,7 @@
   requireAdminNotify: true
   alwaysUseSpawner: true
   access:
+  - RadioBroadcast
   - NCR
   - NCRSGT
   - NCRMedic

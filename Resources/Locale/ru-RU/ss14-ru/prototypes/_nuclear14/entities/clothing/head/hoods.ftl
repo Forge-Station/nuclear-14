@@ -15,6 +15,8 @@ ent-N14ClothingHeadHatHoodScribeTabard = капюшон писца
     .desc = Капюшон, прикрепленный к плащу-накидке, снабжен оптической линзой.
 ent-NCClothingHeadHatBoSReaconHood = капюшон разведчика Братства
     .desc = Обычный капюшон, на вид ничего примечательного.
+ent-N14ClothingHeadHatMidWestBoSScripterBattleHood = капюшон писца
+    .desc = Капюшон, прикрепленный к боевой броне скриптера.
 
 # Племя 
 ent-N14ClothingHeadTribalCloakHood = капюшон племенного плаща
@@ -25,3 +27,4 @@ ent-N14ClothingTribalHood = племенной капюшон
     .desc = Большой капюшон, который носят представители племени.
 ent-N14ClothingTribalHunterHood = охотничий капюшон племени
     .desc = Головной убор, который часто носят охотники племени.
+

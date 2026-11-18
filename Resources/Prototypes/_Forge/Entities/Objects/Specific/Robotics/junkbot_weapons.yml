@@ -1,0 +1,154 @@
+# Лазерное и индустриальное вооружение хламоборга.
+- type: entity
+  id: N14BorgModuleJunkConstruction
+  parent: N14BaseSpecializedBorgModule
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+    - sprite: Corvax/Objects/Weapons/Guns/SMGs/NailSMG.rsi
+      state: base
+      scale: 0.5, 0.5
+  - type: Tag
+    tags: [N14BorgModuleJunkbot]
+  - type: ItemBorgModule
+    items: [N14JunkbotNailgun, N14JunkbotPowerGrip]
+
+- type: entity
+  id: N14JunkbotAutomaticLaser
+  parent: BaseItem
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Guns/Battery/laser_gatling.rsi
+    state: base
+  - type: Icon
+    sprite: _Nuclear14/Objects/Weapons/Guns/Battery/laser_gatling.rsi
+    state: base
+  - type: Item
+    size: Small
+    sprite: _Nuclear14/Objects/Weapons/Guns/Battery/laser_gatling.rsi
+  - type: FollowDistance
+    backStrength: 6
+  - type: AmmoCounter
+  - type: Gun
+    fireRate: 4
+    cameraRecoilScalar: 0.1
+    minAngle: 3
+    maxAngle: 15
+    angleIncrease: 4
+    angleDecay: 10
+    selectedMode: FullAuto
+    availableModes: [SemiAuto, FullAuto]
+    resetOnHandSelected: false
+    fireOnDropChance: 0
+    soundGunshot:
+      collection: N14LaserGatlingGunshot
+  - type: Battery
+    maxCharge: 720
+    startingCharge: 720
+  - type: BatterySelfRecharger
+    autoRecharge: true
+    autoRechargeRate: 10
+  - type: HitscanBatteryAmmoProvider
+    proto: RedLaser
+    fireCost: 30
+
+- type: entity
+  id: N14JunkbotNailgun
+  parent: [BaseItem, ForgeGunConditionProfileSMG]
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/SMGs/NailSMG.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+  - type: Icon
+    sprite: Corvax/Objects/Weapons/Guns/SMGs/NailSMG.rsi
+    state: base
+  - type: Item
+    size: Small
+    sprite: Corvax/Objects/Weapons/Guns/SMGs/NailSMG.rsi
+  - type: Appearance
+  - type: AmmoCounter
+  - type: FollowDistance
+    backStrength: 6
+  - type: Gun
+    fireRate: 6
+    cameraRecoilScalar: 0.1
+    minAngle: 6
+    maxAngle: 11
+    angleIncrease: 10
+    angleDecay: 19
+    selectedMode: FullAuto
+    availableModes: [SemiAuto, FullAuto]
+    resetOnHandSelected: false
+    fireOnDropChance: 0
+    soundGunshot:
+      path: /Audio/Corvax/Weapons/Guns/Wpn_nailgun_fire_2d_01.ogg
+      params:
+        volume: -10
+  - type: BasicEntityAmmoProvider
+    proto: N14BulletNail
+    capacity: 36
+    count: 36
+  - type: RechargeBasicEntityAmmo
+    rechargeCooldown: 3
+    rechargeSound:
+      path: /Audio/Weapons/Guns/MagIn/bullet_insert.ogg
+      params:
+        volume: -25
+  - type: GunCondition
+    maxCondition: 400
+    condition: 400
+
+- type: entity
+  abstract: true
+  id: N14BaseJunkbotMeleeManipulator
+  parent: BaseItem
+  categories: [HideSpawnMenu]
+  components:
+  - type: Item
+    size: Small
+    sprite: Corvax/Objects/Weapons/Melee/displacerglove.rsi
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/displacerglove.rsi
+    state: icon
+  - type: Icon
+    sprite: Corvax/Objects/Weapons/Melee/displacerglove.rsi
+    state: icon
+  - type: MeleeWeapon
+    range: 1.2
+    angle: 60
+    attackRate: 1
+    animation: WeaponArcPunch
+    wideAnimation: WeaponArcFist
+    damage:
+      types:
+        Blunt: 35
+    bluntStaminaDamageFactor: 0
+    heavyDamageBaseModifier: 1
+    heavyRangeModifier: 1
+    soundHit:
+      collection: MetalThud
+
+- type: entity
+  id: N14JunkbotStrikeManipulator
+  parent: N14BaseJunkbotMeleeManipulator
+
+- type: entity
+  id: N14JunkbotPowerGrip
+  parent: N14BaseJunkbotMeleeManipulator
+  components:
+  - type: Sprite
+    color: "#D6B681"
+  - type: MeleeWeapon
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 45
+  - type: MeleeThrowOnHit
+    speed: 5
+    lifetime: 0.025

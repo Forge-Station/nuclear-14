@@ -1,0 +1,22 @@
+# Forge-Change-Start
+- type: entity
+  parent: BaseItem
+  id: N14PipBoyReceiverCartridge
+  name: Pip-Boy radio receiver
+  description: A built-in radio receiver for the Pip-Boy.
+  components:
+  - type: Sprite # Forge-Change-Comp
+    sprite: Objects/Devices/cartridge.rsi
+    state: cart-y
+  - type: UIFragment # Forge-Change-Comp
+    ui: !type:PipBoyReceiverUi
+  - type: Cartridge # Forge-Change-Comp
+    programName: pipboy-receiver-program-name
+    icon:
+      sprite: _Nuclear14/Interface/pipboy_programs.rsi
+      state: radio
+  - type: PipBoyReceiverCartridge # Forge-Change-Comp
+    channels:
+    - Bazar
+    - Wasteland
+# Forge-Change-End

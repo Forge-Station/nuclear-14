@@ -1,0 +1,208 @@
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerLockedBoSWest
+  resultProtos:
+    - N14DoorBunkerLockedBoSWest
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 4
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerGlassLockedBoSWest
+  resultProtos:
+    - N14DoorBunkerGlassLockedBoSWest
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 3
+    SheetRGlass:
+      amount: 1
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunker3XLockedBoSWest
+  resultProtos:
+    - N14DoorBunker3XLockedBoSWest
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 12
+    CableApcStack:
+      amount: 15
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerGlass3XLockedBoSWest
+  resultProtos:
+    - N14DoorBunkerGlass3XLockedBoSWest
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 9
+    SheetRGlass:
+      amount: 3
+    CableApcStack:
+      amount: 15
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerLockedBoSWashington
+  resultProtos:
+    - N14DoorBunkerLockedBoSWashington
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 4
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerGlassLockedBoSWashington
+  resultProtos:
+    - N14DoorBunkerGlassLockedBoSWashington
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 3
+    SheetRGlass:
+      amount: 1
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunker3XLockedBoSMidwest
+  resultProtos:
+    - N14DoorBunker3XLockedBoSMidwest
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 12
+    CableApcStack:
+      amount: 15
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerGlass3XLockedBoSMidwest
+  resultProtos:
+    - N14DoorBunkerGlass3XLockedBoSMidwest
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 9
+    SheetRGlass:
+      amount: 3
+    CableApcStack:
+      amount: 15
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerGlassLockedBoSMidwest
+  resultProtos:
+    - N14DoorBunkerGlassLockedBoSMidwest
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 3
+    SheetRGlass:
+      amount: 1
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerLockedBoSMidwest
+  resultProtos:
+    - N14DoorBunkerLockedBoSMidwest
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 4
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerLockedBoSMidwestTall
+  resultProtos:
+    - N14DoorBunkerLockedBoSMidwestTall
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 4
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerLockedNCR
+  resultProtos:
+    - N14DoorBunkerLockedNCR
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 4
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerGlassLockedNCR
+  resultProtos:
+    - N14DoorBunkerGlassLockedNCR
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 3
+    SheetRGlass:
+      amount: 1
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerLockedVaultDweller
+  resultProtos:
+    - N14DoorBunkerLockedVaultDweller
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 4
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+- type: craftRecipe
+  id: N14CraftDoorN14DoorBunkerLockedVaultDwellerTall
+  resultProtos:
+    - N14DoorBunkerLockedVaultDwellerTall
+  craftTime: 10
+  items:
+    N14IngotIron1:
+      amount: 4
+    CableApcStack:
+      amount: 5
+    N14JunkComponentMainboard:
+      amount: 1
+
+

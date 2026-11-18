@@ -15,6 +15,6 @@
   id: N14ClothingHeadHelmetPowerArmorT51ChinaRaiderNPC
   categories: [ HideSpawnMenu ]
   name: китайский силовой шлем
-  description: Васаунима?
+  description: О боже...
   components:
   - type: Unremoveable

@@ -7,13 +7,15 @@
   description: job-description-townbartender
   playTimeTracker: WastelandBartender
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: Townsfolk
-      min: 7200 # 2 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: Townsfolk
+    min: 7200 # 2 hours
+  # Forge-Change-End
   startingGear: WastelandBartenderGear
   icon: "JobIconBartender"
   supervisors: job-supervisors-townsfolk

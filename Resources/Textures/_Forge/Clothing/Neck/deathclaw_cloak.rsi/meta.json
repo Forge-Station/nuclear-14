@@ -1,5 +1,7 @@
 {
   "version": 1,
+  "license": "All Rights Reserved",
+  "copyright": "Made by nainsentropy (discord)",
   "size": {
     "x": 32,
     "y": 32
@@ -9,7 +11,7 @@
       "name": "icon"
     },
     {
-      "name": "equipped-NECK",
+      "name": "equipped-OUTERCLOTHING",
       "directions": 4
     }
   ]

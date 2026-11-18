@@ -33,6 +33,7 @@ ChangelogEntry = dict[str, Any]
 
 def main():
     if not CHANGELOG_WEBHOOK:
+        print("No discord webhook URL found, skipping discord send")
         return
 
     session = requests.Session()
@@ -41,6 +42,9 @@ def main():
     session.headers["X-GitHub-Api-Version"] = "2022-11-28"
 
     most_recent = get_most_recent_workflow(session)
+    if most_recent is None:
+        print("No previous successful run found, using current run as baseline")
+        return
     last_sha = most_recent['head_commit']['id']
     print(f"Last successful publish job was {most_recent['id']}: {last_sha}")
     last_changelog = yaml.safe_load(get_last_changelog(session, last_sha))

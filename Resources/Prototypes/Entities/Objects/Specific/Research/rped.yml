@@ -26,3 +26,7 @@
     difficulty: 3
     recipes:
       - RPED
+
+- type: entity # Forge-Add
+  parent: RPED
+  id: N14RPED

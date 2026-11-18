@@ -26,7 +26,7 @@
     maxAngle: 60
     angleIncrease: 4
     angleDecay: 20
-    fireRate: 3.5
+    fireRate: 4.5 # Forge-Change
     soundGunshot:
       collection: N14LMGGunshot
     selectedMode: FullAuto
@@ -51,8 +51,8 @@
           tags:
             - N14Cartridge762Rifle
   - type: ClothingSpeedModifier
-    walkModifier: 0.95
-    sprintModifier: 0.95
+    walkModifier: 0.9 # Forge-Change
+    sprintModifier: 0.9 # Forge-Change
   - type: HeldSpeedModifier
   - type: MagazineVisuals
     magState: mag

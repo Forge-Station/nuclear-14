@@ -117,6 +117,7 @@
   materials:
     Steel: 600
     Plastic: 200
+    Circuitry: 100 # Forge-Add
 
 - type: latheRecipe
   id: N14HandheldGPSBasic
@@ -156,13 +157,13 @@
 
 - type: latheRecipe
   id: N14RPED
-  result: RPED
+  result: N14RPED # Forge-Change
   category: N14Tools
   completetime: 10
   materials:
     Steel: 650
     Plastic: 150
-    Gold: 50
+    N14Gold: 50 # Forge-Change
 
 - type: latheRecipe
   id: N14MiningDrill

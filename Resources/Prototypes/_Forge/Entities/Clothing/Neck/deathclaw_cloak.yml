@@ -1,5 +1,5 @@
 - type: entity
-  parent: ClothingNeckBase
+  parent: N14ClothingOuterBase
   id: ForgeClothingNeckCloakDeathclaw
   name: плащ из когтя смерти
   description: Тяжёлый плащ из шкуры когтя смерти, сшитый крепкими сухожилиями.
@@ -11,8 +11,18 @@
     state: icon
   - type: Clothing
     sprite: _Forge/Clothing/Neck/deathclaw_cloak.rsi
-    slots:
-    - neck
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.75
+        Slash: 0.75
+        Piercing: 0.75
+        Heat: 0.75
+        Caustic: 0.9
+  - type: FireProtection
+    reduction: 0.1
+  - type: ExplosionResistance
+    damageCoefficient: 0.80
   - type: Construction
     graph: ForgeDeathclawCloak
     node: cloak

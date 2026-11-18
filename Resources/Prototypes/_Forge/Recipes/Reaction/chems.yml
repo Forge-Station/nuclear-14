@@ -13,3 +13,41 @@
       amount: 1
   products:
     BerserkerMixture: 4
+
+# Хи-хи-хихи. - Salniy
+- type: reaction
+  id: BerserkerMixtureRecipe2
+  reactants:
+    HealingPowder:
+      amount: 1
+    DamageModifyingMixture:
+      amount: 0.4
+  products:
+    BerserkerMixture: 1
+
+- type: reaction
+  id: N14MovespeedMixtureInJet
+  reactants:
+    MovespeedMixture:
+      amount: 15
+    Oil:
+      amount: 5
+    Phosphorus:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14JetInhaler
+
+- type: reaction
+  id: N14RobustMovespeedMixtureInTurbo
+  reactants:
+    RobustMovespeedMixture:
+      amount: 10
+    Oil:
+      amount: 5
+    Phosphorus:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14Turbo
+

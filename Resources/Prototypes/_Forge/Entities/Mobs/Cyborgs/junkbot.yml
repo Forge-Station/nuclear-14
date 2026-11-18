@@ -3,6 +3,14 @@
   parent: N14BaseBorg
   name: junkbot
   components:
+  - type: TTS
+    voice: MisterGutsyFl3
+  # Действия камеры создаются до переопределённого BorgChassis.
+  - type: CameraFollow
+  - type: BorgChassis
+    maxModules: 4
+    moduleWhitelist:
+      tags: [BorgModuleGeneric, N14BorgModuleJunkbot]
   - type: Sprite
     sprite: _Forge/Mobs/Cyborgs/junkbot.rsi
     layers:
@@ -53,7 +61,7 @@
     laws: N14JunkbotLaws
   - type: RandomSiliconLaws
   - type: Inventory
-    templateId: borgDutch
+    templateId: N14JunkbotBorgInventory
   - type: Hands
     showInHands: true
   - type: FootstepModifier
@@ -63,7 +71,35 @@
         volume: -6
   - type: Damageable
     damageContainer: Silicon
-    damageModifierSet: Silicon
+    damageModifierSet: N14JunkbotBorg
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 2.375
+    baseSprintSpeed: 4.275
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      120: Critical
+      240: Dead
+  - type: Destructible
+    thresholds:
+    - trigger: !type:DamageTrigger
+        damage: 75
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          path: /Audio/Machines/warning_buzzer.ogg
+          params:
+            volume: 5
+    - trigger: !type:DamageTrigger
+        damage: 360
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:EmptyContainersBehaviour
+        containers: [borg_brain, borg_module, cell_slot]
+      - !type:DoActsBehavior
+        acts: [Destruction]
 
 # Раундстартовый хламоборг для роли из лобби.
 - type: entity
@@ -86,3 +122,267 @@
         startingItem: PowerCellHyper
   - type: RandomMetadata
     nameSegments: [names_borg]
+
+- type: entity
+  abstract: true
+  id: N14BaseSalvagedRobot
+  parent: N14BaseBorgChassis
+  components:
+  - type: RemoveComponents
+    components:
+    - ShowJobIcons
+    - ShowMindShieldIcons
+    - FootstepModifier
+  - type: EmitsSoundOnMove
+    requiresGravity: false
+    requiresWorn: false
+    soundCollection:
+      collection: FootstepHoverBorg
+  - type: Tag
+    tags: [DoorBumpOpener, CanPilot, SiliconEmotes]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+  - type: SiliconLawProvider
+    laws: N14JunkbotLaws
+  - type: RandomSiliconLaws
+  - type: Hands
+    showInHands: true
+  - type: MovementIgnoreGravity
+    gravityState: true
+  - type: FloatingVisuals
+    offset: 0, 0.0625
+    animationTime: 0.3
+  - type: AnimationPlayer
+  - type: CombatModeVisuals
+    layers: [combat_light]
+  - type: GenericVisualizer
+    visuals:
+      enum.MobStateVisuals.State:
+        combat_light:
+          Alive: { color: "#FFFFFFFF" }
+          Critical: { color: "#FFFFFF00" }
+          SoftCritical: { color: "#FFFFFF00" }
+          Dead: { color: "#FFFFFF00" }
+  - type: MovementSpeedModifier
+    weightlessModifier: 1
+    weightlessAcceleration: 8
+    weightlessFriction: 8
+    weightlessFrictionNoInput: 14
+
+- type: entity
+  id: N14BorgMrHandy
+  parent: [N14BaseSalvagedRobot, FlyingMobBase]
+  components:
+  - type: TTS
+    voice: MisterHandyFl3
+  # Действия камеры создаются до BorgChassis, пока контейнер мозга ещё не инициализирован.
+  - type: CameraFollow
+  # Для хирургического интерфейса SurgeryTarget нужен и пациенту, и хирургу.
+  - type: SurgeryTarget
+  # Хирургическим манипуляторам не нужны слоты человеческих перчаток и маски.
+  - type: Sanitized
+  - type: Sprite
+    sprite: _Forge/Mobs/Cyborgs/mrhandy.rsi
+    layers:
+    - state: icon
+      map: ["enum.DamageStateVisualLayers.Base", movement]
+    - state: light_off
+      map: ["enum.BorgVisualLayers.Light"]
+      shader: unshaded
+      visible: false
+    - state: light_on
+      map: [light]
+      shader: unshaded
+      visible: false
+    - state: light_combat
+      map: [combat_light]
+      shader: unshaded
+      visible: false
+  - type: SpriteMovement
+    movementLayers:
+      movement:
+        state: moving
+    noMovementLayers:
+      movement:
+        state: icon
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: icon
+      Critical:
+        Base: dead
+      Dead:
+        Base: dead
+  - type: BorgChassis
+    maxModules: 5
+    moduleWhitelist:
+      tags:
+      - BorgModuleGeneric
+      - N14BorgModuleMrHandy
+    hasMindState: light_on
+    noMindState: light_off
+  - type: BorgTransponder
+    name: Мистер Помощник
+    sprite:
+      sprite: _Forge/Mobs/Cyborgs/mrhandy.rsi
+      state: icon
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 3.15
+    baseSprintSpeed: 5.25
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      100: Critical
+      200: Dead
+  - type: Damageable
+    damageContainer: Silicon
+    damageModifierSet: N14MrHandyBorg
+  - type: Destructible
+    thresholds:
+    - trigger: !type:DamageTrigger
+        damage: 300
+      behaviors:
+      - !type:EmptyContainersBehaviour
+        containers: [borg_brain, borg_module, cell_slot]
+      - !type:DoActsBehavior
+        acts: [Destruction]
+  - type: Construction
+    graph: N14JunktronCyborg
+    node: mrhandy
+
+- type: entity
+  id: PlayerN14BorgMrHandy
+  parent: N14BorgMrHandy
+  components:
+  - type: ContainerFill
+    containers:
+      borg_brain: [N14JunktronPositronicBrain]
+      borg_module: [N14BorgModuleJunkManipulator, N14BorgModuleJunkTools, N14BorgModuleMrHandyMedical, N14BorgModuleMrHandySurgery, N14BorgModuleMrHandyDefibrillator]
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        startingItem: PowerCellHyper
+
+- type: entity
+  id: N14BorgEyebot
+  parent: [N14BaseSalvagedRobot, FlyingMobBase]
+  components:
+  - type: TTS
+    voice: Glados
+  # Действия камеры создаются до BorgChassis, пока контейнер мозга ещё не инициализирован.
+  - type: CameraFollow
+    backStrength: 3
+    defaultBackStrength: 3
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.35
+        density: 150
+        mask: [FlyingMobMask]
+        layer: [FlyingMobLayer]
+  - type: Inventory
+    templateId: N14EyebotBorgInventory
+  - type: Sprite
+    sprite: _Forge/Mobs/Cyborgs/eyebot.rsi
+    layers:
+    - state: icon
+      map: ["enum.DamageStateVisualLayers.Base"]
+    - state: shadow_eyebot
+    - state: light_off
+      map: ["enum.BorgVisualLayers.Light"]
+      shader: unshaded
+      visible: false
+    - state: light_on
+      color: "#FFFFFF00"
+      map: [light]
+      visible: false
+    - state: light_combat
+      map: [combat_light]
+      shader: unshaded
+      visible: false
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: icon
+      Critical:
+        Base: dead
+      Dead:
+        Base: dead
+  - type: BorgChassis
+    maxModules: 3
+    moduleWhitelist:
+      tags:
+      - N14BorgModuleEyebot
+    hasMindState: light_on
+    noMindState: light_off
+  - type: BorgTransponder
+    name: хламоглаз
+    sprite:
+      sprite: _Forge/Mobs/Cyborgs/eyebot.rsi
+      state: icon
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 3.25
+    baseSprintSpeed: 5.85
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      60: Critical
+      160: Dead
+  - type: Damageable
+    damageContainer: Silicon
+    damageModifierSet: N14EyebotBorg
+  - type: Destructible
+    thresholds:
+    - trigger: !type:DamageTrigger
+        damage: 240
+      behaviors:
+      - !type:EmptyContainersBehaviour
+        containers: [borg_brain, borg_module, cell_slot, storagebase]
+      - !type:DoActsBehavior
+        acts: [Destruction]
+  - type: Storage
+    # Хранилище не должно перехватывать обслуживание корпуса в BorgSystem.AfterInteractUsing.
+    clickInsert: false
+    maxItemSize: Huge
+    grid:
+    - 0,0,3,3
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: ContainerContainer
+    containers:
+      # Поле заменяет унаследованный словарь. Сохраняем типы контейнеров борга
+      # для переноса батареи и деталей при завершении сборки.
+      borg_brain: !type:ContainerSlot {}
+      cell_slot: !type:ContainerSlot {}
+      borg_module: !type:Container {}
+      part-container: !type:Container {}
+      storagebase: !type:Container {}
+  - type: ActionGrant
+    actions: [N14ActionOpenEyebotStorage]
+  - type: Construction
+    graph: N14JunktronCyborg
+    node: eyebot
+
+- type: entity
+  id: PlayerN14BorgEyebot
+  parent: N14BorgEyebot
+  components:
+  - type: ContainerFill
+    containers:
+      borg_brain: [N14JunktronPositronicBrain]
+      borg_module: [N14BorgModuleEyebotCombat]
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        startingItem: PowerCellHyper
+
+- type: entity
+  id: N14ActionOpenEyebotStorage
+  parent: ActionOpenStorageImplant

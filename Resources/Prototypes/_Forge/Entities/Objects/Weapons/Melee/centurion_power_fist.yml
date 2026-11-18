@@ -1,0 +1,19 @@
+# Forge: Centurion's power fist (power fist with stamina damage).
+
+- type: entity
+  parent: N14ClothingHandsPowerFist
+  id: N14ClothingHandsPowerFistCenturion
+  name: силовой кастет Центуриона
+  description: Доработанный силовой кастет Центуриона Легиона. Удары выбивают дух и сбивают с ног.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/displacerglove.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: Corvax/Objects/Weapons/Melee/displacerglove.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/displacerglove.rsi
+    slots: [gloves]
+  - type: StaminaDamageOnHit
+    damage: 15

@@ -1,6 +1,6 @@
   - type: loadout
     id: GeigerCounter
-    category: Items
+    category: ItemsTools
     cost: 4
     requirements:
     - !type:OverallTimeRequirement
@@ -15,49 +15,49 @@
 
   - type: loadout
     id: BarberScissors
-    category: Items
+    category: ItemsTools
     cost: 1
     items:
       - BarberScissors
 
   - type: loadout
     id: N14DrinkSunsetSarsaparillaBottleFull
-    category: Items
+    category: ItemsFood
     cost: 2
     items:
       - N14DrinkSunsetSarsaparillaBottleFull
 
   - type: loadout
     id: N14DrinkNukaCola
-    category: Items
+    category: ItemsFood
     cost: 1
     items:
       - N14DrinkNukaCola
 
   - type: loadout
     id: BoxCandle
-    category: Items
+    category: ItemsPersonal
     cost: 1
     items:
       - BoxCandle
 
   - type: loadout
     id: PhotoCameraFilled
-    category: Items
+    category: ItemsPersonal
     cost: 1
     items:
       - PhotoCameraFilled
 
   - type: loadout
     id: d20Dice
-    category: Items
+    category: ItemsPersonal
     cost: 1
     items:
       - d20Dice
 
   - type: loadout
     id: N14Jet
-    category: Items
+    category: ItemsMedical
     cost: 2
     requirements:
     - !type:CharacterDepartmentRequirement
@@ -76,14 +76,14 @@
 
   - type: loadout
     id: N14HealingPowder
-    category: Items
+    category: ItemsMedical
     cost: 2
     items:
       - N14HealingPowder
 
   - type: loadout
     id: N14Turbo
-    category: Items
+    category: ItemsMedical
     cost: 3
     requirements:
     - !type:CharacterDepartmentRequirement
@@ -102,7 +102,7 @@
 
   - type: loadout
     id: N14Psycho
-    category: Items
+    category: ItemsMedical
     cost: 3
     requirements:
     - !type:CharacterDepartmentRequirement
@@ -121,7 +121,7 @@
 
   - type: loadout
     id: N14StimpakDirty
-    category: Items
+    category: ItemsMedical
     cost: 3
     requirements:
     - !type:CharacterDepartmentRequirement
@@ -140,7 +140,7 @@
 
   - type: loadout
     id: N14HealingPoultice
-    category: Items
+    category: ItemsMedical
     cost: 3
     items:
       - N14HealingPoultice

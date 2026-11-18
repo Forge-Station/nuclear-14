@@ -45,6 +45,8 @@
   id: N14BaseSyringe
   abstract: true
   components:
+  - type: Item
+    size: Tiny
   - type: Sprite # Forge-change
     sprite: _Corvax/Objects/Specific/Chemistry/syringe.rsi
     layers:
@@ -646,7 +648,7 @@
           Quantity: 10
   - type: Tag
     tags:
-    - N14HealingPowder          
+    - N14HealingPowder
   - type: Food # Forge-Change
     forceFeedDelay: 1
     transferAmount: 5

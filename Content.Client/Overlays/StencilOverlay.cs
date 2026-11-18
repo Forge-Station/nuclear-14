@@ -53,19 +53,27 @@ public sealed partial class StencilOverlay : Overlay
         if (_blep?.Texture.Size != args.Viewport.Size)
         {
             _blep?.Dispose();
-            _blep = _clyde.CreateRenderTarget(args.Viewport.Size, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), name: "weather-stencil");
+            _blep = _clyde.CreateRenderTarget(args.Viewport.Size, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), name: "overlay-stencil"); // #Forge-Change
         }
 
         if (_entManager.TryGetComponent<WeatherComponent>(mapUid, out var comp))
         {
+            var maskPrepared = false; // #Forge-Change: one mask preparation for all weather effects.
             foreach (var (proto, weather) in comp.Weather)
             {
                 if (!_protoManager.TryIndex<WeatherPrototype>(proto, out var weatherProto))
                     continue;
                 if (weatherProto.Sprite == null)
                     continue;
+                // #Forge-Change-Start: prepare once per viewport draw, rather than once per effect.
+                if (!maskPrepared)
+                {
+                    UpdateWeatherMask(args, invMatrix);
+                    maskPrepared = true;
+                }
+                // #Forge-Change-End
                 var alpha = _weather.GetPercent(weather, mapUid);
-                DrawWeather(args, weatherProto, alpha, invMatrix);
+                DrawWeather(args, weatherProto, alpha); // #Forge-Change
             }
         }
 
@@ -84,4 +92,14 @@ public sealed partial class StencilOverlay : Overlay
         args.WorldHandle.UseShader(null);
         args.WorldHandle.SetTransform(Matrix3x2.Identity);
     }
+
+    // #Forge-Change-Start: release the cached weather mask and other owned rendering resources.
+    protected override void DisposeBehavior()
+    {
+        _blep?.Dispose();
+        _weatherMask?.Dispose();
+        _shader.Dispose();
+        base.DisposeBehavior();
+    }
+    // #Forge-Change-End
 }

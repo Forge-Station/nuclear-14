@@ -1,3 +1,4 @@
+<!-- Forge-Change-Start -->
 <n14:PipBoyRadioUiFragment
     xmlns:n14="clr-namespace:Content.Client._Nuclear14.CartridgeLoader.Cartridges"
     xmlns="https://spacestation14.io"
@@ -53,6 +54,15 @@
             Text="{Loc pipboy-radio-stop}"
             HorizontalExpand="True"/>
 
+        <Label Name="VolumeLabel"/>
+        <Slider
+            Name="VolumeSlider"
+            MinValue="0"
+            MaxValue="100"
+            Value="100"
+            Rounded="True"
+            HorizontalExpand="True"/>
+
         <ScrollContainer
             HorizontalExpand="True"
             VerticalExpand="True">
@@ -67,3 +77,4 @@
     </BoxContainer>
 
 </n14:PipBoyRadioUiFragment>
+<!-- Forge-Change-End -->

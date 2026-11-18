@@ -1,0 +1,20 @@
+# Forge: crafting graph for the wasteland thunder spear.
+
+- type: constructionGraph
+  id: N14WastelandThunderspear
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: thunderspear
+          steps:
+            - material: WoodPlank
+              amount: 2
+            - tag: N14TinNade
+              name: tin-nade
+              icon:
+                sprite: _Nuclear14/Objects/Weapons/Grenades/TincanNade.rsi
+                state: icon
+              doAfter: 5
+    - node: thunderspear
+      entity: N14WastelandThunderspear

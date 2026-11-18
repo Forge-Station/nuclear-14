@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 - type: entity
-  name: Бинокль
+  name: бинокль
   parent: BaseItem
   id: Binoculars
   description: Старый туристический бинокль.
@@ -18,7 +18,7 @@
     sprite: Corvax/Objects/Tools/binoculars.rsi
     state: icon
   - type: Item
-    size: Normal
+    size: Small
   - type: Clothing
     sprite: Corvax/Objects/Tools/binoculars.rsi
     quickEquip: false
@@ -35,4 +35,3 @@
       Glass: 50
   - type: StaticPrice
     price: 100
-

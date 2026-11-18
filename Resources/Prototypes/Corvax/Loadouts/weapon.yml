@@ -1,7 +1,7 @@
 # Pistols
 - type: loadout
   id: N14WeaponRevolver10mm
-  category: Weapons
+  category: WeaponsFirearms
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -21,7 +21,7 @@
 
 - type: loadout
   id: N14WeaponRevolver44Magnun
-  category: Weapons
+  category: WeaponsFirearms
   cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -42,7 +42,7 @@
 #Shotgun
 - type: loadout
   id: N14WeaponShotgunPipe
-  category: Weapons
+  category: WeaponsFirearms
   cost: 2
   requirements:
     - !type:OverallTimeRequirement
@@ -64,7 +64,7 @@
 
 - type: loadout
   id: N14WeaponShotgunCaravan
-  category: Weapons
+  category: WeaponsFirearms
   cost: 2
   requirements:
     - !type:OverallTimeRequirement
@@ -87,7 +87,7 @@
 # SMG
 - type: loadout
   id: N14WeaponSMG10mmPipe
-  category: Weapons
+  category: WeaponsFirearms
   cost: 3
   requirements:
     - !type:OverallTimeRequirement
@@ -110,7 +110,7 @@
 #Rifle
 - type: loadout
   id: N14WeaponSniper556VarmintRifle
-  category: Weapons
+  category: WeaponsFirearms
   cost: 4
   requirements:
     - !type:OverallTimeRequirement
@@ -133,7 +133,7 @@
 #Laser
 - type: loadout
   id: N14WeaponLaserPistol
-  category: Weapons
+  category: WeaponsEnergy
   cost: 3
   requirements:
     - !type:OverallTimeRequirement
@@ -155,8 +155,8 @@
 
 - type: loadout
   id: N14WeaponLaserRifleMakeshift
-  category: Weapons
-  cost: 6
+  category: WeaponsEnergy
+  cost: 4
   requirements:
     - !type:OverallTimeRequirement
       min: 16800
@@ -179,7 +179,7 @@
 #Ammo
 - type: loadout
   id: N14MagazinePistol22lr
-  category: Weapons
+  category: WeaponsAmmo
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -202,7 +202,7 @@
 
 - type: loadout
   id: SpeedLoader10
-  category: Weapons
+  category: WeaponsAmmo
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -225,7 +225,7 @@
 
 - type: loadout
   id: SpeedLoader44
-  category: Weapons
+  category: WeaponsAmmo
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -242,7 +242,7 @@
 
 - type: loadout
   id: N14MagazinePistol10mm
-  category: Weapons
+  category: WeaponsAmmo
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -263,7 +263,7 @@
 
 - type: loadout
   id: MagazineBox12gauge
-  category: Weapons
+  category: WeaponsAmmo
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -283,7 +283,7 @@
 
 - type: loadout
   id: MagazineBox20gauge
-  category: Weapons
+  category: WeaponsAmmo
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -303,7 +303,7 @@
 
 - type: loadout
   id: N14MagazinePistol9mm
-  category: Weapons
+  category: WeaponsAmmo
   cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -324,7 +324,7 @@
 
 - type: loadout
   id: N14MagazineSMG10mm
-  category: Weapons
+  category: WeaponsAmmo
   cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -345,7 +345,7 @@
 
 - type: loadout
   id: N14PowerCellSmall
-  category: Weapons
+  category: WeaponsAmmo
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -355,6 +355,9 @@
       departments:
       - CaesarLegion
       - Vault
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -365,11 +368,36 @@
     - N14PowerCellSmall
     - N14PowerCellSmall
 
+- type: loadout
+  id: N14PowerCellHigh
+  category: WeaponsAmmo
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - CaesarLegion
+      - Vault
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14PowerCellHigh
+    - N14PowerCellHigh
+
 #Melee
 
 - type: loadout
   id: N14Whip
-  category: Weapons
+  category: WeaponsMelee
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -389,8 +417,8 @@
 
 - type: loadout
   id: N14ClothingHandsKnucklesWithClaws
-  category: Weapons
-  cost: 3
+  category: WeaponsMelee
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
@@ -409,8 +437,8 @@
 
 - type: loadout
   id: N14ClothingHandsKnuckles
-  category: Weapons
-  cost: 2
+  category: WeaponsMelee
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
@@ -429,7 +457,7 @@
 
 - type: loadout
   id: N14PoliceBaton
-  category: Weapons
+  category: WeaponsMelee
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -449,7 +477,7 @@
 
 - type: loadout
   id: N14ButchersCleaver
-  category: Weapons
+  category: WeaponsMelee
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -469,7 +497,7 @@
 
 - type: loadout
   id: N14Machete
-  category: Weapons
+  category: WeaponsMelee
   cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -489,7 +517,7 @@
 
 - type: loadout
   id: N14TrenchClub
-  category: Weapons
+  category: WeaponsMelee
   cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -509,7 +537,7 @@
 
 - type: loadout
   id: N14BaseAxe
-  category: Weapons
+  category: WeaponsMelee
   cost: 5
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -529,7 +557,7 @@
 
 - type: loadout
   id: N14SledgeHammer
-  category: Weapons
+  category: WeaponsMelee
   cost: 5
   requirements:
     - !type:CharacterItemGroupRequirement

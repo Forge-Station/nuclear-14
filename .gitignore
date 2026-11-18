@@ -313,3 +313,7 @@ package-lock.json
 /Resources/Prototypes/Guidebook
 /Resources/Prototypes/Loadouts
 /Resources/Prototypes/Catalog
+
+
+#Forge-secrets
+/FalloutSecrets/

@@ -37,7 +37,7 @@
   #  luckModifier: 1
 
 - type: entity
-  parent: N14ClothingOuterBase
+  parent: N14ClothingOuterTownMediumCoat
   id: N14ClothingOuterHarperCoat
   name: Harper Coat
   description: A dark coat with some red lining.
@@ -628,6 +628,14 @@
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/midwestbosfieldscribe.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/midwestbosfieldscribe.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.80
+        Slash: 0.80
+        Piercing: 0.75
+        Heat: 0.75
+    priceMultiplier: 0.5
 
 - type: entity
   parent: N14ClothingOuterBase
@@ -635,6 +643,12 @@
   name: Midwest Brotherhood medical Scribe coat
   description: A finely made robe affixed with leather worn by medical Scribes, a symbol of the Brotherhood emblazoned across the chest and back.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/midwestbosmedicalscribe.rsi
   - type: Clothing
@@ -644,8 +658,8 @@
       coefficients:
         Blunt: 0.80
         Slash: 0.85
-        Piercing: 0.70
-        Heat: 0.70
+        Piercing: 0.85
+        Heat: 0.85
     priceMultiplier: 0.5
 
 #MARK: Washington BoS
@@ -827,6 +841,12 @@
   name: preventor paded jacket
   description: A winter leather jacket with internal armor layers, the regular piece of armor used by the vancouver law enforcers and preventors.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/armoredjacket.rsi
   - type: Clothing

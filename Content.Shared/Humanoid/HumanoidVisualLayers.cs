@@ -11,6 +11,8 @@ namespace Content.Shared.Humanoid
         Wings,
         Hair,
         FacialHair,
+        UndergarmentTop,
+        UndergarmentBottom,
         Chest,
         Head,
         Snout,

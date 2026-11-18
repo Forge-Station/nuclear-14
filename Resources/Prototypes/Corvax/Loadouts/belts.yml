@@ -1,6 +1,6 @@
 - type: loadout
   id: N14LoadoutClothingBeltFarmerFilled
-  category: Items
+  category: Belts
   cost: 3
   requirements:
     - !type:OverallTimeRequirement
@@ -8,7 +8,7 @@
     - !type:CharacterDepartmentRequirement
       inverted: true
       departments:
-      - Vault        
+      - Vault
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -20,9 +20,9 @@
 
 - type: loadout
   id: N14LoadoutClothingBeltStorageWaistbag
-  category: Items
+  category: Belts
   cost: 3
-  requirements:      
+  requirements:
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -34,15 +34,15 @@
 
 - type: loadout
   id: N14LoadoutClothingBeltRope
-  category: Items
+  category: Belts
   cost: 4
-  requirements:      
+  requirements:
     - !type:OverallTimeRequirement
       min: 3600
     - !type:CharacterDepartmentRequirement
       inverted: true
       departments:
-      - Vault        
+      - Vault
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -54,36 +54,36 @@
 
 - type: loadout
   id: N14LoadoutPlantBag
-  category: Items
+  category: CollectionBags
   cost: 2
-  requirements:   
+  requirements:
     - !type:CharacterDepartmentRequirement
       inverted: true
       departments:
-      - Vault      
+      - Vault
   items:
     - PlantBag
 
 - type: loadout
   id: N14LoadoutOreBag
-  category: Items
+  category: CollectionBags
   cost: 2
-  requirements:   
+  requirements:
     - !type:CharacterDepartmentRequirement
       inverted: true
       departments:
-      - Vault      
+      - Vault
   items:
     - OreBag
 
 - type: loadout
   id: N14LoadoutChemBag
-  category: Items
+  category: CollectionBags
   cost: 2
-  requirements:   
+  requirements:
     - !type:CharacterDepartmentRequirement
       inverted: true
       departments:
-      - Vault      
+      - Vault
   items:
     - ChemBag

@@ -4,6 +4,9 @@
   params:
     variation: 0.125
   sounds:
+    # Forge-Add: Space Stories battle cries.
+    Warcry:
+      collection: STMaleWarcry
     Scream:
       collection: MaleScreams
     Laugh:
@@ -40,6 +43,9 @@
   params:
     variation: 0.125
   sounds:
+    # Forge-Add: Space Stories battle cries.
+    Warcry:
+      collection: STFemaleWarcry
     Scream:
       collection: FemaleScreams
     Laugh:

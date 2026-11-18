@@ -147,7 +147,8 @@
   name: lathe-recipe-Medkit-name
   completetime: 2
   materials:
-    Plastic: 300
+    Plastic: 1000
+    Cloth: 500
 
 - type: latheRecipe
   id: MedkitBurn

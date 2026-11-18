@@ -472,9 +472,11 @@ public sealed class ChatUIController : UIController
 
         if (existing.Count > SpeechBubbleCap)
         {
-            // Get the oldest to start fading fast.
-            var last = existing[0];
+            // #Forge-Change-Start: upstream #32223; older bubbles are already fading,
+            // so fade the next one instead of repeatedly targeting the oldest.
+            var last = existing[^(SpeechBubbleCap + 1)];
             last.FadeNow();
+            // #Forge-Change-End
         }
     }
 
@@ -485,9 +487,10 @@ public sealed class ChatUIController : UIController
 
     private void EnqueueSpeechBubble(EntityUid entity, ChatMessage message, SpeechBubble.SpeechType speechType)
     {
-        // Don't enqueue speech bubbles for other maps. TODO: Support multiple viewports/maps?
-        if (EntityManager.GetComponent<TransformComponent>(entity).MapID != _eye.CurrentMap)
+        // #Forge-Change-Start: speech received while the sender is out of view must not be replayed later.
+        if (!CanShowSpeechBubble(entity))
             return;
+        // #Forge-Change-End
 
         if (!_queuedSpeechBubbles.TryGetValue(entity, out var queueData))
         {
@@ -495,7 +498,7 @@ public sealed class ChatUIController : UIController
             _queuedSpeechBubbles.Add(entity, queueData);
         }
 
-        queueData.MessageQueue.Enqueue(new SpeechBubbleData(message, speechType));
+        queueData.MessageQueue.Enqueue(new SpeechBubbleData(message, speechType, _timing.RealTime)); // #Forge-Change
     }
 
     public void RemoveSpeechBubble(EntityUid entityUid, SpeechBubble bubble)
@@ -598,28 +601,42 @@ public sealed class ChatUIController : UIController
         }
     }
 
+    // #Forge-Change-Start: age hidden bubbles, refresh visibility and discard stale/out-of-view speech.
     public override void FrameUpdate(FrameEventArgs delta)
     {
+        // Remove expired bubbles even if they are hidden or no messages are queued.
+        foreach (var (entity, bubbles) in _activeSpeechBubbles.ShallowClone())
+        {
+            for (var i = bubbles.Count - 1; i >= 0; i--)
+            {
+                if (bubbles[i].AdvanceLifetime(delta.DeltaSeconds))
+                    RemoveSpeechBubble(entity, bubbles[i]);
+            }
+        }
         UpdateQueuedSpeechBubbles(delta);
     }
 
     private void UpdateQueuedSpeechBubbles(FrameEventArgs delta)
     {
         // Update queued speech bubbles.
-        if (_queuedSpeechBubbles.Count == 0 || _examine == null)
+        if (_examine == null) // Active bubble visibility must update even with an empty queue.
         {
             return;
         }
 
         foreach (var (entity, queueData) in _queuedSpeechBubbles.ShallowClone())
         {
-            if (!EntityManager.EntityExists(entity))
+            if (!CanShowSpeechBubble(entity)) // Discard the backlog when its sender leaves view.
             {
                 _queuedSpeechBubbles.Remove(entity);
                 continue;
             }
 
             queueData.TimeLeft -= delta.DeltaSeconds;
+            // Discard stale queued speech instead of replaying an old backlog.
+            while (queueData.MessageQueue.TryPeek(out var pending)
+                   && _timing.RealTime - pending.QueuedAt >= TimeSpan.FromSeconds(4))
+                queueData.MessageQueue.Dequeue();
             if (queueData.TimeLeft > 0)
             {
                 continue;
@@ -640,43 +657,33 @@ public sealed class ChatUIController : UIController
             CreateSpeechBubble(entity, msg);
         }
 
-        var player = _player.LocalEntity;
-        var predicate = static (EntityUid uid, (EntityUid compOwner, EntityUid? attachedEntity) data)
-            => uid == data.compOwner || uid == data.attachedEntity;
-        var playerPos = player != null
-            ? _transform?.GetMapCoordinates(player.Value) ?? MapCoordinates.Nullspace
-            : MapCoordinates.Nullspace;
-
-        var occluded = player != null && _examine.IsOccluded(player.Value);
-
+        // Apply the same view check to existing bubbles even without new speech.
         foreach (var (ent, bubs) in _activeSpeechBubbles)
         {
-            if (EntityManager.Deleted(ent))
-            {
-                SetBubbles(bubs, false);
-                continue;
-            }
-
-            if (ent == player)
-            {
-                SetBubbles(bubs, true);
-                continue;
-            }
-
-            var otherPos = _transform?.GetMapCoordinates(ent) ?? MapCoordinates.Nullspace;
-
-            if (occluded && !_examine.InRangeUnOccluded(
-                    playerPos,
-                    otherPos, 0f,
-                    (ent, player), predicate))
-            {
-                SetBubbles(bubs, false);
-                continue;
-            }
-
-            SetBubbles(bubs, true);
+            SetBubbles(bubs, CanShowSpeechBubble(ent));
         }
     }
+
+    // Hearing speech is not sufficient to show a bubble; its sender must be in view.
+    private bool CanShowSpeechBubble(EntityUid entity)
+    {
+        if (_transform == null || _examine == null || EntityManager.Deleted(entity)
+            || !EntityManager.TryGetComponent<TransformComponent>(entity, out var xform)
+            || xform.MapID == MapId.Nullspace || xform.MapID != _eye.CurrentMap)
+            return false;
+
+        var position = _transform.GetMapCoordinates(entity);
+        if (!_eye.GetWorldViewbounds().Contains(position.Position))
+            return false;
+
+        var player = _player.LocalEntity;
+        if (player == null || player == entity || !_examine.IsOccluded(player.Value))
+            return true;
+
+        return _examine.InRangeUnOccluded(_transform.GetMapCoordinates(player.Value), position, 0f,
+            (entity, player), static (uid, data) => uid == data.entity || uid == data.player);
+    }
+    // #Forge-Change-End
 
     private void SetBubbles(List<SpeechBubble> bubbles, bool visible)
     {
@@ -950,7 +957,8 @@ public sealed class ChatUIController : UIController
         return _chatNameColors[colorIdx];
     }
 
-    private readonly record struct SpeechBubbleData(ChatMessage Message, SpeechBubble.SpeechType Type);
+    // #Forge-Change: queue timestamps bound the age of messages waiting for a bubble.
+    private readonly record struct SpeechBubbleData(ChatMessage Message, SpeechBubble.SpeechType Type, TimeSpan QueuedAt);
 
     private sealed class SpeechBubbleQueueData
     {

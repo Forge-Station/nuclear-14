@@ -10,7 +10,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server.Administration.Commands;
 
-[AdminCommand(AdminFlags.Admin)]
+[AdminCommand(AdminFlags.Host)]
 public sealed class PlayTimeUnlockCommands : IConsoleCommand
 {
     [Dependency] private readonly IPlayerManager _playerManager = default!;

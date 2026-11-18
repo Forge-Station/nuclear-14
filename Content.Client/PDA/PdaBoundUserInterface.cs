@@ -83,6 +83,14 @@ namespace Content.Client.PDA
             _menu.BorderColor = borderColorComponent.BorderColor;
             _menu.AccentHColor = borderColorComponent.AccentHColor;
             _menu.AccentVColor = borderColorComponent.AccentVColor;
+            /// Forge-Change-Start
+
+            if (borderColorComponent.PipBoyTheme)
+            {
+                _menu.ApplyPipBoyTheme(borderColorComponent.PipBoyGreen);
+                _menu.OnPipBoyColorChanged += green => borderColorComponent.PipBoyGreen = green;
+            }
+            /// Forge-Change-End
         }
 
         protected override void UpdateState(BoundUserInterfaceState state)

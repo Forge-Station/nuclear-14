@@ -114,8 +114,8 @@
   - type: IncreaseDamageOnWield
     damage:
       types:
-        Blunt: 20
-        Slash: 25
+        Blunt: 14 # Forge-Change
+        Slash: 14 # Forge-Change
   - type: Sharp
   - type: StaticPrice
     price: 30
@@ -151,8 +151,8 @@
   - type: IncreaseDamageOnWield
     damage:
       types:
-        Blunt: 15 # Forge-Change
-        Slash: 20 # Forge-Change
+        Blunt: 16 # Forge-Change
+        Slash: 19 # Forge-Change
   - type: Tool
     qualities:
       - Prying

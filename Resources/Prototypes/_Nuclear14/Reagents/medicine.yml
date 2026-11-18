@@ -77,7 +77,7 @@
           types:
             Poison: 4
 
-- type: reagent 
+- type: reagent
   id: RobustHealingMixture #used in super stimpacks
   name: reagent-name-robust-healing-mixture
   group: Medicine
@@ -238,30 +238,20 @@
       effects:
       - !type:HealthChange
         conditions:
-        - !type:ReagentThreshold
-          min: 10
-          max: 20
         damage:
           groups:
             Brute: -3
             Burn: -4
-      - !type:HealthChange
+      - !type:ChemVomit
+        probability: 0.05
         conditions:
         - !type:ReagentThreshold
-          max: 10
-        damage:
-          groups:
-            Brute: -1.5
-            Burn: -2
+          min: 15
+          max: 30
       - !type:ChemVomit
         conditions:
         - !type:ReagentThreshold
-          max: 10
-        probability: 0.15
-      - !type:ChemVomit
-        conditions:
-        - !type:ReagentThreshold
-          min: 20
+          min: 32
 
 #MARK: Poison
 - type: reagent

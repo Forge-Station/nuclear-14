@@ -4,6 +4,9 @@ trait-description-LanguageTribal = Вы понимаете и говорите �
 trait-name-LanguageChinese = Китайский язык
 trait-description-LanguageChinese = Вы понимаете и говорите на китайском языке. Будь то благодаря обучению или вашей предыстории.
 
+trait-name-LanguageSpanish = Испанский язык
+trait-description-LanguageSpanish = Вы понимаете и говорите на испанском языке. Будь то благодаря обучению или вашей предыстории.
+
 trait-name-N14SignLanguage = Язык жестов
 trait-description-N14SignLanguage =
     Вы понимаете и используете базовый общепринятый язык жестов.

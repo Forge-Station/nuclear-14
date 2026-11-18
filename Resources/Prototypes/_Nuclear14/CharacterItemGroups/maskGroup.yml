@@ -29,3 +29,17 @@
       id: ClothingMaskWhiteBalaclava
     - type: loadout
       id: ClothingMaskBreather
+    - type: loadout
+      id: N14ClothingMaskRedMask
+    - type: loadout
+      id: N14ClothingMaskDesertMask
+    - type: loadout
+      id: N14ClothingMaskBlueMask
+    - type: loadout
+      id: N14ClothingMaskGreenMask
+    - type: loadout
+      id: N14ClothingMaskOrangeMask
+    - type: loadout
+      id: N14ClothingMaskBrownMask
+    - type: loadout
+      id: N14ClothingMaskPatriotMask

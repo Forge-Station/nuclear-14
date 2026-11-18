@@ -1,6 +1,6 @@
 - type: loadout
   id: LoadoutBoSMidwestSquire
-  category: Outer
+  category: OuterArmor
   cost: 8 # Forge-Change
   exclusive: true
   requirements:
@@ -16,7 +16,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterMBoSSquireArmor
-  category: Outer
+  category: OuterArmor
   cost: 4 
   exclusive: True
   requirements:
@@ -31,7 +31,7 @@
 
 - type: loadout
   id: LoadoutBoSMidwestSeniorKnight
-  category: Outer
+  category: OuterArmor
   cost: 6 # Forge-Change
   exclusive: true
   requirements:

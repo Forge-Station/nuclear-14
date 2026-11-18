@@ -3,7 +3,7 @@
     xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
     xmlns:ui="clr-namespace:Content.Client.Materials.UI"
     Title="{Loc 'lathe-menu-title'}"
-    MinSize="550 450"
+    MinSize="400 300"
     SetSize="750 500">
     <BoxContainer
         Orientation="Horizontal"
@@ -32,10 +32,9 @@
                         StyleClasses="ButtonSquare"/>
                 </BoxContainer>
                 <BoxContainer Orientation="Vertical"
-                    MinHeight="225"
                     VerticalExpand="True"
                     HorizontalExpand="True"
-                    SizeFlagsStretchRatio="4">
+                    SizeFlagsStretchRatio="1">
                     <PanelContainer VerticalExpand="True">
                         <PanelContainer.PanelOverride>
                             <gfx:StyleBoxFlat BackgroundColor="#1B1B1E" />
@@ -43,6 +42,34 @@
                         <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
                             <BoxContainer
                                 Name="RecipeList"
+                                Orientation="Vertical"
+                                HorizontalExpand="True"
+                                VerticalExpand="True"
+                                RectClipContent="True">
+                            </BoxContainer>
+                        </ScrollContainer>
+                    </PanelContainer>
+                </BoxContainer>
+                <BoxContainer Orientation="Vertical"
+                    VerticalExpand="True"
+                    HorizontalExpand="True"
+                    SizeFlagsStretchRatio="1">
+                    <Label
+                        Text="{Loc 'lathe-menu-blueprints-title'}"
+                        Margin="5 2 5 2"
+                        HorizontalAlignment="Center"
+                        FontColorOverride="#FFD9A3"/>
+                    <LineEdit
+                        Name="BlueprintSearchBar"
+                        PlaceHolder="{Loc 'lathe-menu-search-blueprints'}"
+                        HorizontalExpand="True"/>
+                    <PanelContainer VerticalExpand="True">
+                        <PanelContainer.PanelOverride>
+                            <gfx:StyleBoxFlat BackgroundColor="#1B1B1E" />
+                        </PanelContainer.PanelOverride>
+                        <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
+                            <BoxContainer
+                                Name="BlueprintRecipeList"
                                 Orientation="Vertical"
                                 HorizontalExpand="True"
                                 VerticalExpand="True"
@@ -69,7 +96,10 @@
             VerticalExpand="True"
             HorizontalExpand="True"
             SeparationOverride="5">
-            <BoxContainer Orientation="Vertical" MinHeight="225">
+            <BoxContainer
+                Orientation="Vertical"
+                VerticalExpand="True"
+                SizeFlagsStretchRatio="3">
                 <BoxContainer
                     Orientation="Horizontal"
                     Align="End"
@@ -85,8 +115,7 @@
                 <BoxContainer
                     Name="FabricatingContainer"
                     Orientation="Horizontal"
-                    HorizontalExpand="True"
-                    SizeFlagsStretchRatio="2">
+                    HorizontalExpand="True">
                     <PanelContainer
                         VerticalExpand="True"
                         HorizontalExpand="True"
@@ -111,7 +140,7 @@
                         </Label>
                     </PanelContainer>
                 </BoxContainer>
-                <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
+                <ScrollContainer VerticalExpand="True" HorizontalExpand="True" HScrollEnabled="False">
                     <BoxContainer
                         Name="QueueList"
                         Orientation="Vertical"
@@ -122,9 +151,10 @@
                 </ScrollContainer>
             </BoxContainer>
             <BoxContainer
-            VerticalExpand="True"
-            HorizontalExpand="True"
-            Orientation="Vertical">
+                VerticalExpand="True"
+                HorizontalExpand="True"
+                Orientation="Vertical"
+                SizeFlagsStretchRatio="2">
             <Label Text="{Loc 'lathe-menu-materials-title'}" Margin="5 5 5 5" HorizontalAlignment="Center"/>
             <BoxContainer
                 Orientation="Vertical"

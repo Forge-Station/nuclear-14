@@ -26,7 +26,7 @@
     maxAngle: 12
     angleIncrease: 2
     angleDecay: 12
-    fireRate: 6
+    fireRate: 7
     selectedMode: FullAuto
     availableModes:
       - FullAuto
@@ -121,7 +121,7 @@
     maxAngle: 8
     angleIncrease: 2
     angleDecay: 8
-    fireRate: 8
+    fireRate: 9
   - type: HeldSpeedModifier
     walkModifier: 0.8
     sprintModifier: 0.8

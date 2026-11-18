@@ -109,3 +109,33 @@
         reagents:
         - ReagentId: Fiber
           Quantity: 10
+
+- type: entity
+  parent: PlushieArachne
+  id: N14ZoiDarbiPlushie
+  name: плюшевый медик
+  description: Вы только посмотрите на плюшевую игрушку "Зои Дарби", из коллекции "Твой любимый врач" в улучшенном разрешении! Наполяет вас невероятным зарядом доброты и позитива.
+  components:
+  - type: Sprite
+    scale: 0.5, 0.5
+    sprite: Corvax/Objects/Fun/toyncr.rsi
+    state: mommy_healer
+  - type: Tag
+    tags:
+      - Payload
+      - ClothMade
+  - type: UseDelay
+    delay: 1.0
+  - type: DamageOtherOnHit
+  - type: PhysicalComposition
+    materialComposition:
+      Cloth: 100
+  - type: StaticPrice
+    price: 5
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 10
+        reagents:
+        - ReagentId: Fiber
+          Quantity: 10

@@ -1,0 +1,16 @@
+- type: entity
+  parent: ClothingHeadBase
+  id: ForgeClothingRadstagHat
+  name: шапка из рад-оленя
+  description: Шапка из шкуры рад-оленя с рогами.
+  components:
+  - type: Sprite
+    sprite: _Forge/Clothing/Head/radstag_hat.rsi
+    state: icon
+  - type: Clothing
+    sprite: _Forge/Clothing/Head/radstag_hat.rsi
+    slots:
+    - head
+  - type: Construction
+    graph: ForgeRadstagHat
+    node: hat

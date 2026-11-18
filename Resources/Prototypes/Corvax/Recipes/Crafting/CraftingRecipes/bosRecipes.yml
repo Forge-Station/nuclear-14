@@ -119,7 +119,7 @@
     N14ClothingOuterMidwestArmorBlueprint:
       amount: 1
       catalyzer: true
-    N14ClothingOuterCombatArmor:
+    N14ComponentArmorPlateMK1:
       amount: 1
     MaterialCloth1:
       amount: 2
@@ -138,9 +138,28 @@
     N14ClothingOuterMidwestArmorMK2Blueprint:
       amount: 1
       catalyzer: true
-    N14ClothingOuterCombatArmorMK2:
+    N14ComponentArmorPlateMK2:
       amount: 1
     MaterialCloth1:
       amount: 3
     N14MaterialThread1:
       amount: 4
+
+- type: craftRecipe
+  id: N14ClothingHeadHatBrotherhoodMidwestHelmetVeteranRecipe
+  resultProtos:
+    - N14ClothingHeadHatBrotherhoodMidwestHelmetVeteran
+  requiredWorkbench: N14WorkbenchArmorbench
+  availableFaction:
+    - BrotherhoodMidwest
+  craftTime: 7.5
+  items:
+    N14ClothingHeadHatBrotherhoodMidwestHelmetVeteranBlueprint:
+      amount: 1
+      catalyzer: true
+    N14ComponentHelmetMK2:
+      amount: 1
+    MaterialCloth1:
+      amount: 1
+    N14MaterialThread1:
+      amount: 2

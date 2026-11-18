@@ -8,11 +8,48 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SECRETS_TOKEN: ${{ secrets.SECRETS_TOKEN }}
 
     steps:
     - uses: actions/checkout@v3.6.0
       with:
         submodules: 'recursive'
+
+# Forge-Secrets-Start
+    - name: Checkout secrets
+      if: ${{ env.SECRETS_TOKEN != '' }}
+      uses: actions/checkout@v4
+      with:
+        repository: Forge-Station/FalloutSecrets
+        path: FalloutSecrets
+        token: ${{ env.SECRETS_TOKEN }}
+        persist-credentials: false
+
+    - name: Verify secrets
+      if: ${{ env.SECRETS_TOKEN != '' }}
+      run: test -f FalloutSecrets/Content.Secrets.Server/Content.Secrets.Server.csproj
+
+    - name: Merge secret resources
+      if: ${{ env.SECRETS_TOKEN != '' }}
+      shell: bash
+      run: |
+        src=FalloutSecrets/Resources
+        if [ ! -d "$src" ]; then
+          echo "No $src, skipping"
+          exit 0
+        fi
+        conflicts=$(cd "$src" && find . -type f ! -name .gitkeep -print | while read -r f; do
+          [ -e "../../Resources/$f" ] && echo "$f"
+        done || true)
+        if [ -n "$conflicts" ]; then
+          echo "::error::Secret resources overwrite public files:"
+          echo "$conflicts"
+          exit 1
+        fi
+        tar -C "$src" --exclude=.gitkeep -cf - . | tar -C Resources -xf -
+        echo "Merged $(find "$src" -type f ! -name .gitkeep | wc -l) secret resource files"
+# Forge-Secrets-End
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4.1.0
@@ -44,12 +81,6 @@ jobs:
       env:
         PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
         GITHUB_REPOSITORY: ${{ vars.GITHUB_REPOSITORY }}
-
-    # - name: Publish changelog (Discord)
-    #   run: Tools/actions_changelogs_since_last_run.py
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     DISCORD_WEBHOOK_URL: ${{ secrets.CHANGELOG_DISCORD_WEBHOOK }}
 
     #- name: Publish changelog (RSS)
     #  run: Tools/actions_changelog_rss.py

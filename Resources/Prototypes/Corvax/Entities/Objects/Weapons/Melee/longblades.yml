@@ -107,6 +107,8 @@
       collection: Welder
     qualities: Welding
     speedModifier: 3
+  - type: RefillableSolution
+    solution: Welder
   - type: Welder
   - type: PointLight
     enabled: false
@@ -207,6 +209,8 @@
     useSound:
       collection: Welder
     qualities: Welding
+  - type: RefillableSolution
+    solution: Welder
   - type: Welder
   - type: PointLight
     enabled: false

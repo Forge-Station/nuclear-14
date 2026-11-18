@@ -308,6 +308,7 @@
   - type: ClothingSpeedModifier # Corvax-Add
     walkModifier: 0.85
     sprintModifier: 0.85
+  - type: HeldSpeedModifier
   - type: GunRequiresWield
   - type: GunWieldBonus
     minAngle: -20 # Forge-Change
