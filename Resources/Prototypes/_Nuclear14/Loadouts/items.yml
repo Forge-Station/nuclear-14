@@ -311,6 +311,27 @@
     - Binoculars
 
 - type: loadout
+  id: N14LoadoutItemHandcuffs
+  category: ItemsTools
+  cost: 3
+  items:
+    - Handcuffs
+
+- type: loadout
+  id: N14LoadoutItemRadioHandheld
+  category: ItemsTools
+  cost: 5
+  items:
+    - RadioHandheld
+
+- type: loadout
+  id: N14LoadoutItemToolboxWeaponMaintenance
+  category: ItemsTools
+  cost: 5
+  items:
+    - N14ToolboxWeaponMaintenance
+
+- type: loadout
   id: N14LoadoutItemMortarPestle
   category: ItemsMedical
   cost: 1

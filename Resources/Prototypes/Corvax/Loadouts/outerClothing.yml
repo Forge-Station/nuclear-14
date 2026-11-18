@@ -227,6 +227,25 @@
     - N14ClothingOuterReinforcedArmorKit
 
 - type: loadout
+  id: N14ClothingOuterCombatRusted
+  category: OuterArmor
+  cost: 4
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Wastelander
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterCombatRusted
+
+- type: loadout
   id: N14ClothingOuterArmoredKit
   category: OuterArmor
   cost: 1
@@ -304,3 +323,41 @@
       min: 72000 # 20 hours veterancy unlock
   items:
     - N14ClothingOuterCoatFollowersArmored
+
+- type: loadout
+  id: N14ClothingOuterLeatherRobes
+  category: OuterClothing
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Wastelander
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterLeatherRobes
+
+- type: loadout
+  id: N14ClothingOuterBlackRobes
+  category: OuterClothing
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Wastelander
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterBlackRobes

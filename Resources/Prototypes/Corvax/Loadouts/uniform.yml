@@ -139,3 +139,39 @@
     - !type:CharacterDepartmentRequirement
         departments:
           - Wastelander
+
+- type: loadout
+  id: N14ClothingUniformJumpsuitFudd
+  category: Uniform
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingUniformJumpsuitFudd
+  requirements:
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: N14ClothingUniformJumpsuitMilUniform
+  category: Uniform
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingUniformJumpsuitMilUniform
+  requirements:
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander

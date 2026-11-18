@@ -65,7 +65,7 @@
 #      - N14ClothingNeckCloakDarkCloak # Forge-end
 
  - type: loadout
-   id: ClothingNeckScarfStripedBlack
+   id: N14LoadoutClothingNeckScarfStripedBlack
    category: Neck
    cost: 2
    exclusive: true
@@ -83,7 +83,7 @@
      - ClothingNeckScarfStripedBlack
 
  - type: loadout
-   id: ClothingNeckTribalCloak
+   id: N14LoadoutClothingNeckTribalCloak
    category: Neck
    cost: 2
    exclusive: true
@@ -105,7 +105,7 @@
      - N14ClothingNeckTribalCloak
 
  - type: loadout
-   id: ClothingNeckTribalCloakBr
+   id: N14LoadoutClothingNeckTribalCloakBr
    category: Neck
    cost: 2
    exclusive: true
@@ -127,7 +127,7 @@
      - N14ClothingNeckTribalCloakBr
 
  - type: loadout
-   id: ClothingNeckShawl
+   id: N14LoadoutClothingNeckShawl
    category: Neck
    cost: 2
    exclusive: true
@@ -149,7 +149,7 @@
      - N14ClothingNeckShawl
 
  - type: loadout
-   id: ClothingNeckScarfStripedBrown
+   id: N14LoadoutClothingNeckScarfStripedBrown
    category: Neck
    cost: 2
    exclusive: true
@@ -167,7 +167,7 @@
      - ClothingNeckScarfStripedBrown
 
  - type: loadout
-   id: ClothingNeckScarfStripedBlue
+   id: N14LoadoutClothingNeckScarfStripedBlue
    category: Neck
    cost: 2
    exclusive: true
@@ -186,7 +186,7 @@
 
 
  - type: loadout
-   id: ClothingNeckScarfStripedGreen
+   id: N14LoadoutClothingNeckScarfStripedGreen
    category: Neck
    cost: 2
    exclusive: true
@@ -204,7 +204,7 @@
      - ClothingNeckScarfStripedGreen
 
  - type: loadout
-   id: ClothingNeckScarfStripedGreen
+   id: N14LoadoutClothingNeckScarfStripedRed
    category: Neck
    cost: 2
    exclusive: true
@@ -219,5 +219,24 @@
       - CaesarLegionSlave
       - NCRPisoner
    items:
-     - ClothingNeckScarfStripedGreen
+     - ClothingNeckScarfStripedRed
+     
+ - type: loadout
+   id: N14LoadoutClothingNeckCloakWesternPoncho
+   category: Neck
+   cost: 2
+   exclusive: true
+   customColorTint: true
+   requirements:
+     - !type:CharacterItemGroupRequirement
+       group: N14LoadoutNeck
+     - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+   items:
+     - M14ClothingNeckCloakWesternPoncho
+
 #forge-add
