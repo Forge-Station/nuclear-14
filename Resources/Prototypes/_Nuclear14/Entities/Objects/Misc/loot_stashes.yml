@@ -22,12 +22,15 @@
         orGroup: StashCash
       - id: N14DirtyGauze1 # Let's also give them some medicine or chems.
         prob: 0.25
+        amount: 2 #Forge-change
         orGroup: StashMeds
       - id: N14Ointment1
         prob: 0.1375
+        amount: 2 #Forge-change
         orGroup: StashMeds
       - id: N14CleanGauze1
         prob: 0.125
+        amount: 2 #Forge-change
         orGroup: StashMeds
       - id: N14Jet
         prob: 0.05

@@ -413,6 +413,138 @@
       - sprite: _Nuclear14/Objects/Weapons/Guns/Heavy/minigun.rsi
         state: inhand-right  # Only part we change, the gun sprite.
 
+- type: entity
+  name: рейдер охотник
+  parent: N14MobRaiderHunter 
+  id: N14MobRaiderHunter2
+  suffix: рейдер
+  description: Рейдер, вооружённый длинной винтовкой. Опасен на расстоянии.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderHunterGear2
+
+- type: entity
+  name: рейдер охотник
+  parent: N14MobRaiderHunter 
+  id: N14MobRaiderHunter3
+  suffix: рейдер
+  description: Рейдер, вооружённый длинной винтовкой. Опасен на расстоянии.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderHunterGear3
+
+- type: entity
+  name: рейдер охотник
+  parent: N14MobRaiderHunter 
+  id: N14MobRaiderHunter4
+  suffix: рейдер
+  description: Рейдер, вооружённый длинной винтовкой. Опасен на расстоянии.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderHunterGear4
+
+- type: entity
+  name: рейдер
+  parent: N14MobRaiderSkrimisher
+  id: N14MobRaiderSkrimisher2
+  suffix: рейдер
+  description: Рейдер, вооружённый дробовиком. Смертельно опасен на близкой дистанции.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderSkrimisherGear2
+
+- type: entity
+  name: рейдер
+  parent: N14MobRaiderSkrimisher
+  id: N14MobRaiderSkrimisher3
+  suffix: рейдер
+  description: Рейдер, вооружённый дробовиком. Смертельно опасен на близкой дистанции.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderSkrimisherGear3
+
+- type: entity
+  name: рейдер
+  parent: N14MobRaiderSkrimisher
+  id: N14MobRaiderSkrimisher4
+  suffix: рейдер
+  description: Рейдер, вооружённый дробовиком. Смертельно опасен на близкой дистанции.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderSkrimisherGear4
+
+- type: entity
+  name: рейдер
+  parent: N14MobRaiderPsychoRanged
+  id: N14MobRaiderPsychoRanged2
+  suffix: рейдер
+  description: Он здесь чтобы ограбить тебя.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderPistolGear2
+
+- type: entity
+  name: рейдер
+  parent: N14MobRaiderPsychoRanged
+  id: N14MobRaiderPsychoRanged3
+  suffix: рейдер
+  description: Он здесь чтобы ограбить тебя.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderPistolGear3
+
+- type: entity
+  name: рейдер
+  parent: N14MobRaiderPsychoRanged
+  id: N14MobRaiderPsychoRanged4
+  suffix: рейдер
+  description: Он здесь чтобы ограбить тебя.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderPistolGear4
+
+- type: entity
+  name: босс
+  parent: N14MobRaiderBoss
+  id: N14MobRaiderBoss2
+  suffix: Рейдер, мини-босс
+  description: Главная шишка среди всех местных рейдеров.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderBossGear2
+
+- type: entity
+  name: босс
+  parent: N14MobRaiderBoss
+  id: N14MobRaiderBoss3
+  suffix: Рейдер, мини-босс
+  description: Главная шишка среди всех местных рейдеров.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderBossGear3
+
+- type: entity
+  name: босс
+  parent: N14MobRaiderBoss
+  id: N14MobRaiderBoss4
+  suffix: Рейдер, мини-босс
+  description: Главная шишка среди всех местных рейдеров.
+  components:
+  - type: Loadout
+    prototypes:
+    - RaiderBossGear4
+
 #MARK: Наёмники
 
 - type: entity
