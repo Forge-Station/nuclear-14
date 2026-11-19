@@ -408,6 +408,26 @@
     - N14MagazineSMG10mm
 
 - type: loadout
+  id: MagazineBox308
+  category: WeaponsAmmo
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items: 
+   - MagazineBox308
+
+- type: loadout
   id: N14PowerCellSmall
   category: WeaponsAmmo
   cost: 2
@@ -456,6 +476,8 @@
   items:
     - N14PowerCellHigh
     - N14PowerCellHigh
+
+
 
 #Melee
 
@@ -642,7 +664,7 @@
 - type: loadout
   id: N14KukriKnife
   category: WeaponsMelee
-  cost: 2
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns

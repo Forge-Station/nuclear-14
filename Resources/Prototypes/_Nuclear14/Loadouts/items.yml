@@ -313,7 +313,7 @@
 - type: loadout
   id: N14LoadoutItemHandcuffs
   category: ItemsTools
-  cost: 3
+  cost: 2
   items:
     - Handcuffs
 
@@ -327,7 +327,7 @@
 - type: loadout
   id: N14LoadoutItemToolboxWeaponMaintenance
   category: ItemsTools
-  cost: 5
+  cost: 4
   items:
     - N14ToolboxWeaponMaintenance
 

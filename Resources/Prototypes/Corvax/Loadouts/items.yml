@@ -86,7 +86,7 @@
   - type: loadout
     id: N14TapeRecorder
     category: ItemsTools
-    cost: 4
+    cost: 1
     items:
       - N14TapeRecorder
       - N14CassetteTape
@@ -331,7 +331,7 @@
   - type: loadout
     id: N14AloeSalve
     category: ItemsMedical
-    cost: 5
+    cost: 2
     items:
       - N14AloeSalve
 
@@ -352,7 +352,7 @@
   - type: loadout
     id: N14RadAwayInhaler
     category: ItemsMedical
-    cost: 3
+    cost: 2
     items:
       - N14RadAwayInhaler
   
