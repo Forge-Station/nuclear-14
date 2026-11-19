@@ -1,7 +1,7 @@
 - type: entity
   parent: N14ClothingOuterPowerArmorMidwest
   id: N14ClothingOuterPowerArmorMidwestTesla
-  name: силовая броня Среднезападного Братства Стали "Тесла" 
+  name: силовая броня Среднезападного Братства Стали "Тесла"
   description: Модификация силовой брони Среднезападного Братства Стали, оснащенная катушками Тесла, даст фору любому энергетическому оружию.
   components:
   - type: ToolRefinable
@@ -65,7 +65,7 @@
         type: ToggleableClothingBoundUserInterface
   - type: ToggleableClothing
     clothingPrototypes:
-      head: N14ClothingHeadHelmetPowerArmorMidwest
+      head: N14ClothingHeadHelmetPowerArmorMidwestTesla
       gloves: N14ClothingPAGauntletsTesla
       shoes: N14ClothingPABootsMBoS
       back: N14ClothingPowerSystemsBack
