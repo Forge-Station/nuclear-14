@@ -2493,8 +2493,13 @@
           orGroup: Ammunition
           amount: 1
           maxAmount: 2
+        - id: N14PowerCellMagnetoSmall
+          prob: 0.09
+          orGroup: Ammunition
+          amount: 1
+          maxAmount: 2
         - id: N14PowerCellAdvanced
-          prob: 0.05
+          prob: 0.08
           orGroup: Ammunition
         - id: N14PowerCellFocused
           prob: 0.05
@@ -2554,6 +2559,9 @@
           orGroup: Ammunition
         - id: MagazineBox556
           prob: 0.07
+          orGroup: Ammunition
+        - id: CartridgeMissile
+          prob: 0.05
           orGroup: Ammunition
         # - id: ClothingBeltUtility
         #   prob: 0.05
