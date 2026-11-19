@@ -225,3 +225,14 @@
     ScrapElectronic: 1200
     N14Brass: 600
     N14Gold: 200
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorMidwestTeslaBlueprint
+  result: N14ClothingOuterPowerArmorMidwestTeslaBlueprint
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Steel: 100
+    Circuitry: 100

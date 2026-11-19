@@ -7,6 +7,15 @@
     - type: STBlueprint
       blueprint: N14ClothingOuterPowerArmorT60TeslaRecipe
 
+- type: entity
+  parent: N14BaseBlueprint
+  id: N14ClothingOuterPowerArmorMidwestTeslaBlueprint
+  name: чертёж модификации силовой брони Среднезападного Братства Стали
+  suffix: Craft, BoS
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterPowerArmorMidwestTeslaRecipe
+
 #MARK: Armor
 - type: entity
   parent: N14BaseBlueprintPaper
