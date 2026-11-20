@@ -60,16 +60,22 @@ public sealed class MeleeStaminaCostModifierSystem : EntitySystem
 
     private static bool Prune(Dictionary<string, (float Modifier, TimeSpan Expiry)> sources, TimeSpan now)
     {
-        var removed = false;
+        List<string>? expired = null;
         foreach (var (key, entry) in sources)
         {
-            if (entry.Expiry < now)
-            {
-                sources.Remove(key);
-                removed = true;
-            }
+            if (entry.Expiry >= now)
+                continue;
+
+            expired ??= new List<string>();
+            expired.Add(key);
         }
 
-        return removed;
+        if (expired == null)
+            return false;
+
+        foreach (var key in expired)
+            sources.Remove(key);
+
+        return true;
     }
 }

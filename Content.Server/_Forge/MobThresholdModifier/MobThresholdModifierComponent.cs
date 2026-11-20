@@ -8,6 +8,7 @@ namespace Content.Server._Forge.MobThresholdModifier;
 ///     "crit" raises the threshold at which the mob enters Critical,
 ///     "death" raises the death threshold. Sources are reagents being metabolized;
 ///     the system applies the highest modifier currently active per group.
+///     Crit is always kept strictly below Dead so both states can coexist.
 /// </summary>
 [RegisterComponent]
 public sealed partial class MobThresholdModifierComponent : Component

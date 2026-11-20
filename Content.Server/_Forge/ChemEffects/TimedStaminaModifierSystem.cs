@@ -6,8 +6,8 @@ namespace Content.Server._Forge.ChemEffects;
 
 /// <summary>
 ///     Applies a temporary maximum-stamina multiplier while a reagent is metabolized.
-///     The largest active modifier wins; when all sources expire the original
-///     StaminaModifier (or its absence) is restored.
+///     The largest active chem modifier wins as an absolute StaminaModifier value;
+///     when all sources expire the original StaminaModifier (or its absence) is restored.
 /// </summary>
 public sealed class TimedStaminaModifierSystem : EntitySystem
 {
@@ -65,6 +65,8 @@ public sealed class TimedStaminaModifierSystem : EntitySystem
         foreach (var (_, entry) in comp.Sources)
             max = MathF.Max(max, entry.Modifier);
 
+        // Absolute value from YAML (e.g. 1.5), not stacked on BaseModifier —
+        // BaseModifier is only used to restore the pre-chem state in Restore().
         _stamina.SetModifier(uid, max);
     }
 
@@ -91,16 +93,22 @@ public sealed class TimedStaminaModifierSystem : EntitySystem
 
     private static bool Prune(Dictionary<string, (float Modifier, TimeSpan Expiry)> sources, TimeSpan now)
     {
-        var removed = false;
+        List<string>? expired = null;
         foreach (var (key, entry) in sources)
         {
-            if (entry.Expiry < now)
-            {
-                sources.Remove(key);
-                removed = true;
-            }
+            if (entry.Expiry >= now)
+                continue;
+
+            expired ??= new List<string>();
+            expired.Add(key);
         }
 
-        return removed;
+        if (expired == null)
+            return false;
+
+        foreach (var key in expired)
+            sources.Remove(key);
+
+        return true;
     }
 }
