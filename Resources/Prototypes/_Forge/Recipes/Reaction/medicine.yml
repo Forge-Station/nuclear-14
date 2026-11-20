@@ -327,17 +327,6 @@
     Fiber:
       amount: 10
     Ethanol:
-      amount: 5
-  effects:
-    - !type:CreateEntityReactionEffect
-      entity: N14CleanGauze1
-
-- type: reaction
-  id: CleanGauzekReaction6
-  reactants:
-    Fiber:
-      amount: 10
-    Antiseptic:
       amount: 2
   effects:
     - !type:CreateEntityReactionEffect
