@@ -18,6 +18,7 @@ using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Physics;
 using Content.Shared.Popups;
+using Content.Shared._Forge.Stamina;
 using Content.Shared.Weapons.Melee.Components;
 using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Weapons.Ranged.Components;
@@ -551,13 +552,17 @@ public abstract class SharedMeleeWeaponSystem : EntitySystem
 
         if (TryComp<StaminaComponent>(user, out var stamina))
         {
-            if (stamina.CritThreshold - stamina.StaminaDamage <= component.HeavyStaminaCost)
+            var staminaCost = component.HeavyStaminaCost;
+            if (TryComp<MeleeStaminaCostModifierComponent>(user, out var costModifier))
+                staminaCost *= costModifier.AppliedModifier;
+
+            if (stamina.CritThreshold - stamina.StaminaDamage <= staminaCost)
             {
                 PopupSystem.PopupClient(Loc.GetString("melee-heavy-no-stamina"), meleeUid, user);
                 return false;
             }
 
-            _stamina.TakeStaminaDamage(user, component.HeavyStaminaCost, stamina, visual: false);
+            _stamina.TakeStaminaDamage(user, staminaCost, stamina, visual: false);
         }
 
         var userPos = TransformSystem.GetWorldPosition(userXform);
