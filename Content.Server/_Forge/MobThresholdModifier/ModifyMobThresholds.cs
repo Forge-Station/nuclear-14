@@ -1,4 +1,3 @@
-using Content.Server._Forge.MobThresholdModifier;
 using Content.Shared.EntityEffects;
 using Robust.Shared.Prototypes;
 

@@ -61,16 +61,37 @@ public sealed partial class DoAfterSpeedModifierSystem : EntitySystem
     private static void Prune(Dictionary<string, Dictionary<string, (float Speed, TimeSpan Expiry)>> sources,
         TimeSpan now)
     {
+        List<string>? emptyEventTypes = null;
+
         foreach (var (eventType, sub) in sources)
         {
+            List<string>? expired = null;
             foreach (var (source, entry) in sub)
             {
-                if (entry.Expiry < now)
+                if (entry.Expiry >= now)
+                    continue;
+
+                expired ??= new List<string>();
+                expired.Add(source);
+            }
+
+            if (expired != null)
+            {
+                foreach (var source in expired)
                     sub.Remove(source);
             }
 
-            if (sub.Count == 0)
-                sources.Remove(eventType);
+            if (sub.Count != 0)
+                continue;
+
+            emptyEventTypes ??= new List<string>();
+            emptyEventTypes.Add(eventType);
         }
+
+        if (emptyEventTypes == null)
+            return;
+
+        foreach (var eventType in emptyEventTypes)
+            sources.Remove(eventType);
     }
 }
