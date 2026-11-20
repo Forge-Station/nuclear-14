@@ -50,7 +50,31 @@
       - id: N14HealingPoultice
         prob: 0.05
         orGroup: StashMeds
-      - id: N14StimpakDirty
+      - id: N14DirtyGauze1 #Forge-change
+        prob: 0.1
+        amount: 5
+        orGroup: StashMeds
+      - id: N14CleanGauze1 #Forge-change
+        prob: 0.1
+        amount: 5 
+        orGroup: StashMeds
+      - id: N14Ointment1 #Forge-change
+        prob: 0.1
+        amount: 5 
+        orGroup: StashMeds
+      - id: N14CateyePill #Forge-change
+        prob: 0.1
+        orGroup: StashMeds
+      - id: N14FixerPill #Forge-change
+        prob: 0.1
+        orGroup: StashMeds
+      - id: N14BuffoutPill #Forge-change
+        prob: 0.1
+        orGroup: StashMeds
+      - id: N14RadXPill #Forge-change
+        prob: 0.1
+        orGroup: StashMeds
+      - id: N14StimpakDirty 
         prob: 0.1
         orGroup: StashMeds
       - id: N14Stimpak

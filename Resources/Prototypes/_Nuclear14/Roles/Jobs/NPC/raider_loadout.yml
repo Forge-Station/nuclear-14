@@ -22,6 +22,7 @@
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitRags
     shoes: N14ClothingBootsBlack
+    mask: N14ClothingMaskRedMask
     eyes: N14ClothingEyesGlassesWelding
     outerClothing: N14ClothingOuterInsectArmor
     pocket1: N14RaiderStash
