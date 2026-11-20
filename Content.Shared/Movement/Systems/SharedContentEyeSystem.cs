@@ -139,6 +139,22 @@ public abstract class SharedContentEyeSystem : EntitySystem
         SetZoom(uid, DefaultZoom, eye: component);
     }
 
+    public Vector2 GetMaxZoom(EntityUid uid, ContentEyeComponent? component = null)
+    {
+        if (!Resolve(uid, ref component))
+            return Vector2.One;
+
+        return component.MaxZoom;
+    }
+
+    public Vector2 GetTargetZoom(EntityUid uid, ContentEyeComponent? component = null)
+    {
+        if (!Resolve(uid, ref component))
+            return Vector2.One;
+
+        return component.TargetZoom;
+    }
+
     public void SetMaxZoom(EntityUid uid, Vector2 value, ContentEyeComponent? component = null)
     {
         if (!Resolve(uid, ref component))
