@@ -15,6 +15,9 @@
           species:
           - GhoulGlowing
           shouldHave: false
+        - !type:HasBodyComponent
+          component: N14GourmandPerk
+          invert: true
         damage:
           types:
             Poison: 2
@@ -23,6 +26,12 @@
         conditions:
         - !type:OrganType
           type: Animal
+        reagent: Protein
+        amount: 0.5
+      - !type:AdjustReagent
+        conditions:
+        - !type:HasBodyComponent
+          component: N14GourmandPerk
         reagent: Protein
         amount: 0.5
       - !type:GenericStatusEffect
@@ -53,6 +62,9 @@
           species:
           - GhoulGlowing
           shouldHave: false
+        - !type:HasBodyComponent
+          component: N14LeadBellyPerk
+          invert: true
         damage:
           types:
             Radiation: 2

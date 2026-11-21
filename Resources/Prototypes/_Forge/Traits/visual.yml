@@ -1,0 +1,25 @@
+- type: trait
+  id: N14PerkEagleEye
+  category: Visual
+  points: -5
+  requirements:
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14Blindness
+        - N14Nearsighted
+  functions:
+    - !type:TraitReplaceComponent
+      components:
+        - type: ContentEye
+          maxZoom: 1.2, 1.2
+          targetZoom: 1.2, 1.2
+
+- type: trait
+  id: N14PerkMonochromacy
+  category: Visual
+  points: 3
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: N14Monochromacy

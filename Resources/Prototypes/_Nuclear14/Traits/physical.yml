@@ -267,6 +267,7 @@
               Burn: -1.0 # Forge-Change
             types:
               Poison: -0.1 # Forge-Change
+              Bloodloss: -0.1 # Forge-Change
 
 - type: trait
   id: N14WorldChampion
@@ -286,6 +287,9 @@
           speed: 10
           lifetime: 0.025
           minlifetime: 0.0125
+    - !type:TraitAddActions
+      actions:
+        - ActionN14ChampionPunch
 
 - type: trait
   id: N14SittingDuck
