@@ -97,3 +97,83 @@
       - NCRPisoner
   items:
     - N14ClothingBootsCombat
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingShoesBootsCowboyWhite
+  category: Shoes
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutShoes
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - ClothingShoesBootsCowboyWhite
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingShoesBootsCowboyBlack
+  category: Shoes
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutShoes
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - ClothingShoesBootsCowboyBlack
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingBootsLeather
+  category: Shoes
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutShoes
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingBootsLeather
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingBootsFire
+  category: Shoes
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutShoes
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingBootsFire
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingShoesBootsCowboyBrown
+  category: Shoes
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutShoes
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - ClothingShoesBootsCowboyBrown

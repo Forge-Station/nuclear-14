@@ -20,6 +20,26 @@
     - N14WeaponRevolver10mm
 
 - type: loadout
+  id: N14WeaponPistolWebley
+  category: WeaponsFirearms
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponPistolWebley
+
+- type: loadout
   id: N14WeaponRevolver44Magnun
   category: WeaponsFirearms
   cost: 3
@@ -84,6 +104,28 @@
   items:
     - N14WeaponShotgunCaravan
 
+- type: loadout
+  id: N14WeaponShotgunDoubleBarrel
+  category: WeaponsFirearms
+  cost: 3
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 3600
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponShotgunDoubleBarrel
+
 # SMG
 - type: loadout
   id: N14WeaponSMG10mmPipe
@@ -108,6 +150,28 @@
     - N14WeaponSMG10mmPipe
 
 #Rifle
+- type: loadout
+  id: N14WeaponSniper308PipeRifle
+  category: WeaponsFirearms
+  cost: 2
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 4800
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement 
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponSniper308PipeRifle
+
 - type: loadout
   id: N14WeaponSniper556VarmintRifle
   category: WeaponsFirearms
@@ -344,6 +408,26 @@
     - N14MagazineSMG10mm
 
 - type: loadout
+  id: MagazineBox308
+  category: WeaponsAmmo
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items: 
+   - MagazineBox308
+
+- type: loadout
   id: N14PowerCellSmall
   category: WeaponsAmmo
   cost: 2
@@ -392,6 +476,8 @@
   items:
     - N14PowerCellHigh
     - N14PowerCellHigh
+
+
 
 #Melee
 
@@ -574,3 +660,63 @@
       - NCRPisoner
   items:
     - N14SledgeHammer
+
+- type: loadout
+  id: N14KukriKnife
+  category: WeaponsMelee
+  cost: 3
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14KukriKnife
+
+- type: loadout
+  id: N14GolfClub
+  category: WeaponsMelee
+  cost: 3
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14GolfClub
+
+- type: loadout
+  id: ForgeBoneKnife
+  category: WeaponsMelee
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - ForgeBoneKnife
