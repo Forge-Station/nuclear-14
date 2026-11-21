@@ -209,7 +209,7 @@
     state: housewindowvertical
     
 - type: entity
-  parent: N14WindowBaseAirtight
+  parent: [ N14WindowBaseAirtight, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14WindowHouseWood
   components:
   - type: Sprite
@@ -242,7 +242,7 @@
     state: housewindowbrokenvertical
     
 - type: entity
-  parent: N14WindowBase
+  parent: [ N14WindowBase, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14WindowHouseWoodBroken
   components:
   - type: Sprite

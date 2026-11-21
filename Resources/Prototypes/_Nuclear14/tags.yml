@@ -175,6 +175,11 @@
 - type: Tag
   id: N14Igniter
 
+# Forge-Add-Start
+- type: Tag
+  id: N14NukaBottle
+# Forge-Add-End
+
 - type: Tag
   id: Capacitor2
 
@@ -441,3 +446,8 @@
 
 - type: Tag
   id: Yaoguai
+
+# Forge-Add-Start
+- type: Tag
+  id: N14FlamerTank
+# Forge-Add-End

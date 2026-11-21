@@ -91,7 +91,7 @@
     state: blue-closed
 
 - type: entity
-  parent: N14BaseBarrel
+  parent: [ N14BaseBarrel, ForgeBaseFlammableFuelContainer ] # Forge-Change: surface fire integration
   id: N14RedBarrel
   name: red barrel
   description: A red barrel with an explosive warning sign on. Better be careful.
@@ -188,7 +188,7 @@
     # TODO - fill with some sort of waste product? Maybe just dirty water.
 
 - type: entity
-  parent: N14RedBarrelOpen
+  parent: [ N14RedBarrelOpen, ForgeBaseFlammableFuelContainer ] # Forge-Change: surface fire integration
   id: N14RedBarrelFull
   suffix: full
   description: A red barrel with an explosive warning sign on. It has a golden liquid inside.

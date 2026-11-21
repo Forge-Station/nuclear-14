@@ -737,7 +737,7 @@
         acts: [ "Destruction" ]
 
 - type: entity
-  parent: N14WindowTallBase
+  parent: [ N14WindowTallBase, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14WindowWoodTall
   categories: [ HideSpawnMenu ]
   suffix: wood
@@ -770,7 +770,7 @@
         acts: [ "Destruction" ]
 
 - type: entity
-  parent: N14WindowTallBase
+  parent: [ N14WindowTallBase, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14WindowWoodTallAlt
   categories: [ HideSpawnMenu ]
   suffix: wood alt

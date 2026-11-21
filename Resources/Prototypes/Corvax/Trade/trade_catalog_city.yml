@@ -270,18 +270,24 @@
 
 - type: storeCategoryStructured
   id: CaravanBuy2_WeaponGrenade
-  name: "Гранатомёты"
+  name: "Тяжёлое оружие" # Forge-Change
   entries:
   - proto: N14WeaponRifleGrenade
     price: 2000
     count: 2
+  # Forge-Add-Start
+  - proto: N14WeaponFlamer
+    price: 800
+    count: 2
+  # Forge-Add-End
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Grenade
   name: "Взрывчатка"
   entries:
   - proto: N14NukaCocktail
-    price: 30
+    price: 120 # Forge-Change
+    count: 4 # Forge-Add
   - proto: N14TinNade
     price: 50
     count: 5
@@ -326,6 +332,14 @@
   - proto: 40mmGrenadeFrag
     price: 150
     count: 20
+  # Forge-Add-Start
+  - proto: 40mmGrenadeFire
+    price: 225
+    count: 20
+  - proto: N14FlamerTank
+    price: 100
+    count: 8
+  # Forge-Add-End
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Melee
@@ -696,6 +710,11 @@
   - proto: N14LastBreathPoisonChemistryBottle
     price: 500
     count: 2
+  # Forge-Add-Start
+  - proto: FireExtinguisher
+    price: 50
+    count: 4
+  # Forge-Add-End
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Sprouts

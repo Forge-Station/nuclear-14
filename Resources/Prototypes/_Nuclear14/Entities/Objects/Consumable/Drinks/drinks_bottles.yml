@@ -208,6 +208,11 @@
         acts: [ "Destruction" ]
   - type: Item
     size: Small
+  # Forge-Add-Start
+  - type: Tag
+    tags:
+    - N14NukaBottle
+  # Forge-Add-End
 
 - type: entity
   parent: BrokenBottle

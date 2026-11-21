@@ -9,7 +9,7 @@
             - material: N14Gunpowder
               amount: 8
             - tag: Baseball
-              name: baseball 
+              name: baseball
               icon:
                 sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
                 state: baseball
@@ -33,7 +33,7 @@
             - material: N14Gunpowder
               amount: 2
             - tag: Turpentine
-              name: turpentine 
+              name: turpentine
               icon:
                 sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
                 state: turpentine
@@ -76,3 +76,50 @@
               doAfter: 35
     - node: TinNade
       entity: N14TinNade
+
+# Forge-Add-Start
+- type: constructionGraph
+  id: N14NukaCocktail
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: empty
+          steps:
+            - tag: N14NukaBottle
+              name: Nuka-Cola bottle
+              icon:
+                sprite: _Nuclear14/Objects/Consumable/Drinks/nuka_cola_new.rsi
+                state: empty
+            - tag: N14Igniter
+              name: igniter
+              icon:
+                sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
+                state: igniter
+            - material: Cloth
+              amount: 5
+            - material: Cable
+              amount: 5
+              doAfter: 10
+    - node: empty
+      entity: N14NukaCocktailEmpty
+      edges:
+        - to: cocktail
+          conditions:
+            - !type:MinSolution
+              solution: drink
+              reagent:
+                ReagentId: WeldingFuel
+              quantity: 50
+          steps:
+            - tool: Screwing
+              doAfter: 3
+            - tag: DuctTape
+              name: duct tape
+              icon:
+                sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
+                state: duct_tape
+              doAfter: 5
+    - node: cocktail
+      entity: N14NukaCocktail
+# Forge-Add-End

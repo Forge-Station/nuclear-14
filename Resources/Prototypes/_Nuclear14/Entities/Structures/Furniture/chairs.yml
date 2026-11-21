@@ -1,5 +1,5 @@
 - type: entity
-  parent: ChairWood
+  parent: [ ChairWood, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14ChairSchool
   name: school chair
   description: A wooden chair suited for long hours of study.
@@ -12,7 +12,7 @@
     node: N14ChairSchool
     
 - type: entity
-  parent: ChairWood
+  parent: [ ChairWood, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14ChairWood
   name: wooden chair
   description: A wooden chair suitable for sitting on.
@@ -25,7 +25,7 @@
     node: N14ChairWood
     
 - type: entity
-  parent: ChairWood
+  parent: [ ChairWood, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14ChairWood1
   components:
   - type: Sprite
@@ -36,7 +36,7 @@
     node: N14ChairWood1
     
 - type: entity
-  parent: ChairWood
+  parent: [ ChairWood, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14ChairWoodPadded
   suffix: padded
   components:

@@ -1,0 +1,142 @@
+- type: entity
+  id: ForgeSurfaceFire
+  name: fire
+  description: A burning pool of fuel.
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Transform
+    anchored: true
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fire:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.35,-0.35,0.35,0.35"
+        layer:
+        - MobMask
+        hard: false
+  - type: Sprite
+    sprite: _RMC14/Effects/fire.rsi
+    noRot: true
+    drawdepth: WallTops
+    layers:
+    - map: [ "base" ]
+      state: red_4
+      shader: unshaded
+  - type: PointLight
+    radius: 3
+    energy: 2
+    color: "#ff7b22"
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.SurfaceFireVisuals.Stage:
+        base:
+          Small: { state: red_1 }
+          Medium: { state: red_2 }
+          Large: { state: red_3 }
+          Initial: { state: red_4 }
+  - type: SurfaceFire
+    duration: 20
+    tickInterval: 0.5
+    damageInterval: 5
+    fireStacksPerTick: 0.2
+    adjacentFireStacks: 0.5
+    extinguishMultiplier: 2
+    maxFuelledDuration: 60
+    fuelSpreadInterval: 1
+    minimumFuelToSpread: 0.25
+    fuelSpreadDuration: 3
+    minimumFuelIntensity: 0.5
+    maximumFuelIntensity: 1.5
+    vaporPrototype: ForgeChemicalVapor
+    vaporEmissionInterval: 2
+    minimumVaporVolume: 0.05
+    puddleEvaporationPerSecond: 0.5
+    carryEvaporatedReagents: true
+    evaporatedVaporFraction: 0.04 # 0.01u per 0.25u evaporation tick; lower values round to zero.
+    fuels:
+    - reagent: WeldingFuel
+      consumptionPerSecond: 0.75
+      durationPerUnit: 1.5
+      carryOriginalReagents: true
+      vaporFraction: 0.1
+    - reagent: Ethanol
+      consumptionPerSecond: 1.25
+      durationPerUnit: 0.6
+      carryOriginalReagents: true
+      vaporFraction: 0.05
+    - reagent: Napalm
+      consumptionPerSecond: 0.35
+      durationPerUnit: 3
+      carryOriginalReagents: true
+      vaporFraction: 0.05
+    - parent: BaseAlcohol
+      consumptionPerSecond: 0.75
+      durationPerUnit: 0.2
+      carryOriginalReagents: true
+      vaporFraction: 0.025
+    damagePerInterval:
+      types:
+        Heat: 6
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+# Reagent-bearing vapor is deliberately separate from combustion smoke. Its chemical mass stays
+# on the source tile; neighboring clouds only contribute to the effective visual density.
+- type: entity
+  id: ForgeChemicalVapor
+  name: chemical vapor
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    sprite: Effects/chemsmoke.rsi
+    state: chemsmoke
+  - type: Appearance
+  - type: SurfaceVapor
+    updateInterval: 1
+    decayPerSecond: 0.04
+    maxVolume: 2
+    deleteThreshold: 0.03
+    supplyGracePeriod: 2.5
+    normalThreshold: 0.15
+    denseEnterThreshold: 1
+    denseExitThreshold: 0.65
+    cardinalNeighborWeight: 0.25
+    diagonalNeighborWeight: 0.1
+    exposureDuration: 6
+    weakAlpha: 0.25
+    normalAlpha: 0.5
+    denseAlpha: 0.85
+  - type: AnimationPlayer
+  - type: Transform
+    anchored: true
+  - type: Clickable
+  - type: Physics
+  - type: Fixtures
+    fixtures:
+      fix1:
+        hard: false
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.4,-0.4,0.4,0.4"
+        mask:
+        - ItemMask
+        layer:
+        - SlipLayer
+  - type: Smoke
+  - type: SolutionContainerManager
+    solutions:
+      solutionArea:
+        maxVol: 2
+        canReact: false
+  - type: Occluder
+    enabled: false
+  - type: Tag
+    tags:
+    - HideContextMenu
