@@ -9,19 +9,16 @@
       amount: 1
     WastelandBlood:
       amount: 1
-    BerserkerMixture:
-      amount: 1
   products:
     BerserkerMixture: 4
 
-# Хи-хи-хихи. - Salniy
 - type: reaction
   id: BerserkerMixtureRecipe2
   reactants:
     HealingPowder:
       amount: 1
     DamageModifyingMixture:
-      amount: 0.4
+      amount: 0.5
   products:
     BerserkerMixture: 1
 
@@ -36,7 +33,7 @@
       amount: 5
   effects:
     - !type:CreateEntityReactionEffect
-      entity: N14JetInhaler
+      entity: N14Jet
 
 - type: reaction
   id: N14RobustMovespeedMixtureInTurbo
