@@ -198,3 +198,10 @@ Entries:
   id: 17
   time: '2026-11-21T12:22:12.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/522
+- author: Salniy
+  changes:
+    - type: Add
+      message: Добавлено огромное количество новых перков по предложке rozycosmic.
+  id: 18
+  time: '2026-11-21T14:32:10.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/564
