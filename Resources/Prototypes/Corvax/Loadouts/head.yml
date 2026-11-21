@@ -241,3 +241,99 @@
     - !type:CharacterDepartmentRequirement
         departments:
           - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadHatCaravan
+  category: Head
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingHeadHatCaravan
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+
+- type: loadout
+  id: N14ClothingHeadHatPrewarMilitaryHelmet
+  category: Head
+  cost: 3
+  exclusive: true
+  items:
+    - N14ClothingHeadHatPrewarMilitaryHelmet
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadHatChinese
+  category: Head
+  cost: 1
+  exclusive: true
+  items:
+    - N14ClothingHeadHatChinese
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadHatFedoraBrown
+  category: Head
+  cost: 1
+  exclusive: true
+  items:
+    - ClothingHeadHatFedoraBrown
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+
+- type: loadout
+  id: ClothingHeadHatTacticalMaidHeadband
+  category: Head
+  cost: 1
+  exclusive: true
+  items:
+    - ClothingHeadHatTacticalMaidHeadband
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+
+        
