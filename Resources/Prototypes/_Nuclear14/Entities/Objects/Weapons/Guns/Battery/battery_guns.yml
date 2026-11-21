@@ -74,6 +74,10 @@
       types:
         Blunt: 5
     bluntStaminaDamageFactor: 1.25
+  - type: DualWieldable
+    whitelist:
+      components:
+      - DualWieldable
 
 - type: entity
   id: N14BaseWeaponPowerCellMedium
@@ -339,6 +343,10 @@
   - type: Tag
     tags:
     - Sidearm
+  - type: DualWieldable
+    whitelist:
+      components:
+      - DualWieldable
   - type: FollowDistance
     backStrength: 6
   - type: StaticPrice

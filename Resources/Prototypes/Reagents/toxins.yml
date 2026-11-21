@@ -492,6 +492,9 @@
           - !type:OrganType
             type: Animal
             shouldHave: false
+          - !type:HasBodyComponent
+            component: N14GourmandPerk
+            invert: true
         type: Local
         visualType: MediumCaution
         messages: [ "generic-reagent-effect-sick" ]
@@ -502,11 +505,17 @@
           - !type:OrganType
             type: Animal
             shouldHave: false
+          - !type:HasBodyComponent
+            component: N14GourmandPerk
+            invert: true
       - !type:HealthChange
         conditions:
         - !type:OrganType
           type: Animal
           shouldHave: false
+        - !type:HasBodyComponent
+          component: N14GourmandPerk
+          invert: true
         damage:
           types:
             Poison: 1
@@ -521,6 +530,12 @@
         conditions:
         - !type:OrganType
           type: Shadowkin
+        reagent: Protein
+        amount: 0.5
+      - !type:AdjustReagent
+        conditions:
+        - !type:HasBodyComponent
+          component: N14GourmandPerk
         reagent: Protein
         amount: 0.5
 
