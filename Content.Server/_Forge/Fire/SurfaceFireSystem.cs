@@ -36,13 +36,6 @@ public sealed class SurfaceFireSystem : EntitySystem
         EntityUid? Source);
 
     private static readonly ProtoId<TagPrototype> WallTag = "Wall";
-    private static readonly Vector2i[] FuelSpreadOffsets =
-    {
-        new(1, 0),
-        new(-1, 0),
-        new(0, 1),
-        new(0, -1),
-    };
 
     [Dependency] private readonly FireExposureSystem _fireExposure = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
@@ -525,9 +518,9 @@ public sealed class SurfaceFireSystem : EntitySystem
         }
 
         fire.Comp.NextFuelSpread = now + fire.Comp.FuelSpreadInterval;
-        foreach (var offset in FuelSpreadOffsets)
+        foreach (var direction in DirectionExtensions.AllDirections)
         {
-            if (!_map.TryGetTileRef(origin.GridUid, grid, origin.GridIndices + offset, out var neighbor) ||
+            if (!_map.TryGetTileRef(origin.GridUid, grid, origin.GridIndices.Offset(direction), out var neighbor) ||
                 neighbor.Tile.IsEmpty ||
                 TileBlocksFire(neighbor) ||
                 TryGetFire(neighbor, out _) ||

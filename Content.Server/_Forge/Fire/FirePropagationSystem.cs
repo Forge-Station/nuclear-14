@@ -7,19 +7,11 @@ using Robust.Shared.Timing;
 namespace Content.Server._Forge.Fire;
 
 /// <summary>
-/// Propagates entity and surface fire to explicitly configured combustible entities on four neighboring tiles.
+/// Propagates entity and surface fire to explicitly configured combustible entities on all eight neighboring tiles.
 /// Surface fire is deliberately not created by this system.
 /// </summary>
 public sealed class FirePropagationSystem : EntitySystem
 {
-    private static readonly Vector2i[] NeighborOffsets =
-    {
-        new(1, 0),
-        new(-1, 0),
-        new(0, 1),
-        new(0, -1),
-    };
-
     private static readonly TimeSpan PropagationInterval = TimeSpan.FromSeconds(1);
 
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
@@ -98,9 +90,9 @@ public sealed class FirePropagationSystem : EntitySystem
         if (sourceTile is not { } tile || !TryComp<MapGridComponent>(tile.GridUid, out var grid))
             return;
 
-        foreach (var offset in NeighborOffsets)
+        foreach (var direction in DirectionExtensions.AllDirections)
         {
-            if (!_map.TryGetTileRef(tile.GridUid, grid, tile.GridIndices + offset, out var neighbor) || neighbor.Tile.IsEmpty)
+            if (!_map.TryGetTileRef(tile.GridUid, grid, tile.GridIndices.Offset(direction), out var neighbor) || neighbor.Tile.IsEmpty)
                 continue;
 
             foreach (var target in neighbor.GetEntitiesInTile(LookupFlags.All, _lookup))

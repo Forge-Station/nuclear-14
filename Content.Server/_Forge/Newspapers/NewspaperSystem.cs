@@ -410,17 +410,19 @@ public sealed class NewspaperSystem : EntitySystem
 
     private void OnCopyImageRequested(Entity<NewspaperCopyComponent> ent, ref NewspaperImageRequestMessage msg)
     {
-        if (!AllowImageRequest(msg.Actor))
+        if (msg.Edition != 0 || !AllowImageRequest(msg.Actor))
             return;
 
-        var id = msg.PhotoId < 0 ? ent.Comp.Edition.PhotoId : msg.PhotoId;
+        var id = msg.PhotoId;
         if (!ent.Comp.Edition.PhotoIds.Contains(id))
             return;
 
         var data = ent.Comp.Photos.GetValueOrDefault(id) ?? (id == ent.Comp.Edition.PhotoId ? ent.Comp.ImageData : null);
         if (data is { Length: <= MaxPhotoBytes })
-            _ui.ServerSendUiMessage(ent.Owner, NewspaperCopyUiKey.Key,
-                new NewspaperImageMessage(id, data, ent.Comp.PhotoKeys.GetValueOrDefault(id, ent.Comp.PhotoKey)), msg.Actor);
+        {
+            var key = ent.Comp.PhotoKeys.GetValueOrDefault(id, ent.Comp.PhotoKey);
+            _ui.ServerSendUiMessage(ent.Owner, NewspaperCopyUiKey.Key, new NewspaperImageMessage(id, data, key), msg.Actor);
+        }
     }
 
     // Archive, publishing and printing.

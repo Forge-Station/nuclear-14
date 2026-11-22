@@ -288,6 +288,14 @@ public sealed class InjectorSystem : SharedInjectorSystem
                 out var solution) || solution.Volume == 0)
             return;
 
+        // #Forge-Change-Start: Check the reagent allowlist before withdrawing anything from the injector.
+        if (!SolutionContainers.CanAcceptReagents(targetSolution, solution))
+        {
+            Popup.PopupEntity(Loc.GetString("comp-solution-transfer-invalid-reagents", ("target", targetEntity)), injector.Owner, user);
+            return;
+        }
+        // #Forge-Change-End
+
         // Get transfer amount. May be smaller than _transferAmount if not enough room
         var realTransferAmount =
             FixedPoint2.Min(injector.Comp.TransferAmount, targetSolution.Comp.Solution.AvailableVolume);

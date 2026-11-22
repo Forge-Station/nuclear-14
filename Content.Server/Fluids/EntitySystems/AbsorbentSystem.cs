@@ -130,7 +130,9 @@ public sealed partial class AbsorbentSystem : SharedAbsorbentSystem
         if (!TryComp(target, out RefillableSolutionComponent? refillable))
             return false;
 
-        if (!_solutionContainerSystem.TryGetRefillableSolution((target, refillable, null), out var refillableSoln, out var refillableSolution))
+        // #Forge-Change: Check the destination allowlist before exchanging liquid with the absorbent.
+        if (!_solutionContainerSystem.TryGetRefillableSolution((target, refillable, null), out var refillableSoln, out var refillableSolution) ||
+            !_solutionContainerSystem.CanAcceptReagents(refillableSoln.Value, absorbentSoln.Comp.Solution))
             return false;
 
         if (refillableSolution.Volume <= 0)

@@ -83,7 +83,7 @@ public sealed partial class SurfaceFireComponent : Component
     public TimeSpan MaxFuelledDuration = TimeSpan.FromSeconds(60);
 
     /// <summary>
-    /// Delay between attempts to ignite fuel puddles on the four cardinal neighboring tiles.
+    /// Delay between attempts to ignite fuel puddles on the eight neighboring tiles.
     /// </summary>
     [DataField]
     public TimeSpan FuelSpreadInterval = TimeSpan.FromSeconds(1);

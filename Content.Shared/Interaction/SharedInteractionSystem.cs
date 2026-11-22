@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration.Logs;
+using Content.Shared._Forge.Newspapers; // #Forge-Change
 using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.CombatMode;
@@ -163,12 +164,19 @@ namespace Content.Shared.Interaction
             _uiQuery.TryComp(ev.Target, out var uiComp);
             if (!_actionBlockerSystem.CanInteract(ev.Actor, ev.Target))
             {
-                // We permit ghosts to open uis unless explicitly blocked
-                if (ev.Message is not OpenBoundInterfaceMessage || !HasComp<GhostComponent>(ev.Actor) || uiComp?.BlockSpectators == true)
+                // #Forge-Change-Start: Photo requests and client-side replies require an open newspaper.
+                var newspaperPhoto = Equals(ev.UiKey, NewspaperCopyUiKey.Key) &&
+                    (ev.Message is NewspaperImageRequestMessage { Edition: 0 } ||
+                     _net.IsClient && ev.Message is NewspaperImageMessage) &&
+                    _ui.IsUiOpen(ev.Target, ev.UiKey, ev.Actor);
+
+                if ((ev.Message is not OpenBoundInterfaceMessage && !newspaperPhoto) ||
+                    !HasComp<GhostComponent>(ev.Actor) || uiComp?.BlockSpectators == true)
                 {
                     ev.Cancel();
                     return;
                 }
+                // #Forge-Change-End
             }
 
             var range = _ui.GetUiRange(ev.Target, ev.UiKey);
