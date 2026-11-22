@@ -92,7 +92,9 @@ internal sealed class UdderSystem : EntitySystem
         if (!_solutionContainerSystem.ResolveSolution(entity.Owner, entity.Comp.SolutionName, ref entity.Comp.Solution, out var solution))
             return;
 
-        if (!_solutionContainerSystem.TryGetRefillableSolution(args.Args.Used.Value, out var targetSoln, out var targetSolution))
+        // #Forge-Change: Check the milk against the destination's reagent allowlist before drawing it.
+        if (!_solutionContainerSystem.TryGetRefillableSolution(args.Args.Used.Value, out var targetSoln, out var targetSolution) ||
+            !_solutionContainerSystem.CanAcceptReagents(targetSoln.Value, solution))
             return;
 
         args.Handled = true;

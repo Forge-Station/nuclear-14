@@ -86,6 +86,15 @@
     tags:
     - HideContextMenu
 
+- type: entity
+  id: N14FlamerSurfaceFire
+  parent: ForgeSurfaceFire
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: PointLight
+    radius: 4
+    energy: 3
+
 # Reagent-bearing vapor is deliberately separate from combustion smoke. Its chemical mass stays
 # on the source tile; neighboring clouds only contribute to the effective visual density.
 - type: entity

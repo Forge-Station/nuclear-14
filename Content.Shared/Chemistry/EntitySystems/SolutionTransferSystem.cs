@@ -183,6 +183,14 @@ public sealed class SolutionTransferSystem : EntitySystem
             return FixedPoint2.Zero;
         }
 
+        // #Forge-Change-Start: Check the destination allowlist before splitting the source solution.
+        if (!_solution.CanAcceptReagents(target, sourceSolution))
+        {
+            _popup.PopupClient(Loc.GetString("comp-solution-transfer-invalid-reagents", ("target", targetEntity)), targetEntity, user);
+            return FixedPoint2.Zero;
+        }
+        // #Forge-Change-End
+
         var targetSolution = target.Comp.Solution;
         if (targetSolution.AvailableVolume == 0)
         {

@@ -1,5 +1,7 @@
+using Content.Shared.Chemistry.Reagent; // #Forge-Change
 using Content.Shared.FixedPoint;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes; // #Forge-Change
 
 namespace Content.Shared.Chemistry.Components;
 
@@ -22,4 +24,7 @@ public sealed partial class RefillableSolutionComponent : Component
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public FixedPoint2? MaxRefill = null;
+
+    [DataField]
+    public HashSet<ProtoId<ReagentPrototype>>? AllowedReagents; // #Forge-Change: Null allows all reagents.
 }

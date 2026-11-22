@@ -8,7 +8,7 @@ namespace Content.Server._Forge.Fire;
 public sealed partial class FirePropagationComponent : Component
 {
     /// <summary>
-    /// Fire stacks sent to each orthogonally adjacent combustible tile per propagation tick.
+    /// Fire stacks sent to each adjacent combustible tile per propagation tick.
     /// </summary>
     [DataField]
     public float SpreadFireStacks = 0.3f;

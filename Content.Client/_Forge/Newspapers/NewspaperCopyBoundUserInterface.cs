@@ -29,6 +29,6 @@ public sealed class NewspaperCopyBoundUserInterface : BoundUserInterface
     {
         base.ReceiveMessage(message);
         if (message is NewspaperImageMessage image)
-            _window?.ReceivePhoto(image.PhotoId, image.Data);
+            _window?.ReceivePhoto(image.PhotoId, image.PhotoKey, image.Data);
     }
 }

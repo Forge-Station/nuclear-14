@@ -118,6 +118,7 @@
     solution: tank
   - type: RefillableSolution
     solution: tank
+    allowedReagents: [Napalm, WeldingFuel] #Forge-Change
   - type: DrainableSolution
     solution: tank
   - type: ExaminableSolution

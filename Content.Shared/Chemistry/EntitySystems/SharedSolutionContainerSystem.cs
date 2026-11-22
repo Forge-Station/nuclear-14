@@ -395,6 +395,19 @@ public abstract partial class SharedSolutionContainerSystem : EntitySystem
         UpdateChemicals(soln);
     }
 
+    // #Forge-Change-Start: Apply the allowlist to the configured refillable solution.
+    private HashSet<ProtoId<ReagentPrototype>>? GetAllowedReagents(EntityUid solution)
+        => TryComp<ContainedSolutionComponent>(solution, out var contained) &&
+           TryComp<RefillableSolutionComponent>(contained.Container, out var refillable) &&
+           refillable.Solution == contained.ContainerName
+            ? refillable.AllowedReagents
+            : null;
+
+    public bool CanAcceptReagents(Entity<SolutionComponent> target, Solution incoming)
+        => GetAllowedReagents(target.Owner) is not { } allowed ||
+           incoming.Contents.All(reagent => allowed.Contains(reagent.Reagent.Prototype));
+    // #Forge-Change-End
+
     /// <summary>
     ///     Adds reagent of an Id to the container.
     /// </summary>
@@ -407,6 +420,14 @@ public abstract partial class SharedSolutionContainerSystem : EntitySystem
     {
         var (uid, comp) = soln;
         var solution = comp.Solution;
+
+        // #Forge-Change-Start
+        if (GetAllowedReagents(uid) is { } allowed && !allowed.Contains(reagentQuantity.Reagent.Prototype))
+        {
+            acceptedQuantity = FixedPoint2.Zero;
+            return reagentQuantity.Quantity == 0;
+        }
+        // #Forge-Change-End
 
         acceptedQuantity = solution.AvailableVolume > reagentQuantity.Quantity
             ? reagentQuantity.Quantity
@@ -534,7 +555,7 @@ public abstract partial class SharedSolutionContainerSystem : EntitySystem
             throw new InvalidOperationException("Quantity must be positive");
 
         quantity = FixedPoint2.Min(quantity, solution.AvailableVolume, source.Volume);
-        if (quantity == 0)
+        if (quantity == 0 || !CanAcceptReagents(soln, source)) // #Forge-Change
             return false;
 
         // TODO This should be made into a function that directly transfers reagents.
@@ -562,8 +583,7 @@ public abstract partial class SharedSolutionContainerSystem : EntitySystem
         if (toAdd.Volume > solution.AvailableVolume)
             return false;
 
-        ForceAddSolution(soln, toAdd);
-        return true;
+        return ForceAddSolution(soln, toAdd); // #Forge-Change
     }
 
     /// <summary>
@@ -582,12 +602,12 @@ public abstract partial class SharedSolutionContainerSystem : EntitySystem
             return FixedPoint2.Zero;
 
         var quantity = FixedPoint2.Max(FixedPoint2.Zero, FixedPoint2.Min(toAdd.Volume, solution.AvailableVolume));
-        if (quantity < toAdd.Volume)
-            TryTransferSolution(soln, toAdd, quantity);
-        else
-            ForceAddSolution(soln, toAdd);
-
-        return quantity;
+        // #Forge-Change-Start: Report the amount accepted after validation.
+        var added = quantity < toAdd.Volume
+            ? TryTransferSolution(soln, toAdd, quantity)
+            : ForceAddSolution(soln, toAdd);
+        return added ? quantity : FixedPoint2.Zero;
+        // #Forge-Change-End
     }
 
     /// <summary>
@@ -602,7 +622,7 @@ public abstract partial class SharedSolutionContainerSystem : EntitySystem
         var (uid, comp) = soln;
         var solution = comp.Solution;
 
-        if (toAdd.Volume == FixedPoint2.Zero)
+        if (toAdd.Volume == FixedPoint2.Zero || !CanAcceptReagents(soln, toAdd)) // #Forge-Change
             return false;
 
         solution.AddSolution(toAdd, PrototypeManager);
@@ -626,7 +646,7 @@ public abstract partial class SharedSolutionContainerSystem : EntitySystem
         var (uid, comp) = soln;
         var solution = comp.Solution;
 
-        if (toAdd.Volume == 0 || overflowThreshold > solution.MaxVolume)
+        if (toAdd.Volume == 0 || overflowThreshold > solution.MaxVolume || !CanAcceptReagents(soln, toAdd)) // #Forge-Change
         {
             overflowingSolution = null;
             return false;

@@ -73,9 +73,9 @@ public sealed partial class NewspaperCopyWindow : BaseWindow
             OnImageRequested?.Invoke(id);
     }
 
-    public void ReceivePhoto(int id, byte[] data)
+    public void ReceivePhoto(int id, string photoKey, byte[] data)
     {
-        if (!VisiblePhotoKeys().TryGetValue(id, out var key))
+        if (!VisiblePhotoKeys().TryGetValue(id, out var key) || key != photoKey)
             return;
 
         _photos.Get(id, key, data);
