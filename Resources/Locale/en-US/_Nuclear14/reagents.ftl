@@ -377,3 +377,15 @@ reagent-desc-scorpiontail = scorpion tail. Stingy.
 
 compost-mixing-success = compost mixed
 mixing-verb-composting = mix compost
+
+reagent-effect-mentats-sharp-mind = Your thoughts sharpen and the world slows down.
+reagent-effect-mentats-focus = Everything falls into focus; the details become obvious.
+reagent-effect-mentats-clarity = A wave of mental clarity washes over you.
+
+reagent-effect-buffout-strength = A surge of strength floods your muscles.
+reagent-effect-buffout-endurance = Your endurance rises and fatigue fades away.
+reagent-effect-buffout-power = You feel stronger and tougher.
+
+reagent-effect-mentats-grape-festive = Your mood turns festive; you can't help but smile.
+reagent-effect-mentats-grape-charisma = You feel incredibly charismatic — people are drawn to you.
+reagent-effect-mentats-grape-party = Tonight feels like a good night for a party.

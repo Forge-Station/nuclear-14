@@ -313,3 +313,15 @@ reagent-name-scorpiontail = яд скорпиона
 reagent-desc-scorpiontail = Яд скорпиона. Можно из него сделать противоядие.
 compost-mixing-success = компостная смесь
 mixing-verb-composting = Смесь компоста.
+
+reagent-effect-mentats-sharp-mind = Мысли становятся чёткими, ум — острым.
+reagent-effect-mentats-focus = В голове проясняется, детали становятся заметнее.
+reagent-effect-mentats-clarity = Мир словно замедляется, а мысли ускоряются.
+
+reagent-effect-buffout-strength = Мышцы наливаются силой.
+reagent-effect-buffout-endurance = Выносливость растёт, усталость отступает.
+reagent-effect-buffout-power = Ты чувствуешь себя сильнее и выносливее.
+
+reagent-effect-mentats-grape-festive = Настроение становится праздничным, хочется улыбаться.
+reagent-effect-mentats-grape-charisma = Ты чувствуешь невероятное обаяние — окружающие сами тянутся к тебе.
+reagent-effect-mentats-grape-party = Кажется, сегодня отличный день для вечеринки.
