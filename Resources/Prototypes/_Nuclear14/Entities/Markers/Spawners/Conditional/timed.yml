@@ -396,6 +396,9 @@
   - type: TimedSpawner
     prototypes:
       - N14MobRaiderPsychoRanged
+      - N14MobRaiderPsychoRanged2
+      - N14MobRaiderPsychoRanged3
+      - N14MobRaiderPsychoRanged4 #Forge-change
     chance: 0.95
     intervalSeconds: 2400
     minimumEntitiesSpawned: 1
@@ -415,6 +418,9 @@
     - type: TimedSpawner
       prototypes:
         - N14MobRaiderHunter
+        - N14MobRaiderHunter2
+        - N14MobRaiderHunter3
+        - N14MobRaiderHunter4 #Forge-change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -434,6 +440,9 @@
     - type: TimedSpawner
       prototypes:
         - N14MobRaiderSkrimisher
+        - N14MobRaiderSkrimisher2
+        - N14MobRaiderSkrimisher3
+        - N14MobRaiderSkrimisher4 #Forge-change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -453,6 +462,9 @@
   - type: TimedSpawner
     prototypes:
       - N14MobRaiderBoss
+      - N14MobRaiderBoss2
+      - N14MobRaiderBoss3
+      - N14MobRaiderBoss4 #Forge-change
     chance: 0.95
     intervalSeconds: 2400
     minimumEntitiesSpawned: 1
