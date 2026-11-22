@@ -1,12 +1,12 @@
-using Content.Shared._Forge.Stamina;
+using Content.Shared._Forge.Weapons.Melee;
 using Robust.Shared.Timing;
 
 namespace Content.Server._Forge.ChemEffects;
 
 /// <summary>
 ///     Applies a temporary multiplier to heavy melee stamina costs while a reagent
-///     is metabolized. The smallest active modifier wins; restores 1 when all
-///     sources expire.
+///     is metabolized. The smallest active chem modifier wins against the pre-chem
+///     base (e.g. perk); restores that base when all chem sources expire.
 /// </summary>
 public sealed class MeleeStaminaCostModifierSystem : EntitySystem
 {
@@ -27,7 +27,7 @@ public sealed class MeleeStaminaCostModifierSystem : EntitySystem
 
             if (comp.Sources.Count == 0)
             {
-                RemComp<MeleeStaminaCostModifierComponent>(uid);
+                RestoreBase(uid, comp);
                 continue;
             }
 
@@ -44,18 +44,40 @@ public sealed class MeleeStaminaCostModifierSystem : EntitySystem
             return;
 
         var comp = EnsureComp<MeleeStaminaCostModifierComponent>(uid);
+
+        if (!comp.ChemInitialized)
+        {
+            comp.ChemInitialized = true;
+            comp.BaseHeavyCostMultiplier = comp.HeavyCostMultiplier;
+        }
+
         comp.Sources[source] = (modifier, _timing.CurTime + ExpiryGrace);
         Recalculate(uid, comp);
     }
 
     private void Recalculate(EntityUid uid, MeleeStaminaCostModifierComponent comp)
     {
-        var min = 1f;
+        // Smallest wins among perk/base and active chems (no multiplicative stack).
+        var min = comp.BaseHeavyCostMultiplier;
         foreach (var (_, entry) in comp.Sources)
             min = MathF.Min(min, entry.Modifier);
 
-        comp.AppliedModifier = min;
+        comp.HeavyCostMultiplier = min;
         Dirty(uid, comp);
+    }
+
+    private void RestoreBase(EntityUid uid, MeleeStaminaCostModifierComponent comp)
+    {
+        if (comp.ChemInitialized)
+        {
+            comp.HeavyCostMultiplier = comp.BaseHeavyCostMultiplier;
+            comp.ChemInitialized = false;
+            Dirty(uid, comp);
+        }
+
+        // Keep the component if a perk (or other non-default base) still needs it.
+        if (comp.HeavyCostMultiplier.Equals(1f))
+            RemComp<MeleeStaminaCostModifierComponent>(uid);
     }
 
     private static bool Prune(Dictionary<string, (float Modifier, TimeSpan Expiry)> sources, TimeSpan now)

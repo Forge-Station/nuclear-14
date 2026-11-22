@@ -1,3 +1,4 @@
+using Content.Shared._Forge.DoAfter;
 using Content.Shared.DoAfter;
 using Robust.Shared.Timing;
 
@@ -33,7 +34,11 @@ public sealed partial class DoAfterSpeedModifierSystem : EntitySystem
 
             _doAfter.ApplyDoAfterSpeedModifiers(uid, comp.Sources, comp.BaseDelays);
 
-            if (comp.Sources.Count == 0 && comp.BaseDelays.Count == 0)
+            if (comp.Sources.Count != 0 || comp.BaseDelays.Count != 0)
+                continue;
+
+            // Keep the component if a job/trait still needs ToolSpeed / MedicalSpeed.
+            if (comp.ToolSpeed.Equals(1f) && comp.MedicalSpeed.Equals(1f))
                 RemComp<DoAfterSpeedModifierComponent>(uid);
         }
     }
