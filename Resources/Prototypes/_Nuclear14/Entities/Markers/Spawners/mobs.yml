@@ -467,6 +467,9 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobRaiderPsychoRanged
+      - N14MobRaiderPsychoRanged2
+      - N14MobRaiderPsychoRanged3
+      - N14MobRaiderPsychoRanged4 #Forge-change
       
 - type: entity
   name: Raider Spawner - Rifle
@@ -482,6 +485,9 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobRaiderHunter
+      - N14MobRaiderHunter2
+      - N14MobRaiderHunter3
+      - N14MobRaiderHunter4 #Forge-change
       
 - type: entity
   name: Raider Spawner - Shotgun
@@ -497,6 +503,9 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobRaiderSkrimisher
+      - N14MobRaiderSkrimisher2
+      - N14MobRaiderSkrimisher3
+      - N14MobRaiderSkrimisher4 #Forge-change
       
 - type: entity
   name: Raider Spawner - Boss
@@ -512,6 +521,9 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobRaiderBoss
+      - N14MobRaiderBoss2
+      - N14MobRaiderBoss3
+      - N14MobRaiderBoss4 #Forge-change
 
 - type: entity
   name: Mercenary Spawner - Private

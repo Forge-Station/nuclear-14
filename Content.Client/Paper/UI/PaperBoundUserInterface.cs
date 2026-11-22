@@ -9,7 +9,7 @@ using static Content.Shared.Paper.SharedPaperComponent;
 namespace Content.Client.Paper.UI;
 
 [UsedImplicitly]
-public sealed class PaperBoundUserInterface : BoundUserInterface
+public sealed partial class PaperBoundUserInterface : BoundUserInterface // #Forge-Change: partial enables the PaperSurface adapter in _Forge.
 {
     [ViewVariables]
     private PaperWindow? _window;

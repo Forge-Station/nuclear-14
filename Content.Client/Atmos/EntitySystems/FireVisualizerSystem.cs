@@ -1,4 +1,6 @@
+using System.Linq; // Forge-Change: fire layers must remain above icon-smoothed structure layers.
 using Content.Client.Atmos.Components;
+using Content.Client.IconSmoothing; // Forge-Change
 using Content.Shared.Atmos;
 using Robust.Client.GameObjects;
 using Robust.Shared.Map;
@@ -17,6 +19,8 @@ public sealed class FireVisualizerSystem : VisualizerSystem<FireVisualsComponent
         base.Initialize();
 
         SubscribeLocalEvent<FireVisualsComponent, ComponentInit>(OnComponentInit);
+        SubscribeLocalEvent<FireVisualsComponent, ComponentStartup>(OnComponentStartup, // Forge-Change
+            after: [typeof(IconSmoothSystem)]);
         SubscribeLocalEvent<FireVisualsComponent, ComponentShutdown>(OnShutdown);
     }
 
@@ -37,19 +41,27 @@ public sealed class FireVisualizerSystem : VisualizerSystem<FireVisualsComponent
         }
     }
 
+    // Forge-Change-Start: keep fire above icon-smoothed structure layers.
     private void OnComponentInit(EntityUid uid, FireVisualsComponent component, ComponentInit args)
+    {
+        if (!TryComp<SpriteComponent>(uid, out var sprite) || !HasComp<AppearanceComponent>(uid))
+            return;
+
+        EnsureFireLayer(component, sprite, false);
+    }
+    // Forge-Change-End
+
+    // Forge-Add-Start
+    private void OnComponentStartup(EntityUid uid, FireVisualsComponent component, ComponentStartup args)
     {
         if (!TryComp<SpriteComponent>(uid, out var sprite) || !TryComp(uid, out AppearanceComponent? appearance))
             return;
 
-        sprite.LayerMapReserveBlank(FireVisualLayers.Fire);
-        sprite.LayerSetVisible(FireVisualLayers.Fire, false);
-        sprite.LayerSetShader(FireVisualLayers.Fire, "unshaded");
-        if (component.Sprite != null)
-            sprite.LayerSetRSI(FireVisualLayers.Fire, component.Sprite);
-
+        // At startup the parent entity is fully initialized and icon smoothing has appended its layers,
+        // so it is safe both to move fire to the top and to attach the client-side light entity.
         UpdateAppearance(uid, component, sprite, appearance);
     }
+    // Forge-Add-End
 
     protected override void OnAppearanceChange(EntityUid uid, FireVisualsComponent component, ref AppearanceChangeEvent args)
     {
@@ -59,11 +71,14 @@ public sealed class FireVisualizerSystem : VisualizerSystem<FireVisualsComponent
 
     private void UpdateAppearance(EntityUid uid, FireVisualsComponent component, SpriteComponent sprite, AppearanceComponent appearance)
     {
-        if (!sprite.LayerMapTryGet(FireVisualLayers.Fire, out var index))
-            return;
-
         AppearanceSystem.TryGetData<bool>(uid, FireVisuals.OnFire, out var onFire, appearance);
         AppearanceSystem.TryGetData<float>(uid, FireVisuals.FireStacks, out var fireStacks, appearance);
+
+        // Forge-Change-Start
+        // Icon smoothing and some other visualizers append their layers after component initialization.
+        // Recreate the fire layer on ignition so that it cannot end up hidden behind a wall or door sprite.
+        var index = EnsureFireLayer(component, sprite, onFire);
+        // Forge-Change-End
         sprite.LayerSetVisible(index, onFire);
 
         if (!onFire)
@@ -93,6 +108,27 @@ public sealed class FireVisualizerSystem : VisualizerSystem<FireVisualsComponent
 
         // TODO flickering animation? Or just add a noise mask to the light? But that requires an engine PR.
     }
+
+    // Forge-Add-Start: icon smoothing may append wall and door layers after component initialization.
+    private static int EnsureFireLayer(FireVisualsComponent component, SpriteComponent sprite, bool moveToTop)
+    {
+        if (sprite.LayerMapTryGet(FireVisualLayers.Fire, out var index))
+        {
+            if (!moveToTop || index == sprite.AllLayers.Count() - 1)
+                return index;
+
+            sprite.RemoveLayer(index);
+        }
+
+        index = sprite.LayerMapReserveBlank(FireVisualLayers.Fire);
+        sprite.LayerSetVisible(index, false);
+        sprite.LayerSetShader(index, "unshaded");
+        if (component.Sprite != null)
+            sprite.LayerSetRSI(index, component.Sprite);
+
+        return index;
+    }
+    // Forge-Add-End
 }
 
 public enum FireVisualLayers : byte

@@ -1,0 +1,7 @@
+- type: shader
+  id: N14NewspaperPhoto
+  kind: source
+  path: "/Textures/_Forge/Shaders/newspaper_photo.swsl"
+  params:
+    EdgeWidth: 0.01
+    Grayscale: false

@@ -1,0 +1,34 @@
+- type: entity
+  parent: N14ClothingHeadHelmetPowerArmorMidwest
+  id: N14ClothingHeadHelmetPowerArmorMidwestTesla
+  name: шлем силовой брони Среднезападного Братства "Тесла"
+  description: Неизвестная модель шлема силовой брони, происходящая из Среднего Запада и принятая на вооружение отделением Братства Среднего Запада.
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: _Forge/Clothing/Head/PowerArmorHelmets/midwesttesla.rsi
+    layers:
+    - state: icon
+    - state: icon-unshaded
+    - state: light-overlay
+      visible: false
+      shader: unshaded
+      map: [ "light" ]
+  - type: EyeProtection
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.75
+        Slash: 0.75
+        Piercing: 0.8
+        Heat: 0.8
+        Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 3
+        Heat: 3
+      # Forge-Add-End
+  - type: ExplosionResistance
+    damageCoefficient: 0.85

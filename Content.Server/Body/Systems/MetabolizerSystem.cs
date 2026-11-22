@@ -1,3 +1,4 @@
+using Content.Server._Forge.Metabolism;
 using Content.Server.Body.Components;
 using Content.Server.Chemistry.Containers.EntitySystems;
 using Content.Shared.Administration.Logs;
@@ -160,6 +161,29 @@ namespace Content.Server.Body.Systems
                 if (reagents >= ent.Comp1.MaxReagentsProcessable)
                     return;
 
+                // Forge-Change: Lead Belly turns dirty/irradiated reagents into clean water 1:1.
+                if (ent.Comp2?.Body is { } perkBody
+                    && HasComp<N14LeadBellyPerkComponent>(perkBody)
+                    && proto.ID is "WaterDirty" or "WaterIrradiated" or "N14RadParticleFood")
+                {
+                    var rate = quantity;
+                    if (ent.Comp1.MetabolismGroups != null)
+                    {
+                        foreach (var perkGroup in ent.Comp1.MetabolismGroups)
+                        {
+                            if (!proto.Metabolisms.TryGetValue(perkGroup.Id, out var perkEntry))
+                                continue;
+
+                            rate = FixedPoint2.Clamp(perkEntry.MetabolismRate * perkGroup.MetabolismRateModifier, 0, quantity);
+                            break;
+                        }
+                    }
+
+                    solution.RemoveReagent(reagent, rate);
+                    solution.AddReagent("Water", rate);
+                    reagents++;
+                    continue;
+                }
 
                 // loop over all our groups and see which ones apply
                 if (ent.Comp1.MetabolismGroups is null)
@@ -189,6 +213,14 @@ namespace Content.Server.Body.Systems
                     var actualEntity = ent.Comp2?.Body ?? solutionEntityUid.Value;
                     var ev = new TryMetabolizeReagent(reagent, proto, quantity);
                     RaiseLocalEvent(actualEntity, ref ev);
+
+                    // Forge-Change: listeners can scale effects or speed up reagent removal.
+                    scale *= ev.Scale;
+                    mostToRemove = FixedPoint2.Clamp(mostToRemove * ev.QuantityMultiplier, FixedPoint2.Zero, quantity);
+
+                    // Scale 0 neutralizes the effect, but the reagent is still consumed.
+                    if (scale <= 0f)
+                        continue;
 
                     var args = new EntityEffectReagentArgs(actualEntity, EntityManager, ent, solution, mostToRemove, proto, null, scale);
 

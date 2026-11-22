@@ -191,3 +191,31 @@ Entries:
   id: 16
   time: '2026-11-14T15:40:33.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/571
+- author: yanus42
+  changes:
+    - type: Add
+      message: Новая система огня.
+  id: 17
+  time: '2026-11-21T12:22:12.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/522
+- author: Salniy
+  changes:
+    - type: Add
+      message: Добавлено огромное количество новых перков по предложке rozycosmic.
+  id: 18
+  time: '2026-11-21T14:32:10.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/564
+- author: yanus42
+  changes:
+    - type: Add
+      message: Added fun :D
+  id: 19
+  time: '2026-11-21T15:09:53.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/546
+- author: yanus42
+  changes:
+    - type: Add
+      message: Added fun :D
+  id: 20
+  time: '2026-11-21T15:11:03.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/534

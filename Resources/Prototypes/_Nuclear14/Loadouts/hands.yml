@@ -93,3 +93,67 @@
       - NCRPisoner
   items:
     - N14ClothingHandsGlovesNitrilePurple
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingHandsGlovesDriver
+  category: Hands
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHands
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingHandsGlovesDriver 
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingHandsGlovesBrownBiker
+  category: Hands
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHands
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingHandsGlovesBrownBiker 
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingHandsGlovesBlackBiker
+  category: Hands
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHands
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingHandsGlovesBlackBiker
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingHandsGlovesMountie
+  category: Hands
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHands
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingHandsGlovesMountie

@@ -19,6 +19,7 @@ using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Physics;
 using Content.Shared.Popups;
 using Content.Shared._Forge.Stamina;
+using Content.Shared._Forge.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Components;
 using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Weapons.Ranged.Components;
@@ -549,6 +550,10 @@ public abstract class SharedMeleeWeaponSystem : EntitySystem
 
         if (targetMap.MapId != userXform.MapID)
             return false;
+
+        var heavyCost = component.HeavyStaminaCost;
+        if (TryComp<MeleeStaminaCostModifierComponent>(user, out var heavyCostModifier))
+            heavyCost *= heavyCostModifier.HeavyCostMultiplier;
 
         if (TryComp<StaminaComponent>(user, out var stamina))
         {

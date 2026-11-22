@@ -78,3 +78,36 @@
       - NCRPisoner
   items:
     - ClothingEyesGlassesChemist
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingEyesGlassesPilot
+  category: Eyes
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutEyes
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingEyesGlassesPilot
+
+- type: loadout # Forge-add
+  id: N14LoadoutClothingEyesGlassesSunglassesAviator
+  category: Eyes
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutEyes
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - ClothingEyesGlassesSunglassesAviator
+

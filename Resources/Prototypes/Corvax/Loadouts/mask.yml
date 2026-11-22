@@ -237,3 +237,20 @@
       - BoSMidSerf
       - CaesarLegionSlave
       - NCRPisoner
+
+- type: loadout
+  id: N14ClothingMaskGasRangerBroken
+  category: Mask
+  cost: 2
+  exclusive: true
+  items:
+    - ClothingMaskGasRangerBroken
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMask
+    - !type:CharacterJobRequirement 
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner

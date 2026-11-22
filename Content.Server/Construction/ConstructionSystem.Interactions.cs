@@ -283,6 +283,7 @@ namespace Content.Server.Construction
                     {
                         var doAfterEv = new ConstructionInteractDoAfterEvent(EntityManager, interactUsing);
 
+                        // Tool speed is applied once in TryStartDoAfter when Used is a tool.
                         var doAfterEventArgs = new DoAfterArgs(EntityManager, interactUsing.User, step.DoAfter, doAfterEv, uid, uid, interactUsing.Used)
                         {
                             BreakOnDamage = false,

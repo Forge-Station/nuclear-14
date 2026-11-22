@@ -65,7 +65,7 @@
 
 # Wooden Doors
 - type: entity
-  parent: N14BaseDoor
+  parent: [ N14BaseDoor, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14DoorMakeshift # Base Door Wood
   name: makeshift door
   description: It's a wooden door. It looks dirty and handmade.
@@ -245,7 +245,7 @@
 
 # Metal Doors
 - type: entity
-  parent: N14BaseDoor
+  parent: N14BaseDoor # Forge-Change: do not inherit wood flammability from the makeshift door.
   id: N14DoorMetalReinforced
   name: metal reinforced door
   description: It's a door, reinforced with metal. Hope you brought you bobby pins.
@@ -341,7 +341,7 @@
 
 # Glass Doors
 - type: entity
-  parent: N14DoorMakeshift
+  parent: N14BaseDoor
   id: N14DoorGlass
   name: glass door
   description: It's a door with panels made of clean glass.

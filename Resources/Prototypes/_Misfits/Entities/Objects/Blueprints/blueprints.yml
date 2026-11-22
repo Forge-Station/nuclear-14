@@ -495,7 +495,6 @@
   - type: Blueprint
     recipes:
     - N14ClothingOuterWBoSReconBattleArmor
-    - N14ClothingMaskGasWBoSRecon
 
 - type: entity
   parent: N14BlueprintBase
@@ -792,6 +791,7 @@
     recipes:
     - N14ClothingOuterMidwestReconArmor
     - N14ClothingHeadHatBrotherhoodMidwestHelmetRecon
+    - N14ClothingOuterPowerArmorMidwestTeslaBlueprint
 
 # =====================================================================
 # TOWNSFOLK BLUEPRINTS
