@@ -31,6 +31,12 @@
   special:
   - !type:AddComponentSpecial
     components:
+      - type: RoleBonus
+        healthBonus: 30
+        slowOnDamageModifier: 0.5
+        staminaBonus: 50
+        meleeDamageMultiplier: 1.5
+        meleeHeavyStaminaCostMultiplier: 0.75
       - type: NpcFactionMember
         factions:
           - CaesarLegion

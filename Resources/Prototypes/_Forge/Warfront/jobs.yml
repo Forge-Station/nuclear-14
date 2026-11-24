@@ -133,6 +133,20 @@
         factions:
           - Wastelander
           - NCR
+  - !type:AddComponentSpecial
+    components:
+      - type: RoleBonus
+        healthBonus: 25
+        walkSpeedMultiplier: 1.15
+        sprintSpeedMultiplier: 1.15
+        slowOnDamageModifier: 0.5
+        staminaBonus: 25
+        meleeDamageMultiplier: 1.2
+        meleeHeavyStaminaCostMultiplier: 0.75
+        fireRateBonus: 2
+        fireRateWhitelist:
+          - N14WeaponSniper44LeverCarbine
+          - N14WeaponSniper44LeverShortCarbine
 
 - type: playTimeTracker
   id: WarfrontNCRRanger

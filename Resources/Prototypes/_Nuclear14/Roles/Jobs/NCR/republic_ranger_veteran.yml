@@ -34,6 +34,35 @@
         factions:
           - Wastelander
           - NCR
+      - type: DoAfterSpeedModifier
+        medicalSpeed: 1.25
+      - type: RoleBonus
+        healthBonus: 30
+        walkSpeedMultiplier: 1.2
+        sprintSpeedMultiplier: 1.2
+        slowOnDamageModifier: 0.5
+        fireRateBonus: 1.5
+        fireRateWhitelist:
+        - N14WeaponSniper44LeverCarbine
+        - N14WeaponSniper44LeverShortCarbine
+        - N14WeaponSniper308LeverRifle
+        - N14WeaponSniper45-70BrushGun
+        - N14WeaponSniper308Tribal
+        - N14WeaponSniper308TribalUpgraded
+        - N14WeaponShotgunLever
+        - N14WeaponRevolver9mm
+        - N14WeaponRevolver10mm
+        - N14WeaponRevolverWebley
+        - N14WeaponRevolver44Magnun
+        - N14WeaponRevolver45-70Hunter
+        - N14WeaponRevolver45-70RangerSequoia
+        - N14WeaponRevolverThatGun
+        - N14WeaponRevolver12-7x55mmRSH12
+        - N14WeaponRevolver44Tribal
+        - N14WeaponRevolver44TribalUpgraded
+        - N14WeaponRevolver44TribalUpgradedExtra
+        - N14WeaponRevolver45-70Handcannon
+        - N14WeaponRevolver45-70HandcannonUpgraded
 
 - type: startingGear
   id: NCRRangerVeteranGear
