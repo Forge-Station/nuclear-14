@@ -32,13 +32,17 @@ public sealed class RechargeBasicEntityAmmoSystem : EntitySystem
 
         while (query.MoveNext(out var uid, out var recharge, out var ammo))
         {
-            if (ammo.Count is null || ammo.Count == ammo.Capacity || recharge.NextCharge == null)
+            var capacity = ammo.Capacity ?? int.MaxValue;
+            if (ammo.Count is null || ammo.Count >= capacity || recharge.NextCharge == null)
                 continue;
 
             if (recharge.NextCharge > _timing.CurTime)
                 continue;
 
-            if (_gun.UpdateBasicEntityAmmoCount(uid, ammo.Count.Value + 1, ammo))
+            var amount = Math.Max(1, recharge.RechargeAmount);
+            var newCount = Math.Min(ammo.Count.Value + amount, capacity);
+
+            if (_gun.UpdateBasicEntityAmmoCount(uid, newCount, ammo))
             {
                 // We don't predict this because occasionally on client it may not play.
                 // PlayPredicted will still be predicted on the client.

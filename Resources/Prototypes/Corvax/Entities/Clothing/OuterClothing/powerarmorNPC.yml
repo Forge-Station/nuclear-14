@@ -36,7 +36,7 @@
   - type: ExplosionResistance
     damageCoefficient: 0.6
   - type: Reflect
-    reflectProb: 0.3
+    reflectProb: 0.2
   - type: Unremoveable
 
 - type: entity
@@ -71,7 +71,7 @@
     - type: ExplosionResistance
       damageCoefficient: 0.6
     - type: Reflect
-      reflectProb: 0.3
+      reflectProb: 0.2
     - type: Unremoveable
 
 - type: entity
@@ -82,6 +82,5 @@
   components:
     - type: Unremoveable
     - type: ClothingSpeedModifier
-      walkModifier: 4.75 
-      sprintModifier: 4.75
-    
+      walkModifier: 3
+      sprintModifier: 3
