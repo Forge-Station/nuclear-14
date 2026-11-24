@@ -2,11 +2,11 @@
   id: RaiderPowerArmorBossNPC
   equipment:
     jumpsuit: ClothingUniformMNKUnderGarment
-    outerClothing: N14ClothingOuterPowerArmorRaiderNPC 
+    outerClothing: N14ClothingOuterPowerArmorRaiderNPC
     head: N14ClothingHeadHelmetPowerArmorRaiderNPC
     shoes: N14ClothingBootsCombatMK2
     back: N14ClothingPowerSystemsBackRaiderNPC
-    pocket1: N14CurrencyCap500 
+    pocket1: N14CurrencyCap500
 
 - type: startingGear
   id: MercenaryHeavySniperNPC
@@ -59,12 +59,12 @@
   id: PsychoRaiderGear3
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitRags
-    outerClothing: N14ClothingOuterLightMetalArmor
+    outerClothing: N14ClothingOuterTireArmor
     shoes: N14ClothingBootsLeather
-    mask: N14ClothingMaskGrill
+    head: ForgeClothingHumanSkinHat
     pocket1: N14RaiderStash
   inhand:
-  - N14BrokenPipe
+  - N14Hatchet
 
 - type: startingGear
   id: FernMercLieutenantGear1
@@ -133,7 +133,7 @@
     shoes: N14ClothingShoesJamrock
     mask: N14ClothingMaskGreenMask
     gloves: N14ClothingHandsGlovesTribal
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
   inhand:
   - N14PoliceBaton
 
@@ -145,10 +145,10 @@
     head: ClothingHeadHatUshanka
     shoes: ClothingShoesBootsMantis
     gloves: N14ClothingHandsGlovesFur
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
   inhand:
   - N14BrokenPipe
-    
+
 - type: startingGear
   id: ChineseFighterGear3
   equipment:
@@ -156,7 +156,7 @@
     outerClothing: N14ClothingOuterRaiderBadlands
     head: N14ClothingHeadHatVancouver
     shoes: N14ClothingBootsLeather
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
   inhand:
   - N14CombatKnife
 
@@ -168,7 +168,7 @@
     head: ClothingHeadHatSyndieMAA
     shoes: N14ClothingBootsCombatMK2
     neck: N14ClothingNeckCloakRangerPoncho
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
   inhand:
   - N14ChineseSword
 
@@ -179,7 +179,7 @@
     outerClothing: N14ClothingOuterCombatRaider
     head: N14ClothingHeadHatChinese
     shoes: N14ClothingShoesRaider
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
 
 - type: startingGear
   id: ChineseRifleSKSGear
@@ -189,7 +189,7 @@
     head: N14ClothingHeadHatChinese
     eyes: N14ClothingEyesGlassesWelding
     shoes: N14ClothingBootsLeather
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
 
 - type: startingGear
   id: ChineseShotgunGear
@@ -199,7 +199,7 @@
     head: N14ClothingHeadHatChineseHelmet
     eyes: N14ClothingEyesGlassesWelding
     shoes: N14ClothingBootsCombat
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
 
 - type: startingGear
   id: ChineseAssaultRifleGear
@@ -208,7 +208,7 @@
     outerClothing: N14ClothingOuterVestChinese
     head: N14ClothingHeadHatChineseHelmet
     shoes: N14ClothingBootsLeather
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
 
 - type: startingGear
   id: ChineseSniperRifleGear
@@ -219,7 +219,7 @@
     eyes: N14ClothingEyesGlassesWelding
     shoes: N14ClothingBootsCombat
     neck: N14ClothingNeckCloakGhillie
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
 
 - type: startingGear
   id: ChineseSMGAdvancedGear
@@ -231,7 +231,7 @@
     hands: N14ClothingHandsGlovesBlackLeather
     shoes: N14ClothingBootsCombatMK2
     mask: N14ClothingMaskBlackBalaclava
-    pocket1: N14MercStash 
+    pocket1: N14MercStash
 
 - type: startingGear
   id: ChinesePowerArmorGear
@@ -241,4 +241,4 @@
     head: N14ClothingHeadHelmetPowerArmorT51ChinaRaiderNPC
     shoes: N14ClothingBootsCombatMK2
     back: N14ClothingPowerSystemsBackRaiderNPC
-    pocket1: N14CurrencyCap500 
+    pocket1: N14CurrencyCap500

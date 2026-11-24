@@ -76,7 +76,7 @@
         sprite: Objects/Misc/handcuffs.rsi
         state: body-overlay-2
         visible: false
-      - sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/10mmPIPE.rsi
+      - sprite: _Nuclear14/Objects/Weapons/Guns/Pistols/10mmPIPEpistol.rsi
         state: inhand-right  # Only part we change, the gun sprite.
 
 - type: entity
@@ -85,28 +85,29 @@
   id: N14MobRaiderBoss
   description: Boss of all those psycho raiders you see around this area. Good luck!
   components:
-    - type: MobThresholds 
+    - type: MobThresholds
       thresholds:
         0: Alive
-        175: Dead  # Forge-end  
+        175: Dead  # Forge-end
     - type: Gun
       minAngle: 10
-      maxAngle: 34.5
+      maxAngle: 35
       angleIncrease: 8
       angleDecay: 16
-      fireRate: 2.66
-      soundGunshot: /Audio/_Nuclear14/Weapons/Guns/Pistols/N14WeaponPistol10mm/shot1.ogg
+      fireRate: 4
+      soundGunshot: /Audio/_Nuclear14/Weapons/Guns/SMGs/N14Weapon45SMG/shot1.ogg
       useKey: false
       selectedMode: FullAuto
       availableModes:
         - FullAuto
     - type: CombatMode
     - type: BasicEntityAmmoProvider
-      proto: N14CartridgePistol10
-      capacity: 35
-      count: 35
+      proto: N14CartridgePistol45
+      capacity: 20
+      count: 20
     - type: RechargeBasicEntityAmmo
-      rechargeCooldown: 2
+      rechargeCooldown: 12
+      rechargeAmount: 20
       rechargeSound:
         path: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magin.ogg
     - type: Loadout
@@ -161,7 +162,7 @@
         sprite: Objects/Misc/handcuffs.rsi
         state: body-overlay-2
         visible: false
-      - sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/10mmPIPE.rsi
+      - sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/45SMG.rsi
         state: inhand-right  # Only part we change, the gun sprite.
 
 - type: entity
@@ -257,7 +258,7 @@
       angleIncrease: 8
       angleDecay: 16
       fireRate: 0.75
-      soundGunshot: /Audio/_Nuclear14/Weapons/Guns/Shotguns/N14WeaponDoubleBarrelShotgun/shot1.ogg
+      soundGunshot: /Audio/_Nuclear14/Weapons/Guns/Shotguns/N14WeaponCaravanShotgun/shot1.ogg
       useKey: false
       selectedMode: SemiAuto
       availableModes:
@@ -268,7 +269,8 @@
       capacity: 2
       count: 2
     - type: RechargeBasicEntityAmmo
-      rechargeCooldown: 2
+      rechargeCooldown: 4
+      rechargeAmount: 2
       rechargeSound:
         path: /Audio/_Nuclear14/Weapons/Effects/Reload/Shotguns/shotgun_insert.ogg
     - type: Loadout
@@ -333,9 +335,9 @@
   description: Professional mercenary armed with a carbine. One might be better off avoiding him.
   components:
     - type: MovementSpeedModifier # Forge-Start
-      baseWalkSpeed: 4                         
-      baseSprintSpeed: 5.125 
-    - type: MobThresholds 
+      baseWalkSpeed: 4
+      baseSprintSpeed: 5.125
+    - type: MobThresholds
       thresholds:
         0: Alive
         125: Dead     # Forge-end
@@ -421,12 +423,12 @@
   description: Professional mercenary armed with a combat shotgun. This man can finish anyone off in close quarters.
   components:
     - type: MovementSpeedModifier # Forge-Start
-      baseWalkSpeed: 4                         
-      baseSprintSpeed: 5.4  
-    - type: MobThresholds 
+      baseWalkSpeed: 4
+      baseSprintSpeed: 5.4
+    - type: MobThresholds
       thresholds:
         0: Alive
-        150: Dead # Forge-end   
+        150: Dead # Forge-end
     - type: Gun
       minAngle: 34.5
       maxAngle: 104
@@ -509,9 +511,9 @@
   description: Professional mercenary armed with an SMG. Looks like an officer, more might be around!
   components:
     - type: MovementSpeedModifier # Forge-start
-      baseWalkSpeed: 4                         
-      baseSprintSpeed: 5.625   
-    - type: MobThresholds 
+      baseWalkSpeed: 4
+      baseSprintSpeed: 5.625
+    - type: MobThresholds
       thresholds:
         0: Alive
         200: Dead  # Forge-end
@@ -758,10 +760,10 @@
   id: N14MobEnforcerChief
   description: Rough man in fine clothes, carrying a magnum revolver.
   components:
-    - type: MobThresholds 
+    - type: MobThresholds
       thresholds:
         0: Alive
-        175: Dead  # Forge-end 
+        175: Dead  # Forge-end
     - type: Gun
       minAngle: 4.5
       maxAngle: 13.5

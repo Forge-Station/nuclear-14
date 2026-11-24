@@ -15,6 +15,15 @@ public sealed partial class RechargeBasicEntityAmmoComponent : Component
     [AutoNetworkedField]
     public float RechargeCooldown = 1.5f;
 
+    /// <summary>
+    ///     How many rounds are restored per recharge cycle.
+    ///     The last cycle is clamped to the provider's remaining capacity.
+    /// </summary>
+    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField("rechargeAmount")]
+    [AutoNetworkedField]
+    public int RechargeAmount = 1;
+
     [DataField("rechargeSound")]
     [AutoNetworkedField]
     public SoundSpecifier RechargeSound = new SoundPathSpecifier("/Audio/Magic/forcewall.ogg")
