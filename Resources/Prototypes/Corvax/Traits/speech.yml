@@ -24,8 +24,10 @@
         - Chinese
         - Tribal
         - Latin
+        - Spanish
       languagesUnderstood:
         - Chinese
         - Tribal
         - Latin
-        - N14Robot # Forge-change
+        - N14Robot 
+        - Spanish # Forge-change
