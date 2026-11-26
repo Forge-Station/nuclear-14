@@ -36,6 +36,30 @@
       - state: dean
 
 - type: entity
+  id: N14SpawnPointRecruitDean
+  parent: N14SpawnPointDean
+  name: recruit dean
+  components:
+  - type: SpawnPoint
+    job_id: CaesarLegionRecruitDean
+
+- type: entity
+  id: N14SpawnPointBellatorDean
+  parent: N14SpawnPointDean
+  name: bellator dean
+  components:
+  - type: SpawnPoint
+    job_id: CaesarLegionBellatorDean
+
+- type: entity
+  id: N14SpawnPointVeteranDean
+  parent: N14SpawnPointDean
+  name: veteran dean
+  components:
+  - type: SpawnPoint
+    job_id: CaesarLegionVeteranDean
+
+- type: entity
   id: N14SpawnPointLegionnaireVeteran
   parent: N14SpawnPointCenturion
   name: legionnaire-veteran
