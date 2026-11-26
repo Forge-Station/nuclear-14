@@ -47,6 +47,13 @@
     Scrap: 200
 
 - type: latheRecipe
+  id: N14ScrapFromSteel
+  result: N14Scrap1
+  completetime: 2
+  materials:
+    Steel: 100
+
+- type: latheRecipe
   id: SheetPlasticScrap
   result: SheetPlastic1
   completetime: 2
