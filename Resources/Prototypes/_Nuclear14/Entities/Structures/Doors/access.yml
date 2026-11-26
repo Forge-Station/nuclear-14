@@ -79,6 +79,9 @@
       board: [ DoorElectronicsNCR ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerNCRGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunkerGlass
@@ -92,6 +95,9 @@
     layoutId: HighSec
 
 #MARK: BoS Midwest
+  - type: Construction
+    graph: DoorBunkerGlassNCRGraph
+    node: done
 - type: entity
   parent: N14DoorBunker
   id: N14DoorBunkerLockedBoSMidwest
@@ -102,6 +108,9 @@
       board: [ DoorElectronicsBOSMidwestGeneral ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerBoSMidwestGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunkerGlass
@@ -113,6 +122,9 @@
       board: [ DoorElectronicsBOSMidwestGeneral ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerGlassBoSMidwestGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunker
@@ -223,6 +235,9 @@
       board: [ DoorElectronicsBOSWashington ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerBoSWashingtonGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunkerGlass
@@ -234,6 +249,9 @@
       board: [ DoorElectronicsBOSWashington ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerGlassBoSWashingtonGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunker
@@ -478,6 +496,9 @@
       board: [ DoorElectronicsVaultDweller ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: DoorBunkerVaultGraph
+    node: done
 
 - type: entity
   parent: N14DoorBunkerVault

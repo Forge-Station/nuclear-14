@@ -1,0 +1,6 @@
+- type: loadout
+  id: LoadoutN14PrewarWristwatch
+  category: ItemsPersonal
+  cost: 2
+  items:
+  - N14PrewarWristwatch

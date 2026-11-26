@@ -37,7 +37,7 @@
   #  luckModifier: 1
 
 - type: entity
-  parent: N14ClothingOuterBase
+  parent: N14ClothingOuterTownMediumCoat
   id: N14ClothingOuterHarperCoat
   name: Harper Coat
   description: A dark coat with some red lining.

@@ -1,0 +1,71 @@
+- type: entity
+  parent: N14ClothingOuterPowerArmorMidwest
+  id: N14ClothingOuterPowerArmorMidwestTesla
+  name: силовая броня Среднезападного Братства Стали "Тесла"
+  description: Модификация силовой брони Среднезападного Братства Стали, оснащенная катушками Тесла, даст фору любому энергетическому оружию.
+  components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
+  - type: Sprite
+    sprite: _Forge/Clothing/OuterClothing/PowerArmor/midwesttesla.rsi
+    layers:
+    - state: icon
+    - state: icon-unshaded
+      shader: unshaded
+  - type: Clothing
+    sprite: _Forge/Clothing/OuterClothing/PowerArmor/midwesttesla.rsi
+    clothingVisuals:
+      outerClothing:
+      - state: equipped-OUTERCLOTHING
+      - state: equipped-OUTERCLOTHING-unshaded
+        shader: unshaded
+  - type: Item
+    size: Huge
+    inhandVisuals:
+      left:
+      - state: inhand-left
+      - state: inhand-left-unshaded
+        shader: unshaded
+      right:
+      - state: inhand-right
+      - state: inhand-right-unshaded
+        shader: unshaded
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.5
+        Slash: 0.5
+        Piercing: 0.55
+        Heat: 0.55
+        Caustic: 0.75
+        Radiation: 0.6
+      flatReductions:
+        Blunt: 3
+        Slash: 3
+        Piercing: 4
+        Heat: 4
+        Caustic: 1
+        Radiation: 1
+  - type: Reflect
+    reflectProb: 0.15
+    spread: 275
+  - type: PointLight
+    radius: 1.5
+    energy: 1
+    color: "#47f8ff"
+  - type: ExplosionResistance
+    damageCoefficient: 0.6
+  - type: UserInterface
+    interfaces:
+      enum.ToggleClothingUiKey.Key:
+        type: ToggleableClothingBoundUserInterface
+  - type: ToggleableClothing
+    clothingPrototypes:
+      head: N14ClothingHeadHelmetPowerArmorMidwestTesla
+      gloves: N14ClothingPAGauntletsTesla
+      shoes: N14ClothingPABootsMBoS
+      back: N14ClothingPowerSystemsBack

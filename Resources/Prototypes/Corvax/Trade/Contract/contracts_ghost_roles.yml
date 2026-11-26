@@ -17,7 +17,7 @@
 
 - type: entity
   id: NcGhostRoleIconSofiaMiller
-  name: София Миллер
+  name: сбежавшая работница
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
@@ -33,7 +33,7 @@
 
 - type: entity
   id: NcGhostRoleIconElizabethEvil
-  name: Элизабет Злая
+  name: опасная пленница
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
@@ -49,7 +49,7 @@
 
 - type: entity
   id: NcGhostRoleIconBelka
-  name: Белка
+  name: беглая рабыня
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
@@ -65,7 +65,7 @@
 
 - type: entity
   id: NcGhostRoleIconZoyaDarby
-  name: Зоя Дарби
+  name: разыскиваемая наёмница
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
@@ -147,7 +147,7 @@
 - type: ncGhostRolePerk
   id: NcGhostRolePerkRaider
   name: "Рейдерский рывок"
-  description: "Рейдер быстрее уходит от погони и опаснее стреляет из автоматов, пистолетов и револьверов."
+  description: "Рейдер быстрее передвигается и наносит больше урона при стрельбе из автоматов, пистолетов и револьверов."
   sprintSpeedMultiplier: 1.30
   projectileDamageMultiplier: 1.45
   passiveHealing:
@@ -220,8 +220,12 @@
 - type: entity
   parent: MobHuman
   id: NcGhostRoleMobEscapedWorker
-  name: София Миллер
+  name: сбежавшая работница
   components:
+  - type: RandomMetadata
+    nameSegments:
+    - names_first_female
+    - names_last_female
   - type: RandomHumanoidAppearance
     randomizeName: false
     sex: Female
@@ -239,7 +243,7 @@
 - type: ncGhostRolePerk
   id: NcGhostRolePerkEscapedWorker
   name: "Панический рывок"
-  description: "Беглянка быстрее срывается в бег и опаснее стреляет из пистолетов-пулеметов."
+  description: "Работница быстрее передвигается и наносит больше урона при стрельбе из пистолетов-пулемётов."
   sprintSpeedMultiplier: 1.30
   projectileDamageMultiplier: 1.45
   passiveHealing:
@@ -280,11 +284,10 @@
   id: NcGhostRoleEscapedWorker
   entityPrototype: NcGhostRoleMobEscapedWorker
   icon: NcGhostRoleIconSofiaMiller
-  name: "София Миллер"
-  description: "Вас разыскивают по контракту. Охотники получат награду только если доставят вас живой, полностью здоровой и в наручниках."
+  name: "сбежавшая работница"
+  description: "Вас разыскивают по контракту. Охотники получат награду, только если доставят вас к торговцу живой, здоровой и в наручниках."
   rules: nc-contract-ghost-role-wanted-rules
   character:
-    name: "София Миллер"
     sex: Female
     gender: Female
     age: 25
@@ -331,8 +334,12 @@
 - type: entity
   parent: MobHuman
   id: NcGhostRoleMobElizabethEvil
-  name: Элизабет Злая
+  name: опасная пленница
   components:
+  - type: RandomMetadata
+    nameSegments:
+    - names_first_female
+    - names_last_female
   - type: RandomHumanoidAppearance
     randomizeName: false
     sex: Female
@@ -350,7 +357,7 @@
 - type: ncGhostRolePerk
   id: NcGhostRolePerkElizabethEvil
   name: "Бешеный побег"
-  description: "Элизабет быстрее уходит от погони и опаснее стреляет из револьверов."
+  description: "Пленница быстрее передвигается и наносит больше урона при стрельбе из револьверов."
   sprintSpeedMultiplier: 1.30
   projectileDamageMultiplier: 1.50
   passiveHealing:
@@ -378,11 +385,10 @@
   id: NcGhostRoleElizabethEvil
   entityPrototype: NcGhostRoleMobElizabethEvil
   icon: NcGhostRoleIconElizabethEvil
-  name: "Элизабет Злая"
-  description: "Вы Элизабет Злая. Хозяин отправил людей вернуть вас живой, потому что мёртвая вы ему не нужны."
+  name: "опасная пленница"
+  description: "Вы — опасная пленница, сбежавшая от хозяина. Он отправил за вами охотников: вы нужны ему живой."
   rules: nc-contract-ghost-role-wanted-rules
   character:
-    name: "Элизабет Злая"
     sex: Female
     gender: Female
     age: 22
@@ -428,8 +434,12 @@
 - type: entity
   parent: MobHuman
   id: NcGhostRoleMobBelka
-  name: Белка
+  name: беглая рабыня
   components:
+  - type: RandomMetadata
+    nameSegments:
+    - names_first_female
+    - names_last_female
   - type: RandomHumanoidAppearance
     randomizeName: false
     sex: Female
@@ -447,7 +457,7 @@
 - type: ncGhostRolePerk
   id: NcGhostRolePerkBelka
   name: "Рывок из неволи"
-  description: "Белка быстрее срывается с места и опаснее стреляет из дробовиков."
+  description: "Беглая рабыня быстрее передвигается и наносит больше урона при стрельбе из дробовиков."
   sprintSpeedMultiplier: 1.30
   projectileDamageMultiplier: 1.45
   passiveHealing:
@@ -479,11 +489,10 @@
   id: NcGhostRoleBelka
   entityPrototype: NcGhostRoleMobBelka
   icon: NcGhostRoleIconBelka
-  name: "Белка"
-  description: "Вы Белка. Вы вырвались из рабства, но за вами уже идут охотники: заказчику нужна живая беглянка."
+  name: "беглая рабыня"
+  description: "Вы — беглая рабыня. Вам удалось вырваться из неволи, но за вами уже идут охотники: заказчик требует вернуть вас живой."
   rules: nc-contract-ghost-role-wanted-rules
   character:
-    name: "Белка"
     sex: Female
     gender: Female
     age: 21
@@ -534,6 +543,10 @@
   id: NcGhostRoleMobNCRDeserter
   name: дезертир НКР
   components:
+  - type: RandomMetadata
+    nameSegments:
+    - names_first_male
+    - names_last_male
   - type: RandomHumanoidAppearance
     randomizeName: false
     sex: Male
@@ -549,7 +562,7 @@
 - type: ncGhostRolePerk
   id: NcGhostRolePerkNCRDeserter
   name: "Сержантская выучка"
-  description: "Дезертир лучше держит строй под огнем и наносит больше урона из служебных винтовок."
+  description: "Дезертир лучше переносит ранения и наносит больше урона при стрельбе из служебных винтовок."
   sprintSpeedMultiplier: 1.30
   projectileDamageMultiplier: 1.50
   passiveHealing:
@@ -587,11 +600,10 @@
 - type: ncGhostRolePreset
   id: NcGhostRoleNCRDeserter
   entityPrototype: NcGhostRoleMobNCRDeserter
-  name: "Патроу, дезертир НКР"
-  description: "Вы дезертир НКР с хорошей броней и винтовкой. Охотники получат награду только если доставят ваше тело торговцу."
+  name: "дезертир НКР"
+  description: "Вы — дезертир НКР, вооружённый винтовкой и защищённый хорошей бронёй. Охотники получат награду, только если доставят ваше тело торговцу."
   rules: nc-contract-ghost-role-wanted-rules
   character:
-    name: "Патроу"
     sex: Male
     gender: Male
     age: 34
@@ -638,8 +650,12 @@
 - type: entity
   parent: MobHuman
   id: NcGhostRoleMobZoyaDarby
-  name: Зоя Дарби
+  name: разыскиваемая наёмница
   components:
+  - type: RandomMetadata
+    nameSegments:
+    - names_first_female
+    - names_last_female
   - type: RandomHumanoidAppearance
     randomizeName: false
     sex: Female
@@ -657,7 +673,7 @@
 - type: ncGhostRolePerk
   id: NcGhostRolePerkZoyaDarby
   name: "Наёмница-легенда"
-  description: "Зоя быстрее обычного человека, крепче держит удар и особенно опасна с китайским ПП."
+  description: "Наёмница быстрее передвигается, лучше переносит ранения и наносит больше урона при стрельбе из китайского пистолета-пулемёта."
   sprintSpeedMultiplier: 1.30
   projectileDamageMultiplier: 1.50
   passiveHealing:
@@ -691,11 +707,10 @@
   id: NcGhostRoleZoyaDarby
   entityPrototype: NcGhostRoleMobZoyaDarby
   icon: NcGhostRoleIconZoyaDarby
-  name: "Зоя Дарби"
-  description: "Вы Зоя Дарби, опасная наёмница в шипованной броне с китайским ПП. За вами охотятся, но заказчик требует взять вас живой."
+  name: "разыскиваемая наёмница"
+  description: "Вы — опасная наёмница в шипованной броне, вооружённая китайским пистолетом-пулемётом. За вами охотятся, но заказчик требует взять вас живой."
   rules: nc-contract-ghost-role-wanted-rules
   character:
-    name: "Зоя Дарби"
     sex: Female
     gender: Female
     age: 31
@@ -740,8 +755,12 @@
 - type: entity
   parent: MobHuman
   id: NcGhostRoleMobFresh
-  name: фреш
+  name: безумный наркоман
   components:
+  - type: RandomMetadata
+    nameSegments:
+    - names_first_male
+    - names_last_male
   - type: RandomHumanoidAppearance
     randomizeName: false
     sex: Male
@@ -757,7 +776,7 @@
 - type: ncGhostRolePerk
   id: NcGhostRolePerkFresh
   name: "Ломка и адреналин"
-  description: "Фреш быстрее убегает и опаснее стреляет из пистолетов."
+  description: "Безумный наркоман быстрее передвигается и наносит больше урона при стрельбе из пистолетов."
   sprintSpeedMultiplier: 1.30
   projectileDamageMultiplier: 1.45
   passiveHealing:
@@ -784,11 +803,10 @@
 - type: ncGhostRolePreset
   id: NcGhostRoleFresh
   entityPrototype: NcGhostRoleMobFresh
-  name: "Фреш"
-  description: "Вы сорвавшийся наркоман с тяжёлым пистолетом. Охотники получат награду только если принесут ваше тело торговцу."
+  name: "безумный наркоман"
+  description: "Вы — безумный наркоман с тяжёлым пистолетом. Охотники получат награду, только если доставят ваше тело торговцу."
   rules: nc-contract-ghost-role-wanted-rules
   character:
-    name: "Фреш"
     sex: Male
     gender: Male
     age: 28
@@ -798,7 +816,7 @@
 - type: ncGhostRoleContract
   id: NcGhostRoleContractRaiderReturn
   name: "Рейдер для допроса"
-  description: "Один рейдер слишком много знает о ближайших налётах. Заказчик хочет допросить его лично: поймайте цель живой, без тяжёлых ран, закуйте в наручники и приведите к торговцу."
+  description: "Один рейдер слишком много знает о готовящихся налётах. Заказчик хочет допросить его лично. Схватите рейдера, закуйте его в наручники и доставьте к торговцу живым, без тяжёлых ран."
   repeatable: false
   role: NcGhostRoleRaider
   completion:
@@ -806,7 +824,7 @@
   survival:
     briefing: "За вами охотятся по контракту. Продержитесь один час и не дайте охотникам сдать вас торговцу."
     objectiveTitle: "Выжить один час"
-    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+    objectiveDescription: "Если вы проживёте час с момента принятия роли, охотники провалят контракт."
   spawn:
     point:
       type: MarkerId
@@ -822,16 +840,16 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractEscapedWorkerAlive
-  name: "Вернуть Софию Миллер"
-  description: "София Миллер сбежала от караванщиков и ушла в городские закоулки. Её хотят вернуть живой: цель должна быть здорова, в наручниках и рядом с торговцем. Мёртвую Софию никто не примет."
+  name: "Вернуть сбежавшую работницу"
+  description: "Работница сбежала от караванщиков и скрылась в городских закоулках. Заказчик требует вернуть её живой. Закуйте её в наручники и доставьте к торговцу здоровой и невредимой. За мёртвую работницу награду не выплатят."
   repeatable: false
   role: NcGhostRoleEscapedWorker
   completion:
     mode: AliveCuffedTurnIn
   survival:
-    briefing: "Вы София Миллер. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    briefing: "Продержитесь один час и не дайте охотникам доставить вас живой к торговцу."
     objectiveTitle: "Выжить один час"
-    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+    objectiveDescription: "Если вы проживёте час с момента принятия роли, охотники провалят контракт."
   spawn:
     point:
       type: MarkerId
@@ -847,16 +865,16 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractElizabethEvilAlive
-  name: "Вернуть Элизабет Злую"
-  description: "Элизабет Злая сбежала от хозяина и скрылась в городских закоулках. Она быстрая, вооружена револьвером и умеет им пользоваться. Заказчик платит только за живую пленницу: закуйте её в наручники и приведите к торговцу. Труп не примут."
+  name: "Поймать опасную пленницу"
+  description: "Пленница сбежала от хозяина и скрылась в городских закоулках. Она быстро бегает, вооружена револьвером и умеет им пользоваться. Закуйте её в наручники и доставьте к торговцу живой и здоровой. За мёртвую пленницу награду не выплатят."
   repeatable: false
   role: NcGhostRoleElizabethEvil
   completion:
     mode: AliveCuffedTurnIn
   survival:
-    briefing: "Вы Элизабет Злая. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    briefing: "Продержитесь один час и не дайте охотникам доставить вас живой к торговцу."
     objectiveTitle: "Выжить один час"
-    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+    objectiveDescription: "Если вы проживёте час с момента принятия роли, охотники провалят контракт."
   spawn:
     point:
       type: MarkerId
@@ -872,16 +890,16 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractBelkaAlive
-  name: "Вернуть Белку"
-  description: "Белка вырвалась из рабства и ушла с дробовиком. Она быстро бегает и не станет ждать, пока её догонят. Заказчик платит только за живую пленницу: закуйте её в наручники и приведите к торговцу. Труп не примут."
+  name: "Вернуть беглую рабыню"
+  description: "Рабыня вырвалась из неволи, прихватив дробовик. Она быстро бегает и не станет ждать, пока её догонят. Закуйте её в наручники и доставьте к торговцу живой и здоровой. За мёртвую рабыню награду не выплатят."
   repeatable: false
   role: NcGhostRoleBelka
   completion:
     mode: AliveCuffedTurnIn
   survival:
-    briefing: "Вы Белка. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    briefing: "Продержитесь один час и не дайте охотникам доставить вас живой к торговцу."
     objectiveTitle: "Выжить один час"
-    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+    objectiveDescription: "Если вы проживёте час с момента принятия роли, охотники провалят контракт."
   spawn:
     point:
       type: MarkerId
@@ -897,16 +915,16 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractNCRDeserterDead
-  name: "Дезертир Патроу"
-  description: "Патроу, бывший сержант НКР, ушёл с оружием, припасами и чужими секретами. Живым его брать не просят: убейте дезертира и доставьте тело торговцу."
+  name: "Дезертир НКР"
+  description: "Бывший сержант НКР дезертировал, забрав оружие, припасы и чужие секреты. Заказчик требует его смерти: убейте дезертира и доставьте тело торговцу."
   repeatable: false
   role: NcGhostRoleNCRDeserter
   completion:
     mode: DeadBodyTurnIn
   survival:
-    briefing: "Вы Патроу, дезертир НКР. Продержитесь один час и не дайте охотникам принести ваше тело торговцу."
+    briefing: "Вы дезертир НКР. Продержитесь один час и не дайте охотникам доставить ваше тело торговцу."
     objectiveTitle: "Выжить один час"
-    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+    objectiveDescription: "Если вы проживёте час с момента принятия роли, охотники провалят контракт."
   spawn:
     point:
       type: MarkerId
@@ -922,16 +940,16 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractZoyaDarbyAlive
-  name: "Зоя Дарби нужна живой"
-  description: "Зоя Дарби пережила слишком много перестрелок и оставила за собой слишком много тел. Заказчик хочет услышать её ответы, а не смотреть на труп: приведите Зою живой, здоровой и в наручниках."
+  name: "Наёмница нужна живой"
+  description: "Наёмница пережила множество перестрелок и оставила за собой немало трупов. Заказчик хочет допросить её лично. Закуйте её в наручники и доставьте к торговцу живой и здоровой."
   repeatable: false
   role: NcGhostRoleZoyaDarby
   completion:
     mode: AliveCuffedTurnIn
   survival:
-    briefing: "Вы Зоя Дарби. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    briefing: "Продержитесь один час и не дайте охотникам доставить вас живой к торговцу."
     objectiveTitle: "Выжить один час"
-    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+    objectiveDescription: "Если вы проживёте час с момента принятия роли, охотники провалят контракт."
   spawn:
     point:
       type: MarkerId
@@ -947,16 +965,16 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractFreshDead
-  name: "Остановить Фреша"
-  description: "Фреш сорвался окончательно: бегает по окраине, стреляет первым и разговаривать уже не собирается. Остановите его и доставьте тело торговцу."
+  name: "Остановить безумного наркомана"
+  description: "Безумный наркоман окончательно потерял рассудок: бродит по окраинам, стреляет первым и не собирается ни с кем разговаривать. Убейте его и доставьте тело торговцу."
   repeatable: false
   role: NcGhostRoleFresh
   completion:
     mode: DeadBodyTurnIn
   survival:
-    briefing: "Вы Фреш. Продержитесь один час, не подпускайте охотников и не дайте принести ваше тело торговцу."
+    briefing: "Продержитесь один час, держитесь подальше от охотников и не дайте им доставить ваше тело торговцу."
     objectiveTitle: "Выжить один час"
-    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+    objectiveDescription: "Если вы проживёте час с момента принятия роли, охотники провалят контракт."
   spawn:
     point:
       type: MarkerId

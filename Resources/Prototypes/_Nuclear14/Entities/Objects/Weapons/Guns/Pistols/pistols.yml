@@ -8,6 +8,10 @@
   - type: Tag
     tags:
     - Sidearm
+  - type: DualWieldable
+    whitelist:
+      components:
+      - DualWieldable
   - type: Sprite
     layers:
       - state: base
@@ -88,6 +92,10 @@
   - type: Tag
     tags:
     - Sidearm
+  - type: DualWieldable
+    whitelist:
+      components:
+      - DualWieldable
   - type: Sprite
     layers:
       - state: base

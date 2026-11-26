@@ -16,33 +16,24 @@
     - FullAuto
     soundGunshot:
       path: /Audio/_Nuclear14/Weapons/Guns/Flames/flamer.ogg
-  - type: SolutionContainerManager
-    solutions:
-      chamber:
-        maxVol: 500
-        reagents:
-        - ReagentId: WeldingFuel
-          Quantity: 500
-  - type: SolutionAmmoProvider
-    solutionId: chamber
-    proto: FireProjectile
-  - type: SolutionTransfer
-    transferAmount: 5
-    maxTransferAmount: 50
-    minTransferAmount: 5
-    canChangeTransferAmount: true
-  - type: UserInterface
-    interfaces:
-      enum.TransferAmountUiKey.Key:
-        type: TransferAmountBoundUserInterface
-  - type: DrawableSolution
-    solution: chamber
-  - type: RefillableSolution
-    solution: chamber
-  - type: DrainableSolution
-    solution: chamber
-  - type: ExaminableSolution
-    solution: chamber
+  # Forge-Change-Start: replace the internal solution with removable fuel tanks.
+  - type: MagazineAmmoProvider
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Tank
+        startingItem: N14FlamerTank
+        insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/batrifle_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+          - N14FlamerTank
+  - type: ContainerContainer
+    containers:
+      gun_magazine: !type:ContainerSlot
+  - type: Appearance
+  # Forge-Change-End
   - type: StaticPrice
     price: 100
   - type: FollowDistance
@@ -56,20 +47,87 @@
   components:
   - type: Gun
     cameraRecoilScalar: 0 #no recoil
-    fireRate: 20
+    fireRate: 4 # Forge-Change
     selectedMode: FullAuto
     availableModes:
     - FullAuto
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Pistols/soaker.rsi
+    sprite: _RMC14/Objects/Weapons/Guns/Flamethrower/m34.rsi # Forge-Change
+    # Forge-Change-Start: removable-tank visuals.
     layers:
-    - state: detail1
-    - state: detail2
-      map: ["enum.PowerDeviceVisualLayers.Powered"]
-    - state: icon
-      map: [ "enum.DamageStateVisualLayers.Base" ]
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+    # Forge-Change-End
   - type: Item
-    sprite: Objects/Weapons/Guns/Pistols/soaker.rsi
-    size: Normal
+    sprite: _RMC14/Objects/Weapons/Guns/Flamethrower/m34.rsi # Forge-Change
+    size: Large # Forge-Change
+  # Forge-Add-Start: the flamethrower must be wielded to fire.
+  - type: Wieldable
+    unwieldOnUse: false
+  - type: GunRequiresWield
+  # Forge-Add-End
+  # Forge-Add-Start: removable-tank appearance.
+  - type: MagazineVisuals
+    magState: mag
+    steps: 1
+    zeroVisible: true
+  # Forge-Add-End
   - type: FollowDistance
     backStrength: 6
+
+# Forge-Add-Start
+- type: entity
+  parent: BaseItem
+  id: N14FlamerTank
+  name: flamethrower fuel tank
+  description: A removable fuel tank for a flamethrower. Handle with care.
+  components:
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/flamethrower.rsi
+    layers:
+    - state: flametank_custom
+    - state: flametank_custom_strip2
+    - state: flametank_custom_strip2
+      map: ["enum.SolutionContainerLayers.Fill"]
+  - type: Item
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/flamethrower.rsi
+    size: Normal
+  - type: SolutionContainerManager
+    solutions:
+      tank:
+        maxVol: 250
+        reagents:
+        - ReagentId: WeldingFuel
+          Quantity: 250
+  - type: SolutionAmmoProvider
+    solutionId: tank
+    fireCost: 5
+    proto: FireProjectileFlamer
+  - type: SolutionTransfer
+    transferAmount: 5
+    maxTransferAmount: 50
+    minTransferAmount: 5
+    canChangeTransferAmount: true
+  - type: UserInterface
+    interfaces:
+      enum.TransferAmountUiKey.Key:
+        type: TransferAmountBoundUserInterface
+  - type: DrawableSolution
+    solution: tank
+  - type: RefillableSolution
+    solution: tank
+  - type: DrainableSolution
+    solution: tank
+  - type: ExaminableSolution
+    solution: tank
+  - type: SolutionContainerVisuals
+    maxFillLevels: 2
+    fillBaseName: flametank_custom_strip
+  - type: Tag
+    tags:
+    - N14FlamerTank
+  - type: StaticPrice
+    price: 200
+# Forge-Add-End

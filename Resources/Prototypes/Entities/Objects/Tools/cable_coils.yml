@@ -196,6 +196,9 @@
   - type: CablePlacer
     cablePrototypeID: CableApcExtension
     blockingWireType: Apc
+  - type: PhysicalComposition
+    materialComposition:
+      Cable: 100
   - type: Appearance
   - type: Extractable
     grindableSolutionName: lvcable

@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Sprites from vgstation13, imported via space-wizards/space-station-14. Original attribution: https://github.com/space-wizards/space-station-14/blob/66135a115e51a2e0025401bd7af31d417261f1e4/Resources/Textures/Objects/Devices/wristwatch.rsi/meta.json",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "wristwatch"
+    },
+    {
+      "name": "hours_0"
+    },
+    {
+      "name": "minutes_0"
+    },
+    {
+      "name": "inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "equipped-HAND",
+      "directions": 4
+    }
+  ]
+}

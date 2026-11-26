@@ -185,7 +185,7 @@
 
 # Wooden
 - type: entity
-  parent: N14DoorMetalBlueTall
+  parent: [ N14DoorMetalBlueTall, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14DoorWoodTall
   name: wooden door
   suffix: tall
@@ -196,6 +196,11 @@
     layers:
     - state: closed
       map: ["enum.DoorVisualLayers.Base"]
+  # Forge-Add-Start
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Wood
+  # Forge-Add-End
   - type: Destructible
     thresholds:
     - trigger:

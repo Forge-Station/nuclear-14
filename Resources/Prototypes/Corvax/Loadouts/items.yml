@@ -1,6 +1,6 @@
   - type: loadout
     id: GeigerCounter
-    category: Items
+    category: ItemsTools
     cost: 4
     requirements:
     - !type:OverallTimeRequirement
@@ -15,49 +15,225 @@
 
   - type: loadout
     id: BarberScissors
-    category: Items
+    category: ItemsTools
     cost: 1
     items:
       - BarberScissors
 
   - type: loadout
+    id: N14Dynamite
+    category: ItemsTools
+    cost: 3
+    items:
+      - N14Dynamite
+
+  - type: loadout
+    id: N14TinNade
+    category: ItemsTools
+    cost: 3
+    items:
+      - N14TinNade
+
+  - type: loadout
+    id: N14BaseballNade
+    category: ItemsTools
+    cost: 3
+    items:
+      - N14BaseballNade
+
+  - type: loadout
+    id: SmokeGrenade
+    category: ItemsTools
+    cost: 5
+    items:
+      - SmokeGrenade
+
+  - type: loadout
+    id: N14KettleBomb
+    category: ItemsTools
+    cost: 3
+    items:
+      - N14KettleBomb
+
+  - type: loadout
+    id: N14NukaCocktail
+    category: ItemsTools
+    cost: 3
+    items:
+      - N14NukaCocktail
+
+  - type: loadout
+    id: N14NukaNade
+    category: ItemsTools
+    cost: 3
+    items:
+      - N14NukaNade
+
+  - type: loadout
+    id: Bucket
+    category: ItemsTools
+    cost: 2
+    items:
+      - Bucket
+
+  - type: loadout
+    id: ClothingEyesBlindfold
+    category: ItemsTools
+    cost: 2
+    items:
+      - ClothingEyesBlindfold
+
+  - type: loadout
+    id: N14TapeRecorder
+    category: ItemsTools
+    cost: 1
+    items:
+      - N14TapeRecorder
+      - N14CassetteTape
+
+  - type: loadout
     id: N14DrinkSunsetSarsaparillaBottleFull
-    category: Items
+    category: ItemsFood
     cost: 2
     items:
       - N14DrinkSunsetSarsaparillaBottleFull
 
   - type: loadout
     id: N14DrinkNukaCola
-    category: Items
+    category: ItemsFood
     cost: 1
     items:
       - N14DrinkNukaCola
 
   - type: loadout
+    id: N14DrinkRoentgenRum
+    category: ItemsFood
+    cost: 3
+    items:
+      - N14DrinkRoentgenRum
+
+  - type: loadout
+    id: N14DrinkGammagulpBeer
+    category: ItemsFood
+    cost: 3
+    items:
+      - N14DrinkGammagulpBeer
+
+  - type: loadout
+    id: N14DrinkWine
+    category: ItemsFood
+    cost: 3
+    items:
+      - N14DrinkWine
+
+  - type: loadout
+    id: N14DrinkWhisky
+    category: ItemsFood
+    cost: 3
+    items:
+      - N14DrinkWhisky
+
+  - type: loadout
+    id: DrinkFlaskBar
+    category: ItemsFood
+    cost: 1
+    items:
+      - DrinkFlaskBar
+
+  - type: loadout
+    id: N14JunkTeapot
+    category: ItemsFood
+    cost: 1
+    items:
+      - N14JunkTeapot
+
+  - type: loadout
+    id: DrinkFlaskOld
+    category: ItemsFood
+    cost: 1
+    items:
+      - DrinkFlaskOld
+
+  - type: loadout
+    id: N14JunkCoffeepot
+    category: ItemsFood
+    cost: 1
+    items:
+      - N14JunkCoffeepot
+
+  - type: loadout
     id: BoxCandle
-    category: Items
+    category: ItemsPersonal
     cost: 1
     items:
       - BoxCandle
 
   - type: loadout
     id: PhotoCameraFilled
-    category: Items
+    category: ItemsPersonal
     cost: 1
     items:
       - PhotoCameraFilled
 
   - type: loadout
     id: d20Dice
-    category: Items
+    category: ItemsPersonal
     cost: 1
     items:
       - d20Dice
+  
+  - type: loadout
+    id: CheckerBoard
+    category: ItemsPersonal
+    cost: 1
+    items:
+      - CheckerBoard
+
+  - type: loadout
+    id: ChessBoard
+    category: ItemsPersonal
+    cost: 1
+    items:
+      - ChessBoard
+  
+  - type: loadout
+    id: CardDeckBlack
+    category: ItemsPersonal
+    cost: 1
+    items:
+      - CardDeckBlack
+
+  - type: loadout
+    id: Paper
+    category: ItemsPersonal
+    cost: 1
+    items:
+      - Paper
+
+  - type: loadout
+    id: N14PenReporter
+    category: ItemsPersonal
+    cost: 1
+    items:
+      - N14PenReporter
+
+  - type: loadout
+    id: CrayonBox
+    category: ItemsPersonal
+    cost: 5
+    items:
+      - CrayonBox
+
+  - type: loadout
+    id: CrayonRed
+    category: ItemsPersonal
+    cost: 1
+    items:
+      - CrayonRed
 
   - type: loadout
     id: N14Jet
-    category: Items
+    category: ItemsMedical
     cost: 2
     requirements:
     - !type:CharacterDepartmentRequirement
@@ -76,14 +252,14 @@
 
   - type: loadout
     id: N14HealingPowder
-    category: Items
+    category: ItemsMedical
     cost: 2
     items:
       - N14HealingPowder
 
   - type: loadout
     id: N14Turbo
-    category: Items
+    category: ItemsMedical
     cost: 3
     requirements:
     - !type:CharacterDepartmentRequirement
@@ -102,7 +278,7 @@
 
   - type: loadout
     id: N14Psycho
-    category: Items
+    category: ItemsMedical
     cost: 3
     requirements:
     - !type:CharacterDepartmentRequirement
@@ -121,7 +297,7 @@
 
   - type: loadout
     id: N14StimpakDirty
-    category: Items
+    category: ItemsMedical
     cost: 3
     requirements:
     - !type:CharacterDepartmentRequirement
@@ -140,7 +316,43 @@
 
   - type: loadout
     id: N14HealingPoultice
-    category: Items
+    category: ItemsMedical
     cost: 3
     items:
       - N14HealingPoultice
+
+  - type: loadout
+    id: N14MentatsCanisterFilled
+    category: ItemsMedical
+    cost: 1
+    items:
+      - N14MentatsCanisterFilled
+
+  - type: loadout
+    id: N14AloeSalve
+    category: ItemsMedical
+    cost: 2
+    items:
+      - N14AloeSalve
+
+  - type: loadout
+    id: N14ChemicalSyringeAntidote
+    category: ItemsMedical
+    cost: 3
+    items:
+      - N14ChemicalSyringeAntidote
+
+  - type: loadout
+    id: N14Bitterdrink
+    category: ItemsMedical
+    cost: 4
+    items:
+      - N14Bitterdrink
+
+  - type: loadout
+    id: N14RadAwayInhaler
+    category: ItemsMedical
+    cost: 2
+    items:
+      - N14RadAwayInhaler
+  

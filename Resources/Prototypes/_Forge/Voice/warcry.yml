@@ -1,0 +1,17 @@
+- type: emote
+  id: Warcry
+  name: chat-emote-name-warcry
+  category: Vocal
+  icon: Interface/Actions/scream.png
+  whitelist:
+    components:
+    - Vocal
+  blacklist:
+    components:
+    - BorgChassis
+  chatMessages: ["chat-emote-msg-warcry"]
+  chatTriggers:
+  - warcry
+  - shouts a battle cry
+  - выкрикивает боевой клич
+  - боевой клич

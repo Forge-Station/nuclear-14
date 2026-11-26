@@ -119,12 +119,29 @@
     node: WorkbenchAmmobench
   - type: Sprite
     state: ammobench
+  # #Misfits Add: ContainerContainer + Storage + UserInterface for blueprint item support
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+      enum.LatheUiKey.Key:
+        type: LatheBoundUserInterface
+  - type: Storage
+    craft: true
+    maxItemSize: Ginormous
+    grid:
+    - 0,0,12,9
+  # #Misfits Add End
   - type: MaterialStorage
     whitelist:
       tags:
       - Sheet
       - RawMaterial
       - Ingot
+      - Scrap
       - Cartridge
   - type: Lathe
     idleState: icon
@@ -253,6 +270,7 @@
       - Sheet
       - RawMaterial
       - Ingot
+      - Scrap
       - RawLeather # move it to the tanning machine
   - type: Lathe
     idleState: icon
@@ -321,7 +339,7 @@
     - N14FlashlightLantern
     - N14GlowstickRed
     - N14CleanGauze1
-    - DoorElectronics
+    - N14JunkComponentMainboard
     - MagazineBoxNail # Forge-Change
     - DrumMagazineNailGun # Forge-Change
     #Электроника # Forge-Add
@@ -329,9 +347,11 @@
     - MicrowaveMachineCircuitboard
     - ReagentGrinderMachineCircuitboard
     - CellRechargerCircuitboard
-    - PowerCageRechargerCircuitboard
     - N14PowerCellMedium
     - N14PowerCellHigh
+    - N14CapacitorStockPart
+    - N14MicroManipulatorStockPart
+    - N14MatterBinStockPart
 
 - type: entity
   parent: BaseStructure
@@ -457,9 +477,7 @@
     - OreBag # Forge-add
     - ClothingHeadHatWelding # Forge-add
     - Binoculars # Forge-add
-    - FireExtinguisher # Forge-add
     # Kitchen
-    - N14DrinkNukaColaEmpty # Forge-add
     - N14JunkTincan # Forge-add
     - N14ButchersCleaver
     - N14KitchenKnife

@@ -1,0 +1,31 @@
+- type: trait
+  id: N14PerkQuiet
+  category: Auditory
+  points: 1
+  requirements:
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14Muted
+        - N14PerkScreamer
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: SpeechModifier
+          whisperOnly: true
+
+- type: trait
+  id: N14PerkScreamer
+  category: Auditory
+  points: -1
+  requirements:
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - N14Muted
+        - N14PerkQuiet
+  functions:
+    - !type:TraitAddComponent
+      components:
+        - type: SpeechModifier
+          voiceRangeMultiplier: 1.5

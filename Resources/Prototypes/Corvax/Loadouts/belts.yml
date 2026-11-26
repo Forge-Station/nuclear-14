@@ -1,6 +1,6 @@
 - type: loadout
   id: N14LoadoutClothingBeltFarmerFilled
-  category: Items
+  category: Belts
   cost: 3
   requirements:
     - !type:OverallTimeRequirement
@@ -20,7 +20,7 @@
 
 - type: loadout
   id: N14LoadoutClothingBeltStorageWaistbag
-  category: Items
+  category: Belts
   cost: 3
   requirements:
     - !type:CharacterJobRequirement # Forge-Change
@@ -34,7 +34,7 @@
 
 - type: loadout
   id: N14LoadoutClothingBeltRope
-  category: Items
+  category: Belts
   cost: 4
   requirements:
     - !type:OverallTimeRequirement
@@ -54,7 +54,7 @@
 
 - type: loadout
   id: N14LoadoutPlantBag
-  category: Items
+  category: CollectionBags
   cost: 2
   requirements:
     - !type:CharacterDepartmentRequirement
@@ -66,7 +66,7 @@
 
 - type: loadout
   id: N14LoadoutOreBag
-  category: Items
+  category: CollectionBags
   cost: 2
   requirements:
     - !type:CharacterDepartmentRequirement
@@ -78,7 +78,7 @@
 
 - type: loadout
   id: N14LoadoutChemBag
-  category: Items
+  category: CollectionBags
   cost: 2
   requirements:
     - !type:CharacterDepartmentRequirement

@@ -14,7 +14,7 @@
 
 - type: loadout
   id: LoadoutNCRN14ClothingOuterRangerSnowFox
-  category: Outer
+  category: OuterArmor
   cost: 2
   exclusive: true
   sponsorLevel: 3
@@ -27,16 +27,20 @@
 
 - type: loadout
   id: LoadoutN14ClothingOuterWandererCoat
-  category: Outer
-  cost: 4
+  category: OuterArmor
+  cost: 3
   exclusive: true
   sponsorLevel: 2
+  requirements:
+    - !type:CharacterPlaytimeRequirement
+      tracker: Wastelander
+      min: 12000
   items:
   - N14ClothingOuterWandererCoat
 
 - type: loadout
   id: LoadoutBoSMidwestHellCat
-  category: Outer
+  category: OuterArmor
   cost: 10
   exclusive: true
   sponsorLevel: 2
@@ -134,7 +138,7 @@
   id: LoadoutN14ClothingOuterLegionPaladinKiller
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -169,7 +173,7 @@
   id: LoadoutN14ClothingTriariumVeteranArmor
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -205,7 +209,7 @@
   id: LoadoutN14ClothingPrincepsVeteranArmor
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -241,7 +245,7 @@
   id: LoadoutN14ClothingAssassinVeteranArmor
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -259,7 +263,7 @@
   id: LoadoutClothingOuterNCRVestDesertCoat
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -277,7 +281,7 @@
   id: LoadoutClothingOuterNCRVestDesertCoatSnow
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -295,7 +299,7 @@
   id: LoadoutClothingOuterNCRVestpaddedWebKilt
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   sponsorLevel: 2
@@ -316,7 +320,7 @@
   id: LoadoutClothingOuterNCRVestpaddedWebKiltSnow
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   sponsorLevel: 2
@@ -337,7 +341,7 @@
   id: LoadoutClothingOuterNCRVeteranArmorKilt
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 5
   exclusive: true
   sponsorLevel: 2
@@ -358,7 +362,7 @@
   id: LoadoutClothingOuterNCRVeteranArmorKiltSnow
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 5
   exclusive: true
   sponsorLevel: 2
@@ -379,7 +383,7 @@
   id: LoadoutClothingOuterNCRCombatVeteranKiltArmor
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 6
   exclusive: true
   sponsorLevel: 2
@@ -397,7 +401,7 @@
   id: LoadoutClothingOuterNCRCombatVeteranKiltArmorSnow
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterArmor
   cost: 6
   exclusive: true
   sponsorLevel: 2
@@ -415,7 +419,7 @@
   id: LoadoutClothingOuterJacketCowboyOld
   customName: false
   customDescription: false
-  category: Outer
+  category: OuterClothing
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -483,7 +487,7 @@
   id: LoadoutClothingNeckCloakCowboyOld
   customName: false
   customDescription: false
-  category: Outer
+  category: Neck
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -520,7 +524,7 @@
 
 - type: loadout
   id: LoadoutBoSMidwestScripterBattle
-  category: Outer
+  category: OuterArmor
   cost: 0 # Forge-Change
   customName: false
   customDescription: false

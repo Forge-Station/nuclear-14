@@ -23,10 +23,14 @@ using Content.Shared.Power;
 using Content.Shared.ReagentSpeed;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
+using Content.Shared.Storage;
+using Content.Shared._Misfits.Crafting; // #Misfits Add: clean blueprint component for workbench crafting
+using Content.Shared.Weapons.Ranged.Components;
 using JetBrains.Annotations;
 using Robust.Server.Containers;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
@@ -70,6 +74,8 @@ namespace Content.Server.Lathe
 
             SubscribeLocalEvent<LatheComponent, BeforeActivatableUIOpenEvent>((u, c, _) => UpdateUserInterfaceState(u, c));
             SubscribeLocalEvent<LatheComponent, MaterialAmountChangedEvent>(OnMaterialAmountChanged);
+            SubscribeLocalEvent<LatheComponent, EntInsertedIntoContainerMessage>(OnStorageContainerModified);
+            SubscribeLocalEvent<LatheComponent, EntRemovedFromContainerMessage>(OnStorageContainerModified);
             SubscribeLocalEvent<TechnologyDatabaseComponent, LatheGetRecipesEvent>(OnGetRecipes);
             SubscribeLocalEvent<EmagLatheRecipesComponent, LatheGetRecipesEvent>(GetEmagLatheRecipes);
             SubscribeLocalEvent<LatheHeatProducingComponent, LatheStartPrintingEvent>(OnHeatStartPrinting);
@@ -159,7 +165,34 @@ namespace Content.Server.Lathe
                 Recipes = new List<ProtoId<LatheRecipePrototype>>(component.StaticRecipes)
             };
             RaiseLocalEvent(uid, ev);
+
+            AddBlueprintRecipesFromStorage(uid, ev.Recipes);
+
             return ev.Recipes;
+        }
+
+        /// <summary>
+        /// #Misfits Add: Scans the workbench's attached storage container for entities
+        /// carrying <see cref="BlueprintComponent"/>. For each found blueprint, its
+        /// listed recipe IDs are added to the available recipes list. This is the clean
+        /// replacement for the removed Stalker14 AddStorageBlueprintRecipes method.
+        /// </summary>
+        private void AddBlueprintRecipesFromStorage(EntityUid uid, List<ProtoId<LatheRecipePrototype>> recipes)
+        {
+            if (!TryComp<StorageComponent>(uid, out var storage))
+                return;
+
+            foreach (var entity in storage.Container.ContainedEntities)
+            {
+                if (!TryComp<BlueprintComponent>(entity, out var blueprint))
+                    continue;
+
+                foreach (var recipeId in blueprint.Recipes)
+                {
+                    if (!recipes.Contains(recipeId))
+                        recipes.Add(recipeId);
+                }
+            }
         }
 
         public static List<ProtoId<LatheRecipePrototype>> GetAllBaseRecipes(LatheComponent component)
@@ -226,10 +259,19 @@ namespace Content.Server.Lathe
 
             if (comp.CurrentRecipe != null)
             {
+                // #Misfits Add: Debug logging for blueprint crafting
+                Log.Info($"FinishProducing: recipe={comp.CurrentRecipe.ID}, result={comp.CurrentRecipe.Result}");
+
                 if (comp.CurrentRecipe.Result is { } resultProto)
                 {
                     var result = Spawn(resultProto, Transform(uid).Coordinates);
+                    StripCraftedWeaponAmmo(result);
+                    Log.Info($"FinishProducing: spawned {resultProto} as {result}");
                     _stack.TryMergeToContacts(result);
+                }
+                else
+                {
+                    Log.Warning($"FinishProducing: recipe {comp.CurrentRecipe.ID} has null Result — no entity spawned!");
                 }
 
                 if (comp.CurrentRecipe.ResultReagents is { } resultReagents &&
@@ -261,6 +303,53 @@ namespace Content.Server.Lathe
                 RemCompDeferred(uid, prodComp);
                 UpdateUserInterfaceState(uid, comp);
                 UpdateRunningAppearance(uid, false);
+            }
+        }
+
+        /// <summary>
+        /// Ensures fabricated guns spawn empty with no inserted magazine or chambered rounds.
+        /// </summary>
+        private void StripCraftedWeaponAmmo(EntityUid crafted)
+        {
+            if (!HasComp<GunComponent>(crafted))
+                return;
+
+            ClearContainerEntities(crafted, "gun_magazine");
+            ClearContainerEntities(crafted, "gun_chamber");
+            ClearContainerEntities(crafted, "revolver-ammo");
+            ClearContainerEntities(crafted, "ballistic-ammo");
+
+            if (TryComp<BallisticAmmoProviderComponent>(crafted, out var ballistic))
+            {
+                ballistic.UnspawnedCount = 0;
+                ballistic.Entities.Clear();
+                Dirty(crafted, ballistic);
+            }
+
+            if (TryComp<RevolverAmmoProviderComponent>(crafted, out var revolver))
+            {
+                for (var i = 0; i < revolver.AmmoSlots.Count; i++)
+                {
+                    revolver.AmmoSlots[i] = null;
+                }
+
+                for (var i = 0; i < revolver.Chambers.Length; i++)
+                {
+                    revolver.Chambers[i] = null;
+                }
+
+                Dirty(crafted, revolver);
+            }
+        }
+
+        private void ClearContainerEntities(EntityUid uid, string containerId)
+        {
+            if (!_container.TryGetContainer(uid, containerId, out var container))
+                return;
+
+            foreach (var ent in container.ContainedEntities.ToArray())
+            {
+                Del(ent);
             }
         }
 
@@ -313,6 +402,39 @@ namespace Content.Server.Lathe
 
         private void OnMaterialAmountChanged(EntityUid uid, LatheComponent component, ref MaterialAmountChangedEvent args)
         {
+            UpdateUserInterfaceState(uid, component);
+        }
+
+        private void OnStorageContainerModified(EntityUid uid, LatheComponent component, ref EntInsertedIntoContainerMessage args)
+        {
+            // #Misfits Fix: Refresh UI state when physical material entities
+            // (canProduce / available material amounts change) are inserted into storage.
+            // #Misfits Add: Also refresh when a blueprint is inserted so newly unlocked
+            // recipes appear immediately.
+            if (!HasComp<MaterialComponent>(args.Entity) && !HasComp<BlueprintComponent>(args.Entity))
+                return;
+
+            // #Misfits Fix: Refresh the material pool whitelist whenever a blueprint is
+            // added/removed (unlocks/locks its ingredients) or a material entity is inserted.
+            // Without this the whitelist stays as it was at MapInit (static/dynamic-only),
+            // so blueprint-only materials (e.g. N14IngotIron) are rejected by
+            // CanChangeMaterialAmount and end up dumped into plain storage instead of the pool.
+            _materialStorage.UpdateMaterialWhitelist(uid);
+            UpdateUserInterfaceState(uid, component);
+        }
+
+        private void OnStorageContainerModified(EntityUid uid, LatheComponent component, ref EntRemovedFromContainerMessage args)
+        {
+            // #Misfits Fix: Same as insertion - refresh when material
+            // entities are removed so available amounts are recalculated.
+            // #Misfits Add: Also refresh when a blueprint is removed so its recipes
+            // disappear from the available list.
+            if (!HasComp<MaterialComponent>(args.Entity) && !HasComp<BlueprintComponent>(args.Entity))
+                return;
+
+            // #Misfits Fix: Keep the material pool whitelist in sync with storage content
+            // (see reasoning in the insertion handler above).
+            _materialStorage.UpdateMaterialWhitelist(uid);
             UpdateUserInterfaceState(uid, component);
         }
 
@@ -370,16 +492,45 @@ namespace Content.Server.Lathe
 
         private void OnLatheQueueRecipeMessage(EntityUid uid, LatheComponent component, LatheQueueRecipeMessage args)
         {
+            // #Misfits Add: Debug logging for blueprint crafting pipeline
+            Log.Info($"LatheQueueRecipe: actor={args.Actor}, recipe={args.ID}, qty={args.Quantity}");
+
             if (_proto.TryIndex(args.ID, out LatheRecipePrototype? recipe))
             {
+                // Convert raw material entities in storage into the material pool before queuing.
+                // This avoids availability/consumption mismatches from physical material stacks.
+                NormalizeStoredMaterialsToPool(uid, args.Actor);
+
                 var count = 0;
                 for (var i = 0; i < args.Quantity; i++)
                 {
                     if (TryAddToQueue(uid, recipe, component))
                         count++;
                     else
+                    {
+                        if (i == 0)
+                        {
+                            var hasRecipe = HasRecipe(uid, recipe, component);
+                            var canProduce = CanProduce(uid, recipe, 1, component);
+                            var missing = string.Join(", ",
+                                recipe.Materials.Select(m =>
+                                {
+                                    var needed = recipe.ApplyMaterialDiscount
+                                        ? (int) MathF.Ceiling(m.Value * component.MaterialUseMultiplier)
+                                        : m.Value;
+                                    var available = _materialStorage.GetMaterialAmount(uid, m.Key);
+                                    var shortfall = Math.Max(0, needed - available);
+                                    return shortfall > 0 ? $"{m.Key}:{shortfall}" : null;
+                                }).Where(x => x != null)!);
+
+                            Log.Warning($"LatheQueueRecipe: FAILED to queue {args.ID} for actor={args.Actor}. hasRecipe={hasRecipe}, canProduce={canProduce}, Missing={missing}");
+                            _popup.PopupEntity(Loc.GetString("lathe-blueprint-queue-failed"), uid, args.Actor);
+                        }
+
                         break;
+                    }
                 }
+                Log.Info($"LatheQueueRecipe: queued {count}/{args.Quantity} of {args.ID}");
                 if (count > 0)
                 {
                     _adminLogger.Add(LogType.Action,
@@ -389,6 +540,24 @@ namespace Content.Server.Lathe
             }
             TryStartProducing(uid, component);
             UpdateUserInterfaceState(uid, component);
+        }
+
+        /// <summary>
+        /// Converts material entities currently inside attached storage into the machine material pool.
+        /// This makes queue-time consumption deterministic and avoids physical-stack edge cases.
+        /// </summary>
+        private void NormalizeStoredMaterialsToPool(EntityUid uid, EntityUid actor)
+        {
+            if (!TryComp<StorageComponent>(uid, out var storage))
+                return;
+
+            foreach (var ent in storage.Container.ContainedEntities.ToArray())
+            {
+                if (!HasComp<MaterialComponent>(ent) || !HasComp<PhysicalCompositionComponent>(ent))
+                    continue;
+
+                _materialStorage.TryInsertMaterialEntity(actor, ent, uid);
+            }
         }
 
         private void OnLatheSyncRequestMessage(EntityUid uid, LatheComponent component, LatheSyncRequestMessage args)

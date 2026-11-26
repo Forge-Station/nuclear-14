@@ -114,6 +114,9 @@
       board: [ DoorElectronicsBOSWashington ]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: DoorAirlockSlantedBoSWashington
 
 - type: entity
   parent: N14DoorAirlockSlanted

@@ -1,0 +1,27 @@
+- type: latheRecipe
+  id: N14CapacitorStockPart
+  result: CapacitorStockPart
+  category: Parts
+  completetime: 4
+  materials:
+    Steel: 50
+    Glass: 50
+
+- type: latheRecipe
+  id: N14MicroManipulatorStockPart
+  result: MicroManipulatorStockPart
+  category: Parts
+  completetime: 4
+  materials:
+    Steel: 50
+    Glass: 50
+    Plastic: 25
+
+- type: latheRecipe
+  id: N14MatterBinStockPart
+  result: MatterBinStockPart
+  category: Parts
+  completetime: 4
+  materials:
+    Steel: 50
+    Glass: 50

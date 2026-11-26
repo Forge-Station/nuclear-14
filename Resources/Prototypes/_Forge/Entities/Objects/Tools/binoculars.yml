@@ -18,7 +18,7 @@
     sprite: Corvax/Objects/Tools/binoculars.rsi
     state: icon
   - type: Item
-    size: Normal
+    size: Small
   - type: Clothing
     sprite: Corvax/Objects/Tools/binoculars.rsi
     quickEquip: false

@@ -1,0 +1,24 @@
+- type: entity
+  parent: Clothing
+  id: N14PrewarWristwatch
+  name: pre-war wristwatch
+  description: A battered silver wristwatch. Still ticking after all these years.
+  components:
+  - type: WorldClock
+  - type: Item
+    size: Tiny
+    sprite: Corvax/Objects/Devices/wristwatch.rsi
+  - type: Sprite
+    sprite: Corvax/Objects/Devices/wristwatch.rsi
+    layers:
+    - state: wristwatch
+    - state: minutes_0
+    - state: hours_0
+  - type: Clothing
+    slots: [neck, gloves]
+    sprite: Corvax/Objects/Devices/wristwatch.rsi
+    clothingVisuals:
+      neck:
+      - state: equipped-HAND
+      gloves:
+      - state: equipped-HAND

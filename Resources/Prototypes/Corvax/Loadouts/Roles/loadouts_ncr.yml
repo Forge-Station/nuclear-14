@@ -2,7 +2,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterNCRVestpaddedWebDesert
-  category: Outer
+  category: OuterArmor
   cost: 3
   exclusive: true
   requirements:
@@ -20,7 +20,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterNCRVeteranArmorDesert
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   requirements:
@@ -38,7 +38,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterNCRCoatLabArmored
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   requirements:
@@ -53,7 +53,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterNCRCombatVeteranArmor
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   requirements:
@@ -113,7 +113,7 @@
 #Броня
 - type: loadout
   id: LoadoutClothingOuterNCRVestSnow
-  category: Outer
+  category: OuterArmor
   cost: 0
   exclusive: true
   requirements:
@@ -129,7 +129,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterNCRVestpaddedWebSnow
-  category: Outer
+  category: OuterArmor
   cost: 3
   exclusive: true
   requirements:
@@ -147,7 +147,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterNCRVeteranArmorSnow
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   requirements:
@@ -165,7 +165,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterNCRCombatArmorSnow
-  category: Outer
+  category: OuterArmor
   cost: 0
   exclusive: true
   requirements:
@@ -177,7 +177,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterNCRCombatVeteranArmorSnow
-  category: Outer
+  category: OuterArmor
   cost: 4
   exclusive: true
   requirements:
@@ -209,7 +209,7 @@
 
 - type: loadout
   id: LoadoutClothingNeckNCRMPCoat
-  category: Outer
+  category: Neck
   cost: 4
   exclusive: true
   requirements:
@@ -284,7 +284,7 @@
 
 - type: loadout
   id: LoadoutClothingBeltNCRBandolier
-  category: Roles
+  category: Belts
   cost: 1
   exclusive: true
   requirements:
@@ -299,7 +299,7 @@
 
 - type: loadout
   id: LoadoutClothingBeltNCRPouches
-  category: Roles
+  category: Belts
   cost: 1
   exclusive: true
   requirements:
@@ -314,7 +314,7 @@
 
 - type: loadout
   id: LoadoutClothingBeltNCRHarness
-  category: Roles
+  category: Belts
   cost: 1
   exclusive: true
   requirements:

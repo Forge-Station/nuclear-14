@@ -1244,7 +1244,7 @@
   graph: Airlock
   startNode: start
   targetNode: airlock
-  hide: false # Forge-Change
+  hide: true
   category: construction-category-structures
   description: It opens, it closes, and maybe crushes you.
   icon:

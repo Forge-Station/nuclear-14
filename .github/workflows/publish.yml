@@ -29,6 +29,26 @@ jobs:
     - name: Verify secrets
       if: ${{ env.SECRETS_TOKEN != '' }}
       run: test -f FalloutSecrets/Content.Secrets.Server/Content.Secrets.Server.csproj
+
+    - name: Merge secret resources
+      if: ${{ env.SECRETS_TOKEN != '' }}
+      shell: bash
+      run: |
+        src=FalloutSecrets/Resources
+        if [ ! -d "$src" ]; then
+          echo "No $src, skipping"
+          exit 0
+        fi
+        conflicts=$(cd "$src" && find . -type f ! -name .gitkeep -print | while read -r f; do
+          [ -e "../../Resources/$f" ] && echo "$f"
+        done || true)
+        if [ -n "$conflicts" ]; then
+          echo "::error::Secret resources overwrite public files:"
+          echo "$conflicts"
+          exit 1
+        fi
+        tar -C "$src" --exclude=.gitkeep -cf - . | tar -C Resources -xf -
+        echo "Merged $(find "$src" -type f ! -name .gitkeep | wc -l) secret resource files"
 # Forge-Secrets-End
 
     - name: Setup .NET Core
