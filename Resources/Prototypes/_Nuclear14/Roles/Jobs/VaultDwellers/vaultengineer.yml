@@ -28,7 +28,7 @@
   special:
   - !type:AddComponentSpecial
     components:
-      - type: DoAfterSpeedModifier
+      - type: RoleBonus
         toolSpeed: 2
       - type: NpcFactionMember
         factions:

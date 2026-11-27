@@ -1,8 +1,10 @@
+using Content.Shared._Forge.Roles;
 using Content.Shared.Actions;
 using Content.Shared.Examine;
 using Content.Shared.Hands;
 using Content.Shared.Verbs;
 using Content.Shared.Weapons.Ranged.Components;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Weapons.Ranged.Systems;
@@ -18,8 +20,28 @@ public abstract partial class SharedGunSystem
         {
             args.PushMarkup(Loc.GetString("gun-selected-mode-examine", ("color", ModeExamineColor),
                 ("mode", GetLocSelector(component.SelectedMode))));
-            args.PushMarkup(Loc.GetString("gun-fire-rate-examine", ("color", FireRateExamineColor),
-                ("fireRate", $"{component.FireRateModified:0.0}")));
+            var fireRateBonus = 0f;
+            if (TryComp<RoleBonusComponent>(args.Examiner, out var roleBonus) &&
+                roleBonus.FireRateBonus != 0 &&
+                roleBonus.FireRateWhitelist.Count > 0 &&
+                MetaData(uid).EntityPrototype?.ID is { } gunPrototype &&
+                roleBonus.FireRateWhitelist.Contains(new EntProtoId(gunPrototype)))
+            {
+                fireRateBonus = roleBonus.FireRateBonus;
+            }
+
+            if (fireRateBonus != 0)
+            {
+                args.PushMarkup(Loc.GetString("gun-fire-rate-examine-bonus",
+                    ("color", FireRateExamineColor),
+                    ("fireRate", $"{component.FireRateModified:0.0}"),
+                    ("bonus", $"{fireRateBonus:0.0#}")));
+            }
+            else
+            {
+                args.PushMarkup(Loc.GetString("gun-fire-rate-examine", ("color", FireRateExamineColor),
+                    ("fireRate", $"{component.FireRateModified:0.0}")));
+            }
         }
     }
 

@@ -1,8 +1,15 @@
 - type: entity
-  parent: MobHuman
+  parent: N14MobHumanBoS
   id: N14BoSWestElderCommander
   name: BoSWestElderCommander
   components:
+    - type: RoleBonus
+      healthBonus: 25
+      walkSpeedMultiplier: 1.1
+      sprintSpeedMultiplier: 1.1
+      slowOnDamageModifier: 0.5
+      meleeDamageMultiplier: 1.5
+      meleeHeavyStaminaCostMultiplier: 0.75
     - type: Icon
       sprite: Corvax/Markers/boswest.rsi
       state: elder
@@ -15,41 +22,67 @@
       - BrotherhoodWest
 
 - type: entity
-  parent: N14BoSWestElderCommander
+  parent: N14MobHumanBoS
   id: N14MobHumanBoSWestKnight
   name: BoSWestKnight
   components:
     - type: Icon
+      sprite: Corvax/Markers/boswest.rsi
       state: knight
     - type: Loadout
       prototypes: [BoSWestKnightGear]
 
+    - type: NpcFactionMember
+      factions:
+      - BrotherhoodWest
 - type: entity
-  parent: N14BoSWestElderCommander
+  parent: N14MobHumanBoS
   id: N14MobHumanBoSWestPaladin
   name: BoSWestPaladin
   components:
+    - type: RoleBonus
+      healthBonus: 20
+      walkSpeedMultiplier: 1.05
+      sprintSpeedMultiplier: 1.05
+      slowOnDamageModifier: 0.65
+      meleeDamageMultiplier: 1.25
+      meleeHeavyStaminaCostMultiplier: 0.75
     - type: Icon
+      sprite: Corvax/Markers/boswest.rsi
       state: paladin
     - type: Loadout
       prototypes: [BoSWestPaladinGear]
 
+    - type: NpcFactionMember
+      factions:
+      - BrotherhoodWest
 - type: entity
-  parent: N14BoSWestElderCommander
+  parent: N14MobHumanBoS
   id: N14MobHumanBoSWestScribe
   name: BoSWestScribe
   components:
+    - type: RoleBonus
+      toolSpeed: 1.5
+      medicalSpeed: 1.5
     - type: Icon
+      sprite: Corvax/Markers/boswest.rsi
       state: scribe
     - type: Loadout
       prototypes: [BoSWestScribeGear]
 
+    - type: NpcFactionMember
+      factions:
+      - BrotherhoodWest
 - type: entity
-  parent: N14BoSWestElderCommander
+  parent: N14MobHumanBoS
   id: N14MobHumanBoSWestGunsmith
   name: BoSWestGunsmith
   components:
     - type: Icon
+      sprite: Corvax/Markers/boswest.rsi
       state: gunsmith
     - type: Loadout
       prototypes: [BoSWestGunsmithGear]
+    - type: NpcFactionMember
+      factions:
+      - BrotherhoodWest

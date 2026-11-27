@@ -59,6 +59,8 @@
   id: N14MobHumanTribalHealer
   name: TribalHealer
   components:
+    - type: RoleBonus
+      medicalSpeed: 1.25
     - type: Icon
       state: healer
     - type: RandomHumanoidAppearance

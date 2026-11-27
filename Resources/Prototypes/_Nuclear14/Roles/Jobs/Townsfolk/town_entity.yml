@@ -52,6 +52,8 @@
   id: N14MobHumanTownMechanic
   name: TownMechanic
   components:
+    - type: RoleBonus
+      toolSpeed: 1.5
     - type: Icon
       state: mechanic
     - type: RandomHumanoidAppearance
@@ -84,6 +86,8 @@
   id: N14MobHumanTownDoctor
   name: TownDoctor
   components:
+    - type: RoleBonus
+      medicalSpeed: 1.5
     - type: Icon
       state: doctor
     - type: RandomHumanoidAppearance

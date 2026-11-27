@@ -22,6 +22,18 @@ public sealed partial class RoleBonusComponent : Component
     public float SprintSpeedMultiplier = 1f;
 
     /// <summary>
+    ///     Persistent tool DoAfter speed (1 = normal).
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float ToolSpeed = 1f;
+
+    /// <summary>
+    ///     Persistent medical DoAfter speed (1 = normal).
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float MedicalSpeed = 1f;
+
+    /// <summary>
     ///     Reduces the movement slowdown from damage. 1 = no change, 0.5 = half the slowdown removed, 0 = full immunity.
     /// </summary>
     [DataField, AutoNetworkedField]

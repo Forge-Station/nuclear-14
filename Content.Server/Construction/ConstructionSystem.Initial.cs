@@ -9,6 +9,7 @@ using Content.Shared.Construction.Steps;
 using Content.Shared.Coordinates;
 using Content.Shared.Database;
 using Content.Shared._Forge.DoAfter;
+using Content.Shared._Forge.Roles;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
@@ -249,8 +250,14 @@ namespace Content.Server.Construction
 
             // Forge-Change: construction speed from jobs/traits.
             // This do-after has no used item, so TryStartDoAfter will not see a tool.
-            if (TryComp<DoAfterSpeedModifierComponent>(user, out var doAfterSpeed) && doAfterSpeed.ToolSpeed > 0f)
-                doAfterTime /= doAfterSpeed.ToolSpeed;
+            var toolSpeed = 0f;
+            if (TryComp<RoleBonusComponent>(user, out var roleBonus))
+                toolSpeed = roleBonus.ToolSpeed;
+            else if (TryComp<DoAfterSpeedModifierComponent>(user, out var doAfterSpeed))
+                toolSpeed = doAfterSpeed.ToolSpeed;
+
+            if (toolSpeed > 0f)
+                doAfterTime /= toolSpeed;
 
             var doAfterArgs = new DoAfterArgs(EntityManager, user, doAfterTime, new AwaitedDoAfterEvent(), null)
             {

@@ -34,13 +34,12 @@
         factions:
           - Wastelander
           - NCR
-      - type: DoAfterSpeedModifier
-        medicalSpeed: 1.25
       - type: RoleBonus
         healthBonus: 30
         walkSpeedMultiplier: 1.2
         sprintSpeedMultiplier: 1.2
         slowOnDamageModifier: 0.5
+        medicalSpeed: 1.25
         fireRateBonus: 1.5
         fireRateWhitelist:
         - N14WeaponSniper44LeverCarbine
