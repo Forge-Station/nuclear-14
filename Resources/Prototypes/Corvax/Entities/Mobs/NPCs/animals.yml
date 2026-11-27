@@ -164,6 +164,26 @@
         Base: ncr-dead
 
 - type: entity
+  parent: N14MobBrahdoArmor
+  id: N14MobBrahdoArmorNWBS
+  name: brahdo
+  description: "Brado, NWBS, clad in partial plate armor and chainmail. He won’t be so easy to take a bite out of."
+  suffix: NWBS
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base"]
+      state: NWBS
+      sprite: _Corvax/Mobs/Animals/brahdo.rsi
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: NWBS
+      Dead:
+        Base: NWBS-dead
+
+- type: entity
   parent: N14MobBrahdoLight
   id: N14MobBrahdoLightLegion
   name: brahdo
