@@ -1,8 +1,15 @@
 - type: entity
-  parent: MobHuman
+  parent: N14MobHumanBoS
   id: BoSMidPaladinCommander
   name: BoSMidPaladinCommander
   components:
+    - type: RoleBonus
+      healthBonus: 25
+      walkSpeedMultiplier: 1.1
+      sprintSpeedMultiplier: 1.1
+      slowOnDamageModifier: 0.5
+      meleeDamageMultiplier: 1.5
+      meleeHeavyStaminaCostMultiplier: 0.75
     - type: Icon
       sprite: _Nuclear14/Markers/Jobs/bosmid.rsi
       state: commander
@@ -16,45 +23,75 @@
       - BrotherhoodMidwest
 
 - type: entity
-  parent: BoSMidPaladinCommander
+  parent: N14MobHumanBoS
   id: N14MobHumanBoSMidKnight
   name: BoSMidKnight
   components:
     - type: Icon
+      sprite: _Nuclear14/Markers/Jobs/bosmid.rsi
       state: knight
     - type: Loadout
       prototypes: [BoSMidKnightGear]
 
+    - type: NpcFactionMember
+      factions:
+      - Wastelander
+      - BrotherhoodMidwest
 - type: entity
-  parent: BoSMidPaladinCommander
+  parent: N14MobHumanBoS
   id: N14MobHumanBoSMidPaladin
   name: BoSMidPaladin
   components:
+    - type: RoleBonus
+      healthBonus: 20
+      walkSpeedMultiplier: 1.05
+      sprintSpeedMultiplier: 1.05
+      slowOnDamageModifier: 0.65
+      meleeDamageMultiplier: 1.25
+      meleeHeavyStaminaCostMultiplier: 0.75
     - type: Icon
+      sprite: _Nuclear14/Markers/Jobs/bosmid.rsi
       state: paladin
     - type: Loadout
       prototypes: [BoSMidPaladinGear]
 
+    - type: NpcFactionMember
+      factions:
+      - Wastelander
+      - BrotherhoodMidwest
 - type: entity
-  parent: BoSMidPaladinCommander
+  parent: N14MobHumanBoS
   id: N14MobHumanBoSMidScribe
   name: BoSMidScribe
   components:
+    - type: RoleBonus
+      toolSpeed: 1.5
+      medicalSpeed: 1.5
     - type: Icon
+      sprite: _Nuclear14/Markers/Jobs/bosmid.rsi
       state: scribe
     - type: Loadout
       prototypes: [BoSMidScribeGear]
 
+    - type: NpcFactionMember
+      factions:
+      - Wastelander
+      - BrotherhoodMidwest
 - type: entity
-  parent: BoSMidPaladinCommander
+  parent: N14MobHumanBoS
   id: N14MobHumanBoSMidSquire
   name: BoSMidSquire
   components:
     - type: Icon
+      sprite: _Nuclear14/Markers/Jobs/bosmid.rsi
       state: squire
     - type: Loadout
       prototypes: [BoSMidSquireGear]
 
+    - type: NpcFactionMember
+      factions:
+      - Wastelander
+      - BrotherhoodMidwest
 - type: entity # Forge-Add-Start
   parent: BoSMidPaladinCommander
   id: N14MobHumanBoSMidInquisitor

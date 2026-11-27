@@ -335,44 +335,56 @@
 #Стимпаки в шприце.
 - type: reaction
   id: SuperStimpakConversion
+  quantized: true
   reactants:
     RobustHealingMixture:
       amount: 10
-    Silicon:
-      amount: 10
+    Iron:
+      amount: 9
+    Carbon:
+      amount: 1
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14SuperStimpak
 
 - type: reaction
   id: UltraStimpakConversion
+  quantized: true
   reactants:
     UltraRobustHealingMixture:
       amount: 10
-    Silicon:
-      amount: 10
+    Iron:
+      amount: 9
+    Carbon:
+      amount: 1
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14UltraStimpak
 
 - type: reaction
   id: DirtySuperStimpakConversion
+  quantized: true
   reactants:
     DirtySuperStimpack:
       amount: 10
-    Silicon:
-      amount: 10
+    Iron:
+      amount: 9
+    Carbon:
+      amount: 1
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14DirtySuperStimpak
 
 - type: reaction
   id: DamageModifyingMixtureConversion
+  quantized: true
   reactants:
     DamageModifyingMixture:
       amount: 20
-    Silicon:
-      amount: 10
+    Iron:
+      amount: 9
+    Carbon:
+      amount: 1
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Psycho
@@ -380,6 +392,7 @@
 #Порошки в мешочке.
 - type: reaction
   id: HealingPowderConversion
+  quantized: true
   reactants:
     HealingPowder:
       amount: 10
@@ -391,6 +404,7 @@
 
 - type: reaction
   id: HealingPoulticeConversion
+  quantized: true
   reactants:
     HealingPoultice:
       amount: 20
@@ -402,6 +416,7 @@
 
 - type: reaction
   id: BerserkerMixtureConversion
+  quantized: true
   reactants:
     BerserkerMixture:
       amount: 20

@@ -20,6 +20,7 @@
 
 - type: reaction #Forge-change
   id: AntidoteMixtureConversion
+  quantized: true
   reactants:
     AntidoteMixture:
       amount: 50
@@ -41,11 +42,14 @@
 
 - type: reaction #Forge-change
   id: AntidoteConversion
+  quantized: true
   reactants:
     Antidote:
       amount: 15
-    Silicon:
-      amount: 10
+    Oil:
+      amount: 5
+    Phosphorus:
+      amount: 5
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14ChemicalSyringeAntidote
@@ -67,8 +71,10 @@
   reactants:
     RadAway:
       amount: 10
-    Silicon:
-      amount: 10
+    Oil:
+      amount: 5
+    Phosphorus:
+      amount: 5
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14RadAwayInhaler
@@ -85,6 +91,7 @@
 
 - type: reaction
   id: RadAwayConversion
+  quantized: true
   reactants:
     RadAway:
       amount: 20
@@ -110,11 +117,14 @@
 
 - type: reaction
   id: StimpakConversion #Forge-change
+  quantized: true
   reactants:
     HealingMixture:
       amount: 10
-    Silicon:
-      amount: 10
+    Iron:
+      amount: 9
+    Carbon:
+      amount: 1
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Stimpak
@@ -133,11 +143,14 @@
 
 - type: reaction
   id: DirtyStimpakConversion #Forge-change
+  quantized: true
   reactants:
     DirtyStimpak:
       amount: 10
-    Silicon:
-      amount: 10
+    Iron:
+      amount: 9
+    Carbon:
+      amount: 1
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14StimpakDirty

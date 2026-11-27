@@ -33,7 +33,7 @@
   - type: Appearance
   - type: ToolRefinable #Forge-Change
     refineResult:
-    - id: SheetGlass1
+    - id: SheetSteel1
   - type: Tag
     tags:
     - Syringe
@@ -206,6 +206,9 @@
   - type: Tag
     tags:
     - Syringe
+  - type: ToolRefinable #Forge-Add
+    refineResult:
+    - id: SheetPlastic1
 
 - type: entity
   parent: N14ChemicalSyringeAntidoteEmpty

@@ -1,5 +1,5 @@
 - type: entity
-  parent: MobHuman
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCRCadet
   name: NCRCadet
   components:
@@ -16,10 +16,12 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCRMedic
   name: NCRMedic
   components:
+    - type: RoleBonus
+      medicalSpeed: 1.5
     - type: Icon
       state: medic
     - type: RandomHumanoidAppearance
@@ -32,7 +34,7 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCRSGT
   name: NCRSGT
   components:
@@ -48,7 +50,7 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCRLT
   name: NCRLT
   components:
@@ -64,10 +66,12 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCREngineer
   name: NCREngineer
   components:
+    - type: RoleBonus
+      toolSpeed: 1.75
     - type: Icon
       state: engineer
     - type: RandomHumanoidAppearance
@@ -80,7 +84,7 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCRWS
   name: NCRWS
   components:
@@ -96,7 +100,7 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCRSoldier
   name: NCRSoldier
   components:
@@ -112,10 +116,38 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCRRangerVeteran
   name: NCRRangerVeteran
   components:
+    - type: RoleBonus
+      healthBonus: 30
+      walkSpeedMultiplier: 1.2
+      sprintSpeedMultiplier: 1.2
+      slowOnDamageModifier: 0.5
+      medicalSpeed: 1.25
+      fireRateBonus: 1.5
+      fireRateWhitelist:
+      - N14WeaponSniper44LeverCarbine
+      - N14WeaponSniper44LeverShortCarbine
+      - N14WeaponSniper308LeverRifle
+      - N14WeaponSniper45-70BrushGun
+      - N14WeaponSniper308Tribal
+      - N14WeaponSniper308TribalUpgraded
+      - N14WeaponShotgunLever
+      - N14WeaponRevolver9mm
+      - N14WeaponRevolver10mm
+      - N14WeaponRevolverWebley
+      - N14WeaponRevolver44Magnun
+      - N14WeaponRevolver45-70Hunter
+      - N14WeaponRevolver45-70RangerSequoia
+      - N14WeaponRevolverThatGun
+      - N14WeaponRevolver12-7x55mmRSH12
+      - N14WeaponRevolver44Tribal
+      - N14WeaponRevolver44TribalUpgraded
+      - N14WeaponRevolver44TribalUpgradedExtra
+      - N14WeaponRevolver45-70Handcannon
+      - N14WeaponRevolver45-70HandcannonUpgraded
     - type: Icon
       state: rangerveteran
     - type: RandomHumanoidAppearance
@@ -128,10 +160,38 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCRRanger
   name: NCRRanger
   components:
+    - type: RoleBonus
+      healthBonus: 15
+      walkSpeedMultiplier: 1.1
+      sprintSpeedMultiplier: 1.1
+      slowOnDamageModifier: 0.3
+      medicalSpeed: 1.2
+      fireRateBonus: 1.5
+      fireRateWhitelist:
+      - N14WeaponSniper44LeverCarbine
+      - N14WeaponSniper44LeverShortCarbine
+      - N14WeaponSniper308LeverRifle
+      - N14WeaponSniper45-70BrushGun
+      - N14WeaponSniper308Tribal
+      - N14WeaponSniper308TribalUpgraded
+      - N14WeaponShotgunLever
+      - N14WeaponRevolver9mm
+      - N14WeaponRevolver10mm
+      - N14WeaponRevolverWebley
+      - N14WeaponRevolver44Magnun
+      - N14WeaponRevolver44Tribal
+      - N14WeaponRevolver44TribalUpgraded
+      - N14WeaponRevolver44TribalUpgradedExtra
+      - N14WeaponRevolver45-70Handcannon
+      - N14WeaponRevolver45-70HandcannonUpgraded
+      - N14WeaponRevolver45-70Hunter
+      - N14WeaponRevolver45-70RangerSequoia
+      - N14WeaponRevolverThatGun
+      - N14WeaponRevolver12-7x55mmRSH12
     - type: Icon
       state: ranger
     - type: RandomHumanoidAppearance
@@ -144,7 +204,7 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNCRPisoner
   name: NCRPisoner
   components:
@@ -160,7 +220,7 @@
       - NCR
 
 - type: entity
-  parent: N14MobHumanNCRCadet
+  parent: N14MobHumanNCRBase
   id: N14MobHumanNRCMP
   name: NRCMP
   components:

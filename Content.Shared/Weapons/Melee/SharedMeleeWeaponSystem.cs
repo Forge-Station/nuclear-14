@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
+using Content.Shared._Forge.Roles;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration.Logs;
 using Content.Shared.CombatMode;
@@ -193,6 +194,9 @@ public abstract class SharedMeleeWeaponSystem : EntitySystem
 
         var ev = new GetMeleeDamageEvent(uid, new(component.Damage), new(), user, component.ResistanceBypass);
         RaiseLocalEvent(uid, ref ev);
+
+        if (TryComp<RoleBonusComponent>(user, out var roleBonus) && roleBonus.MeleeDamageMultiplier != 1f)
+            ev.Damage *= roleBonus.MeleeDamageMultiplier;
 
         if (component.ContestArgs is not null)
 
@@ -551,6 +555,8 @@ public abstract class SharedMeleeWeaponSystem : EntitySystem
             return false;
 
         var heavyCost = component.HeavyStaminaCost;
+        if (TryComp<RoleBonusComponent>(user, out var roleBonus))
+            heavyCost *= roleBonus.MeleeHeavyStaminaCostMultiplier;
         if (TryComp<MeleeStaminaCostModifierComponent>(user, out var heavyCostModifier))
             heavyCost *= heavyCostModifier.HeavyCostMultiplier;
 

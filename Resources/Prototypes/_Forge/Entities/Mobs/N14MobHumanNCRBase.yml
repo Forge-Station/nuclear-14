@@ -1,0 +1,14 @@
+- type: entity
+  abstract: true
+  parent: MobHuman
+  id: N14MobHumanNCRBase
+  components:
+  - type: Icon
+    sprite: _Nuclear14/Markers/Jobs/ncr.rsi
+    state: cadet
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+    - NCR

@@ -50,3 +50,5 @@ gun-revolver-insert = Заряжен
 gun-revolver-spin = Вращать барабан
 gun-revolver-spun = Барабан вращается
 gun-speedloader-empty = Спидлоадер пуст
+
+gun-fire-rate-examine-bonus = Скорострельность [color={ $color }]{ $fireRate }[/color] (+[color=green]{ $bonus }[/color]) в секунду.

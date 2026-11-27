@@ -13,13 +13,13 @@
       - !type:HealthChange
         damage:
           groups:
-            Burn: -6
-            Brute: -6
+            Burn: -16
+            Brute: -12
           types:
-            Asphyxiation: 2
+            Asphyxiation: 1
             Poison: 0.25
       - !type:ModifyBleedAmount
-        amount: -4
+        amount: -1
       - !type:PopupMessage
         type: Local
         visualType: Medium

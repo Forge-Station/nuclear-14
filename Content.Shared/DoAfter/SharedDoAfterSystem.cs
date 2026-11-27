@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Content.Shared.ActionBlocker;
+using Content.Shared._Forge.Roles;
 using Content.Shared.Damage;
 using Content.Shared.Hands.Components;
 using Content.Shared._Forge.DoAfter;
@@ -206,29 +207,42 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
         }
 
         // Forge-Change: tool/medical DoAfter speed (2 = twice as fast, 0.5 = twice as slow).
-        if (args.MultiplyDelay
-            && TryComp<DoAfterSpeedModifierComponent>(args.User, out var doAfterSpeed))
+        if (args.MultiplyDelay)
         {
+            var toolSpeed = 1f;
+            var medicalSpeed = 1f;
+
+            if (TryComp<RoleBonusComponent>(args.User, out var roleBonus))
+            {
+                toolSpeed = roleBonus.ToolSpeed;
+                medicalSpeed = roleBonus.MedicalSpeed;
+            }
+            else if (TryComp<DoAfterSpeedModifierComponent>(args.User, out var legacySpeed))
+            {
+                toolSpeed = legacySpeed.ToolSpeed;
+                medicalSpeed = legacySpeed.MedicalSpeed;
+            }
+
             if (args.Used is { } used)
             {
                 var isTool = HasComp<ToolComponent>(used) ||
                              HasComp<PryingComponent>(used) ||
                              HasComp<WelderComponent>(used);
 
-                if (isTool && doAfterSpeed.ToolSpeed > 0f)
-                    args.Delay /= doAfterSpeed.ToolSpeed;
-                else if (doAfterSpeed.MedicalSpeed > 0f &&
+                if (isTool && toolSpeed > 0f)
+                    args.Delay /= toolSpeed;
+                else if (medicalSpeed > 0f &&
                          (HasComp<DefibrillatorComponent>(used) ||
                           HasComp<InjectorComponent>(used) ||
                           _tag.HasTag(used, "Brutepack") ||
                           _tag.HasTag(used, "Ointment") ||
                           _tag.HasTag(used, "Bloodpack") ||
                           _tag.HasTag(used, "Gauze")))
-                    args.Delay /= doAfterSpeed.MedicalSpeed;
+                    args.Delay /= medicalSpeed;
             }
             // Bare-handed tool use (e.g. hand as a crowbar) has no Used item.
-            else if (doAfterSpeed.ToolSpeed > 0f && HasComp<ToolComponent>(args.User))
-                args.Delay /= doAfterSpeed.ToolSpeed;
+            else if (toolSpeed > 0f && HasComp<ToolComponent>(args.User))
+                args.Delay /= toolSpeed;
         }
 
         // Duplicate blocking & cancellation.

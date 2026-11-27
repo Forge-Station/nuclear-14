@@ -25,7 +25,7 @@
   special:
   - !type:AddComponentSpecial
     components:
-      - type: DoAfterSpeedModifier
+      - type: RoleBonus
         medicalSpeed: 1.25
       - type: SurgerySpeedModifier
         speedModifier: 1.25

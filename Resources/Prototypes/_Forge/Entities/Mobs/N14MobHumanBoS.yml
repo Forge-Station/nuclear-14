@@ -1,0 +1,7 @@
+- type: entity
+  abstract: true
+  parent: MobHuman
+  id: N14MobHumanBoS
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true

@@ -5,6 +5,7 @@ using Content.Shared.Actions;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Audio;
 using Content.Shared.CombatMode;
+using Content.Shared._Forge.Roles;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
 using Content.Shared.Examine;
@@ -318,7 +319,17 @@ public abstract partial class SharedGunSystem : EntitySystem
         if (gun.NextFire > curTime)
             return;
 
-        var fireRate = TimeSpan.FromSeconds(1f / gun.FireRateModified);
+        var rate = gun.FireRateModified;
+        if (TryComp<RoleBonusComponent>(user, out var roleBonus) &&
+            roleBonus.FireRateBonus != 0 &&
+            roleBonus.FireRateWhitelist.Count > 0 &&
+            MetaData(gunUid).EntityPrototype?.ID is { } gunPrototype &&
+            roleBonus.FireRateWhitelist.Contains(new EntProtoId(gunPrototype)))
+        {
+            rate = MathF.Max(0.1f, rate + roleBonus.FireRateBonus);
+        }
+
+        var fireRate = TimeSpan.FromSeconds(1f / rate);
 
         if (gun.SelectedMode == SelectiveFire.Burst || gun.BurstActivated)
             fireRate = TimeSpan.FromSeconds(1f / gun.BurstFireRate);

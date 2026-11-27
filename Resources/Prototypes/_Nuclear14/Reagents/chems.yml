@@ -78,7 +78,7 @@
       - !type:HealthChange
         damage:
           types:
-            Poison: 0.5
+            Poison: 0.25
       - !type:HealthChange
         conditions:
         - !type:ReagentThreshold
@@ -135,7 +135,7 @@
       - !type:HealthChange
         damage:
           types:
-            Poison: 0.25
+            Poison: 0.1
       - !type:HealthChange
         conditions:
           - !type:ReagentThreshold

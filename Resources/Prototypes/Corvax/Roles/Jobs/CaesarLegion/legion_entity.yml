@@ -3,6 +3,12 @@
   id: N14MobHumanCaesarLegionCenturion
   name: Centurion
   components:
+    - type: RoleBonus
+      healthBonus: 50
+      slowOnDamageModifier: 0.25
+      staminaBonus: 50
+      meleeDamageMultiplier: 2
+      meleeHeavyStaminaCostMultiplier: 0.5
     - type: RandomHumanoidAppearance
       randomizeName: true
     - type: Loadout
@@ -29,6 +35,12 @@
   id: N14MobHumanCaesarLegionDean
   name: Dean
   components:
+    - type: RoleBonus
+      healthBonus: 25
+      slowOnDamageModifier: 0.65
+      staminaBonus: 50
+      meleeDamageMultiplier: 1.5
+      meleeHeavyStaminaCostMultiplier: 0.75
     - type: RandomHumanoidAppearance
       randomizeName: true
     - type: Loadout
@@ -42,6 +54,12 @@
   id: N14MobHumanCaesarLegionnaireVeteran
   name: Legionnaire-Veteran
   components:
+    - type: RoleBonus
+      healthBonus: 25
+      slowOnDamageModifier: 0.65
+      staminaBonus: 50
+      meleeDamageMultiplier: 1.5
+      meleeHeavyStaminaCostMultiplier: 0.75
     - type: RandomHumanoidAppearance
       randomizeName: true
     - type: Loadout
@@ -55,6 +73,10 @@
   id: N14MobHumanCaesarLegionnaireWarrior
   name: Legionnaire-Warrior
   components:
+    - type: RoleBonus
+      staminaBonus: 25
+      meleeDamageMultiplier: 1.25
+      meleeHeavyStaminaCostMultiplier: 0.75
     - type: RandomHumanoidAppearance
       randomizeName: true
     - type: Loadout

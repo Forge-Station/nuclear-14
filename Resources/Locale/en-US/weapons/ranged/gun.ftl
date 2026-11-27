@@ -48,3 +48,5 @@ gun-revolver-insert = Inserted
 gun-revolver-spin = Spin revolver
 gun-revolver-spun = Spun
 gun-speedloader-empty = Speedloader empty
+
+gun-fire-rate-examine-bonus = Fire rate is [color={$color}]{$fireRate}[/color] (+[color=green]{$bonus}[/color]) per second.

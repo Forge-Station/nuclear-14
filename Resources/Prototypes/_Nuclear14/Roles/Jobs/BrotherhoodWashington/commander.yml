@@ -31,6 +31,13 @@
   special:
   - !type:AddComponentSpecial
     components:
+      - type: RoleBonus
+        healthBonus: 30
+        walkSpeedMultiplier: 1.1
+        sprintSpeedMultiplier: 1.1
+        slowOnDamageModifier: 0.5
+        meleeDamageMultiplier: 1.5
+        meleeHeavyStaminaCostMultiplier: 0.75
       - type: NpcFactionMember
         factions:
           - Wastelander

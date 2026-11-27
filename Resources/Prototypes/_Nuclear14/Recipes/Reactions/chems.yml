@@ -67,13 +67,12 @@
 
 - type: reaction
   id: HydraConversion
+  quantized: true
   reactants:
     Hydra:
-      amount: 15
-    Oil:
-      amount: 5
-    Phosphorus:
-      amount: 5
+      amount: 50
+    Silicon:
+      amount: 10
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Hydra

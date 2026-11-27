@@ -19,6 +19,8 @@
   id: N14MobHumanVaultDoctor
   name: VaultDoctor
   components:
+    - type: RoleBonus
+      medicalSpeed: 1.75
     - type: Icon
       state: doctor
     - type: RandomHumanoidAppearance
@@ -35,6 +37,8 @@
   id: N14MobHumanVaultEngineer
   name: VaultEngineer
   components:
+    - type: RoleBonus
+      toolSpeed: 2
     - type: Icon
       state: engineer
     - type: RandomHumanoidAppearance
