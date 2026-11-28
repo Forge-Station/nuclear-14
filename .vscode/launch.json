@@ -124,7 +124,7 @@
             "preLaunchTask": "build (Tools)"
         },
         {
-            "name": "Server/Client (Release)",
+             "name": "Server/Client (Release)",
             "configurations": [
                 "Server (Release)",
                 "Client (Release)"
