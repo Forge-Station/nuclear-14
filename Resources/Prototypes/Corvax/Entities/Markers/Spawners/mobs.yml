@@ -56,6 +56,20 @@
 
 - type: entity
   name: Brahdo Spawner
+  id: N14SpawnMobBrahdoArmorNWBS
+  parent: MarkerBase
+  suffix: NWBS
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobBrahdoArmorNWBS
+
+- type: entity
+  name: Brahdo Spawner
   id: N14SpawnMobBrahdoLightLegion
   parent: MarkerBase
   suffix: Legion
@@ -443,3 +457,4 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobDesertRadscorpion
+      //

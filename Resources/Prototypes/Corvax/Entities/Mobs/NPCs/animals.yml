@@ -93,6 +93,31 @@
     prototype: AnimalRuminant
   - type: MobPrice
     price: 300
+  - type: PassiveDamage
+    allowedStates:
+    - Alive
+    damageCap: 300
+    damage:
+      types:
+        Blunt: -0.15
+        Slash: -0.15
+        Piercing: -0.15
+        Heat: -0.15
+        Cold: -0.15
+        Shock: -0.15
+        Asphyxiation: -0.15
+        Bloodloss: -0.1
+        Poison: -0.01
+        Caustic: -0.1
+  - type: Bloodstream
+    bloodMaxVolume: 450
+    bloodRefreshAmount: 5
+    bloodRegenerationHunger: 0
+    bloodRegenerationThirst: 0
+  - type: SolutionContainerManager
+    solutions:
+      bloodstream:
+        maxVol: 450
 
 - type: entity
   parent: N14MobBrahdo
@@ -142,6 +167,11 @@
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: WastelandArmoredAnimal
+  - type: Reflect
+    reflectProb: 0.35
+    innate: true
+    reflects:
+        - NonEnergy
 
 - type: entity
   parent: N14MobBrahdoArmor
@@ -162,6 +192,26 @@
         Base: ncr
       Dead:
         Base: ncr-dead
+
+- type: entity
+  parent: N14MobBrahdoArmor
+  id: N14MobBrahdoArmorNWBS
+  name: brahdo
+  description: "Brado, NWBS, clad in partial plate armor and chainmail. He won’t be so easy to take a bite out of."
+  suffix: NWBS
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base"]
+      state: NWBS
+      sprite: _Corvax/Mobs/Animals/brahdo.rsi
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: NWBS
+      Dead:
+        Base: NWBS-dead
 
 - type: entity
   parent: N14MobBrahdoLight
@@ -259,3 +309,4 @@
       state: radscorpion
       sprite: Corvax/Mobs/Animals/desertradscorpion.rsi
 # Corvax-Change-End
+//
