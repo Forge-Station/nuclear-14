@@ -15,3 +15,4 @@ ent-N14MobBrahdoArmorNWBS = Брадо СЗБС
 ent-N14MobBrahdoLightLegion = Брадо Легиона
     .desc = { ent-N14MobBrahdo.desc }
     .suffix = Легион
+    //
