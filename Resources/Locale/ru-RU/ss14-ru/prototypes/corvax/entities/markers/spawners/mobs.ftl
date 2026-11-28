@@ -17,4 +17,3 @@ ent-N14SpawnMobBrahdoArmorNWBS = спавнер брадо СЗБС
 ent-N14SpawnMobBrahdoLightLegion = спавнер брадо Легиона
     .desc = { ent-MarkerBase.desc }
     .suffix = Легион
-    //
